@@ -4,6 +4,11 @@ namespace QuickAcid
 {
 	public static partial class QAcid
 	{
+		public static QAcidRunner<TOutput> Act<TOutput>(this string key, Func<TOutput> func)
+		{
+			return Act((object) key, func);
+		}
+
 		public static QAcidRunner<TOutput> Act<TOutput>(object key, Func<TOutput> func)
 		{
 			return 

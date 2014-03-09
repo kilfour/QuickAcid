@@ -8,7 +8,12 @@ namespace QuickAcid
 {
 	public static partial class QAcid
 	{
-		public static QAcidRunner<T> ToShrinkableInput<T>(this Generator<T> generator, object key)
+		public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator)
+		{
+			return ShrinkableInput(generator, key);
+		}
+
+		public static QAcidRunner<T> ShrinkableInput<T>(this Generator<T> generator, object key)
 		{
 			return state =>
 			{

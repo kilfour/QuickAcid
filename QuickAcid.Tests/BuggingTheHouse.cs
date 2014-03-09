@@ -20,7 +20,7 @@ namespace QuickAcid.Tests
 		public void BugHouse1Error()
 		{
 			var test =
-				from a in MGen.Int(0, 10).ToShrinkableInput("a")
+				from a in MGen.Int(0, 10).ShrinkableInput("a")
 				from bughouse in QAcid.OnceOnlyInput("bughouse", () => new BugHouse1())
 				from output in QAcid.Act("bughouse.Run", () => bughouse.Run(a))
 				from spec in QAcid.Spec("returns true", () => output)
@@ -42,7 +42,7 @@ namespace QuickAcid.Tests
 		public void BugHouse2Error()
 		{
 			var test =
-				from a in MGen.Int(0, 10).ToShrinkableInput("a")
+				from a in MGen.Int(0, 10).ShrinkableInput("a")
 				from bughouse in QAcid.OnceOnlyInput("bughouse", () => new BugHouse2())
 				from output in QAcid.Act("bughouse.Run", () => bughouse.Run(a))
 				from spec in QAcid.Spec("returns true", () => output)
@@ -65,7 +65,7 @@ namespace QuickAcid.Tests
 		public void BugHouse3Error()
 		{
 			var test =
-			    from a in MGen.Int(0, 10).ToShrinkableInput("a")
+			    from a in MGen.Int(0, 10).ShrinkableInput("a")
 				from bughouse in QAcid.OnceOnlyInput("bughouse", () => new BugHouse3())
 				from output in QAcid.Act("bughouse.Run", () => bughouse.Run(a))
 				from spec in QAcid.Spec("returns true", () => output)

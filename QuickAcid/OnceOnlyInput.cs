@@ -4,6 +4,11 @@ namespace QuickAcid
 {
 	public static partial class QAcid
 	{
+		public static QAcidRunner<T> OnceOnlyInput<T>(this string key, Func<T> func)
+		{
+			return OnceOnlyInput((object) key, func);
+		}
+
 		public static QAcidRunner<T> OnceOnlyInput<T>(object key, Func<T> func)
 		{
 			return s =>

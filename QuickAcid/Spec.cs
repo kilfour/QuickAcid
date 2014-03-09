@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid
 {
 	public static partial class QAcid
 	{
+		public static QAcidRunner<Unit> Spec(this string key, Func<bool> func)
+		{
+			return Spec((object) key, func);
+		}
+
 		public static QAcidRunner<Unit> Spec(object key, Func<bool> func)
 		{
 			return s =>
