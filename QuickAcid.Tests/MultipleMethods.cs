@@ -30,7 +30,6 @@ namespace QuickAcid.Tests
 		[Fact]
 		public void BugHouseError()
 		{
-
 			var test =
 				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse())
 				from funcOne in

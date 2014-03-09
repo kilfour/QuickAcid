@@ -8,30 +8,34 @@ namespace QuickAcid
 {
 	public class QAcidState
 	{
-		public QAcidRunner<Unit> Runner { get; set; }
+		public QAcidRunner<Unit> Runner { get; private set; }
 
-		public int RunNumber { get; set; }
-		public List<int> Runs { get; set; }
+		public int RunNumber { get; private set; }
+		public List<int> Runs { get; private set; }
 
-		public Memory Memory { get; set; }
-		public GlobalMemory TempMemory { get; set; }
+		public Memory Memory { get; private set; }
+		public TempMemory TempMemory { get; private set; }
 
-		public string FailingSpec { get; set; }
-		public bool Failed { get; set; }
+		public bool Shrinking { get; private set; }
+		public Memory Shrunk { get; private set; }
 
-		public bool Shrinking { get; set; }
-		public Memory Shrunk { get; set; }
+		public bool Verifying { get; private set; }
 
-		public bool Verifying { get; set; }
+		public bool Reporting { get; private set; }
 
-		public bool Reporting { get; set; }
-		public Exception Exception { get; set; }
+		public string FailingSpec { get; private set; }
+		public bool Failed { get; private set; }
+		public Exception Exception { get; private set; }
 
-		public QAcidState()
+
+		private StringBuilder reportBuilder;
+
+		public QAcidState(QAcidRunner<Unit> runner)
 		{
+			Runner = runner;
 			Runs = new List<int>();
 			Memory = new Memory(this);
-			TempMemory = new GlobalMemory();
+			TempMemory = new TempMemory();
 			Shrunk = new Memory(this);
 		}
 
@@ -57,14 +61,71 @@ namespace QuickAcid
 			RunNumber++;
 		}
 
-		public void HandleFailure()
+		public bool ShrinkRun(object key, object value)
+		{
+			Verifying = true;
+			Shrinking = false;
+			Reporting = false;
+			var tempMemory = TempMemory;
+			Failed = false;
+			TempMemory = new TempMemory();
+
+			var failingSpec = FailingSpec;
+			var exception = Exception;
+			var runNumber = RunNumber;
+			var oldVal = Memory.Get<object>(key);
+			Memory.Set(key, value);
+			foreach (var run in Runs)
+			{
+				RunNumber = run;
+				Runner(this);
+			}
+
+			var failed = Failed;
+
+			RunNumber = runNumber;
+			Failed = false;
+			FailingSpec = failingSpec;
+			Exception = exception;
+
+			Verifying = false;
+			Shrinking = true;
+
+			Memory.Set(key, oldVal);
+			TempMemory = tempMemory;
+			return failed;
+		}
+
+		public bool IsNormalRun()
+		{
+			return (Verifying == false && Shrinking == false && Reporting == false);
+		}
+
+		public void FailedWithException(Exception exception)
+		{
+			Failed = true;
+			Exception = exception;
+		}
+
+		public void SpecFailed(string failingSpec)
+		{
+			Failed = true;
+			FailingSpec = failingSpec;
+		}
+
+		public void LogReport(string report)
+		{
+			reportBuilder.AppendLine(report);
+		}
+
+		private void HandleFailure()
 		{
 			ShrinkActions();
 			ShrinkInputs();
 			Report();
 		}
 
-		public void ShrinkActions()
+		private void ShrinkActions()
 		{
 			Verifying = true;
 			Shrinking = false;
@@ -80,7 +141,7 @@ namespace QuickAcid
 			while (current < max)
 			{
 				Failed = false;
-				TempMemory = new GlobalMemory();
+				TempMemory = new TempMemory();
 				FailingSpec = failingSpec;
 				Exception = exception;
 
@@ -102,14 +163,14 @@ namespace QuickAcid
 			Exception = exception;
 		}
 
-		public void ShrinkInputs()
+		private void ShrinkInputs()
 		{
 			Verifying = false;
 			Shrinking = true;
 			Reporting = false;
 
 			Failed = false;
-			TempMemory = new GlobalMemory();
+			TempMemory = new TempMemory();
 
 			var failingSpec = FailingSpec;
 			var exception = Exception;
@@ -125,44 +186,7 @@ namespace QuickAcid
 			Exception = exception;
 		}
 
-		public bool ShrinkRun(object key, object value)
-		{
-			Verifying = true;
-			Shrinking = false;
-			Reporting = false;
-			var tempMemory = TempMemory;
-			Failed = false;
-			TempMemory = new GlobalMemory();
-
-			var failingSpec = FailingSpec;
-			var exception = Exception;
-			var runNumber = RunNumber;
-			var oldVal = Memory.Get<object>(key);
-			Memory.Set(key, value);
-			foreach (var run in Runs)
-			{
-				RunNumber = run;
-				Runner(this);
-			}
-			
-			var failed = Failed;
-
-			RunNumber = runNumber;
-			Failed = false;
-			FailingSpec = failingSpec;
-			Exception = exception;
-
-			Verifying = false;
-			Shrinking = true;
-
-			Memory.Set(key, oldVal);
-			TempMemory = tempMemory;
-			return failed;
-		}
-
-		private StringBuilder reportBuilder;
-
-		public void Report()
+		private void Report()
 		{
 			reportBuilder = new StringBuilder();
 			reportBuilder.AppendLine();
@@ -190,24 +214,5 @@ namespace QuickAcid
 			}
 			throw new FalsifiableException(reportBuilder.ToString());
 		}
-
-		public void LogReport(string report)
-		{
-			reportBuilder.AppendLine(report);
-		}
-
-		public bool IsNormalRun()
-		{
-			return (Verifying == false && Shrinking == false && Reporting == false);
-		}
-	}
-
-	public class FalsifiableException : Exception
-	{
-		public FalsifiableException(string message)
-			: base(message) { }
-
-		public FalsifiableException(string message, Exception exception)
-			: base(message, exception) { }
 	}
 }

@@ -56,11 +56,11 @@ namespace QuickAcid
 		}
 	}
 
-	public class GlobalMemory
+	public class TempMemory
 	{
 		private Dictionary<object, object> Dictionary { get; set; }
 
-		public GlobalMemory()
+		public TempMemory()
 		{
 			Dictionary = new Dictionary<object, object>();
 		}

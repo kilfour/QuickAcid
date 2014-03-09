@@ -20,8 +20,7 @@ namespace QuickAcid
 						}
 						catch (Exception exception)
 						{
-							s.Failed = true;
-							s.Exception = exception;
+							s.FailedWithException(exception);
 							return new QAcidResult<TOutput>(s, default(TOutput));
 						}
 					};

@@ -8,7 +8,7 @@ namespace QuickAcid
 		{
 			for (int i = 0; i < loops; i++)
 			{
-				var state = new QAcidState {Runner = runner};
+				var state = new QAcidState(runner);
 				state.Run(actions);
 				if (state.Failed)
 					break;

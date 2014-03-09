@@ -29,8 +29,7 @@ namespace QuickAcid
 			       		var result = func();
 			       		if (!result)
 			       		{
-							s.FailingSpec = key;
-			       			s.Failed = true;
+							s.SpecFailed(key);
 			       		}
 			       		return new QAcidResult<Unit>(s, Unit.Instance);
 			       	};
