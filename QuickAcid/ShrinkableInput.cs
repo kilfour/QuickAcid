@@ -71,7 +71,7 @@ namespace QuickAcid
 				var before = theList[ix];
 				var primitiveVals = new[] {-1, 0, 1};
 				var removed = false;
-				foreach (var primitiveVal in primitiveVals)
+				foreach (var primitiveVal in primitiveVals.Where(p => !p.Equals(before)))
 				{
 					theList[ix] = primitiveVal;
 					var shrinkstate = state.ShrinkRun(key, theList);
@@ -91,7 +91,7 @@ namespace QuickAcid
 			return string.Format("[ {0} ]", string.Join(", ", theList.Select(v => v.ToString())));
 		}
 
-		private static string ShrinkPrimitive(QAcidState state, object key, object value, object[] primitiveVals)
+		private static string ShrinkPrimitive(QAcidState state, object key, object value, IEnumerable<object> primitiveVals)
 		{
 			return
 				primitiveVals
