@@ -5,7 +5,7 @@ namespace QuickAcid
 {
 	public class Memory
 	{
-		public QAcidState state;
+		private readonly QAcidState state;
 
 		private Dictionary<int, Dictionary<object, object>> MemoryPerRun { get; set; }
 

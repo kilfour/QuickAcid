@@ -10,37 +10,32 @@ namespace QuickAcid
 	{
 		public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator)
 		{
-			return ShrinkableInput(generator, key);
-		}
-
-		public static QAcidRunner<T> ShrinkableInput<T>(this Generator<T> generator, object key)
-		{
 			return state =>
-			{
-				if (state.Reporting)
-				{
-					var shrunk = state.Shrunk.Get<string>(key);
-					if(shrunk!= "Irrelevant")
-						state.LogReport(string.Format("'{0}' : {1}.", key, shrunk));
-					return new QAcidResult<T>(state, state.Memory.Get<T>(key));
-				}
+			       	{
+			       		if (state.Reporting)
+			       		{
+			       			var shrunk = state.Shrunk.Get<string>(key);
+			       			if(shrunk!= "Irrelevant")
+			       				state.LogReport(string.Format("'{0}' : {1}.", key, shrunk));
+			       			return new QAcidResult<T>(state, state.Memory.Get<T>(key));
+			       		}
 
-				if (state.Shrinking && !state.Shrunk.ContainsKey(key))
-				{
-					var value = state.Memory.Get<T>(key);
-					ShrinkInput(state, key, value);
-					return new QAcidResult<T>(state, state.Memory.Get<T>(key));
-				}
+			       		if (state.Shrinking && !state.Shrunk.ContainsKey(key))
+			       		{
+			       			var value = state.Memory.Get<T>(key);
+			       			ShrinkInput(state, key, value);
+			       			return new QAcidResult<T>(state, state.Memory.Get<T>(key));
+			       		}
 
-				if (state.Verifying)
-				{
-					return new QAcidResult<T>(state, state.Memory.Get<T>(key));
-				}
+			       		if (state.Verifying)
+			       		{
+			       			return new QAcidResult<T>(state, state.Memory.Get<T>(key));
+			       		}
 
-				var value2 = generator.Generate();
-				state.Memory.Set(key, value2);
-				return new QAcidResult<T>(state, value2);
-			};
+			       		var value2 = generator.Generate();
+			       		state.Memory.Set(key, value2);
+			       		return new QAcidResult<T>(state, value2);
+			       	};
 		}
 
 		private readonly static Dictionary<Type, object[]> PrimitiveValues = 

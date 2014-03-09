@@ -6,21 +6,17 @@ namespace QuickAcid
 	{
 		public static QAcidRunner<T> OnceOnlyInput<T>(this string key, Func<T> func)
 		{
-			return OnceOnlyInput((object) key, func);
-		}
-
-		public static QAcidRunner<T> OnceOnlyInput<T>(object key, Func<T> func)
-		{
-			return s =>
-			       	{
-						var value = s.TempMemory.Get(key, func());
+			return
+				s =>
+					{
+						var value = s.TempMemory.Get((object) key, func());
 						if (s.Reporting)
 						{
 							//Console.WriteLine("{0} : {1}", key.ToString(), value.ToString());
 							return new QAcidResult<T>(s, value);
 						}
-			       		return new QAcidResult<T>(s, value);
-			       	};
+						return new QAcidResult<T>(s, value);
+					};
 		}
 	}
 }

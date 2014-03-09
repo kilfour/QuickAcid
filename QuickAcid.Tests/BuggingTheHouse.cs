@@ -20,12 +20,12 @@ namespace QuickAcid.Tests
 		public void BugHouse1Error()
 		{
 			var test =
-				from a in MGen.Int(0, 10).ShrinkableInput("a")
-				from bughouse in QAcid.OnceOnlyInput("bughouse", () => new BugHouse1())
-				from output in QAcid.Act("bughouse.Run", () => bughouse.Run(a))
-				from spec in QAcid.Spec("returns true", () => output)
+				from a in "a".ShrinkableInput(MGen.Int(0, 10))
+				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse1())
+				from output in "bughouse.Run".Act(() => bughouse.Run(a))
+				from spec in "returns true".Spec(() => output)
 				select Unit.Instance;
-			test.Verify(10, 100);
+			test.Verify(100, 100);
 		}
 
 		public class BugHouse2
@@ -42,12 +42,12 @@ namespace QuickAcid.Tests
 		public void BugHouse2Error()
 		{
 			var test =
-				from a in MGen.Int(0, 10).ShrinkableInput("a")
-				from bughouse in QAcid.OnceOnlyInput("bughouse", () => new BugHouse2())
-				from output in QAcid.Act("bughouse.Run", () => bughouse.Run(a))
-				from spec in QAcid.Spec("returns true", () => output)
+				from a in "a".ShrinkableInput(MGen.Int(0, 10))
+				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse2())
+				from output in "bughouse.Run".Act(() => bughouse.Run(a))
+				from spec in "returns true".Spec(() => output)
 				select Unit.Instance;
-			test.Verify(10, 100);
+			test.Verify(100, 100);
 		}
 
 		public class BugHouse3
@@ -65,12 +65,12 @@ namespace QuickAcid.Tests
 		public void BugHouse3Error()
 		{
 			var test =
-			    from a in MGen.Int(0, 10).ShrinkableInput("a")
-				from bughouse in QAcid.OnceOnlyInput("bughouse", () => new BugHouse3())
-				from output in QAcid.Act("bughouse.Run", () => bughouse.Run(a))
-				from spec in QAcid.Spec("returns true", () => output)
+				from a in "a".ShrinkableInput(MGen.Int(0, 10))
+				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse3())
+				from output in "bughouse.Run".Act(() => bughouse.Run(a))
+				from spec in "returns true".Spec(() => output)
 				select Unit.Instance;
-			test.Verify(10, 100);
+			test.Verify(100, 100);
 		}
 	}
 }

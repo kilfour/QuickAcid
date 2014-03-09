@@ -16,7 +16,7 @@ namespace QuickAcid
 		public Memory Memory { get; set; }
 		public GlobalMemory TempMemory { get; set; }
 
-		public object FailingSpec { get; set; }
+		public string FailingSpec { get; set; }
 		public bool Failed { get; set; }
 
 		public bool Shrinking { get; set; }
@@ -137,7 +137,7 @@ namespace QuickAcid
 			var failingSpec = FailingSpec;
 			var exception = Exception;
 			var runNumber = RunNumber;
-
+			var oldVal = Memory.Get<object>(key);
 			Memory.Set(key, value);
 			foreach (var run in Runs)
 			{
@@ -154,8 +154,8 @@ namespace QuickAcid
 
 			Verifying = false;
 			Shrinking = true;
-			
-			Memory.Set(key, value);
+
+			Memory.Set(key, oldVal);
 			TempMemory = tempMemory;
 			return failed;
 		}
