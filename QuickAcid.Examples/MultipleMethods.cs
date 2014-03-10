@@ -3,7 +3,7 @@ using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using Xunit;
 
-namespace QuickAcid.Tests
+namespace QuickAcid.Examples
 {
 	public class MultipleMethods
 	{
@@ -38,12 +38,10 @@ namespace QuickAcid.Tests
 						from runInt in "bughouse.RunInt".Act(() => bughouse.RunInt(i))
 						from specOne in "returns true".Spec(() => runInt)
 						select Unit.Instance,
-
 						from str in "string".ShrinkableInput(MGen.String(1, 1))
 						from runString in "bughouse.RunString".Act(() => bughouse.RunString(str))
 						from specTwo in "returns true".Spec(() => runString)
 						select Unit.Instance)
-
 				select Unit.Instance;
 
 			test.Verify(100, 100);

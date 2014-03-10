@@ -4,7 +4,7 @@ using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using Xunit;
 
-namespace QuickAcid.Tests
+namespace QuickAcid.Examples
 {
 	public class DeletingFromAList
 	{
@@ -32,7 +32,7 @@ namespace QuickAcid.Tests
 
 			var test =
 				from list in "input list".ShrinkableInput(ints)
-				from toRemove in "to remove".ToInput(intBetweenZeroAndTen)
+				from toRemove in "to remove".ShrinkableInput(intBetweenZeroAndTen)
 				from output in "listDeleter.DoingMyThing".Act(() => listDeleter.DoingMyThing(list, toRemove))
 				from spec in "int removed".Spec(() => !output.Contains(toRemove))
 				select Unit.Instance;

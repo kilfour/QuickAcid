@@ -41,11 +41,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuggingTheHouse.cs" />
-    <Compile Include="MultipleMethods.cs" />
-    <Compile Include="GeneratorExt.cs" />
-    <Compile Include="MemoTest.cs" />
-    <Compile Include="DeletingFromAList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

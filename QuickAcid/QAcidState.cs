@@ -120,7 +120,7 @@ namespace QuickAcid
 
 		private void HandleFailure()
 		{
-			ShrinkActions();
+			//ShrinkActions();
 			ShrinkInputs();
 			Report();
 		}
@@ -212,6 +212,7 @@ namespace QuickAcid
 			{
 				throw new FalsifiableException(reportBuilder.ToString(), exception);
 			}
+
 			throw new FalsifiableException(reportBuilder.ToString());
 		}
 	}

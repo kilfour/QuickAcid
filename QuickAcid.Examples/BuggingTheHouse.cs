@@ -3,7 +3,7 @@ using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using Xunit;
 
-namespace QuickAcid.Tests
+namespace QuickAcid.Examples
 {
 	public class BuggingTheHouse
 	{

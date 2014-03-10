@@ -1,4 +1,5 @@
 ﻿using System;
+using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid
 {
@@ -11,8 +12,8 @@ namespace QuickAcid
 					{
 						if (s.Reporting)
 						{
-							s.LogReport(string.Format("Executed : '{0}'.", ((object) key).ToString()));
-							return new QAcidResult<TOutput>(s, default(TOutput));
+							s.LogReport(string.Format("Executed : '{0}'.", key.ToString()));
+							//return new QAcidResult<TOutput>(s, default(TOutput));
 						}
 						try
 						{
@@ -24,6 +25,29 @@ namespace QuickAcid
 							return new QAcidResult<TOutput>(s, default(TOutput));
 						}
 					};
+		}
+
+		public static QAcidRunner<Unit> Act(this string key, Action action)
+		{
+			return
+				s =>
+				{
+					if (s.Reporting)
+					{
+						s.LogReport(string.Format("Executed : '{0}'.", key.ToString()));
+						return new QAcidResult<Unit>(s, Unit.Instance);
+					}
+					try
+					{
+						action();
+						return new QAcidResult<Unit>(s, Unit.Instance);
+					}
+					catch (Exception exception)
+					{
+						s.FailedWithException(exception);
+						return new QAcidResult<Unit>(s, Unit.Instance);
+					}
+				};
 		}
 	}
 }
