@@ -17,19 +17,19 @@ namespace QuickAcid
 			       			var shrunk = state.Shrunk.Get<string>(key);
 			       			if(shrunk!= "Irrelevant")
 			       				state.LogReport(string.Format("'{0}' : {1}.", key, shrunk));
-			       			return new QAcidResult<T>(state, state.Memory.Get<T>(key));
+							return new QAcidResult<T>(state, state.Memory.Get<T>(key)) { Key = key };
 			       		}
 
 			       		if (state.Shrinking && !state.Shrunk.ContainsKey(key))
 			       		{
 			       			var value = state.Memory.Get<T>(key);
 			       			ShrinkInput(state, key, value);
-			       			return new QAcidResult<T>(state, state.Memory.Get<T>(key));
+							return new QAcidResult<T>(state, state.Memory.Get<T>(key)) { Key = key };
 			       		}
 
 			       		if (state.Verifying)
 			       		{
-			       			return new QAcidResult<T>(state, state.Memory.Get<T>(key));
+							return new QAcidResult<T>(state, state.Memory.Get<T>(key)) { Key = key };
 			       		}
 
 			       		var value2 = generator.Generate();

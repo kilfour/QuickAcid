@@ -13,7 +13,7 @@ namespace QuickAcid
 						if (s.Reporting)
 						{
 							s.LogReport(string.Format("Executed : '{0}'.", key.ToString()));
-							//return new QAcidResult<TOutput>(s, default(TOutput));
+							return new QAcidResult<TOutput>(s, default(TOutput));
 						}
 						try
 						{
@@ -21,7 +21,7 @@ namespace QuickAcid
 						}
 						catch (Exception exception)
 						{
-							s.FailedWithException(exception);
+                            s.FailedWithException(exception);
 							return new QAcidResult<TOutput>(s, default(TOutput));
 						}
 					};

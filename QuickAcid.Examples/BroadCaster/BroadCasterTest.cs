@@ -12,7 +12,7 @@ namespace QuickAcid.Examples.BroadCaster
 {
 	public class BroadCasterTest
 	{
-		[Fact]
+		[Fact]//(Skip="I reckon we have some thread safety issues in QAcidState")]
 		public void Acid()
 		{
 			var allTogether =

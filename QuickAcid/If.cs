@@ -1,5 +1,4 @@
 ﻿using System;
-using QuickMGenerate;
 
 namespace QuickAcid
 {
@@ -15,5 +14,16 @@ namespace QuickAcid
 					return new QAcidResult<T>(s, default(T));
 				};
 		}
+
+        public static QAcidRunner<T> If<T>(this QAcidRunner<T> runner, Func<bool> predicate)
+        {
+            return
+                s =>
+                {
+                    if (predicate())
+                        return runner(s);
+                    return new QAcidResult<T>(s, default(T));
+                };
+        }
 	}
 }

@@ -27,6 +27,8 @@ namespace QuickAcid
 		public bool Failed { get; private set; }
 		public Exception Exception { get; private set; }
 
+		public bool DontReport { get; set; }
+
 
 		private StringBuilder reportBuilder;
 
@@ -103,6 +105,22 @@ namespace QuickAcid
 
 		public void FailedWithException(Exception exception)
 		{
+            if (Verifying)
+            {
+                if (Exception == null)
+                {
+                    BreakRun = true;
+                    Failed = true;
+                    return;
+                }
+
+                if (Exception.GetType() != exception.GetType())
+                {
+                    BreakRun = true;
+                    Failed = true;
+                    return;
+                }
+            }
 			Failed = true;
 			Exception = exception;
 		}
@@ -115,21 +133,23 @@ namespace QuickAcid
 
 		public void LogReport(string report)
 		{
-			reportBuilder.AppendLine(report);
+			if(!DontReport)
+				reportBuilder.AppendLine(report);
 		}
 
 		private void HandleFailure()
 		{
-			//ShrinkActions();
+			ShrinkActions();
 			ShrinkInputs();
 			Report();
 		}
-
+        public bool BreakRun { get; private set; }
 		private void ShrinkActions()
 		{
 			Verifying = true;
 			Shrinking = false;
 			Reporting = false;
+		    BreakRun = false;
 
 			Failed = false;
 			var failingSpec = FailingSpec;
@@ -138,7 +158,7 @@ namespace QuickAcid
 			var max = Runs.Max(); 
 			var current = 0;
 
-			while (current < max)
+			while (current <= max)
 			{
 				Failed = false;
 				TempMemory = new TempMemory();
@@ -150,8 +170,10 @@ namespace QuickAcid
 					RunNumber = run;
 					if (run != current)
 						Runner(this);
+				    if (BreakRun)
+				        break;
 				}
-				if (Failed)
+				if (Failed && !BreakRun)
 				{
 					Runs.Remove(current);
 				}

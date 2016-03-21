@@ -40,6 +40,8 @@
   <ItemGroup>
     <Compile Include="Act.cs" />
     <Compile Include="Choose.cs" />
+    <Compile Include="Build.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="If.cs" />
     <Compile Include="FalsifiableException.cs" />
     <Compile Include="ShrinkableInput.cs" />

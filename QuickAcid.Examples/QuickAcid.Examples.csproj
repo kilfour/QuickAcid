@@ -54,6 +54,7 @@
     <Compile Include="DeletingFromAList.cs" />
     <Compile Include="MultipleMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ListOfObjects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QuickAcid\QuickAcid.csproj">

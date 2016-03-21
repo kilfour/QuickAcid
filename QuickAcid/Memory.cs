@@ -72,6 +72,13 @@ namespace QuickAcid
 			return (T)Dictionary[key];
 		}
 
+        public T Get<T>(object key, Func<T> newValue)
+        {
+            if (!Dictionary.ContainsKey(key))
+                Dictionary[key] = newValue();
+            return (T)Dictionary[key];
+        }
+
 		public T Get<T>(object key)
 		{
 			return (T)Dictionary[key];
