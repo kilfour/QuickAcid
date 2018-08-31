@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcidReport.cs" />
     <Compile Include="Act.cs" />
     <Compile Include="Choose.cs" />
     <Compile Include="Build.cs" />

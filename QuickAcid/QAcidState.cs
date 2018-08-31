@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid
@@ -150,8 +149,8 @@ namespace QuickAcid
 
         private void HandleFailure()
         {
-            //ShrinkActions();
-            //ShrinkInputs();
+            ShrinkActions();
+            ShrinkInputs();
             Report();
         }
 
@@ -249,53 +248,6 @@ namespace QuickAcid
             }
 
             throw new FalsifiableException(report.ToString());
-        }
-    }
-
-    public class AcidReport
-    {
-        private List<object> entries = new List<object>();
-
-        public void AddEntry(AcidReportEntry reportEntry)
-        {
-            entries.Add(reportEntry);
-        }
-    }
-
-    public abstract class AcidReportEntry
-    {
-        protected readonly string Key;
-        public Exception Exception;
-        public FalsifiableException FalsifiableException;
-
-        protected AcidReportEntry(string key)
-        {
-            Key = key;
-        }
-    }
-
-    public class AcidReportActEntry : AcidReportEntry
-    {
-        public AcidReportActEntry(string key) : base(key)
-        {
-        }
-    }
-
-    public class AcidReportInputEntry : AcidReportEntry
-    {
-        public object Value;
-
-        public AcidReportInputEntry(string key) : base(key)
-        {
-        }
-    }
-
-    public class AcidReportSpecEntry : AcidReportEntry
-    {
-        public object Value;
-
-        public AcidReportSpecEntry(string key) : base(key)
-        {
         }
     }
 }
