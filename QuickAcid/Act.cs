@@ -25,7 +25,7 @@ namespace QuickAcid
 					};
 		}
 
-		public static QAcidRunner<Unit> Act(this string key, Action action)
+		public static QAcidRunner<Acid> Act(this string key, Action action)
 		{
 			return
 			    state =>
@@ -34,13 +34,13 @@ namespace QuickAcid
 					{
 						action();
 					    state.LogReport(new QAcidReportActEntry(key));
-                        return new QAcidResult<Unit>(state, Unit.Instance);
+                        return new QAcidResult<Acid>(state, Acid.Test);
 					}
 					catch (Exception exception)
 					{
 					    state.FailedWithException(exception);
 					    state.LogReport(new QAcidReportActEntry(key, exception));
-                        return new QAcidResult<Unit>(state, Unit.Instance);
+                        return new QAcidResult<Acid>(state, Acid.Test);
 					}
 				};
 		}

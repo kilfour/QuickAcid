@@ -1,5 +1,4 @@
-﻿using System;
-using QuickAcid.Tests.ZheZhools;
+﻿using QuickAcid.Tests.ZheZhools;
 using Xunit;
 
 namespace QuickAcid.Tests

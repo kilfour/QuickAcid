@@ -13,7 +13,7 @@ namespace QuickAcid.Examples.BroadCaster
 	public class BroadCasterTest
 	{
 		[Fact]//(Skip="I reckon we have some thread safety issues in QAcidState")]
-		public void Acid()
+		public void Test()
 		{
 			var allTogether =
 				from info in "thread info".OnceOnlyInput(() => new ThreadInfo())
@@ -24,7 +24,7 @@ namespace QuickAcid.Examples.BroadCaster
 					ClientFaults(broadcaster),
 					Broadcast(broadcaster, info),
 					StopBroadcasting(broadcaster, info))
-				select Unit.Instance;
+				select Acid.Test;
 
 			allTogether.Verify(100, 20);
 		}
@@ -36,7 +36,7 @@ namespace QuickAcid.Examples.BroadCaster
 			public Exception ExceptionFromThread;
 		}
 
-		private static QAcidRunner<Unit> RegisterClient(IClientProxyFactory clientFactory, Broadcaster broadcaster)
+		private static QAcidRunner<Acid> RegisterClient(IClientProxyFactory clientFactory, Broadcaster broadcaster)
 		{
 			return
 				from sleepTime in "sleeptime".Input(MGen.Int(0, 10))
@@ -56,10 +56,10 @@ namespace QuickAcid.Examples.BroadCaster
 						broadcaster.Register();
 					})
 				from spec in "client is added to broadcaster".Spec(() => GetBroadcastersClients(broadcaster).Contains(client))
-				select Unit.Instance;
+				select Acid.Test;
 		}
 
-		private static QAcidRunner<Unit> ClientFaults(Broadcaster broadcaster)
+		private static QAcidRunner<Acid> ClientFaults(Broadcaster broadcaster)
 		{
 			return
 				from canAct in
@@ -69,11 +69,11 @@ namespace QuickAcid.Examples.BroadCaster
 						from raise in "raise fault".Act(() => client.Raise(c => c.Faulted += null, client, EventArgs.Empty))
 						from spec in"client is removed from broadcaster"
 							.Spec(() => !GetBroadcastersClients(broadcaster).Contains(client))
-						select Unit.Instance)
-				select Unit.Instance;
+						select Acid.Test)
+				select Acid.Test;
 		}
 
-		private static QAcidRunner<Unit> Broadcast(Broadcaster broadcaster, ThreadInfo info)
+		private static QAcidRunner<Acid> Broadcast(Broadcaster broadcaster, ThreadInfo info)
 		{
 			return
 				from canact in
@@ -93,11 +93,11 @@ namespace QuickAcid.Examples.BroadCaster
 									info.Thread.Start();
 								})
 						from spec in "Broadcast : No Exception is thrown".Spec(() => info.ExceptionFromThread == null)
-						select Unit.Instance)
-				select Unit.Instance;
+						select Acid.Test)
+				select Acid.Test;
 		}
 
-		private static QAcidRunner<Unit> StopBroadcasting(Broadcaster broadcaster, ThreadInfo info)
+		private static QAcidRunner<Acid> StopBroadcasting(Broadcaster broadcaster, ThreadInfo info)
 		{
 			return
 				from canact in
@@ -111,8 +111,8 @@ namespace QuickAcid.Examples.BroadCaster
 									info.ThreadSwitch = false;
 								})
 						from spec in "StopBroadcasting : No Exception is thrown".Spec(() => info.ExceptionFromThread == null)
-						select Unit.Instance)
-				select Unit.Instance;
+						select Acid.Test)
+				select Acid.Test;
 		}
 
 		private static Exception GetExceptionThrownBy(Action yourCode)

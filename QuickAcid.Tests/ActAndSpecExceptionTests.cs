@@ -14,7 +14,7 @@ namespace QuickAcid.Tests
                 AcidTestRun.FailedRun(
                     from foo in "foo".Act(() => { if (true) throw new Exception();})
                     from spec in "spec".Spec(() => true)
-                    select Unit.Instance);
+                    select Acid.Test);
 
             run.NumberOfReportEntriesIs(1);
 
@@ -30,7 +30,7 @@ namespace QuickAcid.Tests
                 Assert.Throws<Exception>(() => (
                     from foo in "foo".Act(() => true)
                     from spec in "spec".Spec(Throw)
-                    select Unit.Instance
+                    select Acid.Test
                 ).Verify(1, 1));
             Assert.IsNotType<FalsifiableException>(ex);
             Assert.Contains("QuickAcid.Tests.ActAndSpecExceptionTests.Throw()", ex.StackTrace);

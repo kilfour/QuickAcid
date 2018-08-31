@@ -35,7 +35,7 @@ namespace QuickAcid.Examples
 				from toRemove in "to remove".ShrinkableInput(intBetweenZeroAndTen)
 				from output in "listDeleter.DoingMyThing".Act(() => listDeleter.DoingMyThing(list, toRemove))
 				from spec in "int removed".Spec(() => !output.Contains(toRemove))
-				select Unit.Instance;
+				select Acid.Test;
 
 			test.Verify(10, 10);
 		}

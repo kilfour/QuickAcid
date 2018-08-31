@@ -1,6 +1,4 @@
-﻿using QuickMGenerate;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
     public static partial class QAcid
     {

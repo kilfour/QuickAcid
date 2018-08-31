@@ -1,6 +1,5 @@
 ﻿using System;
 using QuickAcid.Tests.ZheZhools;
-using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using Xunit;
 
@@ -23,7 +22,7 @@ namespace QuickAcid.Tests.Bugs
 		    var run = AcidTestRun.FailedRun(3, 
                 from bugHouse in "BugHouse".OnceOnlyInput(() => new BugHouse())
                 from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
-                select Unit.Instance);
+                select Acid.Test);
 		    run.NumberOfReportEntriesIs(2);
 		    var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
 		    Assert.Equal("BugHouse.Run", entry.Key);

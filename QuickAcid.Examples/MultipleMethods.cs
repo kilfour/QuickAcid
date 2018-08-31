@@ -37,12 +37,12 @@ namespace QuickAcid.Examples
 						from i in "int".ShrinkableInput(MGen.Int(0, 10))
 						from runInt in "bughouse.RunInt".Act(() => bughouse.RunInt(i))
 						from specOne in "returns true".Spec(() => runInt)
-						select Unit.Instance,
+						select Acid.Test,
 						from str in "string".ShrinkableInput(MGen.String(1, 1))
 						from runString in "bughouse.RunString".Act(() => bughouse.RunString(str))
 						from specTwo in "returns true".Spec(() => runString)
-						select Unit.Instance)
-				select Unit.Instance;
+						select Acid.Test)
+				select Acid.Test;
 
 			test.Verify(100, 100);
 		}

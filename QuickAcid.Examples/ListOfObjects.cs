@@ -14,31 +14,31 @@ namespace QuickAcid.Examples
             TheRun.Verify(10, 20);
         }
 
-        private static readonly QAcidRunner<Unit> TheRun =
+        private static readonly QAcidRunner<Acid> TheRun =
             from container in "setup".OnceOnlyInput(() => new TheContainer())
             from addRemove in "add/remove"
                 .Choose(
                     Add(container),
                     Remove(container))
-            select Unit.Instance;
+            select Acid.Test;
 
-        private static QAcidRunner<Unit> Add(TheContainer container)
+        private static QAcidRunner<Acid> Add(TheContainer container)
         {
             return 
                 from input in "add input".Input(() => MGen.One<TheObject>().Generate())
                 from add in "add".Act(() => container.Add(input))
                 from added in "added".Spec((() => container.List.Contains(input)))
-                select Unit.Instance;
+                select Acid.Test;
         }
 
-        private static QAcidRunner<Unit> Remove(TheContainer container)
+        private static QAcidRunner<Acid> Remove(TheContainer container)
         {
             return (
                 from index in "remove index".Input(MGen.Int(0, container.List.Count - 1))
                 from input in "remove get at index".Input(() => container.List[index])
                 from remove in "remove".Act(() => container.Remove(input))
                 from removed in "removed".Spec(() => !container.List.Contains(input))
-                select Unit.Instance)
+                select Acid.Test)
                 .If(() => container.List.Any());
         }
 

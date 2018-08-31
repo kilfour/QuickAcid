@@ -1,6 +1,5 @@
 ﻿using System;
 using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
 using Xunit;
 
 namespace QuickAcid.Examples
@@ -24,7 +23,7 @@ namespace QuickAcid.Examples
 				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse1())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
-				select Unit.Instance;
+				select Acid.Test;
 			test.Verify(100, 100);
 		}
 
@@ -46,7 +45,7 @@ namespace QuickAcid.Examples
 				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse2())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
-				select Unit.Instance;
+				select Acid.Test;
 			test.Verify(100, 100);
 		}
 
@@ -69,7 +68,7 @@ namespace QuickAcid.Examples
 				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse3())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
-				select Unit.Instance;
+				select Acid.Test;
 			test.Verify(100, 100);
 		}
 	}

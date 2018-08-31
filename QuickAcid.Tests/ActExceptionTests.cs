@@ -27,7 +27,7 @@ namespace QuickAcid.Tests
                 AcidTestRun.FailedRun(
                     from foo in "foo".Act(() => throw new Exception())
                     from bar in "bar".Act(() => { })
-                    select Unit.Instance);
+                    select Acid.Test);
 
             run.NumberOfReportEntriesIs(1);
 
@@ -43,7 +43,7 @@ namespace QuickAcid.Tests
                 AcidTestRun.FailedRun(
                     from foo in "foo".Act(() => { })
                     from bar in "bar".Act(() => throw new Exception())
-                    select Unit.Instance);
+                    select Acid.Test);
 
 
             // -------------------------------------------------------------------------

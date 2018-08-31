@@ -19,7 +19,7 @@ namespace QuickAcid.Tests
                         if (input == 1) throw new Exception();
                     })
                     from spec in "spec".Spec(() => true)
-                    select Unit.Instance);
+                    select Acid.Test);
 
             run.NumberOfReportEntriesIs(2);
 

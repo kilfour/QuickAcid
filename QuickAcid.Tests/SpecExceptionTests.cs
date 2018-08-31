@@ -12,7 +12,7 @@ namespace QuickAcid.Tests
             var ex =
                 Assert.Throws<Exception>(() => (
                     from spec in "spec".Spec(Throw)
-                    select Unit.Instance
+                    select Acid.Test
                 ).Verify(1, 1));
             Assert.IsNotType<FalsifiableException>(ex);
             Assert.Contains("QuickAcid.Tests.SpecExceptionTests.Throw()", ex.StackTrace);

@@ -7,7 +7,7 @@ namespace QuickAcid
 {
     public class QAcidState
     {
-        public QAcidRunner<Unit> Runner { get; private set; }
+        public QAcidRunner<Acid> Runner { get; private set; }
 
         public int RunNumber { get; private set; }
         public List<int> Runs { get; private set; }
@@ -29,7 +29,7 @@ namespace QuickAcid
 
         private QAcidReport report = new QAcidReport();
 
-        public QAcidState(QAcidRunner<Unit> runner)
+        public QAcidState(QAcidRunner<Acid> runner)
         {
             Runner = runner;
             Runs = new List<int>();
@@ -82,21 +82,6 @@ namespace QuickAcid
             }
 
             var failed = Failed;
-            //if (exception != null)
-            //{
-            //    if (Exception == null)
-            //    {
-            //        failed = true;
-            //    }
-            //    else if (exception.Message != Exception.Message)
-            //    {
-            //        failed = true;
-            //    }
-            //}
-            //else if (Exception != null)
-            //{
-            //    failed = true;
-            //}
             RunNumber = runNumber;
             Failed = false;
             FailingSpec = failingSpec;

@@ -18,7 +18,7 @@ namespace QuickAcid.Tests
                     {
                         if (true) throw new Exception();
                     })
-                    select Unit.Instance);
+                    select Acid.Test);
 
             run.NumberOfReportEntriesIs(1);
 
