@@ -10,7 +10,7 @@ namespace QuickAcid.Tests
         public void TwoActionsExceptionThrownOnFirst()
         {
             var run =
-                AcidTestRun.FailedRun(
+                AcidTestRun.FailedRun(2,
                     "foobar".Sequence(
                         "foo".Act(() => throw new Exception() ),
                         "bar".Act(() => { })));

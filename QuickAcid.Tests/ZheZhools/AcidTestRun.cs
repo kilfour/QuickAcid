@@ -33,5 +33,10 @@ namespace QuickAcid.Tests.ZheZhools
             var ex = Assert.Throws<FalsifiableException>(() => test.Verify(1, numberOfActions));
             return new AcidTestRun(ex.AcidReport);
         }
+
+        public static void SuccessfullRun(QAcidRunner<Unit> test)
+        {
+            test.Verify(1, 1);
+        }
     }
 }

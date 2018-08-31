@@ -14,7 +14,7 @@ namespace QuickAcid
 		            {
 		                if (state.FailingSpec == key)
 		                {
-		                    state.LogReport(new AcidReportInputEntry(key));
+		                    state.LogReport(new AcidReportSpecEntry(key));
 		                }
 		                return new QAcidResult<Unit>(state, Unit.Instance);
 		            }
