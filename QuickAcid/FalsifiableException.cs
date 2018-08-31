@@ -4,7 +4,9 @@ namespace QuickAcid
 {
 	public class FalsifiableException : Exception
 	{
-		public FalsifiableException(string message)
+        public  AcidReport AcidReport { get; set; }
+
+        public FalsifiableException(string message)
 			: base(message) { }
 
 		public FalsifiableException(string message, Exception exception)

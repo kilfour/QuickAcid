@@ -6,9 +6,11 @@ namespace QuickAcid
 {
     public class AcidReport
     {
-        private List<object> entries = new List<object>();
+        private readonly List<object> entries = new List<object>();
 
-        public void AddEntry(AcidReportEntry reportEntry)
+        public List<object> Entries { get { return entries; } }
+
+        public virtual void AddEntry(AcidReportEntry reportEntry)
         {
             entries.Add(reportEntry);
         }
@@ -25,25 +27,47 @@ namespace QuickAcid
         }
     }
 
+    public class DevNullReport : AcidReport
+    {
+        public override void AddEntry(AcidReportEntry reportEntry) { }
+    }
+
     public abstract class AcidReportEntry
     {
-        protected readonly string Key;
+        protected readonly string TheKey;
+        public string Key => TheKey;
+
         protected AcidReportEntry(string key)
         {
-            Key = key;
+            TheKey = key;
         }
     }
 
     public class AcidReportActEntry : AcidReportEntry
     {
-        public AcidReportActEntry(string key)
-            : base(key) { }
+        public Exception Exception { get; set; }
+
+        public AcidReportActEntry(string key) : base(key)
+        {
+            
+        }
+
+        public AcidReportActEntry(string key, Exception exception) : this(key)
+        {
+            Exception = exception;
+        }
 
         public override string ToString()
         {
             var stringBuilder = new StringBuilder($"Execute : {Key}");
             stringBuilder.AppendLine();
             stringBuilder.Append(" ---------------------------");
+            if (Exception != null)
+            {
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine("Exception thrown :");
+                stringBuilder.Append(Exception);
+            }
             return stringBuilder.ToString();
         }
     }

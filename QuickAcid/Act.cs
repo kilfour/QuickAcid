@@ -10,19 +10,17 @@ namespace QuickAcid
 			return
 				state =>
 					{
-						if (state.Reporting)
-						{
-						    state.LogReport(new AcidReportActEntry(key));
-                            return new QAcidResult<TOutput>(state, default(TOutput));
-						}
 						try
 						{
-							return new QAcidResult<TOutput>(state, func());
+							var result = new QAcidResult<TOutput>(state, func());
+						    state.LogReport(new AcidReportActEntry(key));
+						    return result;
 						}
 						catch (Exception exception)
 						{
 						    state.FailedWithException(exception);
-							return new QAcidResult<TOutput>(state, default(TOutput));
+						    state.LogReport(new AcidReportActEntry(key, exception));
+                            return new QAcidResult<TOutput>(state, default(TOutput));
 						}
 					};
 		}
@@ -30,22 +28,19 @@ namespace QuickAcid
 		public static QAcidRunner<Unit> Act(this string key, Action action)
 		{
 			return
-				s =>
+			    state =>
 				{
-					if (s.Reporting)
-					{
-					    s.LogReport(new AcidReportActEntry(key));
-                        return new QAcidResult<Unit>(s, Unit.Instance);
-					}
 					try
 					{
 						action();
-						return new QAcidResult<Unit>(s, Unit.Instance);
+					    state.LogReport(new AcidReportActEntry(key));
+                        return new QAcidResult<Unit>(state, Unit.Instance);
 					}
 					catch (Exception exception)
 					{
-						s.FailedWithException(exception);
-						return new QAcidResult<Unit>(s, Unit.Instance);
+					    state.FailedWithException(exception);
+					    state.LogReport(new AcidReportActEntry(key, exception));
+                        return new QAcidResult<Unit>(state, Unit.Instance);
 					}
 				};
 		}

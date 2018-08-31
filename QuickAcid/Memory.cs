@@ -38,7 +38,7 @@ namespace QuickAcid
 			}
 			catch (Exception)
 			{
-				//Console.WriteLine("Trying to get '{0}' for run '{1}'.", key, state.RunNumber);
+				//Console.WriteLine("Trying to get '{0}' for run '{1}'.", TheKey, state.RunNumber);
 				return default(T);
 			}
 			
@@ -46,7 +46,7 @@ namespace QuickAcid
 
 		public void Set<T>(object key, T value)
 		{
-			//Console.WriteLine("Wrote '{0}' to '{1}' for run '{2}'.", value, key, state.RunNumber);
+			//Console.WriteLine("Wrote '{0}' to '{1}' for run '{2}'.", value, TheKey, state.RunNumber);
 			GetThisRunsMemory()[key] = value;
 		}
 

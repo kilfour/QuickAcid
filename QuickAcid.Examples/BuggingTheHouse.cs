@@ -12,7 +12,7 @@ namespace QuickAcid.Examples
 			private int count;
 			public bool Run(int a)
 			{
-				if (count++ == 2 && a == 0) throw new Exception(); return true;
+				if (count++ == 2 && a == 1) throw new Exception(); return true;
 			}
 		}
 

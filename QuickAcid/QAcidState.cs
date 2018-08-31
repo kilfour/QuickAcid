@@ -26,7 +26,7 @@ namespace QuickAcid
         public bool Failed { get; private set; }
         public Exception Exception { get; private set; }
 
-        private AcidReport report;
+        private AcidReport report = new AcidReport();
 
         public QAcidState(QAcidRunner<Unit> runner)
         {
@@ -244,10 +244,10 @@ namespace QuickAcid
 
             if (Exception != null)
             {
-                throw new FalsifiableException(report.ToString(), exception);
+                throw new FalsifiableException(report.ToString(), exception) {AcidReport = report};
             }
 
-            throw new FalsifiableException(report.ToString());
+            throw new FalsifiableException(report.ToString()) { AcidReport = report };
         }
     }
 }
