@@ -19,7 +19,12 @@ namespace QuickAcid
 					if (s.Reporting)
 					{
 						var value1 = s.Memory.Get<T>(key);
-                        s.LogReport(string.Format("'{0}' : {1}.", key.ToString(), Equals(value1, default(T)) ? "" : value1.ToString()));
+					    var entry =
+					        new AcidReportInputEntry(key)
+					        {
+					            Value = value1
+                            };
+					    s.LogReport(entry);
 						return new QAcidResult<T>(s, value1) { Key = key };
 					}
 					if (s.Shrinking || s.Verifying)

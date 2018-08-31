@@ -16,13 +16,16 @@ namespace QuickAcid.Examples
 
         private static readonly QAcidRunner<Unit> TheRun =
             from container in "setup".OnceOnlyInput(() => new TheContainer())
-            from addRemove in "add/remove".Choose(Add(container), Remove(container))
+            from addRemove in "add/remove"
+                .Choose(
+                    Add(container),
+                    Remove(container))
             select Unit.Instance;
 
         private static QAcidRunner<Unit> Add(TheContainer container)
         {
             return 
-                from input in "add input".Act(() => MGen.One<TheObject>().Generate())
+                from input in "add input".Input(() => MGen.One<TheObject>().Generate())
                 from add in "add".Act(() => container.Add(input))
                 from added in "added".Spec((() => container.List.Contains(input)))
                 select Unit.Instance;
@@ -31,10 +34,10 @@ namespace QuickAcid.Examples
         private static QAcidRunner<Unit> Remove(TheContainer container)
         {
             return (
-                from index in "index".Input(MGen.Int(0, container.List.Count - 1))
-                from input in "remove input".Act(() => container.List[index])
+                from index in "remove index".Input(MGen.Int(0, container.List.Count - 1))
+                from input in "remove get at index".Input(() => container.List[index])
                 from remove in "remove".Act(() => container.Remove(input))
-                from removed in "removed".Spec((() => !container.List.Contains(input)))
+                from removed in "removed".Spec(() => !container.List.Contains(input))
                 select Unit.Instance)
                 .If(() => container.List.Any());
         }
@@ -65,6 +68,11 @@ namespace QuickAcid.Examples
         public class TheObject
         {
             public int AnInt { get; set; }
+
+            public override string ToString()
+            {
+                return AnInt.ToString();
+            }
         }
     }
 }

@@ -15,8 +15,15 @@ namespace QuickAcid
 			       		if (state.Reporting)
 			       		{
 			       			var shrunk = state.Shrunk.Get<string>(key);
-			       			if(shrunk!= "Irrelevant")
-			       				state.LogReport(string.Format("'{0}' : {1}.", key, shrunk));
+					           if (shrunk != "Irrelevant")
+					           {
+					               var entry =
+					                   new AcidReportInputEntry(key)
+					                   {
+					                       Value = shrunk
+                                       };
+					               state.LogReport(entry);
+                               }
 							return new QAcidResult<T>(state, state.Memory.Get<T>(key)) { Key = key };
 			       		}
 
@@ -93,6 +100,15 @@ namespace QuickAcid
 
 		private static string ShrinkPrimitive(QAcidState state, object key, object value, IEnumerable<object> primitiveVals)
 		{
+            if (primitiveVals.Contains(value))
+            {
+                var originalShrinkState = state.ShrinkRun(key, value);
+                return primitiveVals.Where(x => !x.Equals(value))
+		            .Select(primitiveVal => state.ShrinkRun(key, primitiveVal))
+		            .Any(shrinkstate => shrinkstate == originalShrinkState)
+		            ? "Irrelevant"
+		            : value.ToString();
+            }
 			return
 				primitiveVals
 					.Select(primitiveVal => state.ShrinkRun(key, primitiveVal))

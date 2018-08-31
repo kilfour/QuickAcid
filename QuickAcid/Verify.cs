@@ -4,7 +4,7 @@ namespace QuickAcid
 {
 	public static partial class QAcid
 	{
-		public static void Verify(this QAcidRunner<Unit> runner, int loops,int actions)
+		public static void Verify(this QAcidRunner<Unit> runner, int loops, int actions)
 		{
 			for (int i = 0; i < loops; i++)
 			{
@@ -14,6 +14,11 @@ namespace QuickAcid
 					break;
 			}
 		}
-
 	}
+
+    // TODO : whole values for verify
+    public class TimesToRun
+    {
+        private int times { get; set; }
+    }
 }

@@ -8,21 +8,21 @@ namespace QuickAcid
 		public static QAcidRunner<TOutput> Act<TOutput>(this string key, Func<TOutput> func)
 		{
 			return
-				s =>
+				state =>
 					{
-						if (s.Reporting)
+						if (state.Reporting)
 						{
-							s.LogReport(string.Format("Executed : '{0}'.", key.ToString()));
-							return new QAcidResult<TOutput>(s, default(TOutput));
+						    state.LogReport(new AcidReportActEntry(key));
+                            return new QAcidResult<TOutput>(state, default(TOutput));
 						}
 						try
 						{
-							return new QAcidResult<TOutput>(s, func());
+							return new QAcidResult<TOutput>(state, func());
 						}
 						catch (Exception exception)
 						{
-                            s.FailedWithException(exception);
-							return new QAcidResult<TOutput>(s, default(TOutput));
+						    state.FailedWithException(exception);
+							return new QAcidResult<TOutput>(state, default(TOutput));
 						}
 					};
 		}
@@ -34,8 +34,8 @@ namespace QuickAcid
 				{
 					if (s.Reporting)
 					{
-						s.LogReport(string.Format("Executed : '{0}'.", key.ToString()));
-						return new QAcidResult<Unit>(s, Unit.Instance);
+					    s.LogReport(new AcidReportActEntry(key));
+                        return new QAcidResult<Unit>(s, Unit.Instance);
 					}
 					try
 					{

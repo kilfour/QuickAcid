@@ -7,32 +7,35 @@ namespace QuickAcid
 	{
 		public static QAcidRunner<Unit> Spec(this string key, Func<bool> func)
 		{
-			return s =>
-			       	{
-			       		if(s.Reporting)
-			       		{
-			       			if (s.FailingSpec == key)
-			       				s.LogReport(string.Format("Failing Spec : '{0}'.", key));
-			       			return new QAcidResult<Unit>(s, Unit.Instance);
-			       		}
+		    return
+		        state =>
+		        {
+		            if (state.Reporting)
+		            {
+		                if (state.FailingSpec == key)
+		                {
+		                    state.LogReport(new AcidReportInputEntry(key));
+		                }
+		                return new QAcidResult<Unit>(state, Unit.Instance);
+		            }
 
-			       		if (s.FailingSpec != null && s.FailingSpec != key)
-			       		{
-			       			return new QAcidResult<Unit>(s, Unit.Instance);
-			       		}
+		            if (state.FailingSpec != null && state.FailingSpec != key)
+		            {
+		                return new QAcidResult<Unit>(state, Unit.Instance);
+		            }
 
-			       		if(s.Verifying && s.FailingSpec == null)
-			       		{
-			       			return new QAcidResult<Unit>(s, Unit.Instance);	
-			       		}
+		            if (state.Verifying && state.FailingSpec == null)
+		            {
+		                return new QAcidResult<Unit>(state, Unit.Instance);
+		            }
 
-			       		var result = func();
-			       		if (!result)
-			       		{
-							s.SpecFailed(key);
-			       		}
-			       		return new QAcidResult<Unit>(s, Unit.Instance);
-			       	};
+		            var result = func();
+		            if (!result)
+		            {
+		                state.SpecFailed(key);
+		            }
+		            return new QAcidResult<Unit>(state, Unit.Instance);
+		        };
 		}
 	}
 }
