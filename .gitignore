@@ -4,3 +4,4 @@ _ReSharper.*/
 *.user
 *.suo
 /.vs/QuickAcid/v15/Server/sqlite3
+/packages

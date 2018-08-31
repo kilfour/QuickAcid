@@ -4,8 +4,10 @@ using Xunit;
 
 namespace QuickAcid.Tests
 {
-    public class ActExceptionTestsNoShrinking
+    public class ActExceptionTests
     {
+
+
         [Fact]
         public void SimpleExceptionThrown()
         {
@@ -16,7 +18,7 @@ namespace QuickAcid.Tests
             var ex = Assert.Throws<FalsifiableException>(() => test.Verify(1, 1));
             var report = ex.AcidReport;
 
-            Assert.Equal(1, report.Entries.Count);
+            Assert.Single(report.Entries);
 
             var entry = Assert.IsType<AcidReportActEntry>(report.Entries[0]);
             Assert.Equal("foo", entry.Key);
@@ -56,7 +58,7 @@ namespace QuickAcid.Tests
             var ex = Assert.Throws<FalsifiableException>(() => test.Verify(1, 1));
             var report = ex.AcidReport;
 
-            Assert.Equal(1, report.Entries.Count);
+            Assert.Single(report.Entries);
 
             var entry = Assert.IsType<AcidReportActEntry>(report.Entries[0]);
             Assert.Equal("foo", entry.Key);
