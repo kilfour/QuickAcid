@@ -13,7 +13,8 @@ namespace QuickAcid
         public List<int> Runs { get; private set; }
 
         public Memory Memory { get; private set; }
-        public TempMemory TempMemory { get; private set; }
+        public SimpleMemory GlobalMemory { get; private set; }
+        public SimpleMemory TempMemory { get; private set; }
 
         public bool Shrinking { get; private set; }
         public Memory Shrunk { get; private set; }
@@ -33,7 +34,8 @@ namespace QuickAcid
             Runner = runner;
             Runs = new List<int>();
             Memory = new Memory(this);
-            TempMemory = new TempMemory();
+            GlobalMemory = new SimpleMemory();
+            TempMemory = new SimpleMemory();
             Shrunk = new Memory(this);
         }
 
@@ -66,7 +68,7 @@ namespace QuickAcid
             Reporting = false;
             var tempMemory = TempMemory;
             Failed = false;
-            TempMemory = new TempMemory();
+            TempMemory = new SimpleMemory();
 
             var failingSpec = FailingSpec;
             var exception = Exception;
@@ -173,7 +175,7 @@ namespace QuickAcid
             while (current <= max)
             {
                 Failed = false;
-                TempMemory = new TempMemory();
+                TempMemory = new SimpleMemory();
                 FailingSpec = failingSpec;
                 Exception = exception;
 
@@ -204,7 +206,7 @@ namespace QuickAcid
             Reporting = false;
 
             Failed = false;
-            TempMemory = new TempMemory();
+            TempMemory = new SimpleMemory();
 
             var failingSpec = FailingSpec;
             var exception = Exception;

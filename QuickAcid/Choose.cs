@@ -20,5 +20,5 @@ namespace QuickAcid
 					return runners[value](s);
 				};
 		}
-	}
+    }
 }

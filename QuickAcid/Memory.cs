@@ -21,6 +21,7 @@ namespace QuickAcid
 				MemoryPerRun[state.RunNumber] = new Dictionary<object, object>();
 			return MemoryPerRun[state.RunNumber];
 		}
+
 		public T Get<T>(object key, T newValue)
 		{
 			var dictionary = GetThisRunsMemory();
@@ -53,40 +54,6 @@ namespace QuickAcid
 		public bool ContainsKey(object key)
 		{
 			return GetThisRunsMemory().ContainsKey(key);
-		}
-	}
-
-	public class TempMemory
-	{
-		private Dictionary<object, object> Dictionary { get; set; }
-
-		public TempMemory()
-		{
-			Dictionary = new Dictionary<object, object>();
-		}
-
-		public T Get<T>(object key, T newValue)
-		{
-			if (!Dictionary.ContainsKey(key))
-				Dictionary[key] = newValue;
-			return (T)Dictionary[key];
-		}
-
-        public T Get<T>(object key, Func<T> newValue)
-        {
-            if (!Dictionary.ContainsKey(key))
-                Dictionary[key] = newValue();
-            return (T)Dictionary[key];
-        }
-
-		public T Get<T>(object key)
-		{
-			return (T)Dictionary[key];
-		}
-
-		public void Set<T>(object key, T value)
-		{
-			Dictionary[key] = value;
 		}
 	}
 }

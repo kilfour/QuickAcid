@@ -28,11 +28,10 @@ namespace QuickAcid.Tests.ZheZhools
             return new AcidTestRun(ex.AcidReport);
         }
 
-        public static AcidTestRun FailedRunWithNumberOfReportEntriesEqualing(QAcidRunner<Unit> test, int numberOfReportEntries)
+        public static AcidTestRun FailedRun(int numberOfActions, QAcidRunner<Unit> test)
         {
-            var run = FailedRun(test);
-            run.NumberOfReportEntriesIs(numberOfReportEntries);
-            return run;
+            var ex = Assert.Throws<FalsifiableException>(() => test.Verify(1, numberOfActions));
+            return new AcidTestRun(ex.AcidReport);
         }
     }
 }

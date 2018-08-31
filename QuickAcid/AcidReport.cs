@@ -61,13 +61,12 @@ namespace QuickAcid
         {
             var stringBuilder = new StringBuilder($"Execute : {Key}");
             stringBuilder.AppendLine();
-            stringBuilder.Append(" ---------------------------");
             if (Exception != null)
             {
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine("Exception thrown :");
                 stringBuilder.Append(Exception);
+                stringBuilder.AppendLine();
             }
+            stringBuilder.Append(" ---------------------------");
             return stringBuilder.ToString();
         }
     }

@@ -62,8 +62,10 @@
     <Compile Include="Build.cs" />
     <Compile Include="If.cs" />
     <Compile Include="FalsifiableException.cs" />
+    <Compile Include="Sequence.cs" />
     <Compile Include="ShrinkableInput.cs" />
     <Compile Include="OnceOnlyInput.cs" />
+    <Compile Include="SimpleMemory.cs" />
     <Compile Include="Verify.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Memory.cs" />
