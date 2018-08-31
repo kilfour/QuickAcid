@@ -13,13 +13,13 @@ namespace QuickAcid
 						try
 						{
 							var result = new QAcidResult<TOutput>(state, func());
-						    state.LogReport(new AcidReportActEntry(key));
+						    state.LogReport(new QAcidReportActEntry(key));
 						    return result;
 						}
 						catch (Exception exception)
 						{
 						    state.FailedWithException(exception);
-						    state.LogReport(new AcidReportActEntry(key, exception));
+						    state.LogReport(new QAcidReportActEntry(key, exception));
                             return new QAcidResult<TOutput>(state, default(TOutput));
 						}
 					};
@@ -33,13 +33,13 @@ namespace QuickAcid
 					try
 					{
 						action();
-					    state.LogReport(new AcidReportActEntry(key));
+					    state.LogReport(new QAcidReportActEntry(key));
                         return new QAcidResult<Unit>(state, Unit.Instance);
 					}
 					catch (Exception exception)
 					{
 					    state.FailedWithException(exception);
-					    state.LogReport(new AcidReportActEntry(key, exception));
+					    state.LogReport(new QAcidReportActEntry(key, exception));
                         return new QAcidResult<Unit>(state, Unit.Instance);
 					}
 				};

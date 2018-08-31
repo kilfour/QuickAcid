@@ -4,13 +4,13 @@ using System.Text;
 
 namespace QuickAcid
 {
-    public class AcidReport
+    public class QAcidReport
     {
         private readonly List<object> entries = new List<object>();
 
         public List<object> Entries { get { return entries; } }
 
-        public virtual void AddEntry(AcidReportEntry reportEntry)
+        public virtual void AddEntry(QAcidReportEntry reportEntry)
         {
             entries.Add(reportEntry);
         }
@@ -27,32 +27,27 @@ namespace QuickAcid
         }
     }
 
-    public class DevNullReport : AcidReport
-    {
-        public override void AddEntry(AcidReportEntry reportEntry) { }
-    }
-
-    public abstract class AcidReportEntry
+    public abstract class QAcidReportEntry
     {
         protected readonly string TheKey;
         public string Key => TheKey;
 
-        protected AcidReportEntry(string key)
+        protected QAcidReportEntry(string key)
         {
             TheKey = key;
         }
     }
 
-    public class AcidReportActEntry : AcidReportEntry
+    public class QAcidReportActEntry : QAcidReportEntry
     {
         public Exception Exception { get; set; }
 
-        public AcidReportActEntry(string key) : base(key)
+        public QAcidReportActEntry(string key) : base(key)
         {
             
         }
 
-        public AcidReportActEntry(string key, Exception exception) : this(key)
+        public QAcidReportActEntry(string key, Exception exception) : this(key)
         {
             Exception = exception;
         }
@@ -71,11 +66,11 @@ namespace QuickAcid
         }
     }
 
-    public class AcidReportInputEntry : AcidReportEntry
+    public class QAcidReportInputEntry : QAcidReportEntry
     {
         public object Value;
 
-        public AcidReportInputEntry(string key)
+        public QAcidReportInputEntry(string key)
             : base(key) { }
 
         public override string ToString()
@@ -84,16 +79,19 @@ namespace QuickAcid
         }
     }
 
-    public class AcidReportSpecEntry : AcidReportEntry
+    public class QAcidReportSpecEntry : QAcidReportEntry
     {
         public object Value;
 
-        public AcidReportSpecEntry(string key)
+        public QAcidReportSpecEntry(string key)
             : base(key) { }
 
         public override string ToString()
         {
-            return $"Spec Failed : {Key}";
+            var stringBuilder = new StringBuilder($"Spec Failed : {Key}");
+            stringBuilder.AppendLine();
+            stringBuilder.Append(" ---------------------------");
+            return stringBuilder.ToString();
         }
     }
 }

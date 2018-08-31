@@ -18,7 +18,7 @@ namespace QuickAcid
 					           if (shrunk != "Irrelevant")
 					           {
 					               var entry =
-					                   new AcidReportInputEntry(key)
+					                   new QAcidReportInputEntry(key)
 					                   {
 					                       Value = shrunk
                                        };

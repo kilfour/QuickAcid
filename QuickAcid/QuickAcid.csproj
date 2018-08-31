@@ -56,7 +56,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcidReport.cs" />
+    <Compile Include="QAcidReport.cs" />
     <Compile Include="Act.cs" />
     <Compile Include="Choose.cs" />
     <Compile Include="Build.cs" />

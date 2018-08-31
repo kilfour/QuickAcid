@@ -5,9 +5,9 @@ namespace QuickAcid.Tests.ZheZhools
 {
     public class AcidTestRun
     {
-        private readonly AcidReport report;
+        private readonly QAcidReport report;
 
-        public AcidTestRun(AcidReport report)
+        public AcidTestRun(QAcidReport report)
         {
             this.report = report;
         }
@@ -25,13 +25,13 @@ namespace QuickAcid.Tests.ZheZhools
         public static AcidTestRun FailedRun(QAcidRunner<Unit> test)
         {
             var ex = Assert.Throws<FalsifiableException>(() => test.Verify(1, 1));
-            return new AcidTestRun(ex.AcidReport);
+            return new AcidTestRun(ex.QAcidReport);
         }
 
         public static AcidTestRun FailedRun(int numberOfActions, QAcidRunner<Unit> test)
         {
             var ex = Assert.Throws<FalsifiableException>(() => test.Verify(1, numberOfActions));
-            return new AcidTestRun(ex.AcidReport);
+            return new AcidTestRun(ex.QAcidReport);
         }
 
         public static void SuccessfullRun(QAcidRunner<Unit> test)

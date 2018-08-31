@@ -27,7 +27,7 @@ namespace QuickAcid
         public bool Failed { get; private set; }
         public Exception Exception { get; private set; }
 
-        private AcidReport report = new AcidReport();
+        private QAcidReport report = new QAcidReport();
 
         public QAcidState(QAcidRunner<Unit> runner)
         {
@@ -144,7 +144,7 @@ namespace QuickAcid
             FailingSpec = failingSpec;
         }
 
-        public void LogReport(AcidReportEntry reportEntry)
+        public void LogReport(QAcidReportEntry reportEntry)
         {
             report.AddEntry(reportEntry);
         }
@@ -224,8 +224,8 @@ namespace QuickAcid
 
         private void Report()
         {
-            report = new AcidReport();
-
+            report = new QAcidReport();
+            TempMemory = new SimpleMemory();
             Verifying = false;
             Shrinking = false;
             Reporting = true;
@@ -246,10 +246,10 @@ namespace QuickAcid
 
             if (Exception != null)
             {
-                throw new FalsifiableException(report.ToString(), exception) {AcidReport = report};
+                throw new FalsifiableException(report.ToString(), exception) {QAcidReport = report};
             }
 
-            throw new FalsifiableException(report.ToString()) { AcidReport = report };
+            throw new FalsifiableException(report.ToString()) { QAcidReport = report };
         }
     }
 }

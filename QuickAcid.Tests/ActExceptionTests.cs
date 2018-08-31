@@ -15,11 +15,10 @@ namespace QuickAcid.Tests
 
             run.NumberOfReportEntriesIs(1);
 
-            var entry = run.GetReportEntryAtIndex<AcidReportActEntry>(0);
+            var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
             Assert.Equal("foo", entry.Key);
             Assert.NotNull(entry.Exception);
         }
-
 
         [Fact]
         public void TwoActionsExceptionThrownOnFirst()
@@ -32,7 +31,7 @@ namespace QuickAcid.Tests
 
             run.NumberOfReportEntriesIs(1);
 
-            var entry = run.GetReportEntryAtIndex<AcidReportActEntry>(0);
+            var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
             Assert.Equal("foo", entry.Key);
             Assert.NotNull(entry.Exception);
         }
@@ -60,11 +59,11 @@ namespace QuickAcid.Tests
             // Use either Sequence() or Choose() to combine them
             // -------------------------------------------------------------------------
 
-            var entry = run.GetReportEntryAtIndex<AcidReportActEntry>(0);
+            var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
             Assert.Equal("foo", entry.Key);
             Assert.Null(entry.Exception);
 
-            entry = run.GetReportEntryAtIndex<AcidReportActEntry>(1);
+            entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
             Assert.Equal("bar", entry.Key);
             Assert.NotNull(entry.Exception);
         }

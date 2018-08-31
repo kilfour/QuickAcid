@@ -56,7 +56,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActAndInputExceptionTests.cs" />
     <Compile Include="ActAndSpecExceptionTests.cs" />
+    <Compile Include="Bugs\ExceptionNotReported.cs" />
+    <Compile Include="InputTests.cs" />
     <Compile Include="SequenceTests.cs" />
     <Compile Include="SpecExceptionTests.cs" />
     <Compile Include="SpecTests.cs" />

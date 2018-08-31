@@ -14,6 +14,8 @@ namespace QuickAcid
                     {
                         value = s.GlobalMemory.Get(key, -1);
                         value++;
+                        if (value >= runners.Length)
+                            value = 0;
                         s.GlobalMemory.Set(key, value);
                     }
                     else

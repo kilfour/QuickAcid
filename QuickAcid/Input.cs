@@ -20,7 +20,7 @@ namespace QuickAcid
 					{
 						var value1 = s.Memory.Get<T>(key);
 					    var entry =
-					        new AcidReportInputEntry(key)
+					        new QAcidReportInputEntry(key)
 					        {
 					            Value = value1
                             };

@@ -18,7 +18,7 @@ namespace QuickAcid.Tests
 
             run.NumberOfReportEntriesIs(1);
 
-            var entry = run.GetReportEntryAtIndex<AcidReportActEntry>(0);
+            var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
             Assert.Equal("foo", entry.Key);
             Assert.NotNull(entry.Exception);
         }
