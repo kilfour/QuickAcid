@@ -1,5 +1,4 @@
 ﻿using System;
-using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid
 {

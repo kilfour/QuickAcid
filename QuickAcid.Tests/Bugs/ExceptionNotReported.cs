@@ -1,6 +1,5 @@
 ﻿using System;
 using QuickAcid.Tests.ZheZhools;
-using QuickMGenerate.UnderTheHood;
 using Xunit;
 
 namespace QuickAcid.Tests.Bugs

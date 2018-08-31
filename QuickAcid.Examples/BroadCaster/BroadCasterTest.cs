@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Threading;
 using QuickAcid.Examples.BroadCaster.SimpleModel;
 using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
 using Rhino.Mocks;
 using Xunit;
 
@@ -79,7 +78,7 @@ namespace QuickAcid.Examples.BroadCaster
 				from canact in
 					"when threadswitch is false".If(
 						() => info.ThreadSwitch == false,
-						from start in "start broadcasting".Act(
+						from start in "Broadcaster.Broadcast".Act(
 							() =>
 								{
 									info.ThreadSwitch = true;
@@ -103,14 +102,14 @@ namespace QuickAcid.Examples.BroadCaster
 				from canact in
 					"when threadswitch is true".If(
 						() => info.ThreadSwitch,
-						from stop in "stop broadcasting".Act(
+						from stop in "Stop Broadcasting".Act(
 							() =>
 								{
 									info.Thread.Join();
 									info.Thread = null;
 									info.ThreadSwitch = false;
 								})
-						from spec in "StopBroadcasting : No Exception is thrown".Spec(() => info.ExceptionFromThread == null)
+						from spec in "Stop Broadcasting : No Exception is thrown".Spec(() => info.ExceptionFromThread == null)
 						select Acid.Test)
 				select Acid.Test;
 		}
