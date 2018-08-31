@@ -8,7 +8,7 @@ namespace QuickAcid.Tests
     public class ActAndSpecExceptionTests
     {
         [Fact]
-        public void ExceptionThrown()
+        public void ExceptionThrownByAct()
         {
             var run =
                 AcidTestRun.FailedRun(
@@ -21,6 +21,24 @@ namespace QuickAcid.Tests
             var entry = run.GetReportEntryAtIndex<AcidReportActEntry>(0);
             Assert.Equal("foo", entry.Key);
             Assert.NotNull(entry.Exception);
+        }
+
+        [Fact]
+        public void ExceptionThrownBySpecIsNotAQuickAcidException()
+        {
+            var ex =
+                Assert.Throws<Exception>(() => (
+                    from foo in "foo".Act(() => true)
+                    from spec in "spec".Spec(Throw)
+                    select Unit.Instance
+                ).Verify(1, 1));
+            Assert.IsNotType<FalsifiableException>(ex);
+            Assert.Contains("QuickAcid.Tests.ActAndSpecExceptionTests.Throw()", ex.StackTrace);
+        }
+
+        private bool Throw()
+        {
+            throw new Exception();
         }
     }
 }
