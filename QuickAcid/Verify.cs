@@ -12,11 +12,38 @@
 					break;
 			}
 		}
-	}
 
-    // TODO : whole values for verify
-    public class TimesToRun
+	    public static void Verify(this QAcidRunner<Acid> runner, NumberOfRuns numberOfRuns, ActionsPerRun actionsPerRun)
+	    {
+	        for (int i = 0; i < numberOfRuns.Value; i++)
+	        {
+	            var state = new QAcidState(runner);
+	            state.Run(actionsPerRun.Value);
+	            if (state.Failed)
+	                break;
+	        }
+	    }
+
+	    public static NumberOfRuns Runs(this int number)
+	    {
+	        return new NumberOfRuns(number);
+	    }
+
+	    public static ActionsPerRun ActionsPerRun(this int number)
+	    {
+	        return new ActionsPerRun(number);
+	    }
+    }
+
+    public class NumberOfRuns
     {
-        private int times { get; set; }
+        public int Value { get; }
+        public NumberOfRuns(int value) { Value = value; }
+    }
+
+    public class ActionsPerRun
+    {
+        public int Value { get; }
+        public ActionsPerRun(int value) { Value = value; }
     }
 }

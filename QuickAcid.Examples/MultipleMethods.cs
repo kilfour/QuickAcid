@@ -1,6 +1,5 @@
 ﻿using System;
 using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
 using Xunit;
 
 namespace QuickAcid.Examples
