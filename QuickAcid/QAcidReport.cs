@@ -81,8 +81,6 @@ namespace QuickAcid
 
     public class QAcidReportSpecEntry : QAcidReportEntry
     {
-        public object Value;
-
         public QAcidReportSpecEntry(string key)
             : base(key) { }
 

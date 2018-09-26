@@ -61,6 +61,9 @@
     <Compile Include="Bugs\ExceptionNotReported.cs" />
     <Compile Include="InputTests.cs" />
     <Compile Include="SequenceTests.cs" />
+    <Compile Include="Shrinking\Objects\StringProperty.cs" />
+    <Compile Include="Shrinking\Objects\IntProperty.cs" />
+    <Compile Include="Shrinking\Primitives\IntTests.cs" />
     <Compile Include="SpecExceptionTests.cs" />
     <Compile Include="SpecTests.cs" />
     <Compile Include="ZheZhools\AcidTestRun.cs" />

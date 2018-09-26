@@ -53,6 +53,7 @@
     <Compile Include="Sequence.cs" />
     <Compile Include="ShrinkableInput.cs" />
     <Compile Include="OnceOnlyInput.cs" />
+    <Compile Include="Shrinking\Shrink.cs" />
     <Compile Include="SimpleMemory.cs" />
     <Compile Include="Verify.cs" />
     <Compile Include="Input.cs" />
