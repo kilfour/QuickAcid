@@ -2,7 +2,12 @@
 {
 	public static partial class QAcid
 	{
-		public static void Verify(this QAcidRunner<Acid> runner, int loops, int actions)
+	    public static void Verify(this QAcidRunner<Acid> runner)
+	    {
+	        new QAcidState(runner).Run(1);
+        }
+
+        public static void Verify(this QAcidRunner<Acid> runner, int loops, int actions)
 		{
 			for (int i = 0; i < loops; i++)
 			{
