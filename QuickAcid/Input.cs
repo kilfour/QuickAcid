@@ -11,7 +11,7 @@ namespace QuickAcid
 			return Input(key, generator.Generate);
 		}
 
-		public static QAcidRunner<T> Input<T>(this string key, Func<T> func)
+		public static QAcidRunner<T> Input<T>(this string key, Func<T> func, Func<T, string> stringify = null)
 		{
 			return
 				s =>
@@ -22,7 +22,7 @@ namespace QuickAcid
 					    var entry =
 					        new QAcidReportInputEntry(key)
 					        {
-					            Value = value1
+					            Value = stringify?.Invoke(value1)
                             };
 					    s.LogReport(entry);
 						return new QAcidResult<T>(s, value1) { Key = key };

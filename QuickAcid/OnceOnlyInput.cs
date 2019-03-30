@@ -12,7 +12,6 @@ namespace QuickAcid
 						var value = s.TempMemory.Get(key, func);
 						if (s.Reporting)
 						{
-							//Console.WriteLine("{0} : {1}", TheKey.ToString(), value.ToString());
 							return new QAcidResult<T>(s, value) { Key = key };
 						}
 						return new QAcidResult<T>(s, value) { Key = key };
