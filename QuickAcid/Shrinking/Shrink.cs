@@ -22,11 +22,15 @@ namespace QuickAcid.Shrinking
             if (typeof(IEnumerable<int>).IsAssignableFrom(typeof(T)))
             {
                 shrunk = ShrinkIEnumerable(state, key, value);
+                state.Shrunk.Set(key, shrunk);
+                return;
             }
             var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(typeof(T)));
             if (primitiveKey != null)
             {
                 shrunk = ShrinkPrimitive(state, key, value, PrimitiveValues[primitiveKey]);
+                state.Shrunk.Set(key, shrunk);
+                return;
             }
 
             if (typeof(T).IsClass)
