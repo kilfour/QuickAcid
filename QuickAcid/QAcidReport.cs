@@ -17,8 +17,9 @@ namespace QuickAcid
 
         public override string ToString()
         {
-            var stringBuilder = new StringBuilder(" ---------------------------");
+            var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
+            stringBuilder.AppendLine(" ---------------------------");
             foreach (var entry in entries)
             {
                 stringBuilder.AppendLine(entry.ToString());
@@ -86,9 +87,13 @@ namespace QuickAcid
 
         public override string ToString()
         {
-            var stringBuilder = new StringBuilder($"Spec Failed : {Key}");
+            var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
-            stringBuilder.Append(" ---------------------------");
+            stringBuilder.AppendLine(" ********************************");
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine($"  Spec Failed : {Key}");
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine(" ********************************");
             return stringBuilder.ToString();
         }
     }
