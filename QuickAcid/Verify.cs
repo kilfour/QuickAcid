@@ -1,6 +1,6 @@
 ﻿namespace QuickAcid
 {
-	public static partial class QAcid
+    public static partial class QAcid
 	{
 	    public static void Verify(this QAcidRunner<Acid> runner)
 	    {

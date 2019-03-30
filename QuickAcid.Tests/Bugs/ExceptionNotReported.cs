@@ -6,7 +6,7 @@ namespace QuickAcid.Tests.Bugs
 {
 	public class ExceptionNotReported
 	{
-	    public class BugHouse
+	    private class BugHouse
 	    {
 	        private int count;
 	        public bool Run()

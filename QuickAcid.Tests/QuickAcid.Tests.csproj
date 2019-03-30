@@ -60,6 +60,7 @@
     <Compile Include="ActAndSpecExceptionTests.cs" />
     <Compile Include="Bugs\ExceptionNotReported.cs" />
     <Compile Include="InputTests.cs" />
+    <Compile Include="LocalVarTests.cs" />
     <Compile Include="SequenceTests.cs" />
     <Compile Include="Shrinking\Objects\StringProperty.cs" />
     <Compile Include="Shrinking\Objects\IntProperty.cs" />

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acid.cs" />
+    <Compile Include="Local.cs" />
     <Compile Include="QAcidReport.cs" />
     <Compile Include="Act.cs" />
     <Compile Include="Choose.cs" />
