@@ -8,7 +8,7 @@
         public List<int> Runs { get; private set; }
 
         public Memory Memory { get; private set; }
-        public SimpleMemory GlobalMemory { get; private set; }
+
         public SimpleMemory TempMemory { get; private set; }
 
         public bool Shrinking { get; private set; }
@@ -31,7 +31,6 @@
             Runner = runner;
             Runs = new List<int>();
             Memory = new Memory(this);
-            GlobalMemory = new SimpleMemory();
             TempMemory = new SimpleMemory();
             Shrunk = new Memory(this);
         }

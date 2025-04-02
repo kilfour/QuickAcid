@@ -4,20 +4,21 @@
     {
         public static QAcidRunner<T> Sequence<T>(this string key, params QAcidRunner<T>[] runners)
         {
+            var memory = new SimpleMemory();
             return
                 s =>
                 {
                     int value;
                     if (s.IsNormalRun())
                     {
-                        value = s.GlobalMemory.Get(key, -1);
+                        value = memory.Get(key, -1);
                         value++;
                         if (value >= runners.Length)
                             value = 0;
-                        s.GlobalMemory.Set(key, value);
+                        memory.Set(key, value);
                     }
                     else
-                        value = s.GlobalMemory.Get<int>(key);
+                        value = memory.Get<int>(key);
                     return runners[value](s);
                 };
         }

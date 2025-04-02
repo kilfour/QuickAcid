@@ -4,7 +4,7 @@ namespace QuickAcid.Examples;
 
 public class BankAccountExample
 {
-    [Fact(Skip = "Explicit")]
+    [Fact]
     public void AccountPropertiesShouldHold()
     {
         TheTest.Verify(20.Runs(), 50.ActionsPerRun());
@@ -53,7 +53,7 @@ public class BankAccountExample
             if (amount > _balance)
             {
                 // simulate a bug: withdrawal not prevented
-                _balance -= amount;
+                //  _balance -= amount;
             }
             else
             {
