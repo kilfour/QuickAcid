@@ -4,8 +4,8 @@
     {
         public QAcidRunner<Acid> Runner { get; private set; }
 
-        public int RunNumber { get; private set; }
-        public List<int> Runs { get; private set; }
+        public int CurrentActionNumber { get; private set; }
+        public List<int> ActionNumbers { get; private set; }
 
         public Memory Memory { get; private set; }
 
@@ -28,31 +28,31 @@
         public QAcidState(QAcidRunner<Acid> runner)
         {
             Runner = runner;
-            Runs = new List<int>();
-            Memory = new Memory(() => RunNumber);
-            Shrunk = new Memory(() => RunNumber);
+            ActionNumbers = new List<int>();
+            Memory = new Memory(() => CurrentActionNumber);
+            Shrunk = new Memory(() => CurrentActionNumber);
         }
 
         public void Run(int actionsPerRun)
         {
             for (int j = 0; j < actionsPerRun; j++)
             {
-                Run();
+                StepAction();
                 if (Failed)
                     return;
             }
         }
 
-        public void Run()
+        public void StepAction()
         {
-            Runs.Add(RunNumber);
+            ActionNumbers.Add(CurrentActionNumber);
             Runner(this);
             if (Failed)
             {
                 HandleFailure();
                 return;
             }
-            RunNumber++;
+            CurrentActionNumber++;
         }
 
         public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
@@ -61,25 +61,25 @@
             Shrinking = false;
             Reporting = false;
             Failed = false;
-            Memory.StartDiagnostics();
+            Memory.ResetAllRunInputs();
             var failingSpec = FailingSpec;
             var exception = Exception;
-            var runNumber = RunNumber;
-            var oldVal = Memory.ForThisRun().Get<object>(key);
-            Memory.ForThisRun().Set(key, value);
-            foreach (var run in Runs)
+            var runNumber = CurrentActionNumber;
+            var oldVal = Memory.ForThisAction().Get<object>(key);
+            Memory.ForThisAction().Set(key, value);
+            foreach (var actionNumber in ActionNumbers)
             {
-                RunNumber = run;
+                CurrentActionNumber = actionNumber;
                 Runner(this);
             }
             var failed = Failed;
-            RunNumber = runNumber;
+            CurrentActionNumber = runNumber;
             Failed = false;
             FailingSpec = failingSpec;
             Exception = exception;
             Verifying = false;
             Shrinking = true;
-            Memory.ForThisRun().Set(key, oldVal);
+            Memory.ForThisAction().Set(key, oldVal);
             return failed;
         }
 
@@ -141,19 +141,19 @@
             var failingSpec = FailingSpec;
             var exception = Exception;
 
-            var max = Runs.Max();
+            var max = ActionNumbers.Max();
             var current = 0;
 
             while (current <= max)
             {
                 Failed = false;
-                Memory.StartDiagnostics();
+                Memory.ResetAllRunInputs();
                 FailingSpec = failingSpec;
                 Exception = exception;
 
-                foreach (var run in Runs.ToList())
+                foreach (var run in ActionNumbers.ToList())
                 {
-                    RunNumber = run;
+                    CurrentActionNumber = run;
                     if (run != current)
                         Runner(this);
                     if (BreakRun)
@@ -161,7 +161,7 @@
                 }
                 if (Failed && !BreakRun)
                 {
-                    Runs.Remove(current);
+                    ActionNumbers.Remove(current);
                 }
                 current++;
                 shrinkCount++;
@@ -173,7 +173,7 @@
         }
 
         public string ShrinkSummary =>
-            $"Falsified after {Runs.Count} runs, {shrinkCount} shrinks";
+            $"Falsified after {ActionNumbers.Count} runs, {shrinkCount} shrinks";
 
         private void ShrinkInputs()
         {
@@ -182,14 +182,14 @@
             Reporting = false;
 
             Failed = false;
-            Memory.StartDiagnostics();
+            Memory.ResetAllRunInputs();
 
             var failingSpec = FailingSpec;
             var exception = Exception;
 
-            foreach (var run in Runs.ToList())
+            foreach (var run in ActionNumbers.ToList())
             {
-                RunNumber = run;
+                CurrentActionNumber = run;
                 Runner(this);
                 shrinkCount++;
             }
@@ -204,7 +204,7 @@
         {
             report = new QAcidReport();
             report.ShrinkAttempts = shrinkCount;
-            Memory.StartDiagnostics();
+            Memory.ResetAllRunInputs();
             Verifying = false;
             Shrinking = false;
             Reporting = true;
@@ -213,9 +213,9 @@
             var failingSpec = FailingSpec;
             var exception = Exception;
 
-            foreach (var run in Runs.ToList())
+            foreach (var run in ActionNumbers.ToList())
             {
-                RunNumber = run;
+                CurrentActionNumber = run;
                 Runner(this);
             }
 

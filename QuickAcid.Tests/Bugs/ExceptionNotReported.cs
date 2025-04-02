@@ -13,6 +13,7 @@ namespace QuickAcid.Tests.Bugs
 				return true;
 			}
 		}
+
 		[Fact()]
 		public void Example()
 		{

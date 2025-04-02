@@ -9,11 +9,11 @@
                 {
                     if (s.Reporting || s.Shrinking || s.Verifying)
                     {
-                        var value1 = s.Memory.ForThisRun().Get<T>(key);
+                        var value1 = s.Memory.ForThisAction().Get<T>(key);
                         return new QAcidResult<T>(s, value1) { Key = key };
                     }
                     var value2 = func();
-                    s.Memory.ForThisRun().Set(key, value2);
+                    s.Memory.ForThisAction().Set(key, value2);
                     return new QAcidResult<T>(s, value2) { Key = key };
                 };
         }

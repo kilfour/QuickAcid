@@ -1,6 +1,5 @@
 ﻿namespace QuickAcid
 {
-
 	public class Memory
 	{
 		public class Access
@@ -43,14 +42,14 @@
 			MemoryPerAction = [];
 		}
 
-		public Access ForThisRun()
+		public Access ForThisAction()
 		{
 			if (!MemoryPerAction.ContainsKey(getCurrentActionId()))
 				MemoryPerAction[getCurrentActionId()] = new Access();
 			return MemoryPerAction[getCurrentActionId()];
 		}
 
-		public void StartDiagnostics()
+		public void ResetAllRunInputs()
 		{
 			OnceOnlyInputsPerRun = new Access();
 		}

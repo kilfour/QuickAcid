@@ -11,7 +11,7 @@ namespace QuickAcid
 					   {
 						   if (state.Reporting)
 						   {
-							   var shrunk = state.Shrunk.ForThisRun().Get<string>(key);
+							   var shrunk = state.Shrunk.ForThisAction().Get<string>(key);
 							   if (shrunk != "Irrelevant")
 							   {
 								   var entry =
@@ -21,23 +21,23 @@ namespace QuickAcid
 									   };
 								   state.LogReport(entry);
 							   }
-							   return new QAcidResult<T>(state, state.Memory.ForThisRun().Get<T>(key)) { Key = key };
+							   return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
 						   }
 
-						   if (state.Shrinking && !state.Shrunk.ForThisRun().ContainsKey(key))
+						   if (state.Shrinking && !state.Shrunk.ForThisAction().ContainsKey(key))
 						   {
-							   var value = state.Memory.ForThisRun().Get<T>(key);
+							   var value = state.Memory.ForThisAction().Get<T>(key);
 							   Shrink.Input(state, key, value);
-							   return new QAcidResult<T>(state, state.Memory.ForThisRun().Get<T>(key)) { Key = key };
+							   return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
 						   }
 
 						   if (state.Verifying)
 						   {
-							   return new QAcidResult<T>(state, state.Memory.ForThisRun().Get<T>(key)) { Key = key };
+							   return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
 						   }
 
 						   var value2 = generator.Generate();
-						   state.Memory.ForThisRun().Set(key, value2);
+						   state.Memory.ForThisAction().Set(key, value2);
 						   return new QAcidResult<T>(state, value2);
 					   };
 		}

@@ -4,21 +4,23 @@
     {
         public static QAcidRunner<T> Sequence<T>(this string key, params QAcidRunner<T>[] runners)
         {
-            var memory = new SimpleMemory();
+            var counter = 0;
+            var max = runners.Count();
+            var memory = new Dictionary<string, int>();
             return
                 s =>
                 {
                     int value;
                     if (s.IsNormalRun())
                     {
-                        value = memory.Get(key, -1);
-                        value++;
-                        if (value >= runners.Length)
-                            value = 0;
-                        memory.Set(key, value);
+                        value = counter;
+                        memory[key] = counter;
+                        counter++;
+                        if (counter >= max)
+                            counter = 0;
                     }
                     else
-                        value = memory.Get<int>(key);
+                        value = memory[key];
                     return runners[value](s);
                 };
         }
