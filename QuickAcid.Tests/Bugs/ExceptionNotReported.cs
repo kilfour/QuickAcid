@@ -13,7 +13,7 @@ namespace QuickAcid.Tests.Bugs
 				return true;
 			}
 		}
-		[Fact]
+		[Fact()]
 		public void Example()
 		{
 			var run = AcidTestRun.FailedRun(3,

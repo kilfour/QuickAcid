@@ -1,49 +1,58 @@
 ﻿namespace QuickAcid
 {
+
 	public class Memory
 	{
-		private readonly QAcidState state;
-
-		//private readonly Func<Int> getC
-
-		private Dictionary<int, Dictionary<object, object>> MemoryPerRun { get; set; }
-
-		public Memory(QAcidState state)
+		public class Access
 		{
-			this.state = state;
-			MemoryPerRun = new Dictionary<int, Dictionary<object, object>>();
+			private Dictionary<object, object> dictionary = [];
+
+			public T GetOrAdd<T>(object key, Func<T> factory)
+			{
+				if (!dictionary.ContainsKey(key))
+					dictionary[key] = factory()!;
+				return (T)dictionary[key];
+			}
+
+			public T Get<T>(object key)
+			{
+				return (T)dictionary[key];
+			}
+
+			public void Set<T>(object key, T value)
+			{
+				dictionary[key] = value!;
+			}
+
+			public bool ContainsKey(object key)
+			{
+				return dictionary.ContainsKey(key);
+			}
 		}
 
-		private Dictionary<object, object> GetThisRunsMemory()
+		private readonly Func<int> getCurrentActionId;
+
+		public Access OnceOnlyInputsPerRun { get; set; }
+
+		private Dictionary<int, Access> MemoryPerAction { get; set; }
+
+		public Memory(Func<int> getCurrentActionId)
 		{
-			if (!MemoryPerRun.ContainsKey(state.RunNumber))
-				MemoryPerRun[state.RunNumber] = new Dictionary<object, object>();
-			return MemoryPerRun[state.RunNumber];
+			this.getCurrentActionId = getCurrentActionId;
+			OnceOnlyInputsPerRun = new Access();
+			MemoryPerAction = [];
 		}
 
-		public T Get<T>(object key, T newValue)
+		public Access ForThisRun()
 		{
-			var dictionary = GetThisRunsMemory();
-			if (!dictionary.ContainsKey(key))
-				dictionary[key] = newValue;
-			return (T)dictionary[key];
+			if (!MemoryPerAction.ContainsKey(getCurrentActionId()))
+				MemoryPerAction[getCurrentActionId()] = new Access();
+			return MemoryPerAction[getCurrentActionId()];
 		}
 
-		public T Get<T>(object key)
+		public void StartDiagnostics()
 		{
-			return (T)GetThisRunsMemory()[key];
+			OnceOnlyInputsPerRun = new Access();
 		}
-
-		public void Set<T>(object key, T value)
-		{
-			GetThisRunsMemory()[key] = value;
-		}
-
-		public bool ContainsKey(object key)
-		{
-			return GetThisRunsMemory().ContainsKey(key);
-		}
-
-		private Dictionary<int, HashSet<string>> ShrinkableKeysPerRun { get; set; } = new();
 	}
 }

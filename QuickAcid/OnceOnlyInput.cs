@@ -7,7 +7,7 @@
 			return
 				s =>
 					{
-						var value = s.TempMemory.Get(key, func);
+						var value = s.Memory.OnceOnlyInputsPerRun.GetOrAdd(key, func);
 						return new QAcidResult<T>(s, value) { Key = key };
 					};
 		}

@@ -17,7 +17,7 @@ namespace QuickAcid
 				{
 					if (s.Reporting)
 					{
-						var value1 = s.Memory.Get<T>(key);
+						var value1 = s.Memory.ForThisRun().Get<T>(key);
 						var entry =
 							new QAcidReportInputEntry(key)
 							{
@@ -28,11 +28,11 @@ namespace QuickAcid
 					}
 					if (s.Shrinking || s.Verifying)
 					{
-						var value1 = s.Memory.Get<T>(key);
+						var value1 = s.Memory.ForThisRun().Get<T>(key);
 						return new QAcidResult<T>(s, value1) { Key = key };
 					}
 					var value2 = func();
-					s.Memory.Set(key, value2);
+					s.Memory.ForThisRun().Set(key, value2);
 					return new QAcidResult<T>(s, value2) { Key = key };
 				};
 		}

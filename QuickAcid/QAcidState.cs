@@ -9,9 +9,8 @@
 
         public Memory Memory { get; private set; }
 
-        public SimpleMemory TempMemory { get; private set; }
-
         public bool Shrinking { get; private set; }
+
         public Memory Shrunk { get; private set; }
 
         public bool Verifying { get; private set; }
@@ -30,9 +29,8 @@
         {
             Runner = runner;
             Runs = new List<int>();
-            Memory = new Memory(this);
-            TempMemory = new SimpleMemory();
-            Shrunk = new Memory(this);
+            Memory = new Memory(() => RunNumber);
+            Shrunk = new Memory(() => RunNumber);
         }
 
         public void Run(int actionsPerRun)
@@ -63,12 +61,12 @@
             Shrinking = false;
             Reporting = false;
             Failed = false;
-            TempMemory = new SimpleMemory();
+            Memory.StartDiagnostics();
             var failingSpec = FailingSpec;
             var exception = Exception;
             var runNumber = RunNumber;
-            var oldVal = Memory.Get<object>(key);
-            Memory.Set(key, value);
+            var oldVal = Memory.ForThisRun().Get<object>(key);
+            Memory.ForThisRun().Set(key, value);
             foreach (var run in Runs)
             {
                 RunNumber = run;
@@ -81,7 +79,7 @@
             Exception = exception;
             Verifying = false;
             Shrinking = true;
-            Memory.Set(key, oldVal);
+            Memory.ForThisRun().Set(key, oldVal);
             return failed;
         }
 
@@ -149,7 +147,7 @@
             while (current <= max)
             {
                 Failed = false;
-                TempMemory = new SimpleMemory();
+                Memory.StartDiagnostics();
                 FailingSpec = failingSpec;
                 Exception = exception;
 
@@ -184,7 +182,7 @@
             Reporting = false;
 
             Failed = false;
-            TempMemory = new SimpleMemory();
+            Memory.StartDiagnostics();
 
             var failingSpec = FailingSpec;
             var exception = Exception;
@@ -206,7 +204,7 @@
         {
             report = new QAcidReport();
             report.ShrinkAttempts = shrinkCount;
-            TempMemory = new SimpleMemory();
+            Memory.StartDiagnostics();
             Verifying = false;
             Shrinking = false;
             Reporting = true;
