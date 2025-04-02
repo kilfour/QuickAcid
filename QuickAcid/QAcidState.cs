@@ -23,6 +23,7 @@
         public Exception Exception { get; private set; }
 
         private QAcidReport report = new QAcidReport();
+
         private int shrinkCount = 0;
 
         public QAcidState(QAcidRunner<Acid> runner)
@@ -35,9 +36,9 @@
             Shrunk = new Memory(this);
         }
 
-        public void Run(int times)
+        public void Run(int actionsPerRun)
         {
-            for (int j = 0; j < times; j++)
+            for (int j = 0; j < actionsPerRun; j++)
             {
                 Run();
                 if (Failed)
@@ -74,19 +75,14 @@
                 RunNumber = run;
                 Runner(this);
             }
-
             var failed = Failed;
             RunNumber = runNumber;
             Failed = false;
             FailingSpec = failingSpec;
             Exception = exception;
-
             Verifying = false;
             Shrinking = true;
-
             Memory.Set(key, oldVal);
-            //TempMemory = tempMemory;
-
             return failed;
         }
 

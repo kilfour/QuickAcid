@@ -4,6 +4,8 @@
 	{
 		private readonly QAcidState state;
 
+		//private readonly Func<Int> getC
+
 		private Dictionary<int, Dictionary<object, object>> MemoryPerRun { get; set; }
 
 		public Memory(QAcidState state)
@@ -29,22 +31,11 @@
 
 		public T Get<T>(object key)
 		{
-
-			try
-			{
-				return (T)GetThisRunsMemory()[key];
-			}
-			catch (Exception)
-			{
-				//Console.WriteLine("Trying to get '{0}' for run '{1}'.", TheKey, state.RunNumber);
-				return default(T);
-			}
-
+			return (T)GetThisRunsMemory()[key];
 		}
 
 		public void Set<T>(object key, T value)
 		{
-			//Console.WriteLine("Wrote '{0}' to '{1}' for run '{2}'.", value, TheKey, state.RunNumber);
 			GetThisRunsMemory()[key] = value;
 		}
 
@@ -54,42 +45,5 @@
 		}
 
 		private Dictionary<int, HashSet<string>> ShrinkableKeysPerRun { get; set; } = new();
-
-		public void AddShrinkableInput(string key, object value)
-		{
-			Set(key, value);
-
-			if (!ShrinkableKeysPerRun.TryGetValue(state.RunNumber, out var keys))
-			{
-				keys = new HashSet<string>();
-				ShrinkableKeysPerRun[state.RunNumber] = keys;
-			}
-
-			keys.Add(key);
-		}
-
-		public Dictionary<string, object> GetAllShrinkableInputs()
-		{
-			if (!ShrinkableKeysPerRun.TryGetValue(state.RunNumber, out var keys))
-				return new Dictionary<string, object>();
-
-			var dict = new Dictionary<string, object>();
-			foreach (var key in keys)
-			{
-				dict[key] = Get<object>(key);
-			}
-			return dict;
-		}
-
-		public Dictionary<string, object> GetAll()
-		{
-			return GetThisRunsMemory()
-				.Where(kvp => kvp.Key is string)
-				.ToDictionary(
-					kvp => (string)kvp.Key,
-					kvp => kvp.Value
-				);
-		}
-
 	}
 }
