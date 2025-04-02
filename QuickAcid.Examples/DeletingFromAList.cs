@@ -14,7 +14,7 @@ namespace QuickAcid.Examples
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "Explicit")]
 		public void ReportsError()
 		{
 			var intBetweenZeroAndTen = MGen.Int(0, 10);

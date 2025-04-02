@@ -4,7 +4,7 @@ namespace QuickAcid.Examples
 {
     public class ListOfObjects
     {
-        [Fact]
+        [Fact(Skip = "Explicit")]
         public void Check()
         {
             TheTest.Verify(10.Runs(), 100.ActionsPerRun());

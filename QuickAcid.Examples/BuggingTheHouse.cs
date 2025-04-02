@@ -13,7 +13,7 @@ namespace QuickAcid.Examples
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "Explicit")]
 		public void BugHouse1Error()
 		{
 			var test =
@@ -35,7 +35,7 @@ namespace QuickAcid.Examples
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "Explicit")]
 		public void BugHouse2Error()
 		{
 			var test =

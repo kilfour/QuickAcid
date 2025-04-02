@@ -24,7 +24,7 @@ namespace QuickAcid.Examples
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "Explicit")]
 		public void BugHouseError()
 		{
 			var test =

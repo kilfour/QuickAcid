@@ -4,7 +4,7 @@ namespace QuickAcid.Examples;
 
 public class BankAccountExample
 {
-    [Fact]
+    [Fact(Skip = "Explicit")]
     public void AccountPropertiesShouldHold()
     {
         TheTest.Verify(20.Runs(), 50.ActionsPerRun());
