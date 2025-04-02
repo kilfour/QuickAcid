@@ -172,48 +172,5 @@ namespace QuickAcid
                     ? "Irrelevant"
                     : value.ToString();
         }
-
-        public static IEnumerable<object> Input(object value)
-        {
-            if (value == null) yield break;
-
-            var type = value.GetType();
-
-            if (type == typeof(int))
-            {
-                yield return 0;
-                yield return 1;
-                yield return -1;
-            }
-            else if (typeof(IEnumerable<int>).IsAssignableFrom(type))
-            {
-                var list = ((IEnumerable<int>)value).ToList();
-                for (int i = 0; i < list.Count; i++)
-                    yield return list.Where((_, idx) => idx != i).ToList();
-            }
-            else if (type == typeof(string))
-            {
-                yield return "";
-                yield return null;
-            }
-
-            // You can plug in your advanced logic here later
-        }
-
-        public static string Summarize(object value)
-        {
-            if (value == null) return "null";
-
-            var type = value.GetType();
-            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            if (!props.Any()) return value.ToString();
-
-            var summaries = props
-                .Select(p => (Name: p.Name, Value: p.GetValue(value)))
-                .Where(p => p.Value != null)
-                .Select(p => $"{p.Name} : {p.Value}");
-
-            return string.Join(", ", summaries);
-        }
     }
 }

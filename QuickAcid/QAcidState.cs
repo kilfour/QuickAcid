@@ -94,7 +94,7 @@
 
         public bool IsNormalRun()
         {
-            return (Verifying == false && Shrinking == false && Reporting == false);
+            return Verifying == false && Shrinking == false && Reporting == false;
         }
 
         public void FailedWithException(Exception exception)
