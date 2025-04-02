@@ -4,9 +4,13 @@ namespace QuickAcid
 {
     public class QAcidReport
     {
-        private readonly List<object> entries = new List<object>();
+        private readonly List<QAcidReportEntry> entries = new List<QAcidReportEntry>();
 
-        public List<object> Entries { get { return entries; } }
+        public List<QAcidReportEntry> Entries { get { return entries; } }
+
+        public List<QAcidReportInputEntry> Inputs { get; } = new();
+
+        public int ShrinkAttempts { get; set; }
 
         public virtual void AddEntry(QAcidReportEntry reportEntry)
         {
@@ -67,7 +71,7 @@ namespace QuickAcid
 
     public class QAcidReportInputEntry : QAcidReportEntry
     {
-        public object Value;
+        public object Value { get; set; }
 
         public QAcidReportInputEntry(string key)
             : base(key) { }

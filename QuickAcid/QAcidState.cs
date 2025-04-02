@@ -23,6 +23,8 @@
         public Exception Exception { get; private set; }
 
         private QAcidReport report = new QAcidReport();
+        private int shrinkCount = 0;
+        private Dictionary<string, object> _preservedInputs;
 
         public QAcidState(QAcidRunner<Acid> runner)
         {
@@ -50,6 +52,7 @@
             Runner(this);
             if (Failed)
             {
+                _preservedInputs = TempMemory.GetAll();
                 HandleFailure();
                 return;
             }
@@ -172,12 +175,16 @@
                     Runs.Remove(current);
                 }
                 current++;
+                shrinkCount++;
             }
 
             Failed = true;
             FailingSpec = failingSpec;
             Exception = exception;
         }
+
+        public string ShrinkSummary =>
+            $"Falsified after {Runs.Count} runs, {shrinkCount} shrinks";
 
         private void ShrinkInputs()
         {
@@ -195,6 +202,7 @@
             {
                 RunNumber = run;
                 Runner(this);
+                shrinkCount++;
             }
 
             Failed = true;
@@ -202,9 +210,11 @@
             Exception = exception;
         }
 
+
         private void Report()
         {
             report = new QAcidReport();
+            report.ShrinkAttempts = shrinkCount;
             TempMemory = new SimpleMemory();
             Verifying = false;
             Shrinking = false;
@@ -226,10 +236,16 @@
 
             if (Exception != null)
             {
-                throw new FalsifiableException(report.ToString(), exception) { QAcidReport = report };
+                throw new FalsifiableException(ShrinkSummary + "\n" + report.ToString(), exception)
+                {
+                    QAcidReport = report
+                };
             }
 
-            throw new FalsifiableException(report.ToString()) { QAcidReport = report };
+            throw new FalsifiableException(ShrinkSummary + "\n" + report.ToString())
+            {
+                QAcidReport = report
+            };
         }
     }
 }

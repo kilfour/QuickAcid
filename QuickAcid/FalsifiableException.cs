@@ -9,5 +9,10 @@
 
 		public FalsifiableException(string message, Exception exception)
 			: base(message, exception) { }
+
+		// public override string ToString()
+		// {
+		// 	return Message;
+		// }
 	}
 }

@@ -1,6 +1,6 @@
 using QuickMGenerate;
 
-namespace QuickAcid.Tests.Examples;
+namespace QuickAcid.Examples;
 
 public class BankAccountExample
 {

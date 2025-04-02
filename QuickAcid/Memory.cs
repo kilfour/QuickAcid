@@ -52,5 +52,44 @@
 		{
 			return GetThisRunsMemory().ContainsKey(key);
 		}
+
+		private Dictionary<int, HashSet<string>> ShrinkableKeysPerRun { get; set; } = new();
+
+		public void AddShrinkableInput(string key, object value)
+		{
+			Set(key, value);
+
+			if (!ShrinkableKeysPerRun.TryGetValue(state.RunNumber, out var keys))
+			{
+				keys = new HashSet<string>();
+				ShrinkableKeysPerRun[state.RunNumber] = keys;
+			}
+
+			keys.Add(key);
+		}
+
+		public Dictionary<string, object> GetAllShrinkableInputs()
+		{
+			if (!ShrinkableKeysPerRun.TryGetValue(state.RunNumber, out var keys))
+				return new Dictionary<string, object>();
+
+			var dict = new Dictionary<string, object>();
+			foreach (var key in keys)
+			{
+				dict[key] = Get<object>(key);
+			}
+			return dict;
+		}
+
+		public Dictionary<string, object> GetAll()
+		{
+			return GetThisRunsMemory()
+				.Where(kvp => kvp.Key is string)
+				.ToDictionary(
+					kvp => (string)kvp.Key,
+					kvp => kvp.Value
+				);
+		}
+
 	}
 }

@@ -6,6 +6,13 @@ namespace QuickAcid.Tests.Shrinking.Objects
     public class IntProperty
     {
         [Fact]
+        public void ConsoleWriteTest()
+        {
+            Console.WriteLine("🔥 I am visible!");
+            Assert.True(true);
+        }
+
+        [Fact]
         public void OneRelevantProperty()
         {
             var generator =
@@ -23,9 +30,9 @@ namespace QuickAcid.Tests.Shrinking.Objects
 
             run.NumberOfReportEntriesIs(2);
 
-            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
-            Assert.Equal("input", inputÈntry.Key);
-            Assert.Equal("MyFirstProperty : 6", inputÈntry.Value);
+            var inputEntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
+            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("MyFirstProperty : 6", inputEntry.Value);
 
             var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
             Assert.Equal("act", actEntry.Key);

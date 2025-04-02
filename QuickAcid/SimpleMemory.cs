@@ -32,5 +32,29 @@
         {
             Dictionary[key] = value;
         }
+        public Dictionary<string, object> GetAllShrinkableInputs()
+        {
+            return Dictionary
+                .Where(kvp => kvp.Key is string) // assuming shrinkable input keys are strings (like "withdraw amount")
+                .ToDictionary(
+                    kvp => (string)kvp.Key,
+                    kvp => kvp.Value
+                );
+        }
+
+        public Dictionary<string, object> GetAll()
+        {
+            return Dictionary
+                .Where(kvp => kvp.Key is string) // assuming shrinkable input keys are strings (like "withdraw amount")
+                .ToDictionary(
+                    kvp => (string)kvp.Key,
+                    kvp => kvp.Value
+                );
+        }
+        public void AddShrinkableInput<T>(object key, T value)
+        {
+            Dictionary[key] = value;
+        }
+
     }
 }

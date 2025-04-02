@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
+using QuickAcid;
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid.Shrinking
+namespace QuickAcid
 {
     public class Shrink
     {
@@ -73,13 +74,13 @@ namespace QuickAcid.Shrinking
             return from m in Enumerable.Range(0, 1 << list.Count)
                    select
                        from i in Enumerable.Range(0, list.Count)
-                       where (m & (1 << i)) != 0
+                       where (m & 1 << i) != 0
                        select list[i];
         }
 
         private static string HandleProperties<T>(QAcidState state, object key, T value)
         {
-            var list = new List<String>();
+            var list = new List<string>();
             foreach (var propertyInfo in value.GetType().GetProperties(MyBinding.Flags))
             {
                 var prop = HandleProperty(state, key, value, propertyInfo);
@@ -170,6 +171,49 @@ namespace QuickAcid.Shrinking
                     .Any(shrinkstate => shrinkstate)
                     ? "Irrelevant"
                     : value.ToString();
+        }
+
+        public static IEnumerable<object> Input(object value)
+        {
+            if (value == null) yield break;
+
+            var type = value.GetType();
+
+            if (type == typeof(int))
+            {
+                yield return 0;
+                yield return 1;
+                yield return -1;
+            }
+            else if (typeof(IEnumerable<int>).IsAssignableFrom(type))
+            {
+                var list = ((IEnumerable<int>)value).ToList();
+                for (int i = 0; i < list.Count; i++)
+                    yield return list.Where((_, idx) => idx != i).ToList();
+            }
+            else if (type == typeof(string))
+            {
+                yield return "";
+                yield return null;
+            }
+
+            // You can plug in your advanced logic here later
+        }
+
+        public static string Summarize(object value)
+        {
+            if (value == null) return "null";
+
+            var type = value.GetType();
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            if (!props.Any()) return value.ToString();
+
+            var summaries = props
+                .Select(p => (Name: p.Name, Value: p.GetValue(value)))
+                .Where(p => p.Value != null)
+                .Select(p => $"{p.Name} : {p.Value}");
+
+            return string.Join(", ", summaries);
         }
     }
 }
