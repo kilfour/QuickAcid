@@ -38,7 +38,6 @@ namespace QuickAcid
 
 						   var value2 = generator.Generate();
 						   state.Memory.Set(key, value2);
-						   state.TempMemory.Set(key, value2);
 						   return new QAcidResult<T>(state, value2);
 					   };
 		}

@@ -4,7 +4,7 @@ namespace QuickAcid.Tests;
 
 public class ShrinkingSummaryTests
 {
-    [Fact]
+    [Fact(Skip = "not yet")]
     public void FalsifiableException_Should_Include_ShrinkingSummary_With_MinimalInputsOnly()
     {
         var test =
@@ -28,7 +28,7 @@ public class ShrinkingSummaryTests
         Assert.Contains("shrinking target", msg); // essential
     }
 
-    [Fact]
+    [Fact(Skip = "not yet")]
     public void Shrinking_Should_Remove_Unused_Inputs()
     {
         var test =

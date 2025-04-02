@@ -62,10 +62,8 @@
             Verifying = true;
             Shrinking = false;
             Reporting = false;
-            var tempMemory = TempMemory;
             Failed = false;
             TempMemory = new SimpleMemory();
-
             var failingSpec = FailingSpec;
             var exception = Exception;
             var runNumber = RunNumber;
@@ -87,7 +85,7 @@
             Shrinking = true;
 
             Memory.Set(key, oldVal);
-            TempMemory = tempMemory;
+            //TempMemory = tempMemory;
 
             return failed;
         }

@@ -6,13 +6,6 @@ namespace QuickAcid.Tests.Shrinking.Objects
     public class IntProperty
     {
         [Fact]
-        public void ConsoleWriteTest()
-        {
-            Console.WriteLine("🔥 I am visible!");
-            Assert.True(true);
-        }
-
-        [Fact]
         public void OneRelevantProperty()
         {
             var generator =
