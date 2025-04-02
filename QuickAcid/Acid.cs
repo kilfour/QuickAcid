@@ -1,6 +1,6 @@
 ﻿namespace QuickAcid
 {
-    public struct Acid : IComparable<Acid>, IEquatable<Acid>
+    public struct Acid : IComparable<Acid>, IEquatable<Acid> // This is a Unit type really
     {
         public static Acid Test { get; } = new Acid();
 
