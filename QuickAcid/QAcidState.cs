@@ -24,7 +24,6 @@
 
         private QAcidReport report = new QAcidReport();
         private int shrinkCount = 0;
-        private Dictionary<string, object> _preservedInputs;
 
         public QAcidState(QAcidRunner<Acid> runner)
         {
@@ -52,7 +51,6 @@
             Runner(this);
             if (Failed)
             {
-                _preservedInputs = TempMemory.GetAll();
                 HandleFailure();
                 return;
             }
