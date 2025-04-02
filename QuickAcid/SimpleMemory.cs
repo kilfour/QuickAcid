@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
     public class SimpleMemory
     {

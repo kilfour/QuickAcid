@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
 	public class Memory
 	{
@@ -32,7 +29,7 @@ namespace QuickAcid
 
 		public T Get<T>(object key)
 		{
-			
+
 			try
 			{
 				return (T)GetThisRunsMemory()[key];
@@ -42,7 +39,7 @@ namespace QuickAcid
 				//Console.WriteLine("Trying to get '{0}' for run '{1}'.", TheKey, state.RunNumber);
 				return default(T);
 			}
-			
+
 		}
 
 		public void Set<T>(object key, T value)

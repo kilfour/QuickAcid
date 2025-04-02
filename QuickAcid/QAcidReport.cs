@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace QuickAcid
 {
@@ -45,7 +43,7 @@ namespace QuickAcid
 
         public QAcidReportActEntry(string key) : base(key)
         {
-            
+
         }
 
         public QAcidReportActEntry(string key, Exception exception) : this(key)
@@ -76,7 +74,7 @@ namespace QuickAcid
 
         public override string ToString()
         {
-            if(Value == null)
+            if (Value == null)
                 return $"Input : {Key}";
             return $"Input : {Key} = {Value}";
         }

@@ -1,6 +1,5 @@
 ﻿using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
-using Xunit;
 
 namespace QuickAcid.Tests
 {

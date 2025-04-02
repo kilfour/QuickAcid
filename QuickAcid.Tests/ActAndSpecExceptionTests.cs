@@ -1,6 +1,4 @@
-﻿using System;
-using QuickAcid.Tests.ZheZhools;
-using Xunit;
+﻿using QuickAcid.Tests.ZheZhools;
 
 namespace QuickAcid.Tests
 {
@@ -11,7 +9,7 @@ namespace QuickAcid.Tests
         {
             var run =
                 AcidTestRun.FailedRun(
-                    from foo in "foo".Act(() => { if (true) throw new Exception();})
+                    from foo in "foo".Act(() => { if (true) throw new Exception(); })
                     from spec in "spec".Spec(() => true)
                     select Acid.Test);
 

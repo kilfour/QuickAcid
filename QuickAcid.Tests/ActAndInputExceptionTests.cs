@@ -1,7 +1,5 @@
-﻿using System;
-using QuickAcid.Tests.ZheZhools;
+﻿using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
-using Xunit;
 
 namespace QuickAcid.Tests
 {
@@ -12,7 +10,7 @@ namespace QuickAcid.Tests
         {
             var run =
                 AcidTestRun.FailedRun(
-                    from input in "input".ShrinkableInput(MGen.Int(1,1))
+                    from input in "input".ShrinkableInput(MGen.Int(1, 1))
                     from foo in "foo".Act(() =>
                     {
                         if (input == 1) throw new Exception();

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
 	public static class QAcidRunnerToLinq
 	{
@@ -19,8 +17,8 @@ namespace QuickAcid
 					if (s.Failed)
 						return new QAcidResult<TValueTwo>(s, default(TValueTwo));
 					return new QAcidResult<TValueTwo>(s, selector(runner(s).Value));
-				}; 
-			
+				};
+
 		}
 
 		// This is the Bind function

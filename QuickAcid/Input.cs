@@ -1,5 +1,4 @@
-﻿using System;
-using QuickMGenerate;
+﻿using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid
@@ -19,12 +18,12 @@ namespace QuickAcid
 					if (s.Reporting)
 					{
 						var value1 = s.Memory.Get<T>(key);
-					    var entry =
-					        new QAcidReportInputEntry(key)
-					        {
-					            Value = stringify?.Invoke(value1)
-                            };
-					    s.LogReport(entry);
+						var entry =
+							new QAcidReportInputEntry(key)
+							{
+								Value = stringify?.Invoke(value1)
+							};
+						s.LogReport(entry);
 						return new QAcidResult<T>(s, value1) { Key = key };
 					}
 					if (s.Shrinking || s.Verifying)

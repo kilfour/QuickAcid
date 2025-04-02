@@ -1,7 +1,4 @@
-﻿using System;
-using Xunit;
-
-namespace QuickAcid.Tests
+﻿namespace QuickAcid.Tests
 {
     public class SpecExceptionTests
     {

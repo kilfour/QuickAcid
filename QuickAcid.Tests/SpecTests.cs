@@ -1,5 +1,4 @@
 ﻿using QuickAcid.Tests.ZheZhools;
-using Xunit;
 
 namespace QuickAcid.Tests
 {

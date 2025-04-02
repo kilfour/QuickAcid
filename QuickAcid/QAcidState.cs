@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
     public class QAcidState
     {
@@ -230,7 +226,7 @@ namespace QuickAcid
 
             if (Exception != null)
             {
-                throw new FalsifiableException(report.ToString(), exception) {QAcidReport = report};
+                throw new FalsifiableException(report.ToString(), exception) { QAcidReport = report };
             }
 
             throw new FalsifiableException(report.ToString()) { QAcidReport = report };

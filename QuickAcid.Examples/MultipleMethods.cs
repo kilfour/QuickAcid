@@ -1,6 +1,4 @@
-﻿using System;
-using QuickMGenerate;
-using Xunit;
+﻿using QuickMGenerate;
 
 namespace QuickAcid.Examples
 {
@@ -13,7 +11,7 @@ namespace QuickAcid.Examples
 			{
 				bug += "1";
 				if (bug.EndsWith("1221") && a == 6)
-					throw new Exception(); 
+					throw new Exception();
 				return true;
 			}
 
@@ -21,7 +19,7 @@ namespace QuickAcid.Examples
 			{
 				bug += "2";
 				if (bug.EndsWith("122") && a == "p")
-					throw new Exception(); 
+					throw new Exception();
 				return true;
 			}
 		}

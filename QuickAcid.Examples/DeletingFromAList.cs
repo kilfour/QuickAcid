@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
-using Xunit;
+﻿using QuickMGenerate;
 
 namespace QuickAcid.Examples
 {

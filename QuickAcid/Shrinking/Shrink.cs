@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Shrinking
@@ -36,7 +33,7 @@ namespace QuickAcid.Shrinking
             if (typeof(T).IsClass)
             {
                 shrunk = HandleProperties(state, key, value);
-                
+
                 if (shrunk == "Irrelevant")
                 {
                     var oldValues = new Dictionary<string, object>();
@@ -74,10 +71,10 @@ namespace QuickAcid.Shrinking
         public static IEnumerable<IEnumerable<T>> GetPowerSet<T>(List<T> list)
         {
             return from m in Enumerable.Range(0, 1 << list.Count)
-                select
-                    from i in Enumerable.Range(0, list.Count)
-                    where (m & (1 << i)) != 0
-                    select list[i];
+                   select
+                       from i in Enumerable.Range(0, list.Count)
+                       where (m & (1 << i)) != 0
+                       select list[i];
         }
 
         private static string HandleProperties<T>(QAcidState state, object key, T value)

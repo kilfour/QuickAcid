@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace QuickAcid.Tests.ZheZhools
+﻿namespace QuickAcid.Tests.ZheZhools
 {
     public class AcidTestRun
     {

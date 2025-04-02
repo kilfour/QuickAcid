@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
     public struct Acid : IComparable<Acid>, IEquatable<Acid>
     {

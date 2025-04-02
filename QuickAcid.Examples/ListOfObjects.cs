@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using QuickMGenerate;
-using Xunit;
+﻿using QuickMGenerate;
 
 namespace QuickAcid.Examples
 {
@@ -24,7 +20,7 @@ namespace QuickAcid.Examples
 
         private static QAcidRunner<Acid> Add(TheContainer container)
         {
-            return 
+            return
                 from input in "add input".Input(() => MGen.One<TheObject>().Generate())
                 from add in "TheContainer.Add".Act(() => container.Add(input))
                 from added in "added".Spec(() => container.List.Contains(input))

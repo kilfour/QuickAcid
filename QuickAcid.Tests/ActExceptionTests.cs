@@ -1,10 +1,8 @@
-﻿using System;
-using QuickAcid.Tests.ZheZhools;
-using Xunit;
+﻿using QuickAcid.Tests.ZheZhools;
 
 namespace QuickAcid.Tests
 {
-    public class ActExceptionTests 
+    public class ActExceptionTests
     {
         [Fact]
         public void SimpleExceptionThrown()

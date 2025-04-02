@@ -1,7 +1,5 @@
-﻿using System;
-using QuickAcid.Tests.ZheZhools;
+﻿using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
-using Xunit;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {
@@ -88,11 +86,11 @@ namespace QuickAcid.Tests.Shrinking.Objects
 
                 var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
                 Assert.Equal("input", inputÈntry.Key);
-                if ((string) inputÈntry.Value == "MyFirstProperty : 6")
+                if ((string)inputÈntry.Value == "MyFirstProperty : 6")
                     sometimesPropOne = true;
                 else if ((string)inputÈntry.Value == "MySecondProperty : 6")
                     sometimesPropTwo = true;
-                else if ((string) inputÈntry.Value == "MyFirstProperty : 6, MySecondProperty : 6")
+                else if ((string)inputÈntry.Value == "MyFirstProperty : 6, MySecondProperty : 6")
                     sometimesBothProps = true;
                 else
                     somethingElse = (string)inputÈntry.Value;
@@ -120,7 +118,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var run =
                 AcidTestRun.FailedRun(10,
                     from input in "input".ShrinkableInput(generator)
-                    from result in "act".Act(() => new Something {MyFirstProperty = input.MyFirstProperty})
+                    from result in "act".Act(() => new Something { MyFirstProperty = input.MyFirstProperty })
                     from spec in "equal".Spec(() =>
                         input.MyFirstProperty == result.MyFirstProperty
                         && input.MySecondProperty == result.MySecondProperty

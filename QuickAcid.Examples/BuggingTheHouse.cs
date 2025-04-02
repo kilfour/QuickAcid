@@ -1,6 +1,4 @@
-﻿using System;
-using QuickMGenerate;
-using Xunit;
+﻿using QuickMGenerate;
 
 namespace QuickAcid.Examples
 {

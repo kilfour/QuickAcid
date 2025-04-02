@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
 	public static partial class QAcid
 	{
@@ -9,21 +7,21 @@ namespace QuickAcid
 			return
 				s =>
 				{
-					if(predicate())
+					if (predicate())
 						return runner(s);
 					return new QAcidResult<T>(s, default(T));
 				};
 		}
 
-        public static QAcidRunner<T> If<T>(this QAcidRunner<T> runner, Func<bool> predicate)
-        {
-            return
-                s =>
-                {
-                    if (predicate())
-                        return runner(s);
-                    return new QAcidResult<T>(s, default(T));
-                };
-        }
+		public static QAcidRunner<T> If<T>(this QAcidRunner<T> runner, Func<bool> predicate)
+		{
+			return
+				s =>
+				{
+					if (predicate())
+						return runner(s);
+					return new QAcidResult<T>(s, default(T));
+				};
+		}
 	}
 }

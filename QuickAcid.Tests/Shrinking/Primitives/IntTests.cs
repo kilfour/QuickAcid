@@ -1,7 +1,5 @@
-﻿using System;
-using QuickAcid.Tests.ZheZhools;
+﻿using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
-using Xunit;
 
 namespace QuickAcid.Tests.Shrinking.Primitives
 {
@@ -22,13 +20,13 @@ namespace QuickAcid.Tests.Shrinking.Primitives
 
             run.NumberOfReportEntriesIs(2);
 
-            var inputÈntry =  run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
+            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
             Assert.Equal("input1", inputÈntry.Key);
             Assert.Equal("6", inputÈntry.Value);
 
             var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
             Assert.Equal("act", actEntry.Key);
-            Assert.NotNull(actEntry.Exception);  
+            Assert.NotNull(actEntry.Exception);
         }
 
         [Fact]

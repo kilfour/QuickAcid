@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
 	public static partial class QAcid
 	{

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
 	public static partial class QAcid
 	{
@@ -12,14 +10,14 @@ namespace QuickAcid
 						try
 						{
 							var result = new QAcidResult<TOutput>(state, func());
-						    state.LogReport(new QAcidReportActEntry(key));
-						    return result;
+							state.LogReport(new QAcidReportActEntry(key));
+							return result;
 						}
 						catch (Exception exception)
 						{
-						    state.FailedWithException(exception);
-						    state.LogReport(new QAcidReportActEntry(key, exception));
-                            return new QAcidResult<TOutput>(state, default(TOutput));
+							state.FailedWithException(exception);
+							state.LogReport(new QAcidReportActEntry(key, exception));
+							return new QAcidResult<TOutput>(state, default(TOutput));
 						}
 					};
 		}
@@ -27,19 +25,19 @@ namespace QuickAcid
 		public static QAcidRunner<Acid> Act(this string key, Action action)
 		{
 			return
-			    state =>
+				state =>
 				{
 					try
 					{
 						action();
-					    state.LogReport(new QAcidReportActEntry(key));
-                        return new QAcidResult<Acid>(state, Acid.Test);
+						state.LogReport(new QAcidReportActEntry(key));
+						return new QAcidResult<Acid>(state, Acid.Test);
 					}
 					catch (Exception exception)
 					{
-					    state.FailedWithException(exception);
-					    state.LogReport(new QAcidReportActEntry(key, exception));
-                        return new QAcidResult<Acid>(state, Acid.Test);
+						state.FailedWithException(exception);
+						state.LogReport(new QAcidReportActEntry(key, exception));
+						return new QAcidResult<Acid>(state, Acid.Test);
 					}
 				};
 		}
