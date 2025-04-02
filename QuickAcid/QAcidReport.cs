@@ -4,7 +4,7 @@ namespace QuickAcid
 {
     public class QAcidReport
     {
-        private readonly List<QAcidReportEntry> entries = new List<QAcidReportEntry>();
+        private readonly List<QAcidReportEntry> entries = [];
 
         public List<QAcidReportEntry> Entries { get { return entries; } }
 
@@ -41,12 +41,9 @@ namespace QuickAcid
 
     public class QAcidReportActEntry : QAcidReportEntry
     {
-        public Exception Exception { get; set; }
+        public Exception? Exception { get; set; }
 
-        public QAcidReportActEntry(string key) : base(key)
-        {
-
-        }
+        public QAcidReportActEntry(string key) : base(key) { }
 
         public QAcidReportActEntry(string key, Exception exception) : this(key)
         {
@@ -69,7 +66,7 @@ namespace QuickAcid
 
     public class QAcidReportInputEntry : QAcidReportEntry
     {
-        public object Value { get; set; }
+        public object? Value { get; set; }
 
         public QAcidReportInputEntry(string key)
             : base(key) { }
