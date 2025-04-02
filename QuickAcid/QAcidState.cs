@@ -57,7 +57,7 @@
             RunNumber++;
         }
 
-        public bool ShrinkRun(object key, object value)
+        public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
         {
             Verifying = true;
             Shrinking = false;

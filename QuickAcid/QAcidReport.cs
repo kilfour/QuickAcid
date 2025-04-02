@@ -8,8 +8,6 @@ namespace QuickAcid
 
         public List<QAcidReportEntry> Entries { get { return entries; } }
 
-        public List<QAcidReportInputEntry> Inputs { get; } = new();
-
         public int ShrinkAttempts { get; set; }
 
         public virtual void AddEntry(QAcidReportEntry reportEntry)
