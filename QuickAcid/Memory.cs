@@ -27,6 +27,12 @@
 			{
 				return dictionary.ContainsKey(key);
 			}
+			public Dictionary<string, object> GetAll()
+			{
+				return dictionary
+					.Where(kvp => kvp.Key is string)
+					.ToDictionary(kvp => (string)kvp.Key, kvp => kvp.Value);
+			}
 		}
 
 		private readonly Func<int> getCurrentActionId;
@@ -52,6 +58,14 @@
 		public void ResetAllRunInputs()
 		{
 			OnceOnlyInputsPerRun = new Access();
+		}
+
+		public Dictionary<string, object> GetAll()
+		{
+			return MemoryPerAction
+				.SelectMany(kvp => kvp.Value.GetAll())
+				.GroupBy(kvp => kvp.Key)
+				.ToDictionary(g => g.Key, g => g.First().Value);
 		}
 	}
 }
