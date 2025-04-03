@@ -15,7 +15,6 @@
 
         public bool Verifying { get; private set; }
 
-
         public string FailingSpec { get; private set; }
         public bool Failed { get; private set; }
         public Exception Exception { get; private set; }
@@ -192,6 +191,7 @@
             Verifying = false;
             Shrinking = true;
             Memory.ForThisAction().Set(key, oldVal);
+
             return failed;
         }
 
@@ -207,7 +207,8 @@
                 report.AddEntry(new QAcidReportSpecEntry(FailingSpec));
             throw new FalsifiableException(ShrinkSummary + "\n" + report.ToString(), Exception)
             {
-                QAcidReport = report
+                QAcidReport = report,
+                MemoryDump = Memory.ToDiagnosticString()
             };
         }
     }

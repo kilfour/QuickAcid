@@ -1,110 +1,148 @@
-﻿using QuickMGenerate;
+﻿using System.Text;
+using QuickMGenerate;
 
-namespace QuickAcid
+namespace QuickAcid;
+
+public class Memory
 {
-	public class Memory
+	public class Access
 	{
-		public class Access
+		public class DecoratedValue
 		{
-			public class DecoratedValue
-			{
-				public object? Value { get; set; }
-				public bool IsIrrelevant { get; set; }
-				public string? ReportingMessage { get; set; }
-			}
-
-			public string? ActionKey { get; set; }
-			public Exception? LastException { get; set; }
+			public object? Value { get; set; }
 			public bool IsIrrelevant { get; set; }
-			private Dictionary<object, DecoratedValue> dictionary = [];
+			public string? ReportingMessage { get; set; }
 
-			public T GetOrAdd<T>(object key, Func<T> factory)
+			public string ToDiagnosticString()
 			{
-				if (!dictionary.ContainsKey(key))
-					dictionary[key] = new DecoratedValue { Value = factory()!, IsIrrelevant = false };
-				return Get<T>(key);
-			}
-
-			public T Get<T>(object key)
-			{
-				return (T)dictionary[key].Value!;
-			}
-
-			public void Set<T>(object key, T value)
-			{
-				if (!dictionary.ContainsKey(key))
-					dictionary[key] = new DecoratedValue { Value = value!, IsIrrelevant = false };
+				var sb = new StringBuilder();
+				if (Value == null)
+					sb.Append("null");
 				else
-					dictionary[key].Value = value!;
-			}
-
-			public void MarkAsIrrelevant<T>(object key)
-			{
-				dictionary[key].IsIrrelevant = true;
-			}
-
-			public void AddReportingMessage<T>(object key, string message)
-			{
-				dictionary[key].ReportingMessage = message;
-			}
-
-			public bool ContainsKey(object key)
-			{
-				return dictionary.ContainsKey(key);
-			}
-
-			public Dictionary<string, DecoratedValue> GetAll()
-			{
-				return dictionary
-					.Where(kvp => kvp.Key is string)
-					.ToDictionary(kvp => (string)kvp.Key, kvp => kvp.Value);
-			}
-
-			public void AddToReport(QAcidReport report)
-			{
-				foreach (var pair in GetAll())
-				{
-					if (pair.Value!.IsIrrelevant) continue;
-					var value = string.IsNullOrEmpty(pair.Value.ReportingMessage) ? pair.Value.Value : pair.Value.ReportingMessage;
-					report.AddEntry(new QAcidReportInputEntry(pair.Key) { Value = value });
-				}
-				report.AddEntry(new QAcidReportActEntry(ActionKey!) { Exception = LastException });
+					sb.Append(Value);
+				if (IsIrrelevant)
+					sb.Append(" : Irrelevant");
+				if (ReportingMessage != null)
+					sb.AppendFormat(", {0}", ReportingMessage);
+				return sb.ToString();
 			}
 		}
-		private readonly Func<int> getCurrentActionId;
 
-		public Access OnceOnlyInputsPerRun { get; set; }
+		public string? ActionKey { get; set; }
+		public Exception? LastException { get; set; }
+		public bool IsIrrelevant { get; set; }
+		private Dictionary<object, DecoratedValue> dictionary = [];
 
-		private Dictionary<int, Access> MemoryPerAction { get; set; }
-
-		public Memory(Func<int> getCurrentActionId)
+		public T GetOrAdd<T>(object key, Func<T> factory)
 		{
-			this.getCurrentActionId = getCurrentActionId;
-			OnceOnlyInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
-			MemoryPerAction = [];
+			if (!dictionary.ContainsKey(key))
+				dictionary[key] = new DecoratedValue { Value = factory()!, IsIrrelevant = false };
+			return Get<T>(key);
 		}
 
-		public void AddActionToReport(int actionNumber, QAcidReport report)
+		public T Get<T>(object key)
 		{
-			if (MemoryPerAction.ContainsKey(actionNumber))
-				MemoryPerAction[actionNumber].AddToReport(report);
+			return (T)dictionary[key].Value!;
 		}
 
-		public Access ForThisAction()
+		public void Set<T>(object key, T value)
 		{
-			if (!MemoryPerAction.ContainsKey(getCurrentActionId()))
-				MemoryPerAction[getCurrentActionId()] = new Access();
-			return MemoryPerAction[getCurrentActionId()];
+			if (!dictionary.ContainsKey(key))
+				dictionary[key] = new DecoratedValue { Value = value!, IsIrrelevant = false };
+			else
+				dictionary[key].Value = value!;
 		}
 
-		public void ResetAllRunInputs()
+		public void MarkAsIrrelevant<T>(object key)
 		{
-			OnceOnlyInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
+			dictionary[key].IsIrrelevant = true;
+		}
+
+		public void AddReportingMessage<T>(object key, string message)
+		{
+			dictionary[key].ReportingMessage = message;
+		}
+
+		public bool ContainsKey(object key)
+		{
+			return dictionary.ContainsKey(key);
+		}
+
+		public Dictionary<string, DecoratedValue> GetAll()
+		{
+			return dictionary
+				.Where(kvp => kvp.Key is string)
+				.ToDictionary(kvp => (string)kvp.Key, kvp => kvp.Value);
 		}
 
 		public void AddToReport(QAcidReport report)
 		{
-			MemoryPerAction.ForEach(a => a.Value.AddToReport(report));
+			foreach (var pair in GetAll())
+			{
+				if (pair.Value!.IsIrrelevant) continue;
+				var value = string.IsNullOrEmpty(pair.Value.ReportingMessage) ? pair.Value.Value : pair.Value.ReportingMessage;
+				report.AddEntry(new QAcidReportInputEntry(pair.Key) { Value = value });
+			}
+			report.AddEntry(new QAcidReportActEntry(ActionKey!) { Exception = LastException });
 		}
+	}
+	private readonly Func<int> getCurrentActionId;
+
+	public Access OnceOnlyInputsPerRun { get; set; }
+
+	private Dictionary<int, Access> MemoryPerAction { get; set; }
+
+	public Memory(Func<int> getCurrentActionId)
+	{
+		this.getCurrentActionId = getCurrentActionId;
+		OnceOnlyInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
+		MemoryPerAction = [];
+	}
+
+	public void AddActionToReport(int actionNumber, QAcidReport report)
+	{
+		if (MemoryPerAction.ContainsKey(actionNumber))
+			MemoryPerAction[actionNumber].AddToReport(report);
+	}
+
+	public Access ForThisAction()
+	{
+		if (!MemoryPerAction.ContainsKey(getCurrentActionId()))
+			MemoryPerAction[getCurrentActionId()] = new Access();
+		return MemoryPerAction[getCurrentActionId()];
+	}
+
+	public void ResetAllRunInputs()
+	{
+		OnceOnlyInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
+	}
+
+	public void AddToReport(QAcidReport report)
+	{
+		MemoryPerAction.ForEach(a => a.Value.AddToReport(report));
+	}
+
+	public string ToDiagnosticString()
+	{
+		var sb = new StringBuilder();
+		sb.AppendLine("=== Memory Dump ===");
+
+		sb.AppendLine("--- OnceOnlyInputsPerRun ---");
+		foreach (var kvp in OnceOnlyInputsPerRun.GetAll())
+		{
+			sb.AppendLine($"{kvp.Key} = {kvp.Value}");
+		}
+
+		sb.AppendLine("--- MemoryPerAction ---");
+		foreach (var action in MemoryPerAction)
+		{
+			sb.AppendLine($"Action {action.Key}:");
+			foreach (var kvp in action.Value.GetAll())
+			{
+				sb.AppendLine($"  {kvp.Key} = {kvp.Value.ToDiagnosticString()}");
+			}
+		}
+
+		return sb.ToString();
 	}
 }

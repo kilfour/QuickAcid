@@ -9,7 +9,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void OneRelevantInt()
         {
             var run =
-                AcidTestRun.FailedRun(10,
+                AcidTestRun.FailedRun(50,
                     from input1 in "input1".ShrinkableInput(MGen.Int(5, 7))
                     from input2 in "input2".ShrinkableInput(MGen.Int(5, 7))
                     from foo in "act".Act(() =>
@@ -33,7 +33,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void TwoRelevantInts()
         {
             var run =
-                AcidTestRun.FailedRun(20,
+                AcidTestRun.FailedRun(50,
                     from input1 in "input1".ShrinkableInput(MGen.Int(5, 7))
                     from input2 in "input2".ShrinkableInput(MGen.Int(5, 7))
                     from foo in "act".Act(() =>

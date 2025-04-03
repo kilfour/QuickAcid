@@ -157,21 +157,25 @@ namespace QuickAcid
 
         private static string ShrinkPrimitive(QAcidState state, object key, object value, object[] primitiveVals)
         {
-            if (primitiveVals.Contains(value))
-            {
-                var originalShrinkState = state.ShrinkRun(key, value);
-                return primitiveVals.Where(x => !x.Equals(value))
-                    .Select(primitiveVal => state.ShrinkRun(key, primitiveVal))
-                    .Any(shrinkstate => shrinkstate == originalShrinkState)
-                    ? "Irrelevant"
-                    : value.ToString();
-            }
-            return
-                primitiveVals
-                    .Select(primitiveVal => state.ShrinkRun(key, primitiveVal))
-                    .Any(shrinkstate => shrinkstate)
-                    ? "Irrelevant"
-                    : value.ToString();
+            var originalFails = state.ShrinkRun(key, value);
+
+            if (!originalFails)
+                return "Irrelevant";
+
+            // If the original value does *not* cause failure, it's irrelevant
+            if (!state.ShrinkRun(key, value))
+                return "Irrelevant";
+
+            // Try changing it: if *none* of the replacements avoid the failure, it's irrelevant
+            bool failureAlwaysOccurs = primitiveVals
+                .Where(x => !Equals(x, value))
+                .All(x => state.ShrinkRun(key, x));
+
+
+
+            return failureAlwaysOccurs
+                ? "Irrelevant"
+                : value.ToString(); // changing it avoids the failure, so it's relevant
         }
     }
 }
