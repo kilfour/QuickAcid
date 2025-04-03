@@ -8,12 +8,17 @@ namespace QuickAcid
 	{
 		public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator)
 		{
+			return ShrinkableInput<T>(key, generator, _ => true);
+		}
+
+		public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator, Func<T, bool> shrinkingGuard)
+		{
 			return state =>
 				{
 					if (state.Shrinking && !state.Shrunk.ForThisAction().ContainsKey(key))
 					{
 						var value = state.Memory.ForThisAction().Get<T>(key);
-						var shrunk = Shrink.Input(state, key, value);
+						var shrunk = Shrink.Input(state, key, value, obj => shrinkingGuard((T)obj));
 						if (shrunk as string == "Irrelevant")
 							state.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
 						else

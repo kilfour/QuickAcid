@@ -9,11 +9,11 @@ namespace QuickAcid
         private static readonly Dictionary<Type, object[]> PrimitiveValues =
             new Dictionary<Type, object[]>
             {
-                {typeof(int), new object[] { -1, 0, 1 }},
+                {typeof(int), new object[] { -1000, -1, 0, 1, 1000 }},
                 {typeof(string), new object[] { null, "", new string('-', 256), new string('-', 1024) }},
             };
 
-        public static object Input<T>(QAcidState state, object key, T value)
+        public static object Input<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
         {
             var shrunk = "Busy";
             state.Shrunk.ForThisAction().Set(key, shrunk);
@@ -26,7 +26,7 @@ namespace QuickAcid
             var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(typeof(T)));
             if (primitiveKey != null)
             {
-                shrunk = ShrinkPrimitive(state, key, value, PrimitiveValues[primitiveKey]);
+                shrunk = ShrinkPrimitive(state, key, value, PrimitiveValues[primitiveKey], shrinkingGuard);
                 state.Shrunk.ForThisAction().Set(key, shrunk);
                 return shrunk;
             }
@@ -155,27 +155,20 @@ namespace QuickAcid
             return $"[ {string.Join(", ", theList.Select(v => v.ToString()))} ]";
         }
 
-        private static string ShrinkPrimitive(QAcidState state, object key, object value, object[] primitiveVals)
+        private static string? ShrinkPrimitive(QAcidState state, string key, object value, object[] primitiveVals, Func<object, bool> shrinkingGuard)
         {
             var originalFails = state.ShrinkRun(key, value);
-
             if (!originalFails)
                 return "Irrelevant";
-
-            // If the original value does *not* cause failure, it's irrelevant
-            if (!state.ShrinkRun(key, value))
-                return "Irrelevant";
-
-            // Try changing it: if *none* of the replacements avoid the failure, it's irrelevant
-            bool failureAlwaysOccurs = primitiveVals
-                .Where(x => !Equals(x, value))
-                .All(x => state.ShrinkRun(key, x));
-
-
-
-            return failureAlwaysOccurs
-                ? "Irrelevant"
-                : value.ToString(); // changing it avoids the failure, so it's relevant
+#if DEBUG
+            QAcidDebug.Write($"    Checking key: {key}, original={value}, originalFails: {originalFails}\n");
+#endif            
+            var filtered = primitiveVals.Where(val => shrinkingGuard(val)).ToArray();
+            bool failureAlwaysOccurs =
+                filtered
+                    .Where(x => !Equals(x, value))
+                    .All(x => state.ShrinkRun(key, x));
+            return failureAlwaysOccurs ? "Irrelevant" : value.ToString();
         }
     }
 }

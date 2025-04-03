@@ -47,6 +47,7 @@
             Runner(this);
             if (Failed)
             {
+
                 HandleFailure();
                 return;
             }
@@ -93,6 +94,10 @@
 
         private void HandleFailure()
         {
+#if DEBUG
+            QAcidDebug.WriteLine("BEFORE SHRINKING");
+            QAcidDebug.WriteLine(Memory.ToDiagnosticString());
+#endif
             ShrinkActions();
             ShrinkInputs();
             Report();
@@ -178,9 +183,20 @@
             var runNumber = CurrentActionNumber;
             var oldVal = Memory.ForThisAction().Get<object>(key);
             Memory.ForThisAction().Set(key, value);
+
+#if DEBUG
+            var sanityCheck = Memory.ForThisAction().Get<object>(key);
+            QAcidDebug.WriteLine("");
+            QAcidDebug.WriteLine($"[shrink run] action #{CurrentActionNumber}");
+            QAcidDebug.WriteLine($"    {key} was set to {value}, now reads {sanityCheck}");
+            QAcidDebug.WriteLine($"    [state] QAcidState: {GetHashCode()}, Thread: {Thread.CurrentThread.ManagedThreadId}");
+#endif
+
             foreach (var actionNumber in ActionNumbers)
             {
                 CurrentActionNumber = actionNumber;
+                if (Failed)
+                    QAcidDebug.WriteLine($"[FAILED SHRINK] Key={key}, Value={value}, Exception={Exception?.Message}");
                 Runner(this);
             }
             var failed = Failed;

@@ -1,35 +1,33 @@
 public static class QAcidDebug
 {
-    public static Action<string>? Log { get; set; }
+    [ThreadStatic]
+    private static Action<string>? _log;
 
-    public static void Write(string message)
-    {
-        Log?.Invoke(message);
-    }
+    public static void Write(string message) => _log?.Invoke(message);
+    public static void WriteLine(string message) => _log?.Invoke(message + Environment.NewLine);
 
-    public static void WriteLine(string message)
-    {
-        Log?.Invoke(message + Environment.NewLine);
-    }
-
-    public static void Disable()
-    {
-        Log = null;
-    }
+    public static void Disable() => _log = null;
 
     public static void EnableFileLogging(string fileName = "log.txt")
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", fileName);
-        Log = msg => File.AppendAllText(Path.GetFullPath(path), msg);
+        var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", fileName);
+        File.Delete(path);
+        _log = msg => File.AppendAllText(Path.GetFullPath(path), msg);
     }
-    public static QAcidDebugLoggingDisposable Logging() { return new QAcidDebugLoggingDisposable(); }
-    public class QAcidDebugLoggingDisposable : IDisposable
+
+    public static IDisposable Logging(string fileName = "log.txt") =>
+        new ScopedLogging(fileName);
+
+    private class ScopedLogging : IDisposable
     {
-        public QAcidDebugLoggingDisposable() { QAcidDebug.EnableFileLogging(); }
+        public ScopedLogging(string fileName)
+        {
+            EnableFileLogging(fileName);
+        }
+
         public void Dispose()
         {
-            QAcidDebug.Disable();
+            Disable();
         }
     }
 }
-

@@ -56,5 +56,33 @@ namespace QuickAcid.Tests.Shrinking.Primitives
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
         }
+
+        [Fact]
+        public void TwoRelevantIntsTricky()
+        {
+            var run =
+                AcidTestRun.FailedRun(50,
+                    from input1 in "input1".ShrinkableInput(MGen.Int(0, 100))
+                    from input2 in "input2".ShrinkableInput(MGen.Int(0, 100))
+                    from foo in "act".Act(() =>
+                    {
+                        if (input1 > 3 && input2 == 3) throw new Exception();
+                    })
+                    select Acid.Test);
+
+            run.NumberOfReportEntriesIs(3);
+
+            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
+            Assert.Equal("input1", inputÈntry.Key);
+            // Assert.Equal("3", inputÈntry.Value);
+
+            inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(1);
+            Assert.Equal("input2", inputÈntry.Key);
+            Assert.Equal("3", inputÈntry.Value);
+
+            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(2);
+            Assert.Equal("act", actEntry.Key);
+            Assert.NotNull(actEntry.Exception);
+        }
     }
 }
