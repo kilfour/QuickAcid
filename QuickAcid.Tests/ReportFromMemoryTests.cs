@@ -11,6 +11,8 @@ namespace QuickAcid.Tests
 
             // Simulate setting the shrunk value in the first action
             memory.ForThisAction().Set("input", 1);
+            memory.ForThisAction().ActionKey = "foo";
+            memory.ForThisAction().LastException = new Exception("boom");
 
             // Simulate act log entry (as would happen in state.LogReport)
             var report = new QAcidReport
@@ -18,17 +20,18 @@ namespace QuickAcid.Tests
                 ShrinkAttempts = 4
             };
 
-            // Convert memory to input entries
-            foreach (var pair in memory.GetAll())
-            {
-                report.AddEntry(new QAcidReportInputEntry(pair.Key)
-                {
-                    Value = pair.Value
-                });
-            }
+            memory.AddToReport(report);
+            // // Convert memory to input entries
+            // foreach (var pair in memory.GetAll())
+            // {
+            //     report.AddEntry(new QAcidReportInputEntry(pair.Key)
+            //     {
+            //         Value = pair.Value
+            //     });
+            // }
 
             // Simulate the action that failed
-            report.AddEntry(new QAcidReportActEntry("foo", new Exception("boom")));
+            // report.AddEntry(new QAcidReportActEntry("foo", new Exception("boom")));
 
             // Assert
             Assert.Equal(2, report.Entries.Count);

@@ -7,6 +7,7 @@
 			return
 				state =>
 					{
+						state.Memory.ForThisAction().ActionKey = key;
 						try
 						{
 							var result = new QAcidResult<TOutput>(state, func());
@@ -15,6 +16,7 @@
 						}
 						catch (Exception exception)
 						{
+							state.Memory.ForThisAction().LastException = exception;
 							state.FailedWithException(exception);
 							state.LogReport(new QAcidReportActEntry(key, exception));
 							return new QAcidResult<TOutput>(state, default(TOutput));
@@ -27,6 +29,7 @@
 			return
 				state =>
 				{
+					state.Memory.ForThisAction().ActionKey = key;
 					try
 					{
 						action();
@@ -35,6 +38,7 @@
 					}
 					catch (Exception exception)
 					{
+						state.Memory.ForThisAction().LastException = exception;
 						state.FailedWithException(exception);
 						state.LogReport(new QAcidReportActEntry(key, exception));
 						return new QAcidResult<Acid>(state, Acid.Test);

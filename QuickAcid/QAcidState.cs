@@ -199,7 +199,19 @@
             Exception = exception;
         }
 
+        private void ReportNew()
+        {
+            report = new QAcidReport();
+            report.ShrinkAttempts = shrinkCount;
+            Memory.AddToReport(report);
+            if (!string.IsNullOrEmpty(FailingSpec))
+                report.AddEntry(new QAcidReportSpecEntry(FailingSpec));
 
+            throw new FalsifiableException(ShrinkSummary + "\n" + report.ToString(), Exception)
+            {
+                QAcidReport = report
+            };
+        }
         private void Report()
         {
             report = new QAcidReport();

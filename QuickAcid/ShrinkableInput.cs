@@ -8,38 +8,38 @@ namespace QuickAcid
 		public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator)
 		{
 			return state =>
-					   {
-						   if (state.Reporting)
-						   {
-							   var shrunk = state.Shrunk.ForThisAction().Get<string>(key);
-							   if (shrunk != "Irrelevant")
-							   {
-								   var entry =
-									   new QAcidReportInputEntry(key)
-									   {
-										   Value = shrunk
-									   };
-								   state.LogReport(entry);
-							   }
-							   return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
-						   }
+				{
+					if (state.Reporting)
+					{
+						var shrunk = state.Shrunk.ForThisAction().Get<string>(key);
+						if (shrunk != "Irrelevant")
+						{
+							var entry =
+								new QAcidReportInputEntry(key)
+								{
+									Value = shrunk
+								};
+							state.LogReport(entry);
+						}
+						return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
+					}
 
-						   if (state.Shrinking && !state.Shrunk.ForThisAction().ContainsKey(key))
-						   {
-							   var value = state.Memory.ForThisAction().Get<T>(key);
-							   Shrink.Input(state, key, value);
-							   return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
-						   }
+					if (state.Shrinking && !state.Shrunk.ForThisAction().ContainsKey(key))
+					{
+						var value = state.Memory.ForThisAction().Get<T>(key);
+						Shrink.Input(state, key, value);
+						return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
+					}
 
-						   if (state.Verifying)
-						   {
-							   return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
-						   }
+					if (state.Verifying)
+					{
+						return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
+					}
 
-						   var value2 = generator.Generate();
-						   state.Memory.ForThisAction().Set(key, value2);
-						   return new QAcidResult<T>(state, value2);
-					   };
+					var value2 = generator.Generate();
+					state.Memory.ForThisAction().Set(key, value2);
+					return new QAcidResult<T>(state, value2);
+				};
 		}
 	}
 }
