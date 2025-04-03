@@ -10,21 +10,6 @@ namespace QuickAcid
 		{
 			return state =>
 				{
-					if (state.Reporting)
-					{
-						var shrunk = state.Shrunk.ForThisAction().Get<string>(key);
-						if (shrunk != "Irrelevant")
-						{
-							var entry =
-								new QAcidReportInputEntry(key)
-								{
-									Value = shrunk
-								};
-							state.LogReport(entry);
-						}
-						return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
-					}
-
 					if (state.Shrinking && !state.Shrunk.ForThisAction().ContainsKey(key))
 					{
 						var value = state.Memory.ForThisAction().Get<T>(key);

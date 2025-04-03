@@ -7,15 +7,6 @@
 			return
 				state =>
 				{
-					if (state.Reporting)
-					{
-						if (state.FailingSpec == key)
-						{
-							state.LogReport(new QAcidReportSpecEntry(key));
-						}
-						return new QAcidResult<Acid>(state, Acid.Test);
-					}
-
 					if (state.FailingSpec != null && state.FailingSpec != key)
 					{
 						return new QAcidResult<Acid>(state, Acid.Test);

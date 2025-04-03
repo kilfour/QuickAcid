@@ -15,17 +15,6 @@ namespace QuickAcid
 			return
 				s =>
 				{
-					if (s.Reporting)
-					{
-						var value1 = s.Memory.ForThisAction().Get<T>(key);
-						var entry =
-							new QAcidReportInputEntry(key)
-							{
-								Value = stringify?.Invoke(value1)
-							};
-						s.LogReport(entry);
-						return new QAcidResult<T>(s, value1) { Key = key };
-					}
 					if (s.Shrinking || s.Verifying)
 					{
 						var value1 = s.Memory.ForThisAction().Get<T>(key);

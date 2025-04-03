@@ -15,7 +15,6 @@
 
         public bool Verifying { get; private set; }
 
-        public bool Reporting { get; private set; }
 
         public string FailingSpec { get; private set; }
         public bool Failed { get; private set; }
@@ -57,7 +56,7 @@
 
         public bool IsNormalRun()
         {
-            return Verifying == false && Shrinking == false && Reporting == false;
+            return Verifying == false && Shrinking == false;
         }
 
         public void FailedWithException(Exception exception)
@@ -97,7 +96,7 @@
         {
             ShrinkActions();
             ShrinkInputs();
-            ReportNew();
+            Report();
         }
 
         public bool BreakRun { get; private set; }
@@ -106,7 +105,6 @@
         {
             Verifying = true;
             Shrinking = false;
-            Reporting = false;
             BreakRun = false;
 
             Failed = false;
@@ -151,7 +149,6 @@
         {
             Verifying = false;
             Shrinking = true;
-            Reporting = false;
 
             Failed = false;
             Memory.ResetAllRunInputs();
@@ -175,7 +172,6 @@
         {
             Verifying = true;
             Shrinking = false;
-            Reporting = false;
             Failed = false;
             Memory.ResetAllRunInputs();
             var failingSpec = FailingSpec;
@@ -199,7 +195,7 @@
             return failed;
         }
 
-        private void ReportNew()
+        private void Report()
         {
             report = new QAcidReport();
             report.ShrinkAttempts = shrinkCount;
@@ -207,48 +203,9 @@
             {
                 Memory.AddActionToReport(actionNumber, report);
             }
-            //Memory.AddToReport(report);
             if (!string.IsNullOrEmpty(FailingSpec))
                 report.AddEntry(new QAcidReportSpecEntry(FailingSpec));
-
             throw new FalsifiableException(ShrinkSummary + "\n" + report.ToString(), Exception)
-            {
-                QAcidReport = report
-            };
-        }
-
-        private void Report()
-        {
-            report = new QAcidReport();
-            report.ShrinkAttempts = shrinkCount;
-            Memory.ResetAllRunInputs();
-            Verifying = false;
-            Shrinking = false;
-            Reporting = true;
-
-            Failed = false;
-            var failingSpec = FailingSpec;
-            var exception = Exception;
-
-            foreach (var actionNumber in ActionNumbers.ToList())
-            {
-                CurrentActionNumber = actionNumber;
-                Runner(this);
-            }
-
-            Failed = true;
-            FailingSpec = failingSpec;
-            Exception = exception;
-
-            if (Exception != null)
-            {
-                throw new FalsifiableException(ShrinkSummary + "\n" + report.ToString(), exception)
-                {
-                    QAcidReport = report
-                };
-            }
-
-            throw new FalsifiableException(ShrinkSummary + "\n" + report.ToString())
             {
                 QAcidReport = report
             };
