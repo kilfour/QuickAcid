@@ -55,34 +55,6 @@
             CurrentActionNumber++;
         }
 
-        public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
-        {
-            Verifying = true;
-            Shrinking = false;
-            Reporting = false;
-            Failed = false;
-            Memory.ResetAllRunInputs();
-            var failingSpec = FailingSpec;
-            var exception = Exception;
-            var runNumber = CurrentActionNumber;
-            var oldVal = Memory.ForThisAction().Get<object>(key);
-            Memory.ForThisAction().Set(key, value);
-            foreach (var actionNumber in ActionNumbers)
-            {
-                CurrentActionNumber = actionNumber;
-                Runner(this);
-            }
-            var failed = Failed;
-            CurrentActionNumber = runNumber;
-            Failed = false;
-            FailingSpec = failingSpec;
-            Exception = exception;
-            Verifying = false;
-            Shrinking = true;
-            Memory.ForThisAction().Set(key, oldVal);
-            return failed;
-        }
-
         public bool IsNormalRun()
         {
             return Verifying == false && Shrinking == false && Reporting == false;
@@ -199,6 +171,34 @@
             Exception = exception;
         }
 
+        public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
+        {
+            Verifying = true;
+            Shrinking = false;
+            Reporting = false;
+            Failed = false;
+            Memory.ResetAllRunInputs();
+            var failingSpec = FailingSpec;
+            var exception = Exception;
+            var runNumber = CurrentActionNumber;
+            var oldVal = Memory.ForThisAction().Get<object>(key);
+            Memory.ForThisAction().Set(key, value);
+            foreach (var actionNumber in ActionNumbers)
+            {
+                CurrentActionNumber = actionNumber;
+                Runner(this);
+            }
+            var failed = Failed;
+            CurrentActionNumber = runNumber;
+            Failed = false;
+            FailingSpec = failingSpec;
+            Exception = exception;
+            Verifying = false;
+            Shrinking = true;
+            Memory.ForThisAction().Set(key, oldVal);
+            return failed;
+        }
+
         private void ReportNew()
         {
             report = new QAcidReport();
@@ -212,6 +212,7 @@
                 QAcidReport = report
             };
         }
+
         private void Report()
         {
             report = new QAcidReport();

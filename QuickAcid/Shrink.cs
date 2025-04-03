@@ -13,7 +13,7 @@ namespace QuickAcid
                 {typeof(string), new object[] { null, "", new string('-', 256), new string('-', 1024) }},
             };
 
-        public static void Input<T>(QAcidState state, object key, T value)
+        public static object Input<T>(QAcidState state, object key, T value)
         {
             var shrunk = "Busy";
             state.Shrunk.ForThisAction().Set(key, shrunk);
@@ -21,14 +21,14 @@ namespace QuickAcid
             {
                 shrunk = ShrinkIEnumerable(state, key, value);
                 state.Shrunk.ForThisAction().Set(key, shrunk);
-                return;
+                return shrunk;
             }
             var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(typeof(T)));
             if (primitiveKey != null)
             {
                 shrunk = ShrinkPrimitive(state, key, value, PrimitiveValues[primitiveKey]);
                 state.Shrunk.ForThisAction().Set(key, shrunk);
-                return;
+                return shrunk;
             }
 
             if (typeof(T).IsClass)
@@ -67,6 +67,7 @@ namespace QuickAcid
             }
 
             state.Shrunk.ForThisAction().Set(key, shrunk);
+            return shrunk;
         }
 
         public static IEnumerable<IEnumerable<T>> GetPowerSet<T>(List<T> list)

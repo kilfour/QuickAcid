@@ -28,7 +28,8 @@ namespace QuickAcid
 					{
 						var value = state.Memory.ForThisAction().Get<T>(key);
 						Shrink.Input(state, key, value);
-						return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
+						var valueAfterShrinking = state.Memory.ForThisAction().Get<T>(key);
+						return new QAcidResult<T>(state, valueAfterShrinking) { Key = key };
 					}
 
 					if (state.Verifying)
