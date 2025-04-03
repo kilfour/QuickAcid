@@ -1,4 +1,5 @@
-﻿using QuickMGenerate;
+﻿using System.Formats.Tar;
+using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid
@@ -30,6 +31,8 @@ namespace QuickAcid
 						var shrunk = Shrink.Input(state, key, value);
 						if (shrunk as string == "Irrelevant")
 							state.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
+						else
+							state.Memory.ForThisAction().AddReportingMessage<T>(key, shrunk.ToString()!);
 						var valueAfterShrinking = state.Memory.ForThisAction().Get<T>(key);
 						return new QAcidResult<T>(state, valueAfterShrinking) { Key = key };
 					}

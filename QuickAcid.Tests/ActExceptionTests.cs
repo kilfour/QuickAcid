@@ -42,25 +42,9 @@ namespace QuickAcid.Tests
                     from bar in "bar".Act(() => throw new Exception())
                     select Acid.Test);
 
-
-            // -------------------------------------------------------------------------
-            run.NumberOfReportEntriesIs(2);
-            //               _____ 
-            //   _ _ _ _    |___  |
-            //  | | | | |_ _ _|  _|
-            //  | | | |   | | |_|  
-            //  |_____|_|_|_  |_|  
-            //            |___|    
-            //
-            // Using 2 Act() thingies in one linq expression does not shrink the actions
-            // Use either Sequence() or Choose() to combine them
-            // -------------------------------------------------------------------------
+            run.NumberOfReportEntriesIs(1);
 
             var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
-            Assert.Equal("foo", entry.Key);
-            Assert.Null(entry.Exception);
-
-            entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
             Assert.Equal("bar", entry.Key);
             Assert.NotNull(entry.Exception);
         }

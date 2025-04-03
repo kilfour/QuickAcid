@@ -10,11 +10,12 @@ namespace QuickAcid
 			{
 				public object? Value { get; set; }
 				public bool IsIrrelevant { get; set; }
+				public string? ReportingMessage { get; set; }
 			}
 
 			public string? ActionKey { get; set; }
 			public Exception? LastException { get; set; }
-
+			public bool IsIrrelevant { get; set; }
 			private Dictionary<object, DecoratedValue> dictionary = [];
 
 			public T GetOrAdd<T>(object key, Func<T> factory)
@@ -42,27 +43,30 @@ namespace QuickAcid
 				dictionary[key].IsIrrelevant = true;
 			}
 
+			public void AddReportingMessage<T>(object key, string message)
+			{
+				dictionary[key].ReportingMessage = message;
+			}
+
 			public bool ContainsKey(object key)
 			{
 				return dictionary.ContainsKey(key);
 			}
 
-			public Dictionary<string, object?> GetAll()
+			public Dictionary<string, DecoratedValue> GetAll()
 			{
 				return dictionary
 					.Where(kvp => kvp.Key is string)
-					.ToDictionary(kvp => (string)kvp.Key, kvp => kvp.Value.Value);
+					.ToDictionary(kvp => (string)kvp.Key, kvp => kvp.Value);
 			}
 
 			public void AddToReport(QAcidReport report)
 			{
 				foreach (var pair in GetAll())
 				{
-
-					report.AddEntry(new QAcidReportInputEntry(pair.Key)
-					{
-						Value = pair.Value
-					});
+					if (pair.Value!.IsIrrelevant) continue;
+					var value = string.IsNullOrEmpty(pair.Value.ReportingMessage) ? pair.Value.Value : pair.Value.ReportingMessage;
+					report.AddEntry(new QAcidReportInputEntry(pair.Key) { Value = value });
 				}
 				report.AddEntry(new QAcidReportActEntry(ActionKey!) { Exception = LastException });
 			}
@@ -80,6 +84,12 @@ namespace QuickAcid
 			MemoryPerAction = [];
 		}
 
+		public void AddActionToReport(int actionNumber, QAcidReport report)
+		{
+			if (MemoryPerAction.ContainsKey(actionNumber))
+				MemoryPerAction[actionNumber].AddToReport(report);
+		}
+
 		public Access ForThisAction()
 		{
 			if (!MemoryPerAction.ContainsKey(getCurrentActionId()))
@@ -90,14 +100,6 @@ namespace QuickAcid
 		public void ResetAllRunInputs()
 		{
 			OnceOnlyInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
-		}
-
-		public Dictionary<string, object> GetAll()
-		{
-			return MemoryPerAction
-				.SelectMany(kvp => kvp.Value.GetAll())
-				.GroupBy(kvp => kvp.Key)
-				.ToDictionary(g => g.Key, g => g.First().Value);
 		}
 
 		public void AddToReport(QAcidReport report)

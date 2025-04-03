@@ -97,7 +97,7 @@
         {
             ShrinkActions();
             ShrinkInputs();
-            Report();
+            ReportNew();
         }
 
         public bool BreakRun { get; private set; }
@@ -203,7 +203,11 @@
         {
             report = new QAcidReport();
             report.ShrinkAttempts = shrinkCount;
-            Memory.AddToReport(report);
+            foreach (var actionNumber in ActionNumbers.ToList())
+            {
+                Memory.AddActionToReport(actionNumber, report);
+            }
+            //Memory.AddToReport(report);
             if (!string.IsNullOrEmpty(FailingSpec))
                 report.AddEntry(new QAcidReportSpecEntry(FailingSpec));
 
@@ -226,9 +230,9 @@
             var failingSpec = FailingSpec;
             var exception = Exception;
 
-            foreach (var run in ActionNumbers.ToList())
+            foreach (var actionNumber in ActionNumbers.ToList())
             {
-                CurrentActionNumber = run;
+                CurrentActionNumber = actionNumber;
                 Runner(this);
             }
 
