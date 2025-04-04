@@ -24,7 +24,7 @@ namespace QuickAcid
         public string? FailingSpec { get; private set; }
         public Exception? Exception { get; private set; }
 
-        private QAcidReport report;
+        private readonly QAcidReport report;
 
         public bool DontThrowFalsifiableException { get; set; }
         public bool Verbose { get; set; }

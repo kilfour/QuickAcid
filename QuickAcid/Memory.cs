@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Windows.Markup;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 
@@ -6,15 +7,7 @@ namespace QuickAcid;
 
 public class Memory
 {
-	public class TrackedInputValueAccess
-	{
-		private Dictionary<string, string> values;
 
-		public TrackedInputValueAccess()
-		{
-			values = new Dictionary<string, string>();
-		}
-	}
 
 	public class Access
 	{

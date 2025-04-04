@@ -45,20 +45,13 @@ public class Spike : QAcidLoggingFixture
             select Acid.Test;
 
 
-        var report = run.ReportIfFailed(1, 50);
-        if (report != null)
-            QAcidDebug.Write(report.ToString());
+        // var report = run.ReportIfFailed(1, 50);
+        // if (report != null)
+        //     QAcidDebug.Write(report.ToString());
 
-        //  ---------------------------
-        // Falsified after 1 actions, 2 shrinks
-        // account (tracked) : QuickAcid.Examples.CodeGen.Spike+Account
-        // Input : withdraw amount = 5
-        // Execute : withdraw
-        //  ---------------------------
-
-        //  ********************************
-        //   Spec Failed : No Overdraft
-        //  ********************************
+        var code = run.ToCodeIfFailed(1, 50);
+        // if (code != null)
+        //     QAcidDebug.Write(code);
 
         var expected =
 @"[Fact]
@@ -67,6 +60,8 @@ public void No_Overdraft()
     var account = new Account();
     account.Withdraw(5);
     Assert.True(account.Balance >= 0);
-}";
+}
+";
+        Assert.Equal(code, expected);
     }
 }
