@@ -52,6 +52,18 @@ namespace QuickAcid
 			return ReportIfFailed(runner, 1, 1);
 		}
 
+		public static string ToCodeIfFailed(this QAcidRunner<Acid> runner, int runs, int actions)
+		{
+			for (int i = 0; i < runs; i++)
+			{
+				var state = new QAcidState(runner) { DontThrowFalsifiableException = true };
+				state.Run(actions);
+				if (state.Failed)
+					return Prospector.Pan(state);
+			}
+			return null!;
+		}
+
 		public static NumberOfRuns Runs(this int number)
 		{
 			return new NumberOfRuns(number);

@@ -17,7 +17,7 @@
 						{
 							state.Memory.ForThisAction().LastException = exception;
 							state.FailedWithException(exception);
-							return new QAcidResult<TOutput>(state, default(TOutput));
+							return new QAcidResult<TOutput>(state, default);
 						}
 					};
 		}

@@ -21,8 +21,8 @@ namespace QuickAcid
 
 
         public bool Failed { get; private set; }
-        public string FailingSpec { get; private set; }
-        public Exception Exception { get; private set; }
+        public string? FailingSpec { get; private set; }
+        public Exception? Exception { get; private set; }
 
         private QAcidReport report;
 
@@ -100,10 +100,6 @@ namespace QuickAcid
 
         private void HandleFailure()
         {
-#if DEBUG
-            QAcidDebug.WriteLine("BEFORE SHRINKING");
-            QAcidDebug.WriteLine(Memory.ToDiagnosticString());
-#endif
             ShrinkActions();
             ShrinkInputs();
             if (Verbose)
@@ -190,19 +186,9 @@ namespace QuickAcid
             var oldVal = Memory.ForThisAction().Get<object>(key);
             Memory.ForThisAction().Set(key, value);
 
-#if DEBUG
-            var sanityCheck = Memory.ForThisAction().Get<object>(key);
-            QAcidDebug.WriteLine("");
-            QAcidDebug.WriteLine($"[shrink run] action #{CurrentActionNumber}");
-            QAcidDebug.WriteLine($"    {key} was set to {value}, now reads {sanityCheck}");
-            QAcidDebug.WriteLine($"    [state] QAcidState: {GetHashCode()}, Thread: {Thread.CurrentThread.ManagedThreadId}");
-#endif
-
             foreach (var actionNumber in ActionNumbers)
             {
                 CurrentActionNumber = actionNumber;
-                if (Failed)
-                    QAcidDebug.WriteLine($"[FAILED SHRINK] Key={key}, Value={value}, Exception={Exception?.Message}");
                 Runner(this);
             }
             var failed = Failed;
@@ -221,7 +207,7 @@ namespace QuickAcid
         {
             foreach (var actionNumber in ActionNumbers.ToList())
             {
-                Memory.AddActionToReport(actionNumber, report, Exception);
+                Memory.AddActionToReport(actionNumber, report, Exception!);
             }
             if (!string.IsNullOrEmpty(FailingSpec))
                 report.AddEntry(new QAcidReportSpecEntry(FailingSpec));
@@ -237,7 +223,7 @@ namespace QuickAcid
         {
             if (Failed)
             {
-                throw new FalsifiableException(report.ToString(), Exception)
+                throw new FalsifiableException(report.ToString(), Exception!)
                 {
                     QAcidReport = report,
                     MemoryDump = Memory.ToDiagnosticString()

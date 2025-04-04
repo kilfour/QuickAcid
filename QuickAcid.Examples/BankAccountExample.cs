@@ -3,10 +3,10 @@ namespace QuickAcid.Examples;
 
 public class BankAccountExample : IClassFixture<QAcidLoggingFixture>
 {
-    [Fact]
+    [Fact(Skip = "Explicit")]
     public void AccountPropertiesShouldHold()
     {
-        TheTest.VerifyVerbose(20.Runs(), 50.ActionsPerRun());
+        TheTest.Verify(20.Runs(), 50.ActionsPerRun());
     }
 
     [Fact(Skip = "Explicit")]

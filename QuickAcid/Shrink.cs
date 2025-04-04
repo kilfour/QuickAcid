@@ -160,9 +160,6 @@ namespace QuickAcid
             var originalFails = state.ShrinkRun(key, value);
             if (!originalFails)
                 return "Irrelevant";
-#if DEBUG
-            QAcidDebug.Write($"    Checking key: {key}, original={value}, originalFails: {originalFails}\n");
-#endif            
             var filtered = primitiveVals.Where(val => shrinkingGuard(val)).ToArray();
             bool failureAlwaysOccurs =
                 filtered
