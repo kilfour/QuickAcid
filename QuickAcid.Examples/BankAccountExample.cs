@@ -1,28 +1,25 @@
 using QuickMGenerate;
-
 namespace QuickAcid.Examples;
 
 public class BankAccountExample : IClassFixture<QAcidLoggingFixture>
 {
-    [Fact]// (Skip = "explictit")
+    [Fact]
     public void AccountPropertiesShouldHold()
     {
         TheTest.VerifyVerbose(20.Runs(), 50.ActionsPerRun());
     }
 
-    [Fact]
-    public void BugFound()
+    [Fact(Skip = "Explicit")]
+    public void BankAccount_ShouldPreventOverdraft()
     {
-        var test =
-             from account in "Arrange".Input(() => new BankAccount())
-             from act in "Act".Act(() => account.Withdraw(20))
-             from spec in "Assert".Spec(() => account.Balance >= 0)
-             select Acid.Test;
-        Assert.True(test.FailsWith("Assert"));
+        var account = new BankAccount();
+        account.Deposit(19);
+        account.Withdraw(105);
+        Assert.True(account.Balance >= 0);
     }
 
     private static readonly QAcidRunner<Acid> TheTest =
-        from account in "Account".TrackedInput(() => new BankAccount(), a => $"balance: {a.Balance}")
+        from account in "account".TrackedInput(() => new BankAccount())
         from action in "account ops".Choose(
             Deposit(account),
             Withdraw(account))

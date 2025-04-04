@@ -11,14 +11,12 @@
 						try
 						{
 							var result = new QAcidResult<TOutput>(state, func());
-							state.LogReport(new QAcidReportActEntry(key));
 							return result;
 						}
 						catch (Exception exception)
 						{
 							state.Memory.ForThisAction().LastException = exception;
 							state.FailedWithException(exception);
-							state.LogReport(new QAcidReportActEntry(key, exception));
 							return new QAcidResult<TOutput>(state, default(TOutput));
 						}
 					};
@@ -33,14 +31,12 @@
 					try
 					{
 						action();
-						state.LogReport(new QAcidReportActEntry(key));
 						return new QAcidResult<Acid>(state, Acid.Test);
 					}
 					catch (Exception exception)
 					{
 						state.Memory.ForThisAction().LastException = exception;
 						state.FailedWithException(exception);
-						state.LogReport(new QAcidReportActEntry(key, exception));
 						return new QAcidResult<Acid>(state, Acid.Test);
 					}
 				};

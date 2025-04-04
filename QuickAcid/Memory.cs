@@ -93,12 +93,12 @@ public class Memory
 			{
 				if (pair.Value!.IsIrrelevant) continue;
 				var value = string.IsNullOrEmpty(pair.Value.ReportingMessage) ? pair.Value.Value : pair.Value.ReportingMessage;
-				report.AddEntry(new QAcidReportInputEntry(pair.Key) { Value = value });
+				report.AddEntry(new ReportInputEntry(pair.Key) { Value = value });
 			}
 			bool isSameException = LastException?.ToString() == exceptionFromState?.ToString();
 
 			report.AddEntry(
-				new QAcidReportActEntry(ActionKey!)
+				new ReportActEntry(ActionKey!)
 				{
 					Exception = isSameException ? LastException : null
 				});

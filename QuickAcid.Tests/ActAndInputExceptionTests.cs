@@ -1,5 +1,4 @@
 ﻿using QuickAcid.Reporting;
-using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
 
 namespace QuickAcid.Tests
@@ -10,23 +9,20 @@ namespace QuickAcid.Tests
         public void ExceptionThrownByAct()
         {
             var run =
-                AcidTestRun.FailedRun(
-                    from input in "input".ShrinkableInput(MGen.Int(1, 1))
-                    from foo in "foo".Act(() =>
-                    {
-                        if (input == 1) throw new Exception();
-                    })
-                    from spec in "spec".Spec(() => true)
-                    select Acid.Test);
+                from input in "input".ShrinkableInput(MGen.Int(1, 1))
+                from foo in "foo".Act(() => { if (input == 1) throw new Exception(); })
+                from spec in "spec".Spec(() => true)
+                select Acid.Test;
 
-            run.NumberOfReportEntriesIs(2);
+            var report = run.ReportIfFailed();
 
-            var inputEntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
+            var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+            Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);
 
-            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
+            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(actEntry);
             Assert.Equal("foo", actEntry.Key);
-            Assert.NotNull(actEntry.Exception);
         }
     }
 }

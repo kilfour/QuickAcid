@@ -16,13 +16,13 @@ namespace QuickAcid.Examples
 		[Fact(Skip = "Explicit")]
 		public void BugHouse1Error()
 		{
-			var test =
+			var run =
 				from a in "a".ShrinkableInput(MGen.Int(0, 10))
 				from bughouse in "bughouse".TrackedInput(() => new BugHouse1())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			test.Verify(100, 100);
+			run.Verify(100, 100);
 		}
 
 		public class BugHouse2
@@ -38,13 +38,13 @@ namespace QuickAcid.Examples
 		[Fact(Skip = "Explicit")]
 		public void BugHouse2Error()
 		{
-			var test =
+			var run =
 				from a in "a".ShrinkableInput(MGen.Int(0, 10))
 				from bughouse in "bughouse".TrackedInput(() => new BugHouse2())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			test.Verify(100, 100);
+			run.Verify(100, 100);
 		}
 
 		public class BugHouse3
@@ -61,13 +61,13 @@ namespace QuickAcid.Examples
 		[Fact(Skip = "Explicit")]
 		public void BugHouse3Error()
 		{
-			var test =
+			var run =
 				from a in "a".ShrinkableInput(MGen.Int(0, 10))
 				from bughouse in "bughouse".TrackedInput(() => new BugHouse3())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			test.Verify(100, 100);
+			run.Verify(100, 100);
 		}
 	}
 }

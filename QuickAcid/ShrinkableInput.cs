@@ -1,5 +1,4 @@
-﻿using System.Formats.Tar;
-using QuickMGenerate;
+﻿using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid

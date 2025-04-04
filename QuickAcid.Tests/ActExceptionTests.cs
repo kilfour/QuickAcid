@@ -1,5 +1,4 @@
 ﻿using QuickAcid.Reporting;
-using QuickAcid.Tests.ZheZhools;
 
 namespace QuickAcid.Tests
 {
@@ -8,12 +7,9 @@ namespace QuickAcid.Tests
         [Fact]
         public void SimpleExceptionThrown()
         {
-            var run =
-                AcidTestRun.FailedRun("foo".Act(() => { if (true) throw new Exception(); }));
-
-            run.NumberOfReportEntriesIs(1);
-
-            var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
+            var run = "foo".Act(() => { if (true) throw new Exception(); });
+            var entry = run.ReportIfFailed().FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(entry);
             Assert.Equal("foo", entry.Key);
             Assert.NotNull(entry.Exception);
         }
@@ -22,14 +18,11 @@ namespace QuickAcid.Tests
         public void TwoActionsExceptionThrownOnFirst()
         {
             var run =
-                AcidTestRun.FailedRun(
-                    from foo in "foo".Act(() => throw new Exception())
-                    from bar in "bar".Act(() => { })
-                    select Acid.Test);
-
-            run.NumberOfReportEntriesIs(1);
-
-            var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
+                from foo in "foo".Act(() => throw new Exception())
+                from bar in "bar".Act(() => { })
+                select Acid.Test;
+            var entry = run.ReportIfFailed().FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(entry);
             Assert.Equal("foo", entry.Key);
             Assert.NotNull(entry.Exception);
         }
@@ -38,14 +31,11 @@ namespace QuickAcid.Tests
         public void TwoActionsExceptionThrownOnSecond()
         {
             var run =
-                AcidTestRun.FailedRun(
-                    from foo in "foo".Act(() => { })
-                    from bar in "bar".Act(() => throw new Exception())
-                    select Acid.Test);
-
-            run.NumberOfReportEntriesIs(1);
-
-            var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
+                from foo in "foo".Act(() => { })
+                from bar in "bar".Act(() => throw new Exception())
+                select Acid.Test;
+            var entry = run.ReportIfFailed().FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(entry);
             Assert.Equal("bar", entry.Key);
             Assert.NotNull(entry.Exception);
         }

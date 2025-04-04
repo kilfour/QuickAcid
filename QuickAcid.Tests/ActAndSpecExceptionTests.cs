@@ -1,5 +1,4 @@
 ﻿using QuickAcid.Reporting;
-using QuickAcid.Tests.ZheZhools;
 
 namespace QuickAcid.Tests
 {
@@ -9,16 +8,14 @@ namespace QuickAcid.Tests
         public void ExceptionThrownByAct()
         {
             var run =
-                AcidTestRun.FailedRun(
-                    from foo in "foo".Act(() => { if (true) throw new Exception(); })
-                    from spec in "spec".Spec(() => true)
-                    select Acid.Test);
-
-            run.NumberOfReportEntriesIs(1);
-
-            var entry = run.GetReportEntryAtIndex<QAcidReportActEntry>(0);
-            Assert.Equal("foo", entry.Key);
+                from foo in "foo".Act(() => { if (true) throw new Exception(); })
+                from spec in "spec".Spec(() => true)
+                select Acid.Test;
+            var report = run.ReportIfFailed();
+            var entry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(entry);
             Assert.NotNull(entry.Exception);
+            Assert.Equal("foo", entry.Key);
         }
 
         [Fact]
@@ -34,6 +31,7 @@ namespace QuickAcid.Tests
             Assert.Contains("QuickAcid.Tests.ActAndSpecExceptionTests.Throw()", ex.StackTrace);
         }
 
+        // needs to be here because of contains assert above
         private bool Throw()
         {
             throw new Exception();

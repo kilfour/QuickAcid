@@ -34,7 +34,7 @@ public class BoundedSetTest : QAcidLoggingFixture
     [Fact] //(Skip = "explicit")
     public void WithPleasure()
     {
-        var test =
+        var run =
             from maxSize in "max size".TrackedInput(() => MGen.Int(0, 50).Generate())
             from theSet in "the set".TrackedInput(() => new BoundedSet<int>(maxSize))
             from addedInts in "addedInts".TrackedInput(() => new List<int>(), l => "[" + string.Join(", ", l) + "]")
@@ -51,14 +51,6 @@ public class BoundedSetTest : QAcidLoggingFixture
             from checkCount in "Count <= MaxSize".Spec(() => theSet.Count <= maxSize)
             select Acid.Test;
 
-        test.Verify(50.Runs(), 20.ActionsPerRun());
-
-        // Count <= MaxSize
-
-        // Contains returns false after Remove
-
-        // Items added actually end up in the set
-
-        // You can’t add more than MaxSize, 
+        run.Verify(50.Runs(), 20.ActionsPerRun());
     }
 }

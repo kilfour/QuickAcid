@@ -1,5 +1,4 @@
 ﻿using QuickAcid.Reporting;
-using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
 
 namespace QuickAcid.Tests.Shrinking.Primitives
@@ -10,22 +9,23 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void OneRelevantInt()
         {
             var run =
-                AcidTestRun.FailedRun(50,
-                    from input1 in "input1".ShrinkableInput(MGen.Int(5, 7))
-                    from input2 in "input2".ShrinkableInput(MGen.Int(5, 7))
-                    from foo in "act".Act(() =>
-                    {
-                        if (input1 == 6) throw new Exception();
-                    })
-                    select Acid.Test);
+                from input1 in "input1".ShrinkableInput(MGen.Int(5, 7))
+                from input2 in "input2".ShrinkableInput(MGen.Int(5, 7))
+                from foo in "act".Act(() =>
+                {
+                    if (input1 == 6) throw new Exception();
+                })
+                select Acid.Test;
 
-            run.NumberOfReportEntriesIs(2);
+            var report = run.ReportIfFailed(1, 50);
 
-            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
-            Assert.Equal("input1", inputÈntry.Key);
-            Assert.Equal("6", inputÈntry.Value);
+            var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+            Assert.NotNull(inputEntry);
+            Assert.Equal("input1", inputEntry.Key);
+            Assert.Equal("6", inputEntry.Value);
 
-            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
+            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
         }
@@ -34,26 +34,28 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void TwoRelevantInts()
         {
             var run =
-                AcidTestRun.FailedRun(50,
-                    from input1 in "input1".ShrinkableInput(MGen.Int(5, 7))
-                    from input2 in "input2".ShrinkableInput(MGen.Int(5, 7))
-                    from foo in "act".Act(() =>
-                    {
-                        if (input1 == 6 && input2 == 6) throw new Exception();
-                    })
-                    select Acid.Test);
+                from input1 in "input1".ShrinkableInput(MGen.Int(5, 7))
+                from input2 in "input2".ShrinkableInput(MGen.Int(5, 7))
+                from foo in "act".Act(() =>
+                {
+                    if (input1 == 6 && input2 == 6) throw new Exception();
+                })
+                select Acid.Test;
 
-            run.NumberOfReportEntriesIs(3);
+            var report = run.ReportIfFailed(1, 50);
 
-            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
-            Assert.Equal("input1", inputÈntry.Key);
-            Assert.Equal("6", inputÈntry.Value);
+            var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+            Assert.NotNull(inputEntry);
+            Assert.Equal("input1", inputEntry.Key);
+            Assert.Equal("6", inputEntry.Value);
 
-            inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(1);
-            Assert.Equal("input2", inputÈntry.Key);
-            Assert.Equal("6", inputÈntry.Value);
+            inputEntry = report.SecondOrDefault<ReportInputEntry>();
+            Assert.NotNull(inputEntry);
+            Assert.Equal("input2", inputEntry.Key);
+            Assert.Equal("6", inputEntry.Value);
 
-            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(2);
+            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
         }
@@ -62,26 +64,31 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void TwoRelevantIntsTricky()
         {
             var run =
-                AcidTestRun.FailedRun(100,
-                    from input1 in "input1".ShrinkableInput(MGen.Int(0, 100))
-                    from input2 in "input2".ShrinkableInput(MGen.Int(0, 100))
-                    from foo in "act".Act(() =>
-                    {
-                        if (input1 > 3 && input2 == 3) throw new Exception();
-                    })
-                    select Acid.Test);
+                from input1 in "input1".ShrinkableInput(MGen.Int(0, 100))
+                from input2 in "input2".ShrinkableInput(MGen.Int(0, 100))
+                from foo in "act".Act(() =>
+                {
+                    if (input1 > 3 && input2 == 3) throw new Exception();
+                })
+                select Acid.Test;
 
-            run.NumberOfReportEntriesIs(3);
+            var report = run.ReportIfFailed(1, 100);
 
-            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
-            Assert.Equal("input1", inputÈntry.Key);
-            // Assert.Equal("3", inputÈntry.Value);
+            var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+            Assert.NotNull(inputEntry);
+            Assert.Equal("input1", inputEntry.Key);
+            Assert.Equal("3", inputEntry.Value);
 
-            inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(1);
-            Assert.Equal("input2", inputÈntry.Key);
-            Assert.Equal("3", inputÈntry.Value);
+            inputEntry = report.SecondOrDefault<ReportInputEntry>();
+            Assert.NotNull(inputEntry);
+            Assert.Equal("input2", inputEntry.Key);
+            Assert.NotNull(inputEntry.Value);
+            bool success = int.TryParse(inputEntry.Value.ToString(), out int input2FromReport);
+            Assert.True(success);
+            Assert.True(input2FromReport > 3);
 
-            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(2);
+            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
         }

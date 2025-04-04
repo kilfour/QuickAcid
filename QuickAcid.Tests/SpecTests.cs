@@ -1,5 +1,4 @@
 ﻿using QuickAcid.Reporting;
-using QuickAcid.Tests.ZheZhools;
 
 namespace QuickAcid.Tests
 {
@@ -8,17 +7,15 @@ namespace QuickAcid.Tests
         [Fact]
         public void SpecOnlyReturnsTrue()
         {
-            AcidTestRun.SuccessfullRun("foo".Spec(() => true));
+            Assert.Null("foo".Spec(() => true).ReportIfFailed());
         }
 
         [Fact]
         public void SpecOnlyReturnsFalse()
         {
-            var run = AcidTestRun.FailedRun("foo".Spec(() => false));
-
-            run.NumberOfReportEntriesIs(1);
-
-            var entry = run.GetReportEntryAtIndex<QAcidReportSpecEntry>(0);
+            var report = "foo".Spec(() => false).ReportIfFailed();
+            var entry = report.Entries.OfType<QAcidReportSpecEntry>().FirstOrDefault();
+            Assert.NotNull(entry);
             Assert.Equal("foo", entry.Key);
         }
     }

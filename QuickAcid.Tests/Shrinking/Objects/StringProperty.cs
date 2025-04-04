@@ -1,5 +1,4 @@
 ﻿using QuickAcid.Reporting;
-using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
 
 namespace QuickAcid.Tests.Shrinking.Objects
@@ -14,21 +13,23 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from thing in MGen.One<Something>()
                 select thing;
             var run =
-                AcidTestRun.FailedRun(10,
+
                     from input in "input".ShrinkableInput(generator)
                     from foo in "act".Act(() =>
                     {
                         if (input.MyFirstProperty == "6") throw new Exception();
                     })
-                    select Acid.Test);
+                    select Acid.Test;
 
-            run.NumberOfReportEntriesIs(2);
+            var report = run.ReportIfFailed(1, 50);
 
-            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
-            Assert.Equal("input", inputÈntry.Key);
-            Assert.Equal("MyFirstProperty : 6", inputÈntry.Value);
+            var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
+            Assert.NotNull(inputEntry);
+            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("MyFirstProperty : 6", inputEntry.Value);
 
-            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
+            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
         }
@@ -41,21 +42,24 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from thing in MGen.One<Something>()
                 select thing;
             var run =
-                AcidTestRun.FailedRun(100,
+
                     from input in "input".ShrinkableInput(generator)
                     from foo in "act".Act(() =>
                     {
                         if (input.MyFirstProperty == "6" && input.MySecondProperty == "6") throw new Exception();
                     })
-                    select Acid.Test);
+                    select Acid.Test;
 
-            run.NumberOfReportEntriesIs(2);
+            var report = run.ReportIfFailed(1, 50);
 
-            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
-            Assert.Equal("input", inputÈntry.Key);
-            Assert.Equal("MyFirstProperty : 6, MySecondProperty : 6", inputÈntry.Value);
 
-            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
+            var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
+            Assert.NotNull(inputEntry);
+            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("MyFirstProperty : 6, MySecondProperty : 6", inputEntry.Value);
+
+            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
         }
@@ -75,28 +79,29 @@ namespace QuickAcid.Tests.Shrinking.Objects
             for (int i = 0; i < 100; i++)
             {
                 var run =
-                    AcidTestRun.FailedRun(10,
+
                         from input in "input".ShrinkableInput(generator)
                         from foo in "act".Act(() =>
                         {
                             if (input.MyFirstProperty == "6" || input.MySecondProperty == "6") throw new Exception();
                         })
-                        select Acid.Test);
+                        select Acid.Test;
 
-                run.NumberOfReportEntriesIs(2);
+                var report = run.ReportIfFailed(1, 50);
 
-                var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
-                Assert.Equal("input", inputÈntry.Key);
-                if ((string)inputÈntry.Value == "MyFirstProperty : 6")
+                var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
+                Assert.Equal("input", inputEntry.Key);
+                if ((string)inputEntry.Value == "MyFirstProperty : 6")
                     sometimesPropOne = true;
-                else if ((string)inputÈntry.Value == "MySecondProperty : 6")
+                else if ((string)inputEntry.Value == "MySecondProperty : 6")
                     sometimesPropTwo = true;
-                else if ((string)inputÈntry.Value == "MyFirstProperty : 6, MySecondProperty : 6")
+                else if ((string)inputEntry.Value == "MyFirstProperty : 6, MySecondProperty : 6")
                     sometimesBothProps = true;
                 else
-                    somethingElse = (string)inputÈntry.Value;
+                    somethingElse = (string)inputEntry.Value;
 
-                var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
+                var actEntry = report.FirstOrDefault<ReportActEntry>();
+                Assert.NotNull(actEntry);
                 Assert.Equal("act", actEntry.Key);
                 Assert.NotNull(actEntry.Exception);
             }
@@ -117,26 +122,28 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 select thing;
 
             var run =
-                AcidTestRun.FailedRun(10,
+
                     from input in "input".ShrinkableInput(generator)
                     from result in "act".Act(() => new Something { MyFirstProperty = input.MyFirstProperty })
                     from spec in "equal".Spec(() =>
                         input.MyFirstProperty == result.MyFirstProperty
                         && input.MySecondProperty == result.MySecondProperty
                         && input.MyThirdProperty == result.MyThirdProperty)
-                    select Acid.Test);
+                    select Acid.Test;
 
-            run.NumberOfReportEntriesIs(3);
+            var report = run.ReportIfFailed(1, 50);
 
-            var inputÈntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
-            Assert.Equal("input", inputÈntry.Key);
-            Assert.Equal("MySecondProperty : 42, MyThirdProperty : 42", inputÈntry.Value);
+            var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
+            Assert.NotNull(inputEntry);
+            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("MySecondProperty : 42, MyThirdProperty : 42", inputEntry.Value);
 
-            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
+            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.Null(actEntry.Exception);
 
-            var specEntry = run.GetReportEntryAtIndex<QAcidReportSpecEntry>(2);
+            var specEntry = report.Single<QAcidReportSpecEntry>();
             Assert.Equal("equal", specEntry.Key);
         }
 

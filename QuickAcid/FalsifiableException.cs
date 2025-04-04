@@ -1,5 +1,4 @@
-﻿using System.Text;
-using QuickAcid.Reporting;
+﻿using QuickAcid.Reporting;
 
 namespace QuickAcid
 {

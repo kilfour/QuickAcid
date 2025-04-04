@@ -34,6 +34,7 @@ namespace QuickAcid
             ActionNumbers = new List<int>();
             Memory = new Memory(() => CurrentActionNumber);
             Shrunk = new Memory(() => CurrentActionNumber);
+            report = new QAcidReport();
         }
 
         public void Run(int actionsPerRun)
@@ -54,7 +55,7 @@ namespace QuickAcid
             {
                 if (Verbose)
                 {
-                    report = new QAcidReport();
+                    report.AddEntry(new QAcidReportTitleSectionEntry("FIRST FAILED RUN"));
                     AddMemoryToReport(report);
                 }
 
@@ -106,11 +107,9 @@ namespace QuickAcid
             ShrinkActions();
             ShrinkInputs();
             if (Verbose)
-            {
-                Report(report);
-            }
-            else
-                Report();
+                report.AddEntry(new QAcidReportTitleSectionEntry("AFTER SHRINKING"));
+            report.AddEntry(new QAcidReportShrinkingInfoEntry { NrOfActions = ActionNumbers.Count, ShrinkCount = shrinkCount });
+            AddMemoryToReport(report);
         }
 
         public bool BreakRun { get; private set; }
@@ -218,14 +217,8 @@ namespace QuickAcid
             return failed;
         }
 
-        private void Report()
-        {
-            Report(new QAcidReport());
-        }
-
         private QAcidReport AddMemoryToReport(QAcidReport report)
         {
-            report.AddEntry(new QAcidReportShrinkingInfoEntry("shrinking") { NrOfActions = ActionNumbers.Count, ShrinkCount = shrinkCount });
             foreach (var actionNumber in ActionNumbers.ToList())
             {
                 Memory.AddActionToReport(actionNumber, report, Exception);
@@ -235,17 +228,21 @@ namespace QuickAcid
             return report;
         }
 
-        private QAcidReport Report(QAcidReport report)
+        public QAcidReport GetReport()
         {
-            AddMemoryToReport(report);
-            //QAcidDebug.WriteLine(Memory.ToDiagnosticString());
-            if (DontThrowFalsifiableException)
-                return report;
-            throw new FalsifiableException(report.ToString(), Exception)
+            return report;
+        }
+
+        public void ThrowFalsifiableExceptionIfFailed()
+        {
+            if (Failed)
             {
-                QAcidReport = report,
-                MemoryDump = Memory.ToDiagnosticString()
-            };
+                throw new FalsifiableException(report.ToString(), Exception)
+                {
+                    QAcidReport = report,
+                    MemoryDump = Memory.ToDiagnosticString()
+                };
+            }
         }
     }
 }

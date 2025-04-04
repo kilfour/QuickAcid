@@ -26,14 +26,14 @@ namespace QuickAcid.Examples
 
 			var listDeleter = new ListDeleter();
 
-			var test =
+			var run =
 				from list in "input list".ShrinkableInput(ints)
 				from toRemove in "to remove".ShrinkableInput(intBetweenZeroAndTen)
 				from output in "listDeleter.DoingMyThing".Act(() => listDeleter.DoingMyThing(list, toRemove))
 				from spec in "int removed".Spec(() => !output.Contains(toRemove))
 				select Acid.Test;
 
-			test.Verify(10, 10);
+			run.Verify(10, 10);
 		}
 	}
 }

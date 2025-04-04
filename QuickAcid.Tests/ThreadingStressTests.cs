@@ -18,7 +18,7 @@ public class ThreadingStressTests
                 {
                     try
                     {
-                        var test =
+                        var run =
                             from ignored in "not used".ShrinkableInput(MGen.Int(1, 100))
                             from trigger in "failing value".ShrinkableInput(MGen.Int(0, 5))
                             from check in "must fail".Spec(() =>
@@ -28,7 +28,7 @@ public class ThreadingStressTests
                                 })
                             select Acid.Test;
 
-                        var ex = Record.Exception(() => test.Verify(20, 1));
+                        var ex = Record.Exception(() => run.Verify(20, 1));
                         if (ex is FalsifiableException fex)
                         {
                             var msg = fex.ToString();

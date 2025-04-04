@@ -1,5 +1,4 @@
 ﻿using QuickAcid.Reporting;
-using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
 
 namespace QuickAcid.Tests
@@ -10,22 +9,24 @@ namespace QuickAcid.Tests
         public void LocalVarIsNotReported()
         {
             var run =
-                AcidTestRun.FailedRun(
-                    from input in "input".Input(MGen.Int())
-                    from localVar in "local".LocalVar(() => 1)
-                    from foo in "foo".Act(() => { })
-                    from spec in "spec".Spec(() => input + 1 == input)
-                    select Acid.Test);
+                from input in "input".Input(MGen.Int())
+                from localVar in "local".LocalVar(() => 1)
+                from foo in "foo".Act(() => { })
+                from spec in "spec".Spec(() => input + 1 == input)
+                select Acid.Test;
 
-            run.NumberOfReportEntriesIs(3);
+            var report = run.ReportIfFailed();
 
-            var inputEntry = run.GetReportEntryAtIndex<QAcidReportInputEntry>(0);
+            var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+            Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);
 
-            var actEntry = run.GetReportEntryAtIndex<QAcidReportActEntry>(1);
+            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            Assert.NotNull(actEntry);
             Assert.Equal("foo", actEntry.Key);
 
-            var specEntry = run.GetReportEntryAtIndex<QAcidReportSpecEntry>(2);
+            var specEntry = report.FirstOrDefault<QAcidReportSpecEntry>();
+            Assert.NotNull(specEntry);
             Assert.Equal("spec", specEntry.Key);
         }
     }

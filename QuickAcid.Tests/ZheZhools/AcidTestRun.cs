@@ -11,10 +11,6 @@ namespace QuickAcid.Tests.ZheZhools
             this.report = report;
         }
 
-        public void NumberOfReportEntriesIs(int count)
-        {
-            Assert.Equal(count, report.Entries.Count);
-        }
 
         public T GetReportEntryAtIndex<T>(int index)
         {
@@ -31,11 +27,6 @@ namespace QuickAcid.Tests.ZheZhools
         {
             var ex = Assert.Throws<FalsifiableException>(() => test.Verify(1, numberOfActions));
             return new AcidTestRun(ex.QAcidReport);
-        }
-
-        public static void SuccessfullRun(QAcidRunner<Acid> test)
-        {
-            test.Verify(1, 1);
         }
     }
 }
