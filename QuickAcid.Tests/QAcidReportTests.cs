@@ -1,3 +1,5 @@
+using QuickAcid.Reporting;
+
 namespace QuickAcid.Tests
 {
     public class QAcidReportTests

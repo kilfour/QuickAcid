@@ -18,7 +18,7 @@ namespace QuickAcid.Examples
 		{
 			var test =
 				from a in "a".ShrinkableInput(MGen.Int(0, 10))
-				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse1())
+				from bughouse in "bughouse".TrackedInput(() => new BugHouse1())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
@@ -40,7 +40,7 @@ namespace QuickAcid.Examples
 		{
 			var test =
 				from a in "a".ShrinkableInput(MGen.Int(0, 10))
-				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse2())
+				from bughouse in "bughouse".TrackedInput(() => new BugHouse2())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
@@ -63,7 +63,7 @@ namespace QuickAcid.Examples
 		{
 			var test =
 				from a in "a".ShrinkableInput(MGen.Int(0, 10))
-				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse3())
+				from bughouse in "bughouse".TrackedInput(() => new BugHouse3())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;

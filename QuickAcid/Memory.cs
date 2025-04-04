@@ -1,10 +1,21 @@
 ﻿using System.Text;
+using QuickAcid.Reporting;
 using QuickMGenerate;
 
 namespace QuickAcid;
 
 public class Memory
 {
+	public class TrackedInputValueAccess
+	{
+		private Dictionary<string, string> values;
+
+		public TrackedInputValueAccess()
+		{
+			values = new Dictionary<string, string>();
+		}
+	}
+
 	public class Access
 	{
 		public class DecoratedValue
@@ -12,6 +23,7 @@ public class Memory
 			public object? Value { get; set; }
 			public bool IsIrrelevant { get; set; }
 			public string? ReportingMessage { get; set; }
+			public Func<object, string>? Stringify { get; set; }
 
 			public string ToDiagnosticString()
 			{
@@ -19,7 +31,7 @@ public class Memory
 				if (Value == null)
 					sb.Append("null");
 				else
-					sb.Append(Value);
+					sb.Append(Stringify == null ? Value : Stringify(Value));
 				if (IsIrrelevant)
 					sb.Append(" : Irrelevant");
 				if (ReportingMessage != null)
@@ -33,10 +45,10 @@ public class Memory
 		public bool IsIrrelevant { get; set; }
 		private Dictionary<object, DecoratedValue> dictionary = [];
 
-		public T GetOrAdd<T>(object key, Func<T> factory)
+		public T GetOrAdd<T>(object key, Func<T> factory, Func<T, string> stringify)
 		{
 			if (!dictionary.ContainsKey(key))
-				dictionary[key] = new DecoratedValue { Value = factory()!, IsIrrelevant = false };
+				dictionary[key] = new DecoratedValue { Value = factory()!, IsIrrelevant = false, Stringify = obj => stringify((T)obj) };
 			return Get<T>(key);
 		}
 
@@ -75,7 +87,7 @@ public class Memory
 				.ToDictionary(kvp => (string)kvp.Key, kvp => kvp.Value);
 		}
 
-		public void AddToReport(QAcidReport report)
+		public void AddToReport(QAcidReport report, Exception exceptionFromState)
 		{
 			foreach (var pair in GetAll())
 			{
@@ -83,26 +95,41 @@ public class Memory
 				var value = string.IsNullOrEmpty(pair.Value.ReportingMessage) ? pair.Value.Value : pair.Value.ReportingMessage;
 				report.AddEntry(new QAcidReportInputEntry(pair.Key) { Value = value });
 			}
-			report.AddEntry(new QAcidReportActEntry(ActionKey!) { Exception = LastException });
+			bool isSameException = LastException?.ToString() == exceptionFromState?.ToString();
+
+			report.AddEntry(
+				new QAcidReportActEntry(ActionKey!)
+				{
+					Exception = isSameException ? LastException : null
+				});
 		}
 	}
+
 	private readonly Func<int> getCurrentActionId;
 
-	public Access OnceOnlyInputsPerRun { get; set; }
+	public Access TrackedInputsPerRun { get; set; }
+	private Dictionary<int, Dictionary<string, string>> TrackedInputValuePerAction { get; set; }
 
 	private Dictionary<int, Access> MemoryPerAction { get; set; }
 
 	public Memory(Func<int> getCurrentActionId)
 	{
 		this.getCurrentActionId = getCurrentActionId;
-		OnceOnlyInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
+		TrackedInputsPerRun = new Access() { ActionKey = "Tracked Inputs" };
+		TrackedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
 		MemoryPerAction = [];
 	}
 
-	public void AddActionToReport(int actionNumber, QAcidReport report)
+	public void AddActionToReport(int actionNumber, QAcidReport report, Exception exception)
 	{
+		if (TrackedInputValuePerAction.TryGetValue(actionNumber, out Dictionary<string, string>? values))
+		{
+			values.ForEach(pair =>
+				report.AddEntry(new QAcidReportTrackedInputEntry(pair.Key) { Value = pair.Value })
+			);
+		}
 		if (MemoryPerAction.ContainsKey(actionNumber))
-			MemoryPerAction[actionNumber].AddToReport(report);
+			MemoryPerAction[actionNumber].AddToReport(report, exception);
 	}
 
 	public Access ForThisAction()
@@ -114,12 +141,20 @@ public class Memory
 
 	public void ResetAllRunInputs()
 	{
-		OnceOnlyInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
+		TrackedInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
 	}
 
-	public void AddToReport(QAcidReport report)
+	public void AddTrackedInputValueForCurrentRun(string key, string value)
 	{
-		MemoryPerAction.ForEach(a => a.Value.AddToReport(report));
+		if (!TrackedInputValuePerAction.ContainsKey(getCurrentActionId()))
+			TrackedInputValuePerAction[getCurrentActionId()] = [];
+		if (!TrackedInputValuePerAction[getCurrentActionId()].ContainsKey(key))
+			TrackedInputValuePerAction[getCurrentActionId()][key] = value;
+	}
+
+	public void AddToReport(QAcidReport report, Exception exception) // only used in test, bweurk
+	{
+		MemoryPerAction.ForEach(a => a.Value.AddToReport(report, exception));
 	}
 
 	public string ToDiagnosticString()
@@ -127,21 +162,21 @@ public class Memory
 		var sb = new StringBuilder();
 		sb.AppendLine("=== Memory Dump ===");
 
-		sb.AppendLine("--- OnceOnlyInputsPerRun ---");
-		foreach (var kvp in OnceOnlyInputsPerRun.GetAll())
-		{
-			sb.AppendLine($"{kvp.Key} = {kvp.Value}");
-		}
+		// sb.AppendLine("--- OnceOnlyInputsPerRun ---");
+		// foreach (var kvp in OnceOnlyInputsPerRun.GetAll())
+		// {
+		// 	sb.AppendLine($"{kvp.Key} = {kvp.Value.ToDiagnosticString()}");
+		// }
 
-		sb.AppendLine("--- MemoryPerAction ---");
-		foreach (var action in MemoryPerAction)
-		{
-			sb.AppendLine($"Action {action.Key}:");
-			foreach (var kvp in action.Value.GetAll())
-			{
-				sb.AppendLine($"  {kvp.Key} = {kvp.Value.ToDiagnosticString()}");
-			}
-		}
+		// sb.AppendLine("--- MemoryPerAction ---");
+		// foreach (var action in MemoryPerAction)
+		// {
+		// 	sb.AppendLine($"Action {action.Key}:");
+		// 	foreach (var kvp in action.Value.GetAll())
+		// 	{
+		// 		sb.AppendLine($"  {kvp.Key} = {kvp.Value.ToDiagnosticString()}");
+		// 	}
+		// }
 
 		return sb.ToString();
 	}

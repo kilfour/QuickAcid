@@ -11,7 +11,7 @@ namespace QuickAcid.Examples
         }
 
         private static readonly QAcidRunner<Acid> TheTest =
-            from container in "setup".OnceOnlyInput(() => new TheContainer())
+            from container in "setup".TrackedInput(() => new TheContainer())
             from addRemove in "add/remove"
                 .Choose(
                     Add(container),

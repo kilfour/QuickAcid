@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Tests.ZheZhools
+﻿using QuickAcid.Reporting;
+
+namespace QuickAcid.Tests.ZheZhools
 {
     public class AcidTestRun
     {

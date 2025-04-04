@@ -28,7 +28,7 @@ namespace QuickAcid.Examples
 		public void BugHouseError()
 		{
 			var test =
-				from bughouse in "bughouse".OnceOnlyInput(() => new BugHouse())
+				from bughouse in "bughouse".TrackedInput(() => new BugHouse())
 				from funcOne in
 					"Choose".Choose(
 						from i in "int".ShrinkableInput(MGen.Int(0, 10))

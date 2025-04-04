@@ -1,28 +1,33 @@
-﻿namespace QuickAcid
+﻿using QuickAcid.Reporting;
+
+namespace QuickAcid
 {
     public class QAcidState
     {
         public QAcidRunner<Acid> Runner { get; private set; }
 
         public int CurrentActionNumber { get; private set; }
+
         public List<int> ActionNumbers { get; private set; }
 
         public Memory Memory { get; private set; }
 
-        public bool Shrinking { get; private set; }
 
+        public bool Shrinking { get; private set; }
         public Memory Shrunk { get; private set; }
+        private int shrinkCount = 0;
 
         public bool Verifying { get; private set; }
 
-        public string FailingSpec { get; private set; }
+
         public bool Failed { get; private set; }
+        public string FailingSpec { get; private set; }
         public Exception Exception { get; private set; }
 
-        private QAcidReport report = new QAcidReport();
+        private QAcidReport report;
 
-        private int shrinkCount = 0;
-
+        public bool DontThrowFalsifiableException { get; set; }
+        public bool Verbose { get; set; }
         public QAcidState(QAcidRunner<Acid> runner)
         {
             Runner = runner;
@@ -47,6 +52,11 @@
             Runner(this);
             if (Failed)
             {
+                if (Verbose)
+                {
+                    report = new QAcidReport();
+                    AddMemoryToReport(report);
+                }
 
                 HandleFailure();
                 return;
@@ -87,11 +97,6 @@
             FailingSpec = failingSpec;
         }
 
-        public void LogReport(QAcidReportEntry reportEntry)
-        {
-            report.AddEntry(reportEntry);
-        }
-
         private void HandleFailure()
         {
 #if DEBUG
@@ -100,7 +105,12 @@
 #endif
             ShrinkActions();
             ShrinkInputs();
-            Report();
+            if (Verbose)
+            {
+                Report(report);
+            }
+            else
+                Report();
         }
 
         public bool BreakRun { get; private set; }
@@ -145,9 +155,6 @@
             FailingSpec = failingSpec;
             Exception = exception;
         }
-
-        public string ShrinkSummary =>
-            $"Falsified after {ActionNumbers.Count} runs, {shrinkCount} shrinks";
 
         private void ShrinkInputs()
         {
@@ -213,15 +220,28 @@
 
         private void Report()
         {
-            report = new QAcidReport();
-            report.ShrinkAttempts = shrinkCount;
+            Report(new QAcidReport());
+        }
+
+        private QAcidReport AddMemoryToReport(QAcidReport report)
+        {
+            report.AddEntry(new QAcidReportShrinkingInfoEntry("shrinking") { NrOfActions = ActionNumbers.Count, ShrinkCount = shrinkCount });
             foreach (var actionNumber in ActionNumbers.ToList())
             {
-                Memory.AddActionToReport(actionNumber, report);
+                Memory.AddActionToReport(actionNumber, report, Exception);
             }
             if (!string.IsNullOrEmpty(FailingSpec))
                 report.AddEntry(new QAcidReportSpecEntry(FailingSpec));
-            throw new FalsifiableException(ShrinkSummary + "\n" + report.ToString(), Exception)
+            return report;
+        }
+
+        private QAcidReport Report(QAcidReport report)
+        {
+            AddMemoryToReport(report);
+            //QAcidDebug.WriteLine(Memory.ToDiagnosticString());
+            if (DontThrowFalsifiableException)
+                return report;
+            throw new FalsifiableException(report.ToString(), Exception)
             {
                 QAcidReport = report,
                 MemoryDump = Memory.ToDiagnosticString()

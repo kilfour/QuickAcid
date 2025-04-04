@@ -1,4 +1,5 @@
-﻿using QuickAcid.Tests.ZheZhools;
+﻿using QuickAcid.Reporting;
+using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
 
 namespace QuickAcid.Tests.Shrinking.Objects
@@ -40,7 +41,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from thing in MGen.One<Something>()
                 select thing;
             var run =
-                AcidTestRun.FailedRun(10,
+                AcidTestRun.FailedRun(100,
                     from input in "input".ShrinkableInput(generator)
                     from foo in "act".Act(() =>
                     {

@@ -1,4 +1,5 @@
-﻿using QuickAcid.Tests.ZheZhools;
+﻿using QuickAcid.Reporting;
+using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
 
 namespace QuickAcid.Tests

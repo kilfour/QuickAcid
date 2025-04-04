@@ -1,3 +1,5 @@
+using QuickAcid.Reporting;
+
 namespace QuickAcid.Tests
 {
     public class ReportFromMemoryTests
@@ -20,18 +22,7 @@ namespace QuickAcid.Tests
                 ShrinkAttempts = 4
             };
 
-            memory.AddToReport(report);
-            // // Convert memory to input entries
-            // foreach (var pair in memory.GetAll())
-            // {
-            //     report.AddEntry(new QAcidReportInputEntry(pair.Key)
-            //     {
-            //         Value = pair.Value
-            //     });
-            // }
-
-            // Simulate the action that failed
-            // report.AddEntry(new QAcidReportActEntry("foo", new Exception("boom")));
+            memory.AddToReport(report, new Exception("boom"));
 
             // Assert
             Assert.Equal(2, report.Entries.Count);

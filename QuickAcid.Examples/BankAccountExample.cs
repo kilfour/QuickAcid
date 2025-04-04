@@ -2,19 +2,31 @@ using QuickMGenerate;
 
 namespace QuickAcid.Examples;
 
-public class BankAccountExample
+public class BankAccountExample : IClassFixture<QAcidLoggingFixture>
 {
-    [Fact]
+    [Fact]// (Skip = "explictit")
     public void AccountPropertiesShouldHold()
     {
-        TheTest.Verify(20.Runs(), 50.ActionsPerRun());
+        TheTest.VerifyVerbose(20.Runs(), 50.ActionsPerRun());
+    }
+
+    [Fact]
+    public void BugFound()
+    {
+        var test =
+             from account in "Arrange".Input(() => new BankAccount())
+             from act in "Act".Act(() => account.Withdraw(20))
+             from spec in "Assert".Spec(() => account.Balance >= 0)
+             select Acid.Test;
+        Assert.True(test.FailsWith("Assert"));
     }
 
     private static readonly QAcidRunner<Acid> TheTest =
-        from account in "account".OnceOnlyInput(() => new BankAccount())
+        from account in "Account".TrackedInput(() => new BankAccount(), a => $"balance: {a.Balance}")
         from action in "account ops".Choose(
             Deposit(account),
             Withdraw(account))
+        from spec in "Never negative".Spec(() => account.Balance >= 0)
         select Acid.Test;
 
     private static QAcidRunner<Acid> Deposit(BankAccount account)
@@ -32,7 +44,6 @@ public class BankAccountExample
             from amount in "withdraw amount".ShrinkableInput(MGen.Int(0, 150))
             from act in "Withdraw".Act(() => account.Withdraw(amount))
             from spec1 in "No overdraft".Spec(() => account.Balance >= 0)
-            from spec2 in "Never negative".Spec(() => account.Balance >= 0)
             select Acid.Test)
             .If(() => account.Balance > 0); // only valid when there's something to withdraw
     }
@@ -53,7 +64,7 @@ public class BankAccountExample
             if (amount > _balance)
             {
                 // simulate a bug: withdrawal not prevented
-                //  _balance -= amount;
+                _balance -= amount;
             }
             else
             {

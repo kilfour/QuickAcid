@@ -61,10 +61,10 @@ public class StackAcidSpec
     public void StackBehavesCorrectly()
     {
         var run =
-            from stack in "stack".OnceOnlyInput(() => new Stack<int>())
-            from pushed in "pushed".OnceOnlyInput(() => new List<int>())
-            from expectedPops in "expectedPops".OnceOnlyInput(() => new List<int>())
-            from popped in "popped".OnceOnlyInput(() => new List<int>())
+            from stack in "stack".TrackedInput(() => new Stack<int>())
+            from pushed in "pushed".TrackedInput(() => new List<int>())
+            from expectedPops in "expectedPops".TrackedInput(() => new List<int>())
+            from popped in "popped".TrackedInput(() => new List<int>())
             from val in "pushval".ShrinkableInput(MGen.Int(0, 100))
             from action in "step".Choose(
                 "push".Act(() => { stack.Push(val); pushed.Add(val); }),

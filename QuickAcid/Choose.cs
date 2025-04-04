@@ -13,10 +13,11 @@ namespace QuickAcid
 					if (s.IsNormalRun())
 					{
 						value = MGen.Int(0, runners.Length).Generate();
-						s.Memory.ForThisAction().Set(key, value);
+						var thisActionsMemory = s.Memory.ForThisAction();
+						thisActionsMemory.Set(key, value);
+						thisActionsMemory.MarkAsIrrelevant<T>(key);
 					}
-					else
-						value = s.Memory.ForThisAction().Get<int>(key);
+					value = s.Memory.ForThisAction().Get<int>(key);
 					return runners[value](s);
 				};
 		}

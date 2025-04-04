@@ -1,11 +1,8 @@
-using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
-
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace QuickAcid.Tests;
 
-public class ShrinkingSummaryTests : IClassFixture<QAcidLoggingFixture>
+public class ShrinkingSummaryTests
 {
     [Fact]
     public void FalsifiableException_Should_Include_ShrinkingSummary_With_MinimalInputsOnly()
@@ -63,7 +60,7 @@ public class ShrinkingSummaryTests : IClassFixture<QAcidLoggingFixture>
             })
             select Acid.Test;
 
-        var ex = Assert.Throws<FalsifiableException>(() => test.Verify(20, 1));
+        var ex = Assert.Throws<FalsifiableException>(() => test.Verify(50, 1));
         var msg = ex.ToString();
         QAcidDebug.Write(ex.MemoryDump);
 

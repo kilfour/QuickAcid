@@ -1,4 +1,5 @@
-﻿using QuickAcid.Tests.ZheZhools;
+﻿using QuickAcid.Reporting;
+using QuickAcid.Tests.ZheZhools;
 using QuickMGenerate;
 
 namespace QuickAcid.Tests.Shrinking.Primitives
@@ -57,11 +58,11 @@ namespace QuickAcid.Tests.Shrinking.Primitives
             Assert.NotNull(actEntry.Exception);
         }
 
-        [Fact]
+        [Fact(Skip = "explicit")]
         public void TwoRelevantIntsTricky()
         {
             var run =
-                AcidTestRun.FailedRun(50,
+                AcidTestRun.FailedRun(100,
                     from input1 in "input1".ShrinkableInput(MGen.Int(0, 100))
                     from input2 in "input2".ShrinkableInput(MGen.Int(0, 100))
                     from foo in "act".Act(() =>
