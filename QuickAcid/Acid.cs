@@ -1,37 +1,11 @@
-﻿namespace QuickAcid
+﻿namespace QuickAcid;
+public readonly struct Acid : IComparable<Acid>, IEquatable<Acid>
 {
-    public struct Acid : IComparable<Acid>, IEquatable<Acid> // This is a Unit type really
-    {
-        public static Acid Test { get; } = new Acid();
-
-        public static bool operator ==(Acid left, Acid right)
-        {
-            return true;
-        }
-
-        public static bool operator !=(Acid left, Acid right)
-        {
-            return false;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is Acid;
-        }
-
-        public override int GetHashCode()
-        {
-            return 0;
-        }
-
-        int IComparable<Acid>.CompareTo(Acid other)
-        {
-            return 0;
-        }
-
-        bool IEquatable<Acid>.Equals(Acid other)
-        {
-            return true;
-        }
-    }
+    public static Acid Test { get; } = new Acid();
+    public static bool operator ==(Acid _, Acid __) => true;
+    public static bool operator !=(Acid _, Acid __) => false;
+    public override bool Equals(object? obj) => obj is Acid;
+    public bool Equals(Acid other) => true;
+    public int CompareTo(Acid other) => 0;
+    public override int GetHashCode() => 0;
 }
