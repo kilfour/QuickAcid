@@ -1,4 +1,5 @@
-﻿using QuickAcid.Reporting;
+﻿using QuickAcid.CodeGen;
+using QuickAcid.Reporting;
 
 namespace QuickAcid
 {
@@ -28,12 +29,18 @@ namespace QuickAcid
 
         public bool DontThrowFalsifiableException { get; set; }
         public bool Verbose { get; set; }
+
+
+        public XMarksTheSpot XMarksTheSpot { get; set; }
+
+
         public QAcidState(QAcidRunner<Acid> runner)
         {
             Runner = runner;
             ActionNumbers = new List<int>();
             Memory = new Memory(() => CurrentActionNumber);
             Shrunk = new Memory(() => CurrentActionNumber);
+            XMarksTheSpot = new XMarksTheSpot();
             report = new QAcidReport();
         }
 

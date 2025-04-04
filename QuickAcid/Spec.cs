@@ -1,4 +1,6 @@
-﻿namespace QuickAcid
+﻿using QuickAcid.CodeGen;
+
+namespace QuickAcid
 {
 	public static partial class QAcid
 	{
@@ -7,6 +9,8 @@
 			return
 				state =>
 				{
+					state.XMarksTheSpot.TheTracker =
+							new Tracker { Key = key, RunnerType = RunnerType.SpecRunner };
 					if (state.FailingSpec != null && state.FailingSpec != key)
 					{
 						return new QAcidResult<Acid>(state, Acid.Test);

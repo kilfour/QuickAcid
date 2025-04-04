@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Windows.Markup;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 
@@ -7,8 +6,6 @@ namespace QuickAcid;
 
 public class Memory
 {
-
-
 	public class Access
 	{
 		public class DecoratedValue
@@ -34,6 +31,7 @@ public class Memory
 		}
 
 		public string? ActionKey { get; set; }
+
 		public Exception? LastException { get; set; }
 		public bool IsIrrelevant { get; set; }
 		private Dictionary<object, DecoratedValue> dictionary = [];
@@ -123,6 +121,22 @@ public class Memory
 		}
 		if (MemoryPerAction.ContainsKey(actionNumber))
 			MemoryPerAction[actionNumber].AddToReport(report, exception);
+	}
+
+	public bool Has(int actionId) // used by codegen, leaving a bit of a mess all over
+	{
+		return MemoryPerAction.ContainsKey(actionId);
+	}
+
+	public Access For(int actionId) // used by codegen, assumes it exists, ... careful now
+	{
+		// might go ploef
+		return MemoryPerAction[actionId];
+	}
+
+	public Access ForLastAction() // used by codegen
+	{
+		return MemoryPerAction.Last().Value;
 	}
 
 	public Access ForThisAction()

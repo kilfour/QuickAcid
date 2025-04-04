@@ -1,4 +1,6 @@
-﻿namespace QuickAcid
+﻿using QuickAcid.CodeGen;
+
+namespace QuickAcid
 {
 	public static partial class QAcid
 	{
@@ -7,6 +9,8 @@
 			return
 				state =>
 					{
+						state.XMarksTheSpot.TheTracker =
+							new Tracker { Key = key, RunnerType = RunnerType.ActionRunner };
 						state.Memory.ForThisAction().ActionKey = key;
 						try
 						{
@@ -27,6 +31,8 @@
 			return
 				state =>
 				{
+					state.XMarksTheSpot.TheTracker =
+							new Tracker { Key = key, RunnerType = RunnerType.ActionRunner };
 					state.Memory.ForThisAction().ActionKey = key;
 					try
 					{

@@ -1,4 +1,6 @@
-﻿namespace QuickAcid
+﻿using QuickAcid.CodeGen;
+
+namespace QuickAcid
 {
 	public static partial class QAcid
 	{
@@ -12,6 +14,8 @@
 			return
 				s =>
 					{
+						s.XMarksTheSpot.TheTracker =
+							new Tracker { Key = key, RunnerType = RunnerType.TrackedInputRunner };
 
 						var value = s.Memory.TrackedInputsPerRun.GetOrAdd(key, func, stringify);
 						if (!s.Shrinking)
