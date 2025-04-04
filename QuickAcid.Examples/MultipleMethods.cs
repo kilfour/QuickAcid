@@ -6,7 +6,7 @@ namespace QuickAcid.Examples
 	{
 		public class BugHouse
 		{
-			private string bug;
+			private string? bug;
 			public bool RunInt(int a)
 			{
 				bug += "1";

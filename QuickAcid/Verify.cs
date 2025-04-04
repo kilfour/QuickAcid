@@ -15,7 +15,7 @@ namespace QuickAcid
 			}
 		}
 
-		public static void Verify(this QAcidRunner<Acid> runner, NumberOfRuns numberOfRuns, ActionsPerRun actionsPerRun)
+		public static void VerifyWith(this QAcidRunner<Acid> runner, NumberOfRuns numberOfRuns, ActionsPerRun actionsPerRun)
 		{
 			Verify(runner, numberOfRuns.Value, actionsPerRun.Value);
 		}
@@ -40,7 +40,7 @@ namespace QuickAcid
 		{
 			for (int i = 0; i < runs; i++)
 			{
-				var state = new QAcidState(runner) { DontThrowFalsifiableException = true };
+				var state = new QAcidState(runner);
 				state.Run(actions);
 				if (state.Failed)
 					return state.GetReport();
@@ -57,7 +57,7 @@ namespace QuickAcid
 		{
 			for (int i = 0; i < runs; i++)
 			{
-				var state = new QAcidState(runner) { DontThrowFalsifiableException = true };
+				var state = new QAcidState(runner);
 				state.Run(actions);
 				if (state.Failed)
 					return Prospector.Pan(state);
@@ -65,6 +65,10 @@ namespace QuickAcid
 			return null!;
 		}
 
+
+	}
+	public static class IntExtensionForVerify
+	{
 		public static NumberOfRuns Runs(this int number)
 		{
 			return new NumberOfRuns(number);
@@ -75,7 +79,6 @@ namespace QuickAcid
 			return new ActionsPerRun(number);
 		}
 	}
-
 	public class NumberOfRuns
 	{
 		public int Value { get; }

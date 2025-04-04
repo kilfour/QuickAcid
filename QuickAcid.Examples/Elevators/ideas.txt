@@ -1,0 +1,41 @@
+// =====================================
+// Elevator Behavior Ideas for QuickAcid
+// =====================================
+
+// 1. Request Queue
+// - Call(floor): Adds a floor to a queue
+// - Step(): Processes the queue
+// Specs:
+// - Eventually service all requests
+// - Open doors at requested floor
+// - Don’t skip requests
+
+// 2. Max Floor / Bounds (SELECTED)
+// - Introduce MinFloor = 0, MaxFloor = N
+// - Clamp or ignore invalid movement
+// Specs:
+// - Never go below MinFloor or above MaxFloor
+// - Ignore MoveUp if already at MaxFloor
+
+// 3. Cooldown / Door Timing
+// - CooldownTicksRemaining, Tick()
+// Specs:
+// - Doors can’t close until cooldown reaches 0
+// - Elevator doesn’t move during cooldown
+
+// 4. Directional Behavior
+// - Track Up, Down, Idle
+// Specs:
+// - Don’t reverse unless no more requests in current direction
+
+// 5. Multi-Elevator Controller
+// - Assign requests to idle elevators
+// Specs:
+// - Requests assigned to nearest
+// - No double-handling
+
+// 6. Fault Tolerance / Failures
+// - Simulate faults (jammed door, sensor fail)
+// Specs:
+// - No movement during fault
+// - Emergency stop cancels current action

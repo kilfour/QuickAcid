@@ -27,7 +27,6 @@ namespace QuickAcid
 
         private readonly QAcidReport report;
 
-        public bool DontThrowFalsifiableException { get; set; }
         public bool Verbose { get; set; }
 
 
@@ -164,13 +163,14 @@ namespace QuickAcid
             Shrinking = true;
 
             Failed = false;
-            Memory.ResetAllRunInputs();
+
 
             var failingSpec = FailingSpec;
             var exception = Exception;
 
             foreach (var run in ActionNumbers.ToList())
             {
+                Memory.ResetAllRunInputs();
                 CurrentActionNumber = run;
                 Runner(this);
                 shrinkCount++;

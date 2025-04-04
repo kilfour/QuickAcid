@@ -18,5 +18,11 @@ namespace QuickAcid.Tests
             Assert.NotNull(entry);
             Assert.Equal("foo", entry.Key);
         }
+
+        [Fact(Skip = "Reason = todo ")]
+        public void ConditionalSpec()
+        {
+            Assert.Fail("URGENT");
+        }
     }
 }

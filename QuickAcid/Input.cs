@@ -10,6 +10,13 @@ namespace QuickAcid
 			return Input(key, generator.Generate);
 		}
 
+		public static QAcidRunner<T> InputIf<T>(this string key, Func<bool> predicate, Generator<T> generator)
+		{
+			if (!predicate())
+				return s => new QAcidResult<T>(s, default!);
+			return Input(key, generator.Generate);
+		}
+
 		public static QAcidRunner<T> Input<T>(this string key, Func<T> func, Func<T, string> stringify = null)
 		{
 			return
@@ -24,6 +31,14 @@ namespace QuickAcid
 					s.Memory.ForThisAction().Set(key, value2);
 					return new QAcidResult<T>(s, value2) { Key = key };
 				};
+		}
+
+		public static QAcidRunner<T> InputIf<T>(this string key, Func<bool> predicate, Func<T> func, Func<T, string> stringify = null)
+		{
+			if (!predicate())
+				return s => new QAcidResult<T>(s, default!);
+
+			return Input(key, func, stringify);
 		}
 	}
 }

@@ -149,6 +149,13 @@ public class Memory
 	public void ResetAllRunInputs()
 	{
 		TrackedInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
+		// -------------------------------------------------------------------------------
+		// Let's really think if you want to do something like that below.
+		// You've tried it before, ... more than once, it never worked and broke stuff.
+		// Why do you think it will solve your problems now ?
+		// --
+		// TrackedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
+		// -------------------------------------------------------------------------------
 	}
 
 	public void AddTrackedInputValueForCurrentRun(string key, string value)

@@ -68,13 +68,14 @@ public class StackAcidSpec
             from val in "pushval".ShrinkableInput(MGen.Int(0, 100))
             from action in "step".Choose(
                 "push".Act(() => { stack.Push(val); pushed.Add(val); }),
-                "pop".Act(() => { expectedPops.Add(stack.Peek()); popped.Add(stack.Pop()); })
-                    .If(() => stack.Count > 0))
+                "pop".ActIf(
+                    () => stack.Count > 0,
+                    () => { expectedPops.Add(stack.Peek()); popped.Add(stack.Pop()); }))
             from finalCountOkay in "FinalCountOkay".Spec(
                     () => stack.Count == pushed.Count - popped.Count)
             from popsInReverse in "PopsInReverse".Spec(
                 () => popped.SequenceEqual(expectedPops))
             select Acid.Test;
-        run.Verify(10.Runs(), 20.ActionsPerRun());
+        run.VerifyWith(10.Runs(), 20.ActionsPerRun());
     }
 }

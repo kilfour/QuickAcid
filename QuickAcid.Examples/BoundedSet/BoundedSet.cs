@@ -40,17 +40,21 @@ public class BoundedSetTest : QAcidLoggingFixture
             from addedInts in "addedInts".TrackedInput(() => new List<int>(), l => "[" + string.Join(", ", l) + "]")
             from choose in "ops".Choose(
                 from toAdd in "to add".ShrinkableInput(MGen.Int(0, 1))
-                from add in "add".Act(() => { theSet.Add(toAdd); addedInts.Add(toAdd); })
-                from added in "added".Spec(() => theSet.Contains(toAdd)).If(() => theSet.Count < maxSize)
+                from add in "add".ActIf(
+                    () => addedInts.Count > 0,
+                    () => { theSet.Add(toAdd); addedInts.Add(toAdd); })
+                from added in "added".SpecIf(
+                    () => addedInts.Count > 0 && theSet.Count < maxSize,
+                    () => theSet.Contains(toAdd))
                 select Acid.Test,
-                from toRemove in "toRemove".Input(MGen.ChooseFrom(addedInts.ToList())).If(() => addedInts.Count > 0)
-                from remove in "remove".Act(() => theSet.Remove(toRemove)).If(() => theSet.Count > 0)
+                from toRemove in "toRemove".InputIf(() => theSet.Count > 0, MGen.ChooseFrom(addedInts.ToList()))
+                from remove in "remove".ActIf(() => theSet.Count > 0, () => theSet.Remove(toRemove))
                 from contains in "contains".Spec(() => !theSet.Contains(toRemove))
                 select Acid.Test
                 )
             from checkCount in "Count <= MaxSize".Spec(() => theSet.Count <= maxSize)
             select Acid.Test;
 
-        run.Verify(50.Runs(), 20.ActionsPerRun());
+        run.VerifyVerbose(50.Runs(), 20.ActionsPerRun());
     }
 }

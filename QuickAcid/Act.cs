@@ -26,6 +26,17 @@ namespace QuickAcid
 					};
 		}
 
+		public static QAcidRunner<TOutput> ActIf<TOutput>(this string key, Func<bool> predicate, Func<TOutput> func)
+		{
+			return
+				state =>
+				{
+					if (!predicate())
+						return new QAcidResult<TOutput>(state, default);
+					return key.Act(func)(state);
+				};
+		}
+
 		public static QAcidRunner<Acid> Act(this string key, Action action)
 		{
 			return
@@ -45,6 +56,17 @@ namespace QuickAcid
 						state.FailedWithException(exception);
 						return new QAcidResult<Acid>(state, Acid.Test);
 					}
+				};
+		}
+
+		public static QAcidRunner<Acid> ActIf(this string key, Func<bool> predicate, Action func)
+		{
+			return
+				state =>
+				{
+					if (!predicate())
+						return new QAcidResult<Acid>(state, Acid.Test);
+					return key.Act(func)(state);
 				};
 		}
 	}
