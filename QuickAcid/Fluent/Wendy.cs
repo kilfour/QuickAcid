@@ -8,7 +8,7 @@ public class Wendy : Bob<Acid>
     public Wendy(QAcidRunner<Acid> runner)
         : base(runner) { }
 
-    public QAcidReport CheckForGold(int runs, int actions)
+    public QAcidReport AndCheckForGold(int runs, int actions)
     {
         for (int i = 0; i < runs; i++)
         {

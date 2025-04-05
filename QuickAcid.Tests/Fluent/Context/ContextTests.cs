@@ -26,7 +26,7 @@ public class ContextTests
                 .Perform("arthur", ctx => () =>
                     theAnswer = ctx.Get<Container>("universe").ItsOnlyAModel)
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.Null(report);
         Assert.Equal(42, theAnswer);
     }
@@ -40,7 +40,7 @@ public class ContextTests
                 .Perform("arthur", ctx => () =>
                     theAnswer = ctx.Get<Container>("not there").ItsOnlyAModel)
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportActEntry>();
         Assert.NotNull(entry);

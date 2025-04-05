@@ -23,7 +23,7 @@ public class TrackedInputTests
                 .TrackedInput("container", () => new Container() { ItsOnlyAModel = 1 })
                 .Perform("throw", () => throw new Exception())
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<QAcidReportTrackedInputEntry>();

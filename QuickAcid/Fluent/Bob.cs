@@ -18,7 +18,7 @@ public class SpecBuilder<T>
 
 public class Bob<T>
 {
-    protected readonly QAcidRunner<T> runner;
+    public readonly QAcidRunner<T> runner;
 
     public Bob(QAcidRunner<T> runner)
     {
@@ -54,6 +54,12 @@ public class Bob<T>
     public Bob<Acid> Perform(string label, Func<QAcidContext, Action> effect)
         => BindState(state => label.Act(effect(state)));
 
+    public BobChoiceBuilder<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
+    {
+        var options = choicesBuilder(this).ToList();
+        return new BobChoiceBuilder<T>(this, options);
+    }
+
     public SpecBuilder<T> Spec(string label)
         => new SpecBuilder<T>(this, label);
 
@@ -70,3 +76,24 @@ public class Bob<T>
     }
 }
 
+public class BobChoiceBuilder<T>
+{
+    private readonly Bob<T> parent;
+    private readonly List<Bob<Acid>> options;
+
+    public BobChoiceBuilder(Bob<T> parent, List<Bob<Acid>> options)
+    {
+        this.parent = parent;
+        this.options = options;
+    }
+
+    public Bob<Acid> PickOne()
+    {
+        var combined =
+        from _ in parent.runner
+        from result in "__00__".Choose(options.Select(opt => opt.runner).ToArray())
+        select Acid.Test;
+
+        return new Bob<Acid>(combined);
+    }
+}

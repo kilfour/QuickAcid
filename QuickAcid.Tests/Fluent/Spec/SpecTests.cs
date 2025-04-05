@@ -11,7 +11,7 @@ public class SpecTests
             SystemSpecs.Define()
                 .Spec("should be true").Assert(() => true)
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.Null(report);
     }
 
@@ -23,7 +23,7 @@ public class SpecTests
                 .Spec("should be true")
                     .Assert(() => false)
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.NotNull(report);
         var entry = report.GetSpecEntry();
         Assert.NotNull(entry);
@@ -39,7 +39,7 @@ public class SpecTests
                 .Perform("flag it", () => flag = true)
                 .Spec("should be true").Assert(() => flag == true)
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.Null(report);
         Assert.True(flag);
     }
@@ -53,7 +53,7 @@ public class SpecTests
                 .Perform("flag it", () => flag = true)
                 .Spec("should be true").Assert(() => flag == false)
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.NotNull(report);
         var entry = report.GetSpecEntry();
         Assert.NotNull(entry);

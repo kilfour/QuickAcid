@@ -2,7 +2,6 @@ using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 
 namespace QuickAcid.Tests.Fluent.Perform;
-
 public class PerformTests
 {
     [Fact]
@@ -13,7 +12,7 @@ public class PerformTests
             SystemSpecs.Define()
                 .Perform("flag it", () => flag = true)
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.Null(report);
         Assert.True(flag);
     }
@@ -27,7 +26,7 @@ public class PerformTests
                 .Perform("flag it once", () => flag += "a")
                 .Perform("flag it again", () => flag += "b")
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.Null(report);
         Assert.Equal("ab", flag);
     }
@@ -39,7 +38,7 @@ public class PerformTests
             SystemSpecs.Define()
                 .Perform("throws", () => throw new Exception("Boom"))
                 .DumpItInAcid()
-                .CheckForGold(1, 1);
+                .AndCheckForGold(1, 1);
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportActEntry>();
