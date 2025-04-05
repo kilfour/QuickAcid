@@ -20,7 +20,6 @@ namespace QuickAcid
 
         public bool Verifying { get; private set; }
 
-
         public bool Failed { get; private set; }
         public string? FailingSpec { get; private set; }
         public Exception? Exception { get; private set; }
@@ -32,7 +31,11 @@ namespace QuickAcid
 
         public XMarksTheSpot XMarksTheSpot { get; set; }
 
-
+        public void MarkMyLocation(Tracker tracker)
+        {
+            QAcidDebug.WriteLine($" - Runner Start => {tracker}");
+            XMarksTheSpot.TheTracker = tracker;
+        }
         public QAcidState(QAcidRunner<Acid> runner)
         {
             Runner = runner;
@@ -53,12 +56,13 @@ namespace QuickAcid
             }
         }
 
-        public void StepAction()
+        private void StepAction()
         {
             ActionNumbers.Add(CurrentActionNumber);
             Runner(this);
             if (Failed)
             {
+                QAcidDebug.WriteLine($"State is FAILED. action #{CurrentActionNumber}");
                 if (Verbose)
                 {
                     report.AddEntry(new QAcidReportTitleSectionEntry("FIRST FAILED RUN"));

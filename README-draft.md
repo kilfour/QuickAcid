@@ -59,6 +59,44 @@ Yes, but it's not the main goal. QuickAcid can test single operations, but its s
 
 ---
 
+## Input Kinds: When to Use What
+
+| Method              | Use When...                                                | Shrinks? | Tracked? |
+|---------------------|------------------------------------------------------------|----------|----------|
+| `ShrinkableInput`   | The value *directly affects* the spec outcome             | ✅       | ✅       |
+| `Input`             | The value is incidental/contextual (e.g., lookup keys)     | ❌       | ❌       |
+| `TrackedInput`      | You want to carry mutable state or inspect later           | ❌       | ✅       |
+| `ShrinkableInputIf` | *(Not implemented yet)* Potentially useful for conditional shrinking | ✅ | ✅ |
+| `InputIf`           | Conditionally include a non-shrinking input                | ❌       | ❌       |
+
+**Note:** `TrackedInput` was previously called `OnceOnlyInput`. It is intended for stateful values that should not be regenerated or shrunk, and need to be passed to future steps or included in output diagnostics.
+
+---
+
+## Guidelines & Best Practices
+
+---
+
+### Choosing the Right Input Kind
+
+| Method              | Use When...                                             | Shrinks? | Tracked? | Notes                                      |
+|---------------------|---------------------------------------------------------|----------|----------|---------------------------------------------|
+| `ShrinkableInput`   | Value *affects* whether a spec passes/fails             | ✅       | ✅       | Used for values tested by specs             |
+| `Input`             | Value is incidental (e.g., keys, labels, lookups)      | ❌       | ❌       | Not tracked, not shrunk                     |
+| `TrackedInput`      | You want to carry or inspect this state across steps   | ❌       | ✅       | Formerly known as `OnceOnlyInput`           |
+| `InputIf`           | Conditionally include an input (non-shrinking)         | ❌       | ❌       | Useful for control flow, optional behavior  |
+| `ShrinkableInputIf` | Shrinkable input *only* when condition is true         | ✅       | ✅       | (Rare) Avoids misleading shrinking          |
+
+---
+
+- 🔤 **Use descriptive spec keys**: Spec names like "Doors should not open while moving" will show up in reports — write them like assertions.
+- 🧱 **Name all LINQ bindings uniquely**: Avoid repeated `from _ in ...`. Use `_s1`, `_a1`, etc. to prevent variable name conflicts.
+- 🧪 **Use `.SpecIf(...)` for conditional assertions**: Only enforce invariants when meaningful (e.g. elevator shouldn't move *if* doors are open).
+- 🧹 **Break out ops into functions**: Compose `QAcidRunner<Acid>` methods for each operation (e.g., `MoveUp(...)`, `CloseDoors(...)`) to reduce clutter.
+- 📋 **Use a `Tracker` to snapshot state**: Capturing pre-op values in a custom tracker makes spec writing much clearer and debuggable.
+
+---
+
 ## Roadmap
 
 - More expressive shrinking

@@ -31,7 +31,7 @@ public class BoundedSet<T>
 
 public class BoundedSetTest : QAcidLoggingFixture
 {
-    [Fact] //(Skip = "explicit")
+    [Fact]
     public void WithPleasure()
     {
         var run =
@@ -40,8 +40,7 @@ public class BoundedSetTest : QAcidLoggingFixture
             from addedInts in "addedInts".TrackedInput(() => new List<int>(), l => "[" + string.Join(", ", l) + "]")
             from choose in "ops".Choose(
                 from toAdd in "to add".ShrinkableInput(MGen.Int(0, 1))
-                from add in "add".ActIf(
-                    () => addedInts.Count > 0,
+                from add in "add".Act(
                     () => { theSet.Add(toAdd); addedInts.Add(toAdd); })
                 from added in "added".SpecIf(
                     () => addedInts.Count > 0 && theSet.Count < maxSize,
@@ -55,6 +54,8 @@ public class BoundedSetTest : QAcidLoggingFixture
             from checkCount in "Count <= MaxSize".Spec(() => theSet.Count <= maxSize)
             select Acid.Test;
 
-        run.VerifyVerbose(50.Runs(), 20.ActionsPerRun());
+        var report = run.ReportIfFailed(50, 10);
+        if (report != null)
+            Assert.Fail(report.ToString());
     }
 }

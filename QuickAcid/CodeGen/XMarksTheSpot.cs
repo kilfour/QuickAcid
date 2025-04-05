@@ -19,5 +19,11 @@ namespace QuickAcid.CodeGen
     {
         public string Key { get; set; }
         public RunnerType RunnerType { get; set; }
+
+        public override string ToString()
+        {
+            return $"{this.RunnerType.ToString()} {Key}";
+        }
     }
+    //public enum RunnerType { TrackedInputRunner, SpecRunner, ActionRunner }
 }

@@ -1,43 +1,42 @@
 ﻿using QuickAcid.Reporting;
 
-namespace QuickAcid.Tests.Bugs
+namespace QuickAcid.Tests.Bugs;
+
+public class ExceptionNotReported
 {
-	public class ExceptionNotReported
+	private class BugHouse
 	{
-		private class BugHouse
+		private int count;
+		public bool Run()
 		{
-			private int count;
-			public bool Run()
-			{
-				if (count++ == 1) throw new Exception();
-				return true;
-			}
+			if (count++ == 1) throw new Exception();
+			return true;
 		}
+	}
 
-		[Fact]
-		public void Example()
-		{
-			var run =
-				from bugHouse in "BugHouse".TrackedInput(() => new BugHouse())
-				from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
-				select Acid.Test;
+	[Fact]
+	public void Example()
+	{
+		var run =
+			from bugHouse in "BugHouse".TrackedInput(() => new BugHouse())
+			from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
+			select Acid.Test;
 
-			var report = run.ReportIfFailed(1, 3);
+		var report = run.ReportIfFailed(1, 3);
 
-			var entry1 = report.FirstOrDefault<QAcidReportTrackedInputEntry>();
-			Assert.NotNull(entry1);
-			Assert.Equal("BugHouse", entry1.Key);
+		var entry1 = report.FirstOrDefault<QAcidReportTrackedInputEntry>();
+		Assert.NotNull(entry1);
+		Assert.Equal("BugHouse", entry1.Key);
 
-			var entry2 = report.FirstOrDefault<ReportActEntry>();
-			Assert.NotNull(entry2);
-			Assert.Equal("BugHouse.Run", entry2.Key);
-			Assert.Null(entry2.Exception);
+		var entry2 = report.FirstOrDefault<ReportActEntry>();
+		Assert.NotNull(entry2);
+		Assert.Equal("BugHouse.Run", entry2.Key);
+		Assert.Null(entry2.Exception);
 
-			var entry3 = report.SecondOrDefault<ReportActEntry>();
-			Assert.NotNull(entry3);
-			Assert.Equal("BugHouse.Run", entry3.Key);
-			Assert.NotNull(entry3.Exception);
+		var entry3 = report.SecondOrDefault<ReportActEntry>();
+		Assert.NotNull(entry3);
+		Assert.Equal("BugHouse.Run", entry3.Key);
+		Assert.NotNull(entry3.Exception);
 
-		}
 	}
 }

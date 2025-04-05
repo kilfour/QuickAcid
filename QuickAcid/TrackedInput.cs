@@ -14,9 +14,7 @@ namespace QuickAcid
 			return
 				s =>
 					{
-						s.XMarksTheSpot.TheTracker =
-							new Tracker { Key = key, RunnerType = RunnerType.TrackedInputRunner };
-
+						s.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.TrackedInputRunner });
 						var value = s.Memory.TrackedInputsPerRun.GetOrAdd(key, func, stringify);
 						if (!s.Shrinking)
 							s.Memory.AddTrackedInputValueForCurrentRun(key, stringify(value));

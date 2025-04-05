@@ -9,8 +9,7 @@ namespace QuickAcid
 			return
 				state =>
 				{
-					state.XMarksTheSpot.TheTracker =
-							new Tracker { Key = key, RunnerType = RunnerType.SpecRunner };
+					state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.SpecRunner });
 					if (state.FailingSpec != null && state.FailingSpec != key)
 					{
 						return new QAcidResult<Acid>(state, Acid.Test);

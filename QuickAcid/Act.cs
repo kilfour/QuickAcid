@@ -9,8 +9,7 @@ namespace QuickAcid
 			return
 				state =>
 					{
-						state.XMarksTheSpot.TheTracker =
-							new Tracker { Key = key, RunnerType = RunnerType.ActionRunner };
+						state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
 						state.Memory.ForThisAction().ActionKey = key;
 						try
 						{
@@ -19,9 +18,10 @@ namespace QuickAcid
 						}
 						catch (Exception exception)
 						{
+							QAcidDebug.WriteLine($"Exception in Act, key {key}, ex: {exception}.");
 							state.Memory.ForThisAction().LastException = exception;
 							state.FailedWithException(exception);
-							return new QAcidResult<TOutput>(state, default);
+							return new QAcidResult<TOutput>(state, default(TOutput));
 						}
 					};
 		}
@@ -32,7 +32,7 @@ namespace QuickAcid
 				state =>
 				{
 					if (!predicate())
-						return new QAcidResult<TOutput>(state, default);
+						return new QAcidResult<TOutput>(state, default(TOutput));
 					return key.Act(func)(state);
 				};
 		}
@@ -42,8 +42,7 @@ namespace QuickAcid
 			return
 				state =>
 				{
-					state.XMarksTheSpot.TheTracker =
-							new Tracker { Key = key, RunnerType = RunnerType.ActionRunner };
+					state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
 					state.Memory.ForThisAction().ActionKey = key;
 					try
 					{
@@ -52,6 +51,7 @@ namespace QuickAcid
 					}
 					catch (Exception exception)
 					{
+						QAcidDebug.WriteLine($"Exception in Act, key {key}, ex: {exception}.");
 						state.Memory.ForThisAction().LastException = exception;
 						state.FailedWithException(exception);
 						return new QAcidResult<Acid>(state, Acid.Test);
