@@ -48,6 +48,13 @@ public class Memory
 			return (T)dictionary[key].Value!;
 		}
 
+		public T GetOrNull<T>(object key)
+		{
+			if (dictionary.ContainsKey(key))
+				return (T)dictionary[key].Value!;
+			return default(T);
+		}
+
 		public void Set<T>(object key, T value)
 		{
 			if (!dictionary.ContainsKey(key))
@@ -194,4 +201,21 @@ public class Memory
 
 		return sb.ToString();
 	}
+
+	public T GetForFluentInterface<T>(string key)
+	{
+
+		var value = TrackedInputsPerRun.GetOrNull<T>(key);
+		if (value != null)
+			return value;
+		value = ForThisAction().GetOrNull<T>(key);
+		if (value == null)
+			throw new ThisNotesOnYou($"The value for key '{key}' was not present in memory, ... and neither was the key itself.");
+		return value;
+	}
+}
+
+public class ThisNotesOnYou : Exception
+{
+	public ThisNotesOnYou(string message) : base(message) { }
 }

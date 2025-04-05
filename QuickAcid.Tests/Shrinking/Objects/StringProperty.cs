@@ -143,7 +143,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.Equal("act", actEntry.Key);
             Assert.Null(actEntry.Exception);
 
-            var specEntry = report.Single<QAcidReportSpecEntry>();
+            var specEntry = report.GetSpecEntry();
             Assert.Equal("equal", specEntry.Key);
         }
 

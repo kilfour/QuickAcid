@@ -57,4 +57,9 @@ public class QAcidReport
     {
         return OfType<T>().Single();
     }
+
+    public QAcidReportSpecEntry GetSpecEntry()
+    {
+        return Single<QAcidReportSpecEntry>();
+    }
 }

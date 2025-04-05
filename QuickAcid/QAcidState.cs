@@ -1,9 +1,10 @@
 ﻿using QuickAcid.CodeGen;
+using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 
 namespace QuickAcid
 {
-    public class QAcidState
+    public class QAcidState : QAcidContext
     {
         public QAcidRunner<Acid> Runner { get; private set; }
 
@@ -44,6 +45,9 @@ namespace QuickAcid
             XMarksTheSpot = new XMarksTheSpot();
             report = new QAcidReport();
         }
+
+        // implementing context
+        public T Get<T>(string key) => Memory.GetForFluentInterface<T>(key);
 
         public void Run(int actionsPerRun)
         {

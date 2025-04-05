@@ -1,5 +1,21 @@
 namespace QuickAcid.Fluent;
 
+
+public class SpecBuilder<T>
+{
+    private readonly Bob<T> bob;
+    private readonly string label;
+
+    public SpecBuilder(Bob<T> bob, string label)
+    {
+        this.label = label;
+        this.bob = bob;
+    }
+
+    public Bob<Acid> Assert(Func<bool> predicate)
+        => bob.Bind(_ => label.Spec(predicate));
+}
+
 public class Bob<T>
 {
     protected readonly QAcidRunner<T> runner;
@@ -9,7 +25,8 @@ public class Bob<T>
         this.runner = runner;
     }
 
-    private Bob<TNext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
+    // Scoop Muck Lofty Dizzy Roley
+    public Bob<TNext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
     {
         var composed =
             from a in runner
@@ -18,11 +35,33 @@ public class Bob<T>
         return new Bob<TNext>(composed);
     }
 
+    public Bob<TNext> BindState<TNext>(Func<QAcidState, QAcidRunner<TNext>> bind)
+    {
+        QAcidRunner<TNext> composed = state =>
+        {
+            var result = runner(state);
+            if (result.State.Failed)
+                return new QAcidResult<TNext>(state, default(TNext));
+
+            return bind(result.State)(result.State);
+        };
+
+        return new Bob<TNext>(composed);
+    }
     public Bob<Acid> Perform(string label, Action action)
         => Bind(_ => label.Act(action));
 
+    public Bob<Acid> Perform(string label, Func<QAcidContext, Action> effect)
+        => BindState(state => label.Act(effect(state)));
+
+    public SpecBuilder<T> Spec(string label)
+        => new SpecBuilder<T>(this, label);
+
     public Bob<TNew> TrackedInput<TNew>(string label, Func<TNew> func)
         => Bind(_ => label.TrackedInput(func));
+
+    public Bob<TNew> TrackedInput<TNew>(string label, Func<QAcidContext, TNew> generator)
+        => BindState(state => label.TrackedInput(() => generator(state)));
 
     public Wendy DumpItInAcid()
     {
