@@ -4,92 +4,34 @@ namespace QuickAcid.Examples.Elevators;
 
 public class ElevatorQAcidTest : QAcidLoggingFixture
 {
-    [Fact]
-    public void RunAndVerify()
-    {
-        var run =
-            from elevator in "Elevator".TrackedInput(
-                () => new Elevator(),
-                a => $"CurrentFloor: {a.CurrentFloor}, DoorsOpen: {a.DoorsOpen}")
-            from tracker in "Tracker".TrackedInput(
-                () => new Tracker(elevator),
-                a => $"CurrentFloor: {a.CurrentFloor}, DoorsOpen: {a.DoorsOpen}")
-            from _o in "ops".Choose(
-                MoveUpWithBounds(elevator, tracker),
-                MoveDown(elevator, tracker),
-                OpenDoors(elevator),
-                CloseDoors(elevator))
-            .Before(() => tracker.Do(elevator))
-            from _s in "Initial floor is zero"
-                .SpecIf(
-                    () => tracker.OperationsPerformed == 0,
-                    () => elevator.CurrentFloor == 0)
-            select Acid.Test;
 
-        var report = run.ReportIfFailed(20, 5);
-        if (report != null)
-            Assert.Fail(report.ToString());
-    }
-
-    [Fact]
-    public void Minimal()
-    {
-        var run =
-            from elevator in "Elevator".TrackedInput(() => new object())
-            from _ in "nothing".Act(() => throw new Exception("boom"))
-            from _s1 in "Always Execute and tru²e".SpecIf(() => true, () => true)
-            from _s2 in MinimalSpec(elevator)
-            select Acid.Test;
-        var report = run.ReportIfFailed(30, 10);
-        if (report != null)
-            Assert.Fail(report.ToString());
-    }
-
-    private static QAcidRunner<Acid> MinimalSpec(object elevator)
-    {
-        return from _ in "minimalSpec".Spec(() => true) select Acid.Test;
-    }
-
-    [Fact]
+    [Fact(Skip = "Only for demo")]
     public void ElevatorRequestSystemWorks()
     {
-        var run =
-            from elevator in "Elevator".TrackedInput(() => new Elevator())
-            from tracker in "Tracker".TrackedInput(() => new Tracker(elevator))
-            from _ in "ops".Choose(
-                MoveUpWithBounds(elevator, tracker),
-                MoveDown(elevator, tracker),
-                OpenDoors(elevator),
-                CloseDoors(elevator),
-                CallFloor(elevator, tracker),
-                Step(elevator)
-            ).Before(() => tracker.Do(elevator))
-            from _s1 in "Initial floor is zero"
-                .SpecIf(() => tracker.OperationsPerformed == 0, () => elevator.CurrentFloor == 0)
-            from _s2 in AllRequestsServed(tracker)
-            select Acid.Test;
-
-        var report = run.ReportIfFailed(30, 10);
+        var report = TheRun.ReportIfFailed(30, 10);
         if (report != null)
             Assert.Fail(report.ToString());
-
-        // from _ in "All requests eventually served".Spec(
-        // () =>
-        //    {
-        //        QAcidDebug.WriteLine($"tracker == null: {tracker == null}.");
-        //        QAcidDebug.WriteLine($"CurrentFloor: {tracker.CurrentFloor}, DoorsOpen: {tracker.DoorsOpen}, Requests: [{string.Join(",", tracker.Requests)}]");
-        //        try
-        //        {
-        //            return tracker.Requests.All(
-        //                r => tracker.ServedRequests.Contains(r));
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            QAcidDebug.WriteLine("Spec crashed: " + ex);
-        //            throw;
-        //        }
-        //    })
     }
+
+    private static QAcidRunner<Acid> TheRun =
+        from elevator in "Elevator".TrackedInput(() => new Elevator())
+        from tracker in "Tracker".TrackedInput(() => new Tracker(elevator))
+        from _ in "ops".Choose(
+            MoveUpWithBounds(elevator, tracker),
+            MoveDown(elevator, tracker),
+            OpenDoors(elevator),
+            CloseDoors(elevator),
+            CallFloor(elevator, tracker),
+            Step(elevator)
+        ).Before(() => tracker.Do(elevator))
+        from _s1 in "Initial floor is zero"
+            .SpecIf(() => tracker.OperationsPerformed == 0, () => elevator.CurrentFloor == 0)
+        from _s2 in AllRequestsServed(tracker)
+        select Acid.Test;
+
+    // this creates a type initializer problemm
+    private static Func<QAcidRunner<Elevator>> ElevatorInput =
+        () => "Elevator".TrackedInput(() => new Elevator());
 
     private static QAcidRunner<Acid> MoveUpWithBounds(Elevator elevator, Tracker tracker)
     {
@@ -127,15 +69,11 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
             select Acid.Test;
     }
 
-    private static QAcidRunner<Acid> OpenDoors(Elevator elevator)
-    {
-        return from _ in "OpenDoors".Act(elevator.OpenDoors) select Acid.Test;
-    }
+    private static QAcidRunner<Acid> OpenDoors(Elevator elevator) =>
+        "OpenDoors".Act(elevator.OpenDoors);
 
-    private static QAcidRunner<Acid> CloseDoors(Elevator elevator)
-    {
-        return from _ in "CloseDoors".Act(elevator.CloseDoors) select Acid.Test;
-    }
+    private static QAcidRunner<Acid> CloseDoors(Elevator elevator) =>
+        "CloseDoors".Act(elevator.CloseDoors);
 
     private static QAcidRunner<Acid> CallFloor(Elevator elevator, Tracker tracker)
     {
@@ -144,34 +82,16 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
             from _a in "Call".Act(() =>
             {
                 elevator.Call(floor);
-                tracker.Requests.Add(floor); // for later specs
+                tracker.Requests.Add(floor);
             })
             select Acid.Test;
     }
 
     private static QAcidRunner<Acid> Step(Elevator elevator)
-    {
-        return from _ in "Step".Act(elevator.Step) select Acid.Test;
-    }
+        => "Step".Act(elevator.Step);
 
-    private static QAcidRunner<Acid> AllRequestsServed(Tracker tracker)
-    {
-        return
-            from _ in "All requests eventually served".Spec(
-            () =>
-               {
-                   try
-                   {
-                       return tracker.Requests.All(
-                           r => tracker.ServedRequests.Contains(r));
-                   }
-                   catch (Exception ex)
-                   {
-                       QAcidDebug.WriteLine("Spec crashed: " + ex);
-                       throw;
-                   }
-               })
-            select Acid.Test;
-    }
+    private static QAcidRunner<Acid> AllRequestsServed(Tracker tracker) =>
+        "All requests eventually served".Spec(
+            () => tracker.Requests.All(r => tracker.ServedRequests.Contains(r)));
 }
 

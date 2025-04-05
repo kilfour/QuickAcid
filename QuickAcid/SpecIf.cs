@@ -1,6 +1,4 @@
-﻿using QuickAcid.CodeGen;
-
-namespace QuickAcid
+﻿namespace QuickAcid
 {
 	public static partial class QAcid
 	{

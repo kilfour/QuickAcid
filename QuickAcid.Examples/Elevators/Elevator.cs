@@ -42,8 +42,8 @@ public class Elevator
         DoorsOpen = true;
         if (_requests.Count == 0)
         {
-            QAcidDebug.WriteLine("WARNING: Tried to dequeue with no pending requests!");
-            // return;
+            // comment return out for bug
+            return;
         }
         _requests.Dequeue(); // assume we served the request
     }

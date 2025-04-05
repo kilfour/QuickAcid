@@ -17,11 +17,14 @@ namespace QuickAcid.CodeGen
 
         private static string FollowTheLead(Clue clue, Memory.Access access)
         {
+            if (clue.SeeWhereItLeads == null)
+                return "DEFAULT";
             return clue.SeeWhereItLeads.Invoke(clue.Key, access);
         }
         private static string GetTrackedInputCode(Clue clue, Memory.Access access)
         {
-            return "    " + FollowTheLead(clue, access);
+            var trackedString = $"Tracked: {clue.Key}: DEFAULT";
+            return "  TRACK  " + FollowTheLead(clue, access);
         }
 
         private static string GetTrackedInputsCode(XMarksTheSpot xMarksTheSpot, Memory.Access access)
@@ -35,8 +38,9 @@ namespace QuickAcid.CodeGen
 
         private static string GetActionCode(XMarksTheSpot xMarksTheSpot, Memory.Access access)
         {
-            var clue = xMarksTheSpot.TheMap.Single(a => a.Key == access.ActionKey);
-
+            var clue = xMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == access.ActionKey);
+            if (clue == null)
+                return $"Action: {access.ActionKey}: DEFAULT";
             return "    " + FollowTheLead(clue, access) + ";";
         }
 
@@ -55,6 +59,9 @@ namespace QuickAcid.CodeGen
         {
             if (state.FailingSpec != null)
             {
+                var clue = state.XMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == state.FailingSpec);
+                if (clue == null)
+                    return $"Failing Spec: {state.FailingSpec} : DEFAULT";
                 return GetAssertTrueCode(
                     state.XMarksTheSpot.TheMap.Single(a => a.Key == state.FailingSpec),
                     state.Memory.ForLastAction());

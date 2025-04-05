@@ -2,7 +2,7 @@ namespace QuickAcid.CodeGen
 {
     public enum RunnerType { TrackedInputRunner, SpecRunner, ActionRunner }
 
-    public struct Clue
+    public class Clue
     {
         public string Key { get; set; }
         public RunnerType RunnerType { get; set; }

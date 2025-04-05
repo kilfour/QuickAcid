@@ -18,7 +18,6 @@ namespace QuickAcid
 						}
 						catch (Exception exception)
 						{
-							QAcidDebug.WriteLine($"Exception in Act, key {key}, ex: {exception}.");
 							state.Memory.ForThisAction().LastException = exception;
 							state.FailedWithException(exception);
 							return new QAcidResult<TOutput>(state, default(TOutput));
@@ -51,7 +50,6 @@ namespace QuickAcid
 					}
 					catch (Exception exception)
 					{
-						QAcidDebug.WriteLine($"Exception in Act, key {key}, ex: {exception}.");
 						state.Memory.ForThisAction().LastException = exception;
 						state.FailedWithException(exception);
 						return new QAcidResult<Acid>(state, Acid.Test);

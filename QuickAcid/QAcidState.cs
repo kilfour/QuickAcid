@@ -33,7 +33,6 @@ namespace QuickAcid
 
         public void MarkMyLocation(Tracker tracker)
         {
-            QAcidDebug.WriteLine($" - Runner Start => {tracker}");
             XMarksTheSpot.TheTracker = tracker;
         }
         public QAcidState(QAcidRunner<Acid> runner)
@@ -62,7 +61,6 @@ namespace QuickAcid
             Runner(this);
             if (Failed)
             {
-                QAcidDebug.WriteLine($"State is FAILED. action #{CurrentActionNumber}");
                 if (Verbose)
                 {
                     report.AddEntry(new QAcidReportTitleSectionEntry("FIRST FAILED RUN"));
