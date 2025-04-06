@@ -28,7 +28,8 @@ public class TrackedInputTests
             SystemSpecs
                 .Define()
                 .TrackedInput(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
-                .Perform("throw", () => throw new Exception())
+                .As("throw").Now(() => throw new Exception())
+                .Do("throw", _ => throw new Exception())
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);

@@ -41,7 +41,7 @@ public class ContextTests
         var theAnswer = 0;
         var report =
             SystemSpecs.Define()
-                .Perform("arthur", ctx => () =>
+                .Do("arthur", ctx => () =>
                     theAnswer = ctx.GetItAtYourOwnRisk<Container>("not there").ItsOnlyAModel)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
@@ -56,16 +56,15 @@ public class ContextTests
     [Fact]
     public void TrackedInput_can_use_context_when_registering()
     {
-        var theAnswer = 0;
+        var container = new Container();
         var report =
             SystemSpecs.Define()
                 .TrackedInput(Keys.TheAnswer, () => 42)
-                .TrackedInput(Keys.Universe, ctx => new Container() { ItsOnlyAModel = ctx.Get(Keys.TheAnswer) })
-                //.Spec("And Everything").Assert(ctx => ctx.Get(Keys.Universe) == 42)
+                .TrackedInput(Keys.Universe, ctx => { container.ItsOnlyAModel = ctx.Get(Keys.TheAnswer); return container; })
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
-        Assert.Equal(42, theAnswer);
+        Assert.Equal(42, container.ItsOnlyAModel);
     }
 }
 

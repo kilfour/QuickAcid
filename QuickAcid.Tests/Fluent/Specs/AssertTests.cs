@@ -16,7 +16,7 @@ public class AssertTests
     }
 
     [Fact]
-    public void Spec_returns_false_gets_reported()
+    public void Assert_returns_false_gets_reported()
     {
         var report =
             SystemSpecs.Define()
@@ -35,7 +35,7 @@ public class AssertTests
         var flag = false;
         var report =
             SystemSpecs.Define()
-                .Perform("flag it", () => flag = true)
+                .As("flag it").Now(() => flag = true)
                 .Assert("should be true", () => flag == true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
@@ -49,7 +49,7 @@ public class AssertTests
         var flag = false;
         var report =
             SystemSpecs.Define()
-                .Perform("flag it", () => flag = true)
+                .As("flag it").Now(() => flag = true)
                 .Assert("should be true", () => flag == false)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

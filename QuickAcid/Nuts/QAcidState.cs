@@ -246,4 +246,9 @@ public class QAcidState : QAcidContext
             };
         }
     }
+
+    internal QAcidState Fail()
+    {
+        throw new NotImplementedException();
+    }
 }

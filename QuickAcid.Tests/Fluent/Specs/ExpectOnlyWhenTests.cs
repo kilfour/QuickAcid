@@ -1,15 +1,15 @@
 using QuickAcid.Fluent;
 
-namespace QuickAcid.Tests.Fluent.Spec;
+namespace QuickAcid.Tests.Fluent.Expect;
 
-public class SpecOnlyWhenTests
+public class ExpectOnlyWhenTests
 {
     [Fact]
-    public void Spec_should_not_run_if_predicate_is_false()
+    public void Expect_should_not_run_if_predicate_is_false()
     {
         var report =
             SystemSpecs.Define()
-                .Spec("should be true")
+                .Expect("should be true")
                     .OnlyWhen(() => false)
                     .Assert(() => true)
                 .DumpItInAcid()
@@ -18,11 +18,11 @@ public class SpecOnlyWhenTests
     }
 
     [Fact]
-    public void Spec_should_run_if_predicate_is_true()
+    public void Expect_should_run_if_predicate_is_true()
     {
         var report =
             SystemSpecs.Define()
-                .Spec("should be true")
+                .Expect("should be true")
                     .OnlyWhen(() => true)
                     .Assert(() => false)
                 .DumpItInAcid()

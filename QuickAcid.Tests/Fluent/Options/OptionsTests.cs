@@ -15,8 +15,8 @@ public class OptionsTests
             var report =
                SystemSpecs.Define()
                     .Options(opt => [
-                        opt.Perform("1", () => { collector+= "a"; }),
-                    opt.Perform("2", () => { collector+= "b"; }) ])
+                        opt.Do("1", () => { collector+= "a"; }),
+                        opt.Do("2", () => { collector+= "b"; }) ])
                     .PickOne()
                     .DumpItInAcid()
                     .AndCheckForGold(1, 2);

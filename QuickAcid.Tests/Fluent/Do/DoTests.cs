@@ -1,16 +1,17 @@
 using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 
-namespace QuickAcid.Tests.Fluent.Perform;
-public class PerformTests
+namespace QuickAcid.Tests.Fluent.Do;
+
+public class DoTests
 {
     [Fact]
-    public void Perform_should_do_its_action()
+    public void Do_should_do_its_action()
     {
         var flag = false;
         var report =
             SystemSpecs.Define()
-                .Perform("flag it", () => flag = true)
+                .Do("flag it", () => flag = true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -18,13 +19,13 @@ public class PerformTests
     }
 
     [Fact]
-    public void Perform_should_do_its_action_even_if_theres_more_of_them()
+    public void Do_should_do_its_action_even_if_theres_more_of_them()
     {
         var flag = "";
         var report =
             SystemSpecs.Define()
-                .Perform("flag it once", () => flag += "a")
-                .Perform("flag it again", () => flag += "b")
+                .Do("flag it once", () => flag += "a")
+                .Do("flag it again", () => flag += "b")
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -32,11 +33,11 @@ public class PerformTests
     }
 
     [Fact]
-    public void Perform_that_throws_should_report_failure()
+    public void Do_that_throws_should_report_failure()
     {
         var report =
             SystemSpecs.Define()
-                .Perform("throws", () => throw new Exception("Boom"))
+                .Do("throws", () => throw new Exception("Boom"))
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);

@@ -33,30 +33,6 @@ public class Bob<T>
         return new Bob<TNext>(composed);
     }
 
-    public Bob<Acid> Perform(string label, Action action)
-        => Bind(_ => label.Act(action));
-
-    public Bob<Acid> Perform(string label, Func<QAcidContext, Action> effect)
-        => BindState(state => label.Act(effect(state)));
-
-    public Bob<Acid> Perform<TNew>(QKey<TNew> key, Func<QAcidContext, Action> effect)
-        => BindState(state => key.Label.Act(effect(state)));
-
-    public Lofty<T> As(string label)
-        => new(this, label);
-
-    public BobChoiceBuilder<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
-    {
-        var options = choicesBuilder(this).ToList();
-        return new BobChoiceBuilder<T>(this, options);
-    }
-
-    public Bristle<T> Spec(string label)
-        => new(this, label);
-
-    public Bob<Acid> Assert(string label, Func<bool> predicate)
-        => Bind(_ => label.Spec(predicate));
-
     // -------------------------------------------------------------------------
     // register Tracked Input
     //
@@ -69,7 +45,33 @@ public class Bob<T>
         => BindState(state => label.TrackedInput(() => generator(state)));
     public Bob<TNew> TrackedInput<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
         => BindState(state => key.Label.TrackedInput(() => generator(state)));
+
     // -------------------------------------------------------------------------
+    // Doing Stuff
+    //
+    public Bob<Acid> Do(string label, Action action)
+       => Bind(_ => label.Act(action));
+
+    public Bob<Acid> Do(string label, Func<QAcidContext, Action> effect)
+        => BindState(state => label.Act(effect(state)));
+
+    public Lofty<T> As(string label)
+        => new(this, label);
+
+    public BobChoiceBuilder<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
+    {
+        var options = choicesBuilder(this).ToList();
+        return new BobChoiceBuilder<T>(this, options);
+    }
+
+    // -------------------------------------------------------------------------
+    // Verifying
+    //
+    public Bristle<T> Expect(string label)
+        => new(this, label);
+
+    public Bob<Acid> Assert(string label, Func<bool> predicate)
+        => Bind(_ => label.Spec(predicate));
 
     public Wendy DumpItInAcid()
     {
