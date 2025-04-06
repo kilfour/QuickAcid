@@ -49,7 +49,7 @@ public class QAcidState : QAcidContext
     // implementing context
     // --
     public T GetItAtYourOwnRisk<T>(string key) => Memory.GetForFluentInterface<T>(key);
-    public T Get<T>(QKey<T> key) => Memory.GetForFluentInterface<T>(key.Label);
+    public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
     // -----------------------------------------------------------------
 
     public void Run(int actionsPerRun)

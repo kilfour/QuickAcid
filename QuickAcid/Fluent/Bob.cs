@@ -42,8 +42,8 @@ public class Bob<T>
     public Bob<Acid> Perform<TNew>(QKey<TNew> key, Func<QAcidContext, Action> effect)
         => BindState(state => key.Label.Act(effect(state)));
 
-    public Lofty<T> As<TNew>(QKey<TNew> key)
-        => new Lofty<T>(this, key.Label);
+    public Lofty<T> As(string label)
+        => new(this, label);
 
     public BobChoiceBuilder<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
     {
@@ -52,18 +52,24 @@ public class Bob<T>
     }
 
     public Bristle<T> Spec(string label)
-        => new Bristle<T>(this, label);
+        => new(this, label);
 
     public Bob<Acid> Assert(string label, Func<bool> predicate)
         => Bind(_ => label.Spec(predicate));
 
+    // -------------------------------------------------------------------------
+    // register Tracked Input
+    //
     public Bob<TNew> TrackedInput<TNew>(string label, Func<TNew> func)
         => Bind(_ => label.TrackedInput(func));
     public Bob<TNew> TrackedInput<TNew>(QKey<TNew> key, Func<TNew> func)
         => Bind(_ => key.Label.TrackedInput(func));
-
+    // using Context
     public Bob<TNew> TrackedInput<TNew>(string label, Func<QAcidContext, TNew> generator)
         => BindState(state => label.TrackedInput(() => generator(state)));
+    public Bob<TNew> TrackedInput<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
+        => BindState(state => key.Label.TrackedInput(() => generator(state)));
+    // -------------------------------------------------------------------------
 
     public Wendy DumpItInAcid()
     {
