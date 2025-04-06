@@ -1,10 +1,5 @@
 namespace QuickAcid.Fluent;
 
-public interface QAcidContext
-{
-    T Get<T>(string key);
-}
-
 public static class SystemSpecs
 {
     public static Bob<Acid> Define()

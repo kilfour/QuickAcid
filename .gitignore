@@ -6,3 +6,4 @@ _ReSharper.*/
 /.vs/QuickAcid/v15/Server/sqlite3
 /packages
 **/log*.txt
+temp.md

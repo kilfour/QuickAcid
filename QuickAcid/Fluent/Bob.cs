@@ -1,20 +1,6 @@
+using QuickAcid.Nuts;
+
 namespace QuickAcid.Fluent;
-
-
-public class SpecBuilder<T>
-{
-    private readonly Bob<T> bob;
-    private readonly string label;
-
-    public SpecBuilder(Bob<T> bob, string label)
-    {
-        this.label = label;
-        this.bob = bob;
-    }
-
-    public Bob<Acid> Assert(Func<bool> predicate)
-        => bob.Bind(_ => label.Spec(predicate));
-}
 
 public class Bob<T>
 {
@@ -25,7 +11,6 @@ public class Bob<T>
         this.runner = runner;
     }
 
-    // Scoop Muck Lofty Dizzy Roley
     public Bob<TNext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
     {
         var composed =
@@ -45,14 +30,20 @@ public class Bob<T>
 
             return bind(result.State)(result.State);
         };
-
         return new Bob<TNext>(composed);
     }
+
     public Bob<Acid> Perform(string label, Action action)
         => Bind(_ => label.Act(action));
 
     public Bob<Acid> Perform(string label, Func<QAcidContext, Action> effect)
         => BindState(state => label.Act(effect(state)));
+
+    public Bob<Acid> Perform<TNew>(QKey<TNew> key, Func<QAcidContext, Action> effect)
+        => BindState(state => key.Label.Act(effect(state)));
+
+    public Lofty<T> As<TNew>(QKey<TNew> key)
+        => new Lofty<T>(this, key.Label);
 
     public BobChoiceBuilder<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
     {
@@ -60,11 +51,16 @@ public class Bob<T>
         return new BobChoiceBuilder<T>(this, options);
     }
 
-    public SpecBuilder<T> Spec(string label)
-        => new SpecBuilder<T>(this, label);
+    public Bristle<T> Spec(string label)
+        => new Bristle<T>(this, label);
+
+    public Bob<Acid> Assert(string label, Func<bool> predicate)
+        => Bind(_ => label.Spec(predicate));
 
     public Bob<TNew> TrackedInput<TNew>(string label, Func<TNew> func)
         => Bind(_ => label.TrackedInput(func));
+    public Bob<TNew> TrackedInput<TNew>(QKey<TNew> key, Func<TNew> func)
+        => Bind(_ => key.Label.TrackedInput(func));
 
     public Bob<TNew> TrackedInput<TNew>(string label, Func<QAcidContext, TNew> generator)
         => BindState(state => label.TrackedInput(() => generator(state)));
@@ -76,24 +72,7 @@ public class Bob<T>
     }
 }
 
-public class BobChoiceBuilder<T>
-{
-    private readonly Bob<T> parent;
-    private readonly List<Bob<Acid>> options;
-
-    public BobChoiceBuilder(Bob<T> parent, List<Bob<Acid>> options)
-    {
-        this.parent = parent;
-        this.options = options;
-    }
-
-    public Bob<Acid> PickOne()
-    {
-        var combined =
-        from _ in parent.runner
-        from result in "__00__".Choose(options.Select(opt => opt.runner).ToArray())
-        select Acid.Test;
-
-        return new Bob<Acid>(combined);
-    }
-}
+// Character	Role in the show	Role in QuickAcid
+// Lofty	 cautious	Conditionally performs actions (OnlyPerform(...).If(...))
+// Scoop / Muck	
+// Digger / Muck truck	Potential future: mutation, shrinking inspection, failure replay

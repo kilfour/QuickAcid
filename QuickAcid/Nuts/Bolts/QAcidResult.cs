@@ -1,4 +1,6 @@
-﻿namespace QuickAcid
+﻿using QuickAcid.Nuts;
+
+namespace QuickAcid
 {
 	public class QAcidResult<TValue>
 	{

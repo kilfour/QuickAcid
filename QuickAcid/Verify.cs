@@ -1,4 +1,5 @@
 ﻿using QuickAcid.CodeGen;
+using QuickAcid.Nuts;
 using QuickAcid.Reporting;
 
 namespace QuickAcid

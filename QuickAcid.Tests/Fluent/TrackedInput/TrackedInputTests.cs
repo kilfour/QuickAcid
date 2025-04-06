@@ -15,12 +15,19 @@ public class TrackedInputTests
         }
     }
 
+    public static class Keys
+    {
+        public static readonly QKey<Container> Container =
+            QKey<Container>.New("container");
+    }
+
     [Fact]
     public void TrackedInput_should_exist_in_per_action_report()
     {
         var report =
-            SystemSpecs.Define()
-                .TrackedInput("container", () => new Container() { ItsOnlyAModel = 1 })
+            SystemSpecs
+                .Define()
+                .TrackedInput(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .Perform("throw", () => throw new Exception())
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

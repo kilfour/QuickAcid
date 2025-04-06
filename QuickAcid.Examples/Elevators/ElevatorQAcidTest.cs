@@ -2,24 +2,22 @@ using QuickAcid.Fluent;
 using QuickMGenerate;
 
 namespace QuickAcid.Examples.Elevators;
-public class ElevatorQAcidFluentTest : QAcidLoggingFixture
+
+public class ElevatorQAcidTest : QAcidLoggingFixture
 {
     [Fact(Skip = "Only for demo")]
-    public void ElevatorRequestSystemWorks()
+    public void FluentElevatorRequestSystemWorks()
     {
         var report =
         SystemSpecs.Define()
             .TrackedInput("Elevator", () => new Elevator())
-            .TrackedInput("Tracker", ctx => new Tracker(ctx.Get<Elevator>("Elevator")))
+            .TrackedInput("Tracker", ctx => new Tracker(ctx.GetItAtYourOwnRisk<Elevator>("Elevator")))
             // choose
             .DumpItInAcid()
             .AndCheckForGold(30, 10);
         if (report != null)
             Assert.Fail(report.ToString());
     }
-}
-public class ElevatorQAcidTest : QAcidLoggingFixture
-{
 
     [Fact(Skip = "Only for demo")]
     public void ElevatorRequestSystemWorks()

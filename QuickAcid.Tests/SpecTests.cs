@@ -19,12 +19,6 @@ namespace QuickAcid.Tests
             Assert.Equal("foo", entry.Key);
         }
 
-        [Fact(Skip = "Reason = todo, works though, ... SpecIf ")]
-        public void ConditionalSpec()
-        {
-            Assert.Fail("URGENT");
-        }
-
         [Fact]
         public void SpecMultipleFirstFails()
         {

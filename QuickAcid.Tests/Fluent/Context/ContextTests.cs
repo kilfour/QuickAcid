@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 
@@ -15,6 +14,11 @@ public class ContextTests
             return ItsOnlyAModel.ToString();
         }
     }
+    public static class Keys
+    {
+        public static QKey<Container> Universe => QKey<Container>.New("universe");
+        public static QKey<Acid> AnswerTheQuestion => QKey<Acid>.New("answerthequestion");
+    }
 
     [Fact]
     public void TrackedInput_can_be_accessed_through_context()
@@ -22,9 +26,9 @@ public class ContextTests
         var theAnswer = 0;
         var report =
             SystemSpecs.Define()
-                .TrackedInput("universe", () => new Container() { ItsOnlyAModel = 42 })
-                .Perform("arthur", ctx => () =>
-                    theAnswer = ctx.Get<Container>("universe").ItsOnlyAModel)
+                .TrackedInput(Keys.Universe, () => new Container() { ItsOnlyAModel = 42 })
+                .As(Keys.AnswerTheQuestion).UseThe(Keys.Universe)
+                    .Now(universe => theAnswer = universe.ItsOnlyAModel)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -38,7 +42,7 @@ public class ContextTests
         var report =
             SystemSpecs.Define()
                 .Perform("arthur", ctx => () =>
-                    theAnswer = ctx.Get<Container>("not there").ItsOnlyAModel)
+                    theAnswer = ctx.GetItAtYourOwnRisk<Container>("not there").ItsOnlyAModel)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
