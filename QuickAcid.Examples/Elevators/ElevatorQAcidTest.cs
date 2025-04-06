@@ -8,11 +8,22 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
     [Fact(Skip = "Only for demo")]
     public void FluentElevatorRequestSystemWorks()
     {
+        var elevator = new Elevator();
+        var tracker = new Tracker(elevator);
+
         var report =
         SystemSpecs.Define()
             .TrackedInput("Elevator", () => new Elevator())
             .TrackedInput("Tracker", ctx => new Tracker(ctx.GetItAtYourOwnRisk<Elevator>("Elevator")))
-            // choose
+            .Options(opt => [
+                    opt.Do("MoveUp", () => elevator.MoveUp())
+                        .Expect("MoveUp Does Not Exceed Max Floor")
+                        .Assert(() => elevator.CurrentFloor <= Elevator.MaxFloor),
+                    opt.Do("MoveDown", () => elevator.MoveDown()),
+                    opt.Do("OpenDoors", () => elevator.OpenDoors()),
+                    opt.Do("CloseDoors", () => elevator.CloseDoors())
+                ])
+            .PickOne()
             .DumpItInAcid()
             .AndCheckForGold(30, 10);
         if (report != null)
@@ -31,7 +42,7 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
         from elevator in "Elevator".TrackedInput(() => new Elevator())
         from tracker in "Tracker".TrackedInput(() => new Tracker(elevator))
         from _ in "ops".Choose(
-            MoveUpWithBounds(elevator, tracker),
+            MoveUp(elevator, tracker),
             MoveDown(elevator, tracker),
             OpenDoors(elevator),
             CloseDoors(elevator),
@@ -47,7 +58,7 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
     private static Func<QAcidRunner<Elevator>> ElevatorInput =
         () => "Elevator".TrackedInput(() => new Elevator());
 
-    private static QAcidRunner<Acid> MoveUpWithBounds(Elevator elevator, Tracker tracker)
+    private static QAcidRunner<Acid> MoveUp(Elevator elevator, Tracker tracker)
     {
         return
             from _ in "MoveUp".Act(elevator.MoveUp)
