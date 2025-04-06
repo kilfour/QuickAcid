@@ -6,6 +6,16 @@ namespace QuickAcid.Tests.Fluent.Perform;
 
 public class TrackedInputTests
 {
+    public static class Keys
+    {
+        public static readonly QKey<Container> Container =
+            QKey<Container>.New("container");
+        public static QKey<Container> Universe =>
+            QKey<Container>.New("universe");
+        public static QKey<int> TheAnswer =>
+            QKey<int>.New("theAnswer");
+    }
+
     public class Container
     {
         public int ItsOnlyAModel { get; set; }
@@ -13,12 +23,6 @@ public class TrackedInputTests
         {
             return ItsOnlyAModel.ToString();
         }
-    }
-
-    public static class Keys
-    {
-        public static readonly QKey<Container> Container =
-            QKey<Container>.New("container");
     }
 
     [Fact]
@@ -38,5 +42,19 @@ public class TrackedInputTests
         Assert.NotNull(entry);
         Assert.Equal("container", entry.Key);
         Assert.Equal("container (tracked) : 1", entry.ToString());
+    }
+
+    [Fact]
+    public void TrackedInput_can_use_context_when_registering()
+    {
+        var container = new Container();
+        var report =
+            SystemSpecs.Define()
+                .TrackedInput(Keys.TheAnswer, () => 42)
+                .TrackedInput(Keys.Universe, ctx => { container.ItsOnlyAModel = ctx.Get(Keys.TheAnswer); return container; })
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.Null(report);
+        Assert.Equal(42, container.ItsOnlyAModel);
     }
 }

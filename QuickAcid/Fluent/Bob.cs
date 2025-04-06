@@ -36,6 +36,7 @@ public class Bob<T>
     // -------------------------------------------------------------------------
     // register Tracked Input
     //
+    // todo add an unsafe method on the qkey one that allows access to the string one
     public Bob<TNew> TrackedInput<TNew>(string label, Func<TNew> func)
         => Bind(_ => label.TrackedInput(func));
     public Bob<TNew> TrackedInput<TNew>(QKey<TNew> key, Func<TNew> func)
