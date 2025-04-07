@@ -5,6 +5,12 @@ namespace QuickAcid.Tests.Fluent.Do;
 
 public class DoTests
 {
+    public static class Keys
+    {
+        public static QKey<bool> TheBool =>
+            QKey<bool>.New("TheBool");
+    }
+
     [Fact]
     public void Do_should_do_its_action()
     {
@@ -47,5 +53,19 @@ public class DoTests
         Assert.Equal("throws", entry.Key);
         Assert.NotNull(entry.Exception);
         Assert.Equal("Boom", entry.Exception.Message);
+    }
+
+    [Fact]
+    public void Do_can_use_context()
+    {
+        var flag = false;
+        var report =
+            SystemSpecs.Define()
+                .TrackedInput(Keys.TheBool, () => true)
+                .Do("flag it", ctx => () => flag = ctx.Get(Keys.TheBool))
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.Null(report);
+        Assert.True(flag);
     }
 }
