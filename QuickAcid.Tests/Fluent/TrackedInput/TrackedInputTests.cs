@@ -1,4 +1,5 @@
 using QuickAcid.Fluent;
+
 using QuickAcid.Reporting;
 
 
