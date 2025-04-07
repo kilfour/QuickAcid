@@ -12,7 +12,7 @@ public class Spike
         public void Withdraw(int amount) { Balance -= amount; }
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact]
     public void InitialTry()
     {
         var run =

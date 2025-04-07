@@ -2,6 +2,7 @@ using QuickAcid.MonadiXEtAl;
 
 namespace QuickAcid.Fluent;
 
+// I can lift it. and Er, yeah, I think so!
 public class Lofty<T>
 {
     private readonly Bob<T> bob;
@@ -17,17 +18,9 @@ public class Lofty<T>
         this.key = key;
     }
 
-    public Lofty<T> UseThe(QKey<T> key)
+    public LoftysCrane<T> UseThe(QKey<T> key)
         => new(bob, label, key);
 
     public Bob<Acid> Now(Action action)
         => bob.Bind(_ => label.Act(() => action()));
-
-    public Bob<Acid> Now(Action<T> effect)
-        => bob.BindState(state => key.Match(
-            some: realKey => label.Act(() => effect(state.Get(realKey))),
-            none: () => throw new ThisNotesOnYou("You're in the wrong key, buddy.")
-        ));
-
-    // used intermediate LoftysCrane to split the now
 }

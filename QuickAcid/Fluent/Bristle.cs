@@ -21,42 +21,44 @@ public class Bristle<T>
     public Bristle<T> OnlyWhen(Func<bool> iPass)
     => new(bob, label, iPass);
 
-
-    // MustHold ?
-    public Bob<Acid> Assert(Func<bool> mustHold)
+    public Bob<Acid> Ensure(Func<bool> mustHold)
     => iPass.Match(
         some: gate => bob.Bind(_ => label.SpecIf(gate, mustHold)),
         none: () => bob.Bind(_ => label.Spec(mustHold))
     );
 
+    // public Bob<Acid> Ensure(Func<T, bool> mustHold)
+    // {
+    //     return key.Match2(
+    //         iPass,
+    //         (realKey, gate) => bob.BindState(state =>
+    //             label.SpecIf(gate, () => mustHold(state.Get(realKey)))),
+    //         () => key.Match(
+    //             some: realKey => bob.BindState(state =>
+    //                 label.Spec(() => mustHold(state.Get(realKey)))),
+    //             none: () => throw new InvalidOperationException(
+    //                 $"Ensure<T> was called without UseThe({typeof(T).Name})"))
+    //     );
+    // }
 
-    public Bob<Acid> Assert(Func<QAcidContext, bool> mustHold)
+    public Bob<Acid> Ensure(Func<QAcidContext, bool> mustHold)
     => iPass.Match(
         some: gate => bob.BindState(state => label.SpecIf(gate, () => mustHold(state))),
         none: () => bob.BindState(state => label.Spec(() => mustHold(state)))
     );
 
-    public Bob<Acid> Assert(Func<T, bool> mustHold)
-    {
-        return
-            key.Match(
-                some: realKey => iPass.Match(
-                    some: gate => bob.BindState(state => label.SpecIf(gate, () => mustHold(state.Get(realKey)))),
-                    none: () => bob.BindState(state => label.Spec(() => mustHold(state.Get(realKey))))
-                ),
-                none: () => throw new InvalidOperationException(
-                        $"Assert<T> was called on Bristle without a matching UseThe({typeof(T).Name})"));
+    public BristlesBrooms<T> UseThe(QKey<T> key)
+        => new(bob, label, key);
 
-        // if (key.TryGet(out var realKey))
-        // {
-        //     return iPass.Match(
-        //         some: gate => bob.BindState(state => label.SpecIf(gate, () => mustHold(state.Get(realKey)))),
-        //         none: () => bob.BindState(state => label.Spec(() => mustHold(state.Get(realKey))))
-        //     );
-        // }
-
-        // throw new InvalidOperationException(
-        //     $"Assert<T> was called on Bristle without a matching UseThe({typeof(T).Name})"
-        // );
-    }
+    // public Bob<Acid> Assert(Func<T, bool> mustHold)
+    // {
+    //     return
+    //         key.Match(
+    //             some: realKey => iPass.Match(
+    //                 some: gate => bob.BindState(state => label.SpecIf(gate, () => mustHold(state.Get(realKey)))),
+    //                 none: () => bob.BindState(state => label.Spec(() => mustHold(state.Get(realKey))))
+    //             ),
+    //             none: () => throw new InvalidOperationException(
+    //                     $"Assert<T> was called on Bristle without a matching UseThe({typeof(T).Name})"));
+    // }
 }

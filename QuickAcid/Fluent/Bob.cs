@@ -2,7 +2,7 @@ using QuickAcid.Nuts;
 
 namespace QuickAcid.Fluent;
 
-public class Bob<T>
+public class Bob<T> // Bob the Architect of Causality
 {
     public readonly QAcidRunner<T> runner;
 
@@ -11,7 +11,7 @@ public class Bob<T>
         this.runner = runner;
     }
 
-    public Bob<TNext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
+    internal Bob<TNext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
     {
         var composed =
             from a in runner
@@ -20,7 +20,7 @@ public class Bob<T>
         return new Bob<TNext>(composed);
     }
 
-    public Bob<TNext> BindState<TNext>(Func<QAcidState, QAcidRunner<TNext>> bind)
+    internal Bob<TNext> BindState<TNext>(Func<QAcidState, QAcidRunner<TNext>> bind)
     {
         QAcidRunner<TNext> composed = state =>
         {
@@ -36,7 +36,6 @@ public class Bob<T>
     // -------------------------------------------------------------------------
     // register Tracked Input
     //
-    // todo add an unsafe method on the qkey one that allows access to the string one
     public Bob<TNew> TrackedInput<TNew>(string label, Func<TNew> func)
         => Bind(_ => label.TrackedInput(func));
     public Bob<TNew> TrackedInput<TNew>(QKey<TNew> key, Func<TNew> func)
@@ -59,10 +58,10 @@ public class Bob<T>
     public Lofty<T> As(string label)
         => new(this, label);
 
-    public BobChoiceBuilder<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
+    public Trix<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
     {
         var options = choicesBuilder(this).ToList();
-        return new BobChoiceBuilder<T>(this, options);
+        return new Trix<T>(this, options);
     }
 
     // -------------------------------------------------------------------------

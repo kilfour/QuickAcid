@@ -25,7 +25,7 @@ namespace QuickAcid.CodeGen
         private static string GetTrackedInputCode(Clue clue, Memory.Access access)
         {
             var trackedString = $"Tracked: {clue.Key}: DEFAULT";
-            return "  TRACK  " + FollowTheLead(clue, access);
+            return "    " + FollowTheLead(clue, access);
         }
 
         private static string GetTrackedInputsCode(XMarksTheSpot xMarksTheSpot, Memory.Access access)

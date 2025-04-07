@@ -16,9 +16,12 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
             .TrackedInput("Elevator", () => new Elevator())
             .TrackedInput("Tracker", ctx => new Tracker(ctx.GetItAtYourOwnRisk<Elevator>("Elevator")))
             .Options(opt => [
-                    opt.Do("MoveUp", () => elevator.MoveUp())
+                    opt.Do("MoveUp", ctx => () => ctx.GetItAtYourOwnRisk<Elevator>("Elevator").MoveUp())
                         .Expect("MoveUp Does Not Exceed Max Floor")
-                        .Assert(() => elevator.CurrentFloor <= Elevator.MaxFloor),
+                            .Ensure(() => elevator.CurrentFloor <= Elevator.MaxFloor)
+                        .Expect("MoveDown Does Not Decrement When Doors Are Open")
+                            .OnlyWhen(() => tracker.DoorsOpen)
+                            .Ensure(() => elevator.CurrentFloor == tracker.CurrentFloor),
                     opt.Do("MoveDown", () => elevator.MoveDown()),
                     opt.Do("OpenDoors", () => elevator.OpenDoors()),
                     opt.Do("CloseDoors", () => elevator.CloseDoors())

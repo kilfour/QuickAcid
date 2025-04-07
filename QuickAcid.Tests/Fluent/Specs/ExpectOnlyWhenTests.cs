@@ -11,7 +11,7 @@ public class ExpectOnlyWhenTests
             SystemSpecs.Define()
                 .Expect("should be true")
                     .OnlyWhen(() => false)
-                    .Assert(() => true)
+                    .Ensure(() => true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -24,7 +24,7 @@ public class ExpectOnlyWhenTests
             SystemSpecs.Define()
                 .Expect("should be true")
                     .OnlyWhen(() => true)
-                    .Assert(() => false)
+                    .Ensure(() => false)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);

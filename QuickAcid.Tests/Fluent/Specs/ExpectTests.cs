@@ -9,7 +9,7 @@ public class ExpectTests
     {
         var report =
             SystemSpecs.Define()
-                .Expect("should be true").Assert(() => true)
+                .Expect("should be true").Ensure(() => true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -21,7 +21,7 @@ public class ExpectTests
         var report =
             SystemSpecs.Define()
                 .Expect("should be true")
-                    .Assert(() => false)
+                    .Ensure(() => false)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
@@ -37,7 +37,7 @@ public class ExpectTests
         var report =
             SystemSpecs.Define()
                 .As("flag it").Now(() => flag = true)
-                .Expect("should be true").Assert(() => flag == true)
+                .Expect("should be true").Ensure(() => flag == true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -51,7 +51,7 @@ public class ExpectTests
         var report =
             SystemSpecs.Define()
                 .As("flag it").Now(() => flag = true)
-                .Expect("should be true").Assert(() => flag == false)
+                .Expect("should be true").Ensure(() => flag == false)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
@@ -66,30 +66,49 @@ public class ExpectTests
             QKey<int>.New("TheAnswer");
     }
 
-    // [Fact]
-    // public void Expect_can_access_the_context()
-    // {
-    //     var report =
-    //         SystemSpecs.Define()
-    //             .TrackedInput(Keys.TheAnswer, _ => 42)
-    //             .Expect("should be true")
-    //                 .Assert(ctx => ctx.Get<TheAnswer>() == 42)
-    //             .DumpItInAcid()
-    //             .AndCheckForGold(1, 1);
-    //     Assert.NotNull(report);
-    // }
+    [Fact]
+    public void Expect_can_access_the_context()
+    {
+        var report =
+            SystemSpecs.Define()
+                .TrackedInput(Keys.TheAnswer, _ => 42)
+                .Expect("should be true")
+                    .Ensure(ctx => ctx.Get(Keys.TheAnswer) == 42)
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.Null(report);
+    }
 
+    [Fact]
+    public void Expect_can_access_the_typed_context_content()
+    {
+        var report =
+            SystemSpecs.Define()
+                .TrackedInput(Keys.TheAnswer, _ => 42)
+                .Expect("should be true")
+                    .UseThe(Keys.TheAnswer)
+                    .Ensure(a => a == 42)
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.Null(report);
+    }
+
+    //// ==== ⛔ INTENTIONALLY NOT COMPILABLE TEST ====
+    // This test is *meant* to fail compilation if uncommented.
+    // It's proof the fluent API prevents invalid usage.
+    // 
     // [Fact]
-    // public void Expect_can_access_the_typed_context_content()
+    // public void Expect_without_use_the_and_typed_context_does_not_compile()
     // {
     //     var report =
     //         SystemSpecs.Define()
     //             .TrackedInput(Keys.TheAnswer, _ => 42)
     //             .Expect("should be true")
-    //                 .UseThe(Keys.TheAnswer)
-    //                 .Assert(a => a == 42)
+    //                 .Ensure(a => a == 42)
     //             .DumpItInAcid()
     //             .AndCheckForGold(1, 1);
-    //     Assert.NotNull(report);
+    //     Assert.Null(report);
     // }
+    // ✅ This is a feature.
+    //// ==============================================
 }

@@ -1,11 +1,12 @@
 namespace QuickAcid.Fluent;
 
-public class BobChoiceBuilder<T>
+// Okey-dokey, J.J.!
+public class Trix<T>
 {
     private readonly Bob<T> parent;
     private readonly List<Bob<Acid>> options;
 
-    public BobChoiceBuilder(Bob<T> parent, List<Bob<Acid>> options)
+    public Trix(Bob<T> parent, List<Bob<Acid>> options)
     {
         this.parent = parent;
         this.options = options;

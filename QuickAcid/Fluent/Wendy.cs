@@ -4,6 +4,7 @@ using QuickAcid.Reporting;
 
 namespace QuickAcid.Fluent;
 
+// Let’s wrap this up and get the Report!
 public class Wendy : Bob<Acid>
 {
     public Wendy(QAcidRunner<Acid> runner)

@@ -89,5 +89,19 @@ namespace QuickAcid.MonadiXEtAl
         }
     }
 
-
+    public static class MaybeExtensions
+    {
+        public static TResult Match2<T1, T2, TResult>(
+            this Maybe<T1> m1,
+            Maybe<T2> m2,
+            Func<T1, T2, TResult> both,
+            Func<TResult> fallback)
+        {
+            return m1.Match(
+                some: v1 => m2.Match(
+                    some: v2 => both(v1, v2),
+                    none: fallback),
+                none: fallback);
+        }
+    }
 }
