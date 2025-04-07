@@ -2,7 +2,7 @@ using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 
 
-namespace QuickAcid.Tests.Fluent.Perform;
+namespace QuickAcid.Tests.Fluent.TrackedInput;
 
 public class TrackedInputTests
 {

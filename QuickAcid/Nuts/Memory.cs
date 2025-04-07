@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 
@@ -48,11 +49,11 @@ public class Memory
 			return (T)dictionary[key].Value!;
 		}
 
-		public T GetOrNull<T>(object key)
+		public Maybe<T> GetMaybe<T>(object key)
 		{
-			if (dictionary.ContainsKey(key))
-				return (T)dictionary[key].Value!;
-			return default(T);
+			return dictionary.TryGetValue(key, out var value)
+				? Maybe<T>.Some((T)value.Value!)
+				: Maybe<T>.None;
 		}
 
 		public void Set<T>(object key, T value)
@@ -204,14 +205,12 @@ public class Memory
 
 	public T GetForFluentInterface<T>(string key)
 	{
-
-		var value = TrackedInputsPerRun.GetOrNull<T>(key);
-		if (value != null)
-			return value;
-		value = ForThisAction().GetOrNull<T>(key);
-		if (value == null)
-			throw new ThisNotesOnYou($"The value for key '{key}' was not present in memory, ... and neither was the key itself.");
-		return value;
+		return TrackedInputsPerRun.GetMaybe<T>(key)
+			.OrElse(ForThisAction().GetMaybe<T>(key))
+			.Match(
+				some: x => x,
+				none: () => throw new ThisNotesOnYou($"You're singing in the wrong key. '{key}' wasn't found in Tracked(...) or Fuzzed(...).")
+			);
 	}
 }
 

@@ -35,6 +35,8 @@ namespace QuickAcid.MonadiXEtAl
             return HasValue ? _value : defaultValue;
         }
 
+
+
         public void Do(Action<T> action)
         {
             if (HasValue) action(_value);
@@ -103,5 +105,11 @@ namespace QuickAcid.MonadiXEtAl
                     none: fallback),
                 none: fallback);
         }
+
+        public static Maybe<T> OrElse<T>(this Maybe<T> first, Maybe<T> second)
+            => first.Match(
+                some: _ => first,
+                none: () => second
+            );
     }
 }

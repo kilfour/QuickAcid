@@ -1,5 +1,6 @@
 using QuickAcid.Fluent;
 using QuickAcid.Reporting;
+using QuickMGenerate;
 
 
 namespace QuickAcid.Tests.Fluent.Perform;
@@ -37,6 +38,22 @@ public class ContextTests
     }
 
     [Fact]
+    public void Context_allows_for_access_to_FuzzedInput()
+    {
+        var theAnswer = 0;
+        var report =
+            SystemSpecs.Define()
+                .Fuzzed(Keys.TheAnswer, MGen.Constant(42))
+                .As("Answering the Question")
+                    .UseThe(Keys.TheAnswer)
+                    .Now(answer => theAnswer = answer)
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.Null(report);
+        Assert.Equal(42, theAnswer);
+    }
+
+    [Fact]
     public void Context_access_to_non_existing_value_throws()
     {
         var theAnswer = 0;
@@ -51,7 +68,7 @@ public class ContextTests
         Assert.NotNull(entry);
         Assert.NotNull(entry.Exception);
         Assert.IsType<ThisNotesOnYou>(entry.Exception);
-        Assert.Equal("The value for key 'not there' was not present in memory, ... and neither was the key itself.", entry.Exception.Message);
+        Assert.Equal("You're singing in the wrong key. 'not there' wasn't found in Tracked(...) or Fuzzed(...).", entry.Exception.Message);
     }
 }
 

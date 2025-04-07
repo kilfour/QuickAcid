@@ -1,5 +1,5 @@
 using QuickAcid.Nuts;
-
+using QuickMGenerate.UnderTheHood;
 namespace QuickAcid.Fluent;
 
 public class Bob<T> // Bob the Architect of Causality
@@ -45,6 +45,20 @@ public class Bob<T> // Bob the Architect of Causality
         => BindState(state => label.TrackedInput(() => generator(state)));
     public Bob<TNew> Tracked<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
         => BindState(state => key.Label.TrackedInput(() => generator(state)));
+    // -------------------------------------------------------------------------
+    // register Fuzzed Input
+    //
+    public Bob<TNew> Fuzzed<TNew>(string label, Generator<TNew> func)
+        => Bind(_ => label.ShrinkableInput(func));
+    public Bob<TNew> Fuzzed<TNew>(QKey<TNew> key, Generator<TNew> func)
+        => Bind(_ => key.Label.ShrinkableInput(func));
+    // using Context
+    public Bob<TNew> Fuzzed<TNew>(string label, Func<QAcidContext, Generator<TNew>> generator)
+        => BindState(state => label.ShrinkableInput(s => generator(state)(s)));
+    public Bob<TNew> Fuzzed<TNew>(QKey<TNew> key, Func<QAcidContext, Generator<TNew>> generator)
+        => BindState(state => key.Label.ShrinkableInput(s => generator(state)(s)));
+
+    // -------------------------------------------------------------------------
 
     // -------------------------------------------------------------------------
     // Doing Stuff
