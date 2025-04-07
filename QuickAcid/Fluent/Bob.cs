@@ -1,5 +1,6 @@
 using QuickAcid.Nuts;
 using QuickMGenerate.UnderTheHood;
+
 namespace QuickAcid.Fluent;
 
 public class Bob<T> // Bob the Architect of Causality
@@ -41,17 +42,17 @@ public class Bob<T> // Bob the Architect of Causality
     }
 
     // -------------------------------------------------------------------------
-    // register Tracked Input
+    // register AlwaysReported Input
     //
-    public Bob<TNew> Tracked<TNew>(string label, Func<TNew> func)
-        => Bind(_ => label.TrackedInput(func));
-    public Bob<TNew> Tracked<TNew>(QKey<TNew> key, Func<TNew> func)
-        => Bind(_ => key.Label.TrackedInput(func));
+    public Bob<TNew> AlwaysReported<TNew>(string label, Func<TNew> func)
+        => Bind(_ => label.AlwaysReported(func));
+    public Bob<TNew> AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func)
+        => Bind(_ => key.Label.AlwaysReported(func));
     // using Context
-    public Bob<TNew> Tracked<TNew>(string label, Func<QAcidContext, TNew> generator)
-        => BindState(state => label.TrackedInput(() => generator(state)));
-    public Bob<TNew> Tracked<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
-        => BindState(state => key.Label.TrackedInput(() => generator(state)));
+    public Bob<TNew> AlwaysReported<TNew>(string label, Func<QAcidContext, TNew> generator)
+        => BindState(state => label.AlwaysReported(() => generator(state)));
+    public Bob<TNew> AlwaysReported<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
+        => BindState(state => key.Label.AlwaysReported(() => generator(state)));
     // -------------------------------------------------------------------------
     // register Fuzzed Input
     //

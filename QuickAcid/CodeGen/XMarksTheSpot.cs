@@ -1,6 +1,8 @@
+using QuickAcid.Nuts;
+
 namespace QuickAcid.CodeGen
 {
-    public enum RunnerType { TrackedInputRunner, SpecRunner, ActionRunner }
+    public enum RunnerType { AlwaysReportedInputRunner, SpecRunner, ActionRunner }
 
     public class Clue
     {
@@ -25,5 +27,5 @@ namespace QuickAcid.CodeGen
             return $"{this.RunnerType.ToString()} {Key}";
         }
     }
-    //public enum RunnerType { TrackedInputRunner, SpecRunner, ActionRunner }
+    //public enum RunnerType { AlwaysReportedInputRunner, SpecRunner, ActionRunner }
 }

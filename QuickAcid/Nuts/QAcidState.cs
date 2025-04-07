@@ -50,7 +50,9 @@ public class QAcidState : QAcidContext
     // --
     public T GetItAtYourOwnRisk<T>(string key) => Memory.GetForFluentInterface<T>(key);
     public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
+    public QAcidContext Prev() { return this; }
     // -----------------------------------------------------------------
+
 
     public void Run(int actionsPerRun)
     {

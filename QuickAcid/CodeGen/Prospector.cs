@@ -22,18 +22,18 @@ namespace QuickAcid.CodeGen
                 return "DEFAULT";
             return clue.SeeWhereItLeads.Invoke(clue.Key, access);
         }
-        private static string GetTrackedInputCode(Clue clue, Memory.Access access)
+        private static string GetAlwaysReportedInputCode(Clue clue, Memory.Access access)
         {
-            var trackedString = $"Tracked: {clue.Key}: DEFAULT";
+            var trackedString = $"AlwaysReported: {clue.Key}: DEFAULT";
             return "    " + FollowTheLead(clue, access);
         }
 
-        private static string GetTrackedInputsCode(XMarksTheSpot xMarksTheSpot, Memory.Access access)
+        private static string GetAlwaysReportedInputsCode(XMarksTheSpot xMarksTheSpot, Memory.Access access)
         {
             var lines =
                 xMarksTheSpot.TheMap
-                    .Where(a => a.RunnerType == RunnerType.TrackedInputRunner)
-                    .Select(a => GetTrackedInputCode(a, access));
+                    .Where(a => a.RunnerType == RunnerType.AlwaysReportedInputRunner)
+                    .Select(a => GetAlwaysReportedInputCode(a, access));
             return string.Join(Environment.NewLine, lines);
         }
 
@@ -86,7 +86,7 @@ namespace QuickAcid.CodeGen
             sb.AppendLine("[Fact]");
             sb.AppendLine(GetFunctionDeclaration(state));
             sb.AppendLine("{");
-            sb.AppendLine(GetTrackedInputsCode(state.XMarksTheSpot, state.Memory.For(0)));
+            sb.AppendLine(GetAlwaysReportedInputsCode(state.XMarksTheSpot, state.Memory.For(0)));
             sb.Append(GetActionsCode(state));
             sb.AppendLine(GetAssertionCode(state));
             sb.AppendLine("}");

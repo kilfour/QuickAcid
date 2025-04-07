@@ -1,4 +1,5 @@
-﻿using QuickAcid.Reporting;
+﻿using QuickAcid.Nuts;
+using QuickAcid.Reporting;
 
 namespace QuickAcid.Tests
 {

@@ -21,6 +21,15 @@ public class Bristle<T>
     public Bristle<T> OnlyWhen(Func<bool> iPass)
     => new(bob, label, iPass);
 
+    public AnotherGate<T> OnlyWhen(Func<QAcidContext, bool> iPass)
+    => new(bob, label, key, iPass);
+
+    // public Bob<Acid> Do(string label, Action action)
+    //    => Bind(_ => label.Act(action));
+
+    // public Bob<Acid> Do(string label, Func<QAcidContext, Action> effect)
+    //     => BindState(state => label.Act(effect(state)));
+
     public Bob<Acid> Ensure(Func<bool> mustHold)
     => iPass.Match(
         some: gate => bob.Bind(_ => label.SpecIf(gate, mustHold)),

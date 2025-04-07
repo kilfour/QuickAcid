@@ -3,9 +3,9 @@ using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 
 
-namespace QuickAcid.Tests.Fluent.TrackedInput;
+namespace QuickAcid.Tests.Fluent.AlwaysReportedInput;
 
-public class TrackedInputTests
+public class AlwaysReportedInputTests
 {
     public static class Keys
     {
@@ -27,32 +27,32 @@ public class TrackedInputTests
     }
 
     [Fact]
-    public void TrackedInput_should_exist_in_per_action_report()
+    public void AlwaysReportedInput_should_exist_in_per_action_report()
     {
         var report =
             SystemSpecs
                 .Define()
-                .Tracked(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .As("throw").Now(() => throw new Exception())
                 .Do("throw", _ => throw new Exception())
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
 
-        var entry = report.FirstOrDefault<QAcidReportTrackedInputEntry>();
+        var entry = report.FirstOrDefault<QAcidReportAlwaysReportedInputEntry>();
         Assert.NotNull(entry);
         Assert.Equal("container", entry.Key);
         Assert.Equal("container (tracked) : 1", entry.ToString());
     }
 
     [Fact]
-    public void TrackedInput_can_use_context_when_registering()
+    public void AlwaysReportedInput_can_use_context_when_registering()
     {
         var container = new Container();
         var report =
             SystemSpecs.Define()
-                .Tracked(Keys.TheAnswer, () => 42)
-                .Tracked(Keys.Universe, ctx => { container.ItsOnlyAModel = ctx.Get(Keys.TheAnswer); return container; })
+                .AlwaysReported(Keys.TheAnswer, () => 42)
+                .AlwaysReported(Keys.Universe, ctx => { container.ItsOnlyAModel = ctx.Get(Keys.TheAnswer); return container; })
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);

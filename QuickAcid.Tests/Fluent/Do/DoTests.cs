@@ -62,7 +62,7 @@ public class DoTests
         var flag = false;
         var report =
             SystemSpecs.Define()
-                .Tracked(Keys.TheBool, () => true)
+                .AlwaysReported(Keys.TheBool, () => true)
                 .Do("flag it", ctx => () => flag = ctx.Get(Keys.TheBool))
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

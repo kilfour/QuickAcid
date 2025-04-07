@@ -1,4 +1,5 @@
 using QuickAcid.MonadiXEtAl;
+using QuickAcid.Nuts;
 
 namespace QuickAcid.Fluent;
 
@@ -67,4 +68,35 @@ public class BroomsWithGate<T>
             none: () => throw new ThisNotesOnYou("You're singing in the wrong key, buddy.")
         );
     }
+}
+
+public class AnotherGate<T>
+{
+    private readonly Bob<Acid> bob;
+    private readonly string label;
+    private readonly Func<QAcidContext, bool> iPass;
+    private readonly Maybe<QKey<T>> key;
+
+    public AnotherGate(Bob<Acid> bob, string label, Maybe<QKey<T>> key = default, Func<QAcidContext, bool> iPass = default)
+    {
+        this.bob = bob;
+        this.label = label;
+        this.iPass = iPass;
+        this.key = key;
+    }
+
+    public Bob<Acid> Ensure(Func<QAcidContext, bool> mustHold)
+    {
+        return bob.BindState(state =>
+            label.SpecIf(() => iPass(state), () => mustHold(state)));
+    }
+
+    // public Bob<Acid> Ensure(Func<T, bool> mustHold)
+    // {
+    //     return key.Match(
+    //         some: realKey => bob.BindState(state =>
+    //             label.SpecIf(() => iPass(state), () => mustHold(state.Get(realKey)))),
+    //         none: () => throw new ThisNotesOnYou("You forgot to call UseThe<T>() before this Ensure.")
+    //     );
+    // }
 }

@@ -19,7 +19,7 @@
 //     }
 
 //     private static readonly QAcidRunner<Acid> TheTest =
-//         from account in "account".TrackedInput(() => new BankAccount())
+//         from account in "account".AlwaysReportedInput(() => new BankAccount())
 //         from action in "account ops".Choose(
 //             Deposit(account),
 //             Withdraw(account))

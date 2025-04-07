@@ -4,20 +4,20 @@ namespace QuickAcid
 {
 	public static partial class QAcid
 	{
-		public static QAcidRunner<T> TrackedInput<T>(this string key, Func<T> func)
+		public static QAcidRunner<T> AlwaysReported<T>(this string key, Func<T> func)
 		{
-			return TrackedInput(key, func, t => t == null ? "null" : t.ToString());
+			return AlwaysReported(key, func, t => t == null ? "null" : t.ToString());
 		}
 
-		public static QAcidRunner<T> TrackedInput<T>(this string key, Func<T> func, Func<T, string> stringify)
+		public static QAcidRunner<T> AlwaysReported<T>(this string key, Func<T> func, Func<T, string> stringify)
 		{
 			return
 				s =>
 					{
-						s.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.TrackedInputRunner });
-						var value = s.Memory.TrackedInputsPerRun.GetOrAdd(key, func, stringify);
+						s.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.AlwaysReportedInputRunner });
+						var value = s.Memory.AlwaysReportedInputsPerRun.GetOrAdd(key, func, stringify);
 						if (!s.Shrinking)
-							s.Memory.AddTrackedInputValueForCurrentRun(key, stringify(value));
+							s.Memory.AddAlwaysReportedInputValueForCurrentRun(key, stringify(value));
 						return new QAcidResult<T>(s, value) { Key = key };
 					};
 		}

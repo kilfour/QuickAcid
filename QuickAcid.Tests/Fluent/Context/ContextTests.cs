@@ -1,5 +1,5 @@
 using QuickAcid.Fluent;
-
+using QuickAcid.Nuts;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 
@@ -24,12 +24,12 @@ public class ContextTests
     }
 
     [Fact]
-    public void Context_allows_for_access_to_TrackedInput()
+    public void Context_allows_for_access_to_AlwaysReportedInput()
     {
         var theAnswer = 0;
         var report =
             SystemSpecs.Define()
-                .Tracked(Keys.Universe, () => new Container() { ItsOnlyAModel = 42 })
+                .AlwaysReported(Keys.Universe, () => new Container() { ItsOnlyAModel = 42 })
                 .As("Answering the Question").UseThe(Keys.Universe)
                     .Now(universe => theAnswer = universe.ItsOnlyAModel)
                 .DumpItInAcid()
@@ -69,7 +69,7 @@ public class ContextTests
         Assert.NotNull(entry);
         Assert.NotNull(entry.Exception);
         Assert.IsType<ThisNotesOnYou>(entry.Exception);
-        Assert.Equal("You're singing in the wrong key. 'not there' wasn't found in Tracked(...) or Fuzzed(...).", entry.Exception.Message);
+        Assert.Equal("You're singing in the wrong key. 'not there' wasn't found in AlwaysReported(...) or Fuzzed(...).", entry.Exception.Message);
     }
 }
 

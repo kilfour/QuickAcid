@@ -1,6 +1,6 @@
 namespace QuickAcid.Tests
 {
-    public class TrackedInputOrderingTests
+    public class AlwaysReportedInputOrderingTests
     {
         public class Container
         {
@@ -20,11 +20,11 @@ namespace QuickAcid.Tests
         }
 
         [Fact]
-        public void TrackedInput_IndirectReferenceMethodForm_ShouldNotThrow()
+        public void AlwaysReportedInput_IndirectReferenceMethodForm_ShouldNotThrow()
         {
             var run =
-                from container in "container".TrackedInput(() => new Container { Value = 21 })
-                from dependent in "dependent".TrackedInput(() => new Dependent(container))
+                from container in "container".AlwaysReported(() => new Container { Value = 21 })
+                from dependent in "dependent".AlwaysReported(() => new Dependent(container))
                 from act in "we might need an act".Act(() => { })
                 from boom in Boom(dependent)
                 select Acid.Test;
@@ -40,11 +40,11 @@ namespace QuickAcid.Tests
         }
 
         [Fact]
-        public void TrackedInput_IndirectReferenceInline_ShouldSucceed()
+        public void AlwaysReportedInput_IndirectReferenceInline_ShouldSucceed()
         {
             var run =
-                from container in "container".TrackedInput(() => new Container { Value = 21 })
-                from dependent in "dependent".TrackedInput(() => new Dependent(container)) // now container is in scope
+                from container in "container".AlwaysReported(() => new Container { Value = 21 })
+                from dependent in "dependent".AlwaysReported(() => new Dependent(container)) // now container is in scope
                 from _ in "spec".Spec(() => dependent.DoubledValue == 42)
                 select Acid.Test;
 

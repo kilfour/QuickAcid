@@ -14,8 +14,8 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
     }
 
     private static QAcidRunner<Acid> TheRun =
-        from elevator in "Elevator".TrackedInput(() => new Elevator())
-        from tracker in "Tracker".TrackedInput(() => new Tracker(elevator))
+        from elevator in "Elevator".AlwaysReported(() => new Elevator())
+        from tracker in "Tracker".AlwaysReported(() => new Tracker(elevator))
         from _ in "ops".Choose(
             MoveUp(elevator, tracker),
             MoveDown(elevator, tracker),
@@ -31,7 +31,7 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
 
     // this creates a type initializer problemm
     private static Func<QAcidRunner<Elevator>> ElevatorInput =
-        () => "Elevator".TrackedInput(() => new Elevator());
+        () => "Elevator".AlwaysReported(() => new Elevator());
 
     private static QAcidRunner<Acid> MoveUp(Elevator elevator, Tracker tracker)
     {

@@ -18,13 +18,13 @@ public class ExceptionNotReported
 	public void Example()
 	{
 		var run =
-			from bugHouse in "BugHouse".TrackedInput(() => new BugHouse())
+			from bugHouse in "BugHouse".AlwaysReported(() => new BugHouse())
 			from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
 			select Acid.Test;
 
 		var report = run.ReportIfFailed(1, 3);
 
-		var entry1 = report.FirstOrDefault<QAcidReportTrackedInputEntry>();
+		var entry1 = report.FirstOrDefault<QAcidReportAlwaysReportedInputEntry>();
 		Assert.NotNull(entry1);
 		Assert.Equal("BugHouse", entry1.Key);
 

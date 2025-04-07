@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Tests
+﻿using QuickAcid.Nuts;
+
+namespace QuickAcid.Tests
 {
     public class SpecExceptionTests
     {

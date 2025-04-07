@@ -1,3 +1,5 @@
+using QuickAcid.Nuts;
+
 namespace QuickAcid.CodeGen
 {
     public static class CodeGenExtensions

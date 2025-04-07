@@ -35,9 +35,9 @@ public class BoundedSetTest : QAcidLoggingFixture
     public void WithPleasure()
     {
         var run =
-            from maxSize in "max size".TrackedInput(() => MGen.Int(0, 50).Generate())
-            from theSet in "the set".TrackedInput(() => new BoundedSet<int>(maxSize))
-            from addedInts in "addedInts".TrackedInput(() => new List<int>(), l => "[" + string.Join(", ", l) + "]")
+            from maxSize in "max size".AlwaysReported(() => MGen.Int(0, 50).Generate())
+            from theSet in "the set".AlwaysReported(() => new BoundedSet<int>(maxSize))
+            from addedInts in "addedInts".AlwaysReported(() => new List<int>(), l => "[" + string.Join(", ", l) + "]")
             from choose in "ops".Choose(
                 from toAdd in "to add".ShrinkableInput(MGen.Int(0, 1))
                 from add in "add".Act(

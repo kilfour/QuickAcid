@@ -3,7 +3,7 @@ using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 
-namespace QuickAcid;
+namespace QuickAcid.Nuts;
 
 public class Memory
 {
@@ -106,25 +106,25 @@ public class Memory
 
 	private readonly Func<int> getCurrentActionId;
 
-	public Access TrackedInputsPerRun { get; set; }
-	private Dictionary<int, Dictionary<string, string>> TrackedInputValuePerAction { get; set; }
+	public Access AlwaysReportedInputsPerRun { get; set; }
+	private Dictionary<int, Dictionary<string, string>> AlwaysReportedInputValuePerAction { get; set; }
 
 	private Dictionary<int, Access> MemoryPerAction { get; set; }
 
 	public Memory(Func<int> getCurrentActionId)
 	{
 		this.getCurrentActionId = getCurrentActionId;
-		TrackedInputsPerRun = new Access() { ActionKey = "Tracked Inputs" };
-		TrackedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
+		AlwaysReportedInputsPerRun = new Access() { ActionKey = "AlwaysReported Inputs" };
+		AlwaysReportedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
 		MemoryPerAction = [];
 	}
 
 	public void AddActionToReport(int actionNumber, QAcidReport report, Exception exception)
 	{
-		if (TrackedInputValuePerAction.TryGetValue(actionNumber, out Dictionary<string, string>? values))
+		if (AlwaysReportedInputValuePerAction.TryGetValue(actionNumber, out Dictionary<string, string>? values))
 		{
 			values.ForEach(pair =>
-				report.AddEntry(new QAcidReportTrackedInputEntry(pair.Key) { Value = pair.Value })
+				report.AddEntry(new QAcidReportAlwaysReportedInputEntry(pair.Key) { Value = pair.Value })
 			);
 		}
 		if (MemoryPerAction.ContainsKey(actionNumber))
@@ -156,22 +156,22 @@ public class Memory
 
 	public void ResetAllRunInputs()
 	{
-		TrackedInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
+		AlwaysReportedInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
 		// -------------------------------------------------------------------------------
 		// Let's really think if you want to do something like that below.
 		// You've tried it before, ... more than once, it never worked and broke stuff.
 		// Why do you think it will solve your problems now ?
 		// --
-		// TrackedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
+		// AlwaysReportedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
 		// -------------------------------------------------------------------------------
 	}
 
-	public void AddTrackedInputValueForCurrentRun(string key, string value)
+	public void AddAlwaysReportedInputValueForCurrentRun(string key, string value)
 	{
-		if (!TrackedInputValuePerAction.ContainsKey(getCurrentActionId()))
-			TrackedInputValuePerAction[getCurrentActionId()] = [];
-		if (!TrackedInputValuePerAction[getCurrentActionId()].ContainsKey(key))
-			TrackedInputValuePerAction[getCurrentActionId()][key] = value;
+		if (!AlwaysReportedInputValuePerAction.ContainsKey(getCurrentActionId()))
+			AlwaysReportedInputValuePerAction[getCurrentActionId()] = [];
+		if (!AlwaysReportedInputValuePerAction[getCurrentActionId()].ContainsKey(key))
+			AlwaysReportedInputValuePerAction[getCurrentActionId()][key] = value;
 	}
 
 	public void AddToReport(QAcidReport report, Exception exception) // only used in test, bweurk
@@ -205,16 +205,11 @@ public class Memory
 
 	public T GetForFluentInterface<T>(string key)
 	{
-		return TrackedInputsPerRun.GetMaybe<T>(key)
+		return AlwaysReportedInputsPerRun.GetMaybe<T>(key)
 			.OrElse(ForThisAction().GetMaybe<T>(key))
 			.Match(
 				some: x => x,
-				none: () => throw new ThisNotesOnYou($"You're singing in the wrong key. '{key}' wasn't found in Tracked(...) or Fuzzed(...).")
+				none: () => throw new ThisNotesOnYou($"You're singing in the wrong key. '{key}' wasn't found in AlwaysReported(...) or Fuzzed(...).")
 			);
 	}
-}
-
-public class ThisNotesOnYou : Exception
-{
-	public ThisNotesOnYou(string message) : base(message) { }
 }

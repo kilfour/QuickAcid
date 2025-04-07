@@ -1,6 +1,6 @@
 ﻿using QuickAcid.Reporting;
 
-namespace QuickAcid
+namespace QuickAcid.Nuts
 {
 	public class FalsifiableException : Exception
 	{

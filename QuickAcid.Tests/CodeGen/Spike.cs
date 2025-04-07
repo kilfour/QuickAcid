@@ -16,7 +16,7 @@ public class Spike
     public void InitialTry()
     {
         var run =
-            from account in "account".TrackedInput(() => new Account())
+            from account in "account".AlwaysReported(() => new Account())
                 .AddCode((key, store) => $"var {key} = new Account();")
             from _ in "ops".Choose(
                 from depositAmount in "deposit amount".ShrinkableInput(MGen.Int(0, 10))

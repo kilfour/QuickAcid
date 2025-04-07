@@ -41,12 +41,26 @@ public class ExpectOnlyWhenTests
     }
 
     [Fact]
+    public void Expect_OnlyWhen_can_access_the_context()
+    {
+        var report =
+            SystemSpecs.Define()
+                .AlwaysReported(Keys.TheAnswer, _ => 42)
+                    .Expect("should be true")
+                    .OnlyWhen(ctx => ctx.Get(Keys.TheAnswer) == 42)
+                    .Ensure(a => false)
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.NotNull(report);
+    }
+
+    [Fact]
     public void Expect_OnlyWhen_can_access_the_typed_context_content()
     {
         var report =
             SystemSpecs.Define()
-                .Tracked(Keys.TheAnswer, _ => 42)
-                .Expect("should be true", Keys.TheAnswer)
+                .AlwaysReported(Keys.TheAnswer, _ => 42)
+                    .Expect("should be true", Keys.TheAnswer)
                     .OnlyWhen(a => a == 42)
                     .Ensure(a => false)
                 .DumpItInAcid()
@@ -59,7 +73,7 @@ public class ExpectOnlyWhenTests
     {
         var report =
             SystemSpecs.Define()
-                .Tracked(Keys.TheAnswer, _ => 42)
+                .AlwaysReported(Keys.TheAnswer, _ => 42)
                 .Expect("should be true")
                     .UseThe(Keys.TheAnswer)
                     .OnlyWhen(a => a == 42)
