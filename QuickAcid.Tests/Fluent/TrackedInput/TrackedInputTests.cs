@@ -31,7 +31,7 @@ public class TrackedInputTests
         var report =
             SystemSpecs
                 .Define()
-                .TrackedInput(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Tracked(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .As("throw").Now(() => throw new Exception())
                 .Do("throw", _ => throw new Exception())
                 .DumpItInAcid()
@@ -50,8 +50,8 @@ public class TrackedInputTests
         var container = new Container();
         var report =
             SystemSpecs.Define()
-                .TrackedInput(Keys.TheAnswer, () => 42)
-                .TrackedInput(Keys.Universe, ctx => { container.ItsOnlyAModel = ctx.Get(Keys.TheAnswer); return container; })
+                .Tracked(Keys.TheAnswer, () => 42)
+                .Tracked(Keys.Universe, ctx => { container.ItsOnlyAModel = ctx.Get(Keys.TheAnswer); return container; })
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);

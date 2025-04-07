@@ -30,7 +30,7 @@ public class ElevatorFluentQAcidTest : QAcidLoggingFixture
 
         var report =
         SystemSpecs.Define()
-            .TrackedInput(Keys.TheHelp, () => new TheHelp(new Elevator()))
+            .Tracked(Keys.TheHelp, () => new TheHelp(new Elevator()))
             .Options(opt => [
                     opt.Do("MoveUp", ctx => () => ctx.Get(Keys.TheHelp).Elevator.MoveUp())
                         .Expect("MoveUp Does Not Exceed Max Floor")

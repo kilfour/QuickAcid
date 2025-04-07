@@ -36,14 +36,14 @@ public class Bob<T> // Bob the Architect of Causality
     // -------------------------------------------------------------------------
     // register Tracked Input
     //
-    public Bob<TNew> TrackedInput<TNew>(string label, Func<TNew> func)
+    public Bob<TNew> Tracked<TNew>(string label, Func<TNew> func)
         => Bind(_ => label.TrackedInput(func));
-    public Bob<TNew> TrackedInput<TNew>(QKey<TNew> key, Func<TNew> func)
+    public Bob<TNew> Tracked<TNew>(QKey<TNew> key, Func<TNew> func)
         => Bind(_ => key.Label.TrackedInput(func));
     // using Context
-    public Bob<TNew> TrackedInput<TNew>(string label, Func<QAcidContext, TNew> generator)
+    public Bob<TNew> Tracked<TNew>(string label, Func<QAcidContext, TNew> generator)
         => BindState(state => label.TrackedInput(() => generator(state)));
-    public Bob<TNew> TrackedInput<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
+    public Bob<TNew> Tracked<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
         => BindState(state => key.Label.TrackedInput(() => generator(state)));
 
     // -------------------------------------------------------------------------

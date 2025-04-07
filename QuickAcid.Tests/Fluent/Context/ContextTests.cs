@@ -27,7 +27,7 @@ public class ContextTests
         var theAnswer = 0;
         var report =
             SystemSpecs.Define()
-                .TrackedInput(Keys.Universe, () => new Container() { ItsOnlyAModel = 42 })
+                .Tracked(Keys.Universe, () => new Container() { ItsOnlyAModel = 42 })
                 .As("Answering the Question").UseThe(Keys.Universe)
                     .Now(universe => theAnswer = universe.ItsOnlyAModel)
                 .DumpItInAcid()

@@ -13,8 +13,8 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
 
         var report =
         SystemSpecs.Define()
-            .TrackedInput("Elevator", () => new Elevator())
-            .TrackedInput("Tracker", ctx => new Tracker(ctx.GetItAtYourOwnRisk<Elevator>("Elevator")))
+            .Tracked("Elevator", () => new Elevator())
+            .Tracked("Tracker", ctx => new Tracker(ctx.GetItAtYourOwnRisk<Elevator>("Elevator")))
             .Options(opt => [
                     opt.Do("MoveUp", ctx => () => ctx.GetItAtYourOwnRisk<Elevator>("Elevator").MoveUp())
                         .Expect("MoveUp Does Not Exceed Max Floor")
