@@ -1,4 +1,4 @@
-namespace QuickAcid.Tests.ZheZhools
+namespace QuickAcid.Tests
 {
     public class QAcidLoggingFixture : IDisposable
     {
