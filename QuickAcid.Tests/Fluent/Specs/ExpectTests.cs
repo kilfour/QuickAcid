@@ -93,6 +93,21 @@ public class ExpectTests
         Assert.Null(report);
     }
 
+    [Fact]
+    public void Expect_can_access_the_typed_context_content_with_correct_tea()
+    {
+        var report =
+            SystemSpecs.Define()
+                .Tracked(Keys.TheAnswer, _ => 42)
+                .Do("stuff", () => { })
+                .Expect("should be true")
+                    .UseThe(Keys.TheAnswer)
+                    .Ensure(a => a == 42)
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.Null(report);
+    }
+
     //// ==== ⛔ INTENTIONALLY NOT COMPILABLE TEST ====
     // This test is *meant* to fail compilation if uncommented.
     // It's proof the fluent API prevents invalid usage.

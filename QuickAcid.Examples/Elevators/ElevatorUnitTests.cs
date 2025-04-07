@@ -10,6 +10,15 @@ public class ElevatorUnitTests
     }
 
     [Fact]
+    public void Fail()
+    {
+        var elevator = new Elevator();
+        elevator.CloseDoors();
+        elevator.MoveDown();
+        Assert.Equal(0, elevator.CurrentFloor);
+    }
+
+    [Fact]
     public void MoveUp_IncrementsFloor_WhenDoorsClosed()
     {
         var elevator = new Elevator();

@@ -10,7 +10,14 @@ public class Bob<T> // Bob the Architect of Causality
     {
         this.runner = runner;
     }
+    public Bob<Acid> ToAcid()
+    {
+        var mapped =
+            from _ in runner
+            select Acid.Test;
 
+        return new Bob<Acid>(mapped);
+    }
     internal Bob<TNext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
     {
         var composed =
@@ -82,7 +89,10 @@ public class Bob<T> // Bob the Architect of Causality
     // Verifying
     //
     public Bristle<T> Expect(string label)
-        => new(this, label);
+        => new(ToAcid(), label);
+
+    public BristlesBrooms<T2> Expect<T2>(string label, QKey<T2> key)
+        => new BristlesBrooms<T2>(ToAcid(), label, key);
 
     public Bob<Acid> Assert(string label, Func<bool> predicate)
         => Bind(_ => label.Spec(predicate));

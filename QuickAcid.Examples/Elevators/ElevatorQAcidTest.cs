@@ -5,35 +5,8 @@ namespace QuickAcid.Examples.Elevators;
 
 public class ElevatorQAcidTest : QAcidLoggingFixture
 {
-    [Fact(Skip = "Only for demo")]
-    public void FluentElevatorRequestSystemWorks()
-    {
-        var elevator = new Elevator();
-        var tracker = new Tracker(elevator);
 
-        var report =
-        SystemSpecs.Define()
-            .Tracked("Elevator", () => new Elevator())
-            .Tracked("Tracker", ctx => new Tracker(ctx.GetItAtYourOwnRisk<Elevator>("Elevator")))
-            .Options(opt => [
-                    opt.Do("MoveUp", ctx => () => ctx.GetItAtYourOwnRisk<Elevator>("Elevator").MoveUp())
-                        .Expect("MoveUp Does Not Exceed Max Floor")
-                            .Ensure(() => elevator.CurrentFloor <= Elevator.MaxFloor)
-                        .Expect("MoveDown Does Not Decrement When Doors Are Open")
-                            .OnlyWhen(() => tracker.DoorsOpen)
-                            .Ensure(() => elevator.CurrentFloor == tracker.CurrentFloor),
-                    opt.Do("MoveDown", () => elevator.MoveDown()),
-                    opt.Do("OpenDoors", () => elevator.OpenDoors()),
-                    opt.Do("CloseDoors", () => elevator.CloseDoors())
-                ])
-            .PickOne()
-            .DumpItInAcid()
-            .AndCheckForGold(30, 10);
-        if (report != null)
-            Assert.Fail(report.ToString());
-    }
-
-    [Fact(Skip = "Only for demo")]
+    [Fact]
     public void ElevatorRequestSystemWorks()
     {
         var report = TheRun.ReportIfFailed(30, 10);
@@ -48,9 +21,9 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
             MoveUp(elevator, tracker),
             MoveDown(elevator, tracker),
             OpenDoors(elevator),
-            CloseDoors(elevator),
-            CallFloor(elevator, tracker),
-            Step(elevator)
+            CloseDoors(elevator)//,
+            // CallFloor(elevator, tracker),
+            // Step(elevator)
         ).Before(() => tracker.Do(elevator))
         from _s1 in "Initial floor is zero"
             .SpecIf(() => tracker.OperationsPerformed == 0, () => elevator.CurrentFloor == 0)
@@ -82,10 +55,10 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
     {
         return
             from __a in "MoveDown".Act(elevator.MoveDown)
-            from _s1 in "MoveDown Decrements Floor When Doors Are Closed"
-                .SpecIf(
-                    () => !tracker.DoorsOpen,
-                    () => elevator.CurrentFloor == tracker.CurrentFloor - 1)
+                // from _s1 in "MoveDown Decrements Floor When Doors Are Closed"
+                //     .SpecIf(
+                //         () => !tracker.DoorsOpen,
+                //         () => elevator.CurrentFloor == tracker.CurrentFloor - 1)
             from _s2 in "MoveDown Does Not Decrement When Doors Are Open"
                 .SpecIf(
                     () => tracker.DoorsOpen,

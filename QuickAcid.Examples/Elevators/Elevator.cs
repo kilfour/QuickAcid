@@ -33,7 +33,7 @@ public class Elevator
 
     public void MoveDown()
     {
-        if (!DoorsOpen && CurrentFloor > 0)
+        if (!DoorsOpen && CurrentFloor > 0) // change to >= for bug
             CurrentFloor--;
     }
 
