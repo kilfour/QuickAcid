@@ -1,4 +1,3 @@
-using System.IO.Compression;
 using QuickAcid.Fluent;
 
 namespace QuickAcid.Examples.Elevators;

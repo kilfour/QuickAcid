@@ -1,4 +1,3 @@
-using QuickAcid.Fluent;
 using QuickMGenerate;
 
 namespace QuickAcid.Examples.Elevators;
