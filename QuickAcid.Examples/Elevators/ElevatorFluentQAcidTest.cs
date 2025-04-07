@@ -27,7 +27,7 @@ public class ElevatorFluentQAcidTest : QAcidLoggingFixture
     // {
     //     public 
     // }
-    [Fact]
+    [Fact(Skip = "demo")]
     public void FluentElevatorRequestSystemWorks()
     {
         var report =

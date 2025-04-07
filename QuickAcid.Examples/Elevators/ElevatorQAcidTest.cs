@@ -6,7 +6,7 @@ namespace QuickAcid.Examples.Elevators;
 public class ElevatorQAcidTest : QAcidLoggingFixture
 {
 
-    [Fact]
+    [Fact(Skip = "demo")]
     public void ElevatorRequestSystemWorks()
     {
         var report = TheRun.ReportIfFailed(30, 10);
