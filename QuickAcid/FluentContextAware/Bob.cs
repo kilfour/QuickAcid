@@ -3,7 +3,7 @@ using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.FluentContextAware;
 
-public class Bob<T> // Bob the Architect of Causality
+public class Bob<T, TContext> // Bob the Architect of Causality
 {
     public readonly QAcidRunner<T> runner;
 
@@ -11,24 +11,25 @@ public class Bob<T> // Bob the Architect of Causality
     {
         this.runner = runner;
     }
-    public Bob<Acid> ToAcid()
+
+    public Bob<Acid, TContext> ToAcid()
     {
         var mapped =
             from _ in runner
             select Acid.Test;
 
-        return new Bob<Acid>(mapped);
+        return new Bob<Acid, TContext>(mapped);
     }
-    internal Bob<TNext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
+    internal Bob<TNext, TContext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
     {
         var composed =
             from a in runner
             from b in bind(a)
             select b;
-        return new Bob<TNext>(composed);
+        return new Bob<TNext, TContext>(composed);
     }
 
-    internal Bob<TNext> BindState<TNext>(Func<QAcidState, QAcidRunner<TNext>> bind)
+    internal Bob<TNext, TContext> BindState<TNext>(Func<QAcidState, QAcidRunner<TNext>> bind)
     {
         QAcidRunner<TNext> composed = state =>
         {
@@ -38,32 +39,32 @@ public class Bob<T> // Bob the Architect of Causality
 
             return bind(result.State)(result.State);
         };
-        return new Bob<TNext>(composed);
+        return new Bob<TNext, TContext>(composed);
     }
 
     // -------------------------------------------------------------------------
     // register Tracked Input
     //
-    public Bob<TNew> Tracked<TNew>(string label, Func<TNew> func)
+    public Bob<TNew, TContext> Tracked<TNew>(string label, Func<TNew> func)
         => Bind(_ => label.TrackedInput(func));
-    public Bob<TNew> Tracked<TNew>(QKey<TNew> key, Func<TNew> func)
+    public Bob<TNew, TContext> Tracked<TNew>(QKey<TNew> key, Func<TNew> func)
         => Bind(_ => key.Label.TrackedInput(func));
     // using Context
-    public Bob<TNew> Tracked<TNew>(string label, Func<QAcidContext, TNew> generator)
+    public Bob<TNew, TContext> Tracked<TNew>(string label, Func<QAcidContext, TNew> generator)
         => BindState(state => label.TrackedInput(() => generator(state)));
-    public Bob<TNew> Tracked<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
+    public Bob<TNew, TContext> Tracked<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
         => BindState(state => key.Label.TrackedInput(() => generator(state)));
     // -------------------------------------------------------------------------
     // register Fuzzed Input
     //
-    public Bob<TNew> Fuzzed<TNew>(string label, Generator<TNew> func)
+    public Bob<TNew, TContext> Fuzzed<TNew>(string label, Generator<TNew> func)
         => Bind(_ => label.ShrinkableInput(func));
-    public Bob<TNew> Fuzzed<TNew>(QKey<TNew> key, Generator<TNew> func)
+    public Bob<TNew, TContext> Fuzzed<TNew>(QKey<TNew> key, Generator<TNew> func)
         => Bind(_ => key.Label.ShrinkableInput(func));
     // using Context
-    public Bob<TNew> Fuzzed<TNew>(string label, Func<QAcidContext, Generator<TNew>> generator)
+    public Bob<TNew, TContext> Fuzzed<TNew>(string label, Func<QAcidContext, Generator<TNew>> generator)
         => BindState(state => label.ShrinkableInput(s => generator(state)(s)));
-    public Bob<TNew> Fuzzed<TNew>(QKey<TNew> key, Func<QAcidContext, Generator<TNew>> generator)
+    public Bob<TNew, TContext> Fuzzed<TNew>(QKey<TNew> key, Func<QAcidContext, Generator<TNew>> generator)
         => BindState(state => key.Label.ShrinkableInput(s => generator(state)(s)));
 
     // -------------------------------------------------------------------------
@@ -71,37 +72,37 @@ public class Bob<T> // Bob the Architect of Causality
     // -------------------------------------------------------------------------
     // Doing Stuff
     //
-    public Bob<Acid> Do(string label, Action action)
+    public Bob<Acid, TContext> Do(string label, Action action)
        => Bind(_ => label.Act(action));
 
-    public Bob<Acid> Do(string label, Func<QAcidContext, Action> effect)
+    public Bob<Acid, TContext> Do(string label, Func<QAcidContext, Action> effect)
         => BindState(state => label.Act(effect(state)));
 
-    public Lofty<T> As(string label)
+    public Lofty<T, TContext> As(string label)
         => new(this, label);
 
-    public Trix<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
+    public Trix<T, TContext> Options(Func<Bob<T, TContext>, IEnumerable<Bob<Acid, TContext>>> choicesBuilder)
     {
         var options = choicesBuilder(this).ToList();
-        return new Trix<T>(this, options);
+        return new Trix<T, TContext>(this, options);
     }
 
     // -------------------------------------------------------------------------
     // Verifying
     //
-    public Bristle<T> Expect(string label)
+    public Bristle<T, TContext> Expect(string label)
         => new(ToAcid(), label);
 
-    public BristlesBrooms<T2> Expect<T2>(string label, QKey<T2> key)
-        => new BristlesBrooms<T2>(ToAcid(), label, key);
+    public BristlesBrooms<T2, TContext> Expect<T2>(string label, QKey<T2> key)
+        => new BristlesBrooms<T2, TContext>(ToAcid(), label, key);
 
-    public Bob<Acid> Assert(string label, Func<bool> predicate)
+    public Bob<Acid, TContext> Assert(string label, Func<bool> predicate)
         => Bind(_ => label.Spec(predicate));
 
-    public Wendy DumpItInAcid()
+    public Wendy<TContext> DumpItInAcid()
     {
         var hereYouGo = from _ in runner select Acid.Test;
-        return new Wendy(hereYouGo);
+        return new Wendy<TContext>(hereYouGo);
     }
 }
 

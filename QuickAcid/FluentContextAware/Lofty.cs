@@ -3,13 +3,13 @@ using QuickAcid.MonadiXEtAl;
 namespace QuickAcid.FluentContextAware;
 
 // I can lift it. and Er, yeah, I think so!
-public class Lofty<T>
+public class Lofty<T, TContext>
 {
-    private readonly Bob<T> bob;
+    private readonly Bob<T, TContext> bob;
     private readonly string label;
     private readonly Maybe<QKey<T>> key;
 
-    public Lofty(Bob<T> bob
+    public Lofty(Bob<T, TContext> bob
         , string label
         , Maybe<QKey<T>> key = default)
     {
@@ -18,9 +18,9 @@ public class Lofty<T>
         this.key = key;
     }
 
-    public LoftysCrane<T> UseThe(QKey<T> key)
+    public LoftysCrane<T, TContext> UseThe(QKey<T> key)
         => new(bob, label, key);
 
-    public Bob<Acid> Now(Action action)
+    public Bob<Acid, TContext> Now(Action action)
         => bob.Bind(_ => label.Act(() => action()));
 }

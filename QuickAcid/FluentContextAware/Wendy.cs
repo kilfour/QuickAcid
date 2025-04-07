@@ -4,7 +4,7 @@ using QuickAcid.Reporting;
 namespace QuickAcid.FluentContextAware;
 
 // Let’s wrap this up and get the Report!
-public class Wendy : Bob<Acid>
+public class Wendy<TContext> : Bob<Acid, TContext>
 {
     public Wendy(QAcidRunner<Acid> runner)
         : base(runner) { }
