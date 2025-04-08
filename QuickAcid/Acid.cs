@@ -1,4 +1,5 @@
 ﻿namespace QuickAcid;
+
 public readonly struct Acid : IComparable<Acid>, IEquatable<Acid>
 {
     public static Acid Test { get; } = new Acid();

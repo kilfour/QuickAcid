@@ -1,5 +1,4 @@
 ﻿using QuickAcid.CodeGen;
-using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
@@ -65,9 +64,8 @@ public static partial class QAcid
 		}
 		return null!;
 	}
-
-
 }
+
 public static class IntExtensionForVerify
 {
 	public static NumberOfRuns Runs(this int number)

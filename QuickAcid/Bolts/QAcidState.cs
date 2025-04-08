@@ -1,5 +1,4 @@
 ﻿using QuickAcid.CodeGen;
-using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
@@ -20,7 +19,7 @@ public class QAcidState : QAcidContext
     public Memory Shrunk { get; private set; }
     private int shrinkCount = 0;
 
-    public bool Verifying { get; private set; }
+    public bool Verifying { get; private set; } // NEEDS TO GO replace all flags with phase struct
 
     public bool Failed { get; private set; }
     public string? FailingSpec { get; private set; }
@@ -37,6 +36,7 @@ public class QAcidState : QAcidContext
     {
         XMarksTheSpot.TheTracker = tracker;
     }
+
     public QAcidState(QAcidRunner<Acid> runner)
     {
         Runner = runner;
@@ -52,7 +52,6 @@ public class QAcidState : QAcidContext
     // --
     public T GetItAtYourOwnRisk<T>(string key) => Memory.GetForFluentInterface<T>(key);
     public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
-    public QAcidContext Prev() { return this; }
     // -----------------------------------------------------------------
 
 
