@@ -11,6 +11,7 @@ public class Bob<T> // Bob the Architect of Causality
     {
         this.runner = runner;
     }
+
     public Bob<Acid> ToAcid()
     {
         var mapped =
@@ -19,6 +20,7 @@ public class Bob<T> // Bob the Architect of Causality
 
         return new Bob<Acid>(mapped);
     }
+
     internal Bob<TNext> Bind<TNext>(Func<T, QAcidRunner<TNext>> bind)
     {
         var composed =
