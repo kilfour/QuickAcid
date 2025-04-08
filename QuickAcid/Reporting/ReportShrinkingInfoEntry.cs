@@ -1,6 +1,6 @@
 namespace QuickAcid.Reporting;
 
-public class QAcidReportShrinkingInfoEntry : IAmAReportEntry
+public class ReportShrinkingInfoEntry : IAmAReportEntry
 {
     public int NrOfActions { get; set; }
     public int ShrinkCount { get; set; }

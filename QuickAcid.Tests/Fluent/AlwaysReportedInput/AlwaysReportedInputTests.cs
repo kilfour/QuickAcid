@@ -38,7 +38,7 @@ public class AlwaysReportedInputTests
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
 
-        var entry = report.FirstOrDefault<QAcidReportAlwaysReportedInputEntry>();
+        var entry = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
         Assert.NotNull(entry);
         Assert.Equal("container", entry.Key);
         Assert.Equal("   => container (tracked) : 1", entry.ToString());

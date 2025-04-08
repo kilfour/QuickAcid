@@ -2,9 +2,9 @@ using System.Text;
 
 namespace QuickAcid.Reporting;
 
-public class QAcidReportSpecEntry : QAcidReportEntry
+public class ReportSpecEntry : ReportEntry
 {
-    public QAcidReportSpecEntry(string key)
+    public ReportSpecEntry(string key)
         : base(key) { }
 
     public override string ToString()

@@ -16,7 +16,7 @@ namespace QuickAcid.Tests
         public void SpecOnlyReturnsFalse()
         {
             var report = "foo".Spec(() => false).ReportIfFailed();
-            var entry = report.Entries.OfType<QAcidReportSpecEntry>().FirstOrDefault();
+            var entry = report.Entries.OfType<ReportSpecEntry>().FirstOrDefault();
             Assert.NotNull(entry);
             Assert.Equal("foo", entry.Key);
         }
@@ -30,7 +30,7 @@ namespace QuickAcid.Tests
                 from _s2 in "second passed".Spec(() => true)
                 select Acid.Test;
 
-            var entry = run.ReportIfFailed().Single<QAcidReportSpecEntry>();
+            var entry = run.ReportIfFailed().Single<ReportSpecEntry>();
 
             Assert.NotNull(entry);
             Assert.Equal("first failed", entry.Key);
@@ -45,7 +45,7 @@ namespace QuickAcid.Tests
                 from _s2 in "second failed".Spec(() => false)
                 select Acid.Test;
 
-            var entry = run.ReportIfFailed().Single<QAcidReportSpecEntry>();
+            var entry = run.ReportIfFailed().Single<ReportSpecEntry>();
 
             Assert.NotNull(entry);
             Assert.Equal("second failed", entry.Key);

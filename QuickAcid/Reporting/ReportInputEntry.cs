@@ -1,6 +1,6 @@
 namespace QuickAcid.Reporting;
 
-public class ReportInputEntry : QAcidReportEntry
+public class ReportInputEntry : ReportEntry
 {
     public object? Value { get; set; }
 

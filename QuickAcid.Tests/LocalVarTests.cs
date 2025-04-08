@@ -27,7 +27,7 @@ namespace QuickAcid.Tests
             Assert.NotNull(actEntry);
             Assert.Equal("foo", actEntry.Key);
 
-            var specEntry = report.FirstOrDefault<QAcidReportSpecEntry>();
+            var specEntry = report.FirstOrDefault<ReportSpecEntry>();
             Assert.NotNull(specEntry);
             Assert.Equal("spec", specEntry.Key);
         }

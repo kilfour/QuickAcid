@@ -131,7 +131,7 @@ public class Memory
 		if (AlwaysReportedInputValuePerAction.TryGetValue(actionNumber, out Dictionary<string, string>? values))
 		{
 			values.ForEach(pair =>
-				report.AddEntry(new QAcidReportAlwaysReportedInputEntry(pair.Key) { Value = pair.Value })
+				report.AddEntry(new ReportAlwaysReportedInputEntry(pair.Key) { Value = pair.Value })
 			);
 		}
 		if (MemoryPerAction.ContainsKey(actionNumber))

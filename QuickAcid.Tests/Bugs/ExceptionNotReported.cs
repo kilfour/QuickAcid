@@ -27,11 +27,11 @@ public class ExceptionNotReported
 
 		var report = run.ReportIfFailed(1, 3);
 
-		var entry1 = report.FirstOrDefault<QAcidReportAlwaysReportedInputEntry>();
+		var entry1 = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
 		Assert.NotNull(entry1);
 		Assert.Equal("BugHouse", entry1.Key);
 
-		var entryAR2 = report.SecondOrDefault<QAcidReportAlwaysReportedInputEntry>();
+		var entryAR2 = report.SecondOrDefault<ReportAlwaysReportedInputEntry>();
 		Assert.NotNull(entry1);
 		Assert.Equal("BugHouse", entry1.Key);
 

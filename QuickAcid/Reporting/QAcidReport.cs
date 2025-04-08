@@ -23,11 +23,6 @@ public class QAcidReport
             stringBuilder.AppendLine(entry.ToString());
         }
         return stringBuilder.ToString();
-        // string.Join(Environment.NewLine,
-        //     stringBuilder
-        //         .ToString()
-        //         .Split(Environment.NewLine)
-        //         .Select(s => $"// {s}"));
     }
 
     public bool FailedWith<T>()
@@ -37,7 +32,7 @@ public class QAcidReport
 
     public bool FailedWith(string specKey)
     {
-        return entries.OfType<QAcidReportSpecEntry>().SingleOrDefault()?.Key == specKey;
+        return entries.OfType<ReportSpecEntry>().SingleOrDefault()?.Key == specKey;
     }
 
     public IEnumerable<T> OfType<T>()
@@ -62,8 +57,8 @@ public class QAcidReport
         return OfType<T>().Single();
     }
 
-    public QAcidReportSpecEntry GetSpecEntry()
+    public ReportSpecEntry GetSpecEntry()
     {
-        return Single<QAcidReportSpecEntry>();
+        return Single<ReportSpecEntry>();
     }
 }

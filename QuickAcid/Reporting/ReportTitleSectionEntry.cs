@@ -2,10 +2,10 @@ using System.Text;
 
 namespace QuickAcid.Reporting;
 
-public class QAcidReportTitleSectionEntry : IAmAReportEntry
+public class ReportTitleSectionEntry : IAmAReportEntry
 {
     private string title = "";
-    public QAcidReportTitleSectionEntry(string title) { this.title = title; }
+    public ReportTitleSectionEntry(string title) { this.title = title; }
 
 
     public override string ToString()

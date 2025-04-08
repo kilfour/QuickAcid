@@ -1,11 +1,11 @@
 namespace QuickAcid.Reporting;
 
-public abstract class QAcidReportEntry : IAmAReportEntry
+public abstract class ReportEntry : IAmAReportEntry
 {
     protected readonly string TheKey;
     public string Key => TheKey;
 
-    protected QAcidReportEntry(string key)
+    protected ReportEntry(string key)
     {
         TheKey = key;
     }

@@ -2,7 +2,7 @@ using System.Text;
 
 namespace QuickAcid.Reporting;
 
-public class ReportActEntry : QAcidReportEntry
+public class ReportActEntry : ReportEntry
 {
     public Exception? Exception { get; set; }
 

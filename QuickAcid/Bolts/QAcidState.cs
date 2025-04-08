@@ -74,7 +74,7 @@ public class QAcidState : QAcidContext
         {
             if (Verbose)
             {
-                report.AddEntry(new QAcidReportTitleSectionEntry("FIRST FAILED RUN"));
+                report.AddEntry(new ReportTitleSectionEntry("FIRST FAILED RUN"));
                 AddMemoryToReport(report);
             }
 
@@ -122,17 +122,17 @@ public class QAcidState : QAcidContext
         ShrinkActions();
         if (Verbose)
         {
-            report.AddEntry(new QAcidReportTitleSectionEntry("AFTER ACTION SHRINKING"));
+            report.AddEntry(new ReportTitleSectionEntry("AFTER ACTION SHRINKING"));
             AddMemoryToReport(report);
         }
         ShrinkInputs();
         if (Verbose)
         {
-            report.AddEntry(new QAcidReportTitleSectionEntry($"AFTER INPUT SHRINKING : Falsified after {ActionNumbers.Count} actions, {shrinkCount} shrinks"));
+            report.AddEntry(new ReportTitleSectionEntry($"AFTER INPUT SHRINKING : Falsified after {ActionNumbers.Count} actions, {shrinkCount} shrinks"));
         }
         else
         {
-            report.AddEntry(new QAcidReportTitleSectionEntry($"Falsified after {ActionNumbers.Count} actions, {shrinkCount} shrinks"));
+            report.AddEntry(new ReportTitleSectionEntry($"Falsified after {ActionNumbers.Count} actions, {shrinkCount} shrinks"));
         }
 
         AddMemoryToReport(report);
@@ -247,7 +247,7 @@ public class QAcidState : QAcidContext
             Memory.AddActionToReport(actionNumber, report, Exception!);
         }
         if (!string.IsNullOrEmpty(FailingSpec))
-            report.AddEntry(new QAcidReportSpecEntry(FailingSpec));
+            report.AddEntry(new ReportSpecEntry(FailingSpec));
         return report;
     }
 
