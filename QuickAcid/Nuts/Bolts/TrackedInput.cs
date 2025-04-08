@@ -16,7 +16,7 @@ namespace QuickAcid.Nuts.Bolts
 					{
 						s.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.AlwaysReportedInputRunner });
 						var value = s.Memory.AlwaysReportedInputsPerRun.GetOrAdd(key, func, stringify);
-						// if (!s.Shrinking)
+						//if (!s.Shrinking)
 						s.Memory.AddAlwaysReportedInputValueForCurrentRun(key, stringify(value));
 						return new QAcidResult<T>(s, value) { Key = key };
 					};

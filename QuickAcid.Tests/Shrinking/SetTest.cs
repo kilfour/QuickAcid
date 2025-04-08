@@ -24,12 +24,11 @@ namespace QuickAcid.Tests.Shrinking
 		[Fact]
 		public void ReportsError()
 		{
-			var lastRemovedInt = 0;
 			var report =
 				SystemSpecs.Define()
-					.AlwaysReported(K.Set, () => new List<int>(), l => string.Join(" ", l.Select(item => item.ToString()).ToArray()))
-					.Fuzzed(K.IntToAdd, MGen.Int(2, 4))
-					.Fuzzed(K.IntToRemove, MGen.Int(2, 4))
+					.AlwaysReported(K.Set, () => new List<int>(), l => "[ " + string.Join(", ", l.Select(item => item.ToString()).ToArray()) + " ]")
+					.Fuzzed(K.IntToAdd, MGen.Int(0, 10))
+					.Fuzzed(K.IntToRemove, MGen.Int(0, 10))
 					.Options(opt => [
 						opt.Do("Add", ctx => ctx.Set().Add(ctx.IntToAdd()))
 							.Expect("Set contains added int")
@@ -44,13 +43,13 @@ namespace QuickAcid.Tests.Shrinking
 					])
 					.PickOne()
 					.DumpItInAcid()
-					//.KeepOneEyeOnTheTouchStone()
+					.KeepOneEyeOnTheTouchStone()
 					.AndCheckForGold(30, 50);
 
 			Assert.NotNull(report);
 
-			if (report != null)
-				Assert.Fail(report.ToString());
+			// if (report != null)
+			// 	Assert.Fail(report.ToString());
 		}
 	}
 }

@@ -55,11 +55,12 @@ public class Memory
 				? Maybe<T>.Some((T)value.Value!)
 				: Maybe<T>.None;
 		}
-		// public void SetIfNotAllReadyThere<T>(object key, T value)
-		// {
-		// 	if (dictionary.ContainsKey(key)) return;
-		// 	dictionary[key] = new DecoratedValue { Value = value!, IsIrrelevant = false };
-		// }
+
+		public void SetIfNotAllReadyThere<T>(object key, T value)
+		{
+			if (dictionary.ContainsKey(key)) return;
+			dictionary[key] = new DecoratedValue { Value = value!, IsIrrelevant = false };
+		}
 
 		public void Set<T>(object key, T value)
 		{
@@ -93,12 +94,6 @@ public class Memory
 
 		public void AddToReport(QAcidReport report, Exception exceptionFromState)
 		{
-			foreach (var pair in GetAll())
-			{
-				if (pair.Value!.IsIrrelevant) continue;
-				var value = string.IsNullOrEmpty(pair.Value.ReportingMessage) ? pair.Value.Value : pair.Value.ReportingMessage;
-				report.AddEntry(new ReportInputEntry(pair.Key) { Value = value });
-			}
 			bool isSameException = LastException?.ToString() == exceptionFromState?.ToString();
 
 			report.AddEntry(
@@ -106,6 +101,13 @@ public class Memory
 				{
 					Exception = isSameException ? LastException : null
 				});
+
+			foreach (var pair in GetAll())
+			{
+				if (pair.Value!.IsIrrelevant) continue;
+				var value = string.IsNullOrEmpty(pair.Value.ReportingMessage) ? pair.Value.Value : pair.Value.ReportingMessage;
+				report.AddEntry(new ReportInputEntry(pair.Key) { Value = value });
+			}
 		}
 	}
 
@@ -175,8 +177,8 @@ public class Memory
 	{
 		if (!AlwaysReportedInputValuePerAction.ContainsKey(getCurrentActionId()))
 			AlwaysReportedInputValuePerAction[getCurrentActionId()] = [];
-		if (!AlwaysReportedInputValuePerAction[getCurrentActionId()].ContainsKey(key))
-			AlwaysReportedInputValuePerAction[getCurrentActionId()][key] = value;
+		//if (!AlwaysReportedInputValuePerAction[getCurrentActionId()].ContainsKey(key))
+		AlwaysReportedInputValuePerAction[getCurrentActionId()][key] = value;
 	}
 
 	public void AddToReport(QAcidReport report, Exception exception) // only used in test, bweurk

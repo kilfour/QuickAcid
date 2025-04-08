@@ -41,7 +41,7 @@ public class AlwaysReportedInputTests
         var entry = report.FirstOrDefault<QAcidReportAlwaysReportedInputEntry>();
         Assert.NotNull(entry);
         Assert.Equal("container", entry.Key);
-        Assert.Equal("container (tracked) : 1", entry.ToString());
+        Assert.Equal("   => container (tracked) : 1", entry.ToString());
     }
 
     [Fact]

@@ -10,7 +10,7 @@ public class ReportInputEntry : QAcidReportEntry
     public override string ToString()
     {
         if (Value == null)
-            return $"Input : {Key}";
-        return $"Input : {Key} = {Value}";
+            return $"   - Input : {Key}";
+        return $"   - Input : {Key} = {Value}";
     }
 }

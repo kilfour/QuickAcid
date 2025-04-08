@@ -32,8 +32,8 @@ namespace QuickAcid.Nuts.Bolts
 					}
 
 					var value2 = generator.Generate();
-					// state.Memory.ForThisAction().SetIfNotAllReadyThere(key, value2);
-					state.Memory.ForThisAction().Set(key, value2);
+					state.Memory.ForThisAction().SetIfNotAllReadyThere(key, value2);
+					//state.Memory.ForThisAction().Set(key, value2);
 					return new QAcidResult<T>(state, value2);
 				};
 		}

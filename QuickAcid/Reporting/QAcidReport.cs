@@ -18,7 +18,6 @@ public class QAcidReport
     {
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine();
-        stringBuilder.AppendLine(" ---------------------------");
         foreach (var entry in entries)
         {
             stringBuilder.AppendLine(entry.ToString());

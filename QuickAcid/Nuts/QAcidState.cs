@@ -118,10 +118,21 @@ public class QAcidState : QAcidContext
     private void HandleFailure()
     {
         ShrinkActions();
+        if (Verbose)
+        {
+            report.AddEntry(new QAcidReportTitleSectionEntry("AFTER ACTION SHRINKING"));
+            AddMemoryToReport(report);
+        }
         ShrinkInputs();
         if (Verbose)
-            report.AddEntry(new QAcidReportTitleSectionEntry("AFTER SHRINKING"));
-        report.AddEntry(new QAcidReportShrinkingInfoEntry { NrOfActions = ActionNumbers.Count, ShrinkCount = shrinkCount });
+        {
+            report.AddEntry(new QAcidReportTitleSectionEntry($"AFTER INPUT SHRINKING : Falsified after {ActionNumbers.Count} actions, {shrinkCount} shrinks"));
+        }
+        else
+        {
+            report.AddEntry(new QAcidReportTitleSectionEntry($"Falsified after {ActionNumbers.Count} actions, {shrinkCount} shrinks"));
+        }
+
         AddMemoryToReport(report);
     }
 

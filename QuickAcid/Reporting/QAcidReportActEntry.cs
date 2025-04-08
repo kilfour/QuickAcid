@@ -15,14 +15,14 @@ public class ReportActEntry : QAcidReportEntry
 
     public override string ToString()
     {
-        var stringBuilder = new StringBuilder($"Execute : {Key}");
-        stringBuilder.AppendLine();
+        var stringBuilder = new StringBuilder();
+        stringBuilder.AppendLine(" ---------------------------");
+        stringBuilder.Append($" EXECUTE : {Key}");
         if (Exception != null)
         {
-            stringBuilder.Append(Exception);
             stringBuilder.AppendLine();
+            stringBuilder.Append(Exception);
         }
-        stringBuilder.Append(" ---------------------------");
         return stringBuilder.ToString();
     }
 }

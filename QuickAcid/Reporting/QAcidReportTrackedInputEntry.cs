@@ -9,6 +9,6 @@ public class QAcidReportAlwaysReportedInputEntry : QAcidReportEntry
 
     public override string ToString()
     {
-        return $"{Key} (tracked) : {Value}";
+        return $"   => {Key} (tracked) : {Value}";
     }
 }
