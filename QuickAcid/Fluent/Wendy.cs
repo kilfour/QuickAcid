@@ -21,12 +21,12 @@ public class Wendy
         return this;
     }
 
-    public QAcidReport AndCheckForGold(int runs, int actions)
+    public QAcidReport AndCheckForGold(int scopes, int executionsPerScope)
     {
-        for (int i = 0; i < runs; i++)
+        for (int i = 0; i < scopes; i++)
         {
             var state = new QAcidState(runner) { Verbose = verbose };
-            state.Run(actions);
+            state.Run(executionsPerScope);
             if (state.Failed)
                 return state.GetReport();
         }
