@@ -1,28 +1,27 @@
-﻿namespace QuickAcid
+﻿namespace QuickAcid.Nuts.Bolts;
+
+public static partial class QAcid
 {
-    public static partial class QAcid
+    public static QAcidRunner<T> Sequence<T>(this string key, params QAcidRunner<T>[] runners)
     {
-        public static QAcidRunner<T> Sequence<T>(this string key, params QAcidRunner<T>[] runners)
-        {
-            var counter = 0;
-            var max = runners.Count();
-            var memory = new Dictionary<string, int>();
-            return
-                s =>
+        var counter = 0;
+        var max = runners.Count();
+        var memory = new Dictionary<string, int>();
+        return
+            s =>
+            {
+                int value;
+                if (s.IsNormalRun())
                 {
-                    int value;
-                    if (s.IsNormalRun())
-                    {
-                        value = counter;
-                        memory[key] = counter;
-                        counter++;
-                        if (counter >= max)
-                            counter = 0;
-                    }
-                    else
-                        value = memory[key];
-                    return runners[value](s);
-                };
-        }
+                    value = counter;
+                    memory[key] = counter;
+                    counter++;
+                    if (counter >= max)
+                        counter = 0;
+                }
+                else
+                    value = memory[key];
+                return runners[value](s);
+            };
     }
 }

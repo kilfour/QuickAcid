@@ -44,6 +44,16 @@ public class FuzzedInputTests
         Assert.Null(report);
     }
 
+    public static class FKDPA
+    {
+        public static QKey<int> TheAnswer =>
+            QKey<int>.New("theAnswer");
+        public static QKey<int> Capture1 =>
+            QKey<int>.New("Capture1");
+        public static QKey<int> Capture2 =>
+            QKey<int>.New("Capture2");
+    }
+
     [Fact]
     public void FuzzedInput_should_be_the_different_per_action()
     {
@@ -52,13 +62,40 @@ public class FuzzedInputTests
         var report =
             SystemSpecs
                 .Define()
-                .Fuzzed(Keys.TheAnswer, MGen.Int(1, 1000))
-                .As("to local storage").UseThe(Keys.TheAnswer).Now(a => theAnswer1 = a)
-                .Expect("check local storage").UseThe(Keys.TheAnswer).Ensure(a => a == theAnswer1)
-                .As("to local storage again").UseThe(Keys.TheAnswer).Now(a => theAnswer2 = a)
-                .Expect("check local storage again").UseThe(Keys.TheAnswer).Ensure(a => a == theAnswer2)
-                .Assert("differs per action", () => theAnswer1 != theAnswer2)
+                .Fuzzed(FKDPA.TheAnswer, MGen.Int(1, 1000))
+                .Options(o => [
+                    o.As("to local storage").UseThe(FKDPA.TheAnswer).Now(a => theAnswer1 = a)
+                        .Expect("check local storage").UseThe(FKDPA.TheAnswer).Ensure(a => a == theAnswer1),
+                    o.As("to local storage again").UseThe(FKDPA.TheAnswer).Now(a => theAnswer2 = a)
+                        .Expect("check local storage again").UseThe(FKDPA.TheAnswer).Ensure(a => a == theAnswer2)
+                        .Expect("differs per action")
+                            .OnlyWhen(_ => theAnswer1 != 0 && theAnswer2 != 0)
+                            .Ensure(_ => theAnswer1 != theAnswer2)])
+                .PickOne()
                 .DumpItInAcid()
+                .KeepOneEyeOnTheTouchStone()
+                .AndCheckForGold(10, 1);
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void FuzzedInput_should_be_the_different_per_sequential_action()
+    {
+        var theAnswer1 = 0;
+        var theAnswer2 = 0;
+        var report =
+            SystemSpecs
+                .Define()
+                .Fuzzed(FKDPA.TheAnswer, MGen.Int(1, 1000))
+                .As("to local storage").UseThe(FKDPA.TheAnswer).Now(a => theAnswer1 = a)
+                        .Expect("check local storage").UseThe(FKDPA.TheAnswer).Ensure(a => a == theAnswer1)
+                .As("to local storage again").UseThe(FKDPA.TheAnswer).Now(a => theAnswer2 = a)
+                        .Expect("check local storage again").UseThe(FKDPA.TheAnswer).Ensure(a => a == theAnswer2)
+                        .Expect("differs per action")
+                            .OnlyWhen(_ => theAnswer1 != 0 && theAnswer2 != 0)
+                            .Ensure(_ => theAnswer1 != theAnswer2)
+                .DumpItInAcid()
+                .KeepOneEyeOnTheTouchStone()
                 .AndCheckForGold(10, 1);
         Assert.Null(report);
     }
