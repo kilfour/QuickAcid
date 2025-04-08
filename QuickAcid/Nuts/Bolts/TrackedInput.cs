@@ -16,8 +16,8 @@ namespace QuickAcid
 					{
 						s.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.AlwaysReportedInputRunner });
 						var value = s.Memory.AlwaysReportedInputsPerRun.GetOrAdd(key, func, stringify);
-						if (!s.Shrinking)
-							s.Memory.AddAlwaysReportedInputValueForCurrentRun(key, stringify(value));
+						// if (!s.Shrinking)
+						s.Memory.AddAlwaysReportedInputValueForCurrentRun(key, stringify(value));
 						return new QAcidResult<T>(s, value) { Key = key };
 					};
 		}

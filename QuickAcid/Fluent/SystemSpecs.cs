@@ -6,4 +6,9 @@ public static class SystemSpecs
     {
         return new Bob<Acid>(state => new QAcidResult<Acid>(state, Acid.Test));
     }
+
+    public static NewBob DefineN()
+    {
+        return new NewBob(state => new QAcidResult<Acid>(state, Acid.Test));
+    }
 }

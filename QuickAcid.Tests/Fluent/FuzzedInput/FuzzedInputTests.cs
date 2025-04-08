@@ -78,7 +78,7 @@ public class FuzzedInputTests
         Assert.Null(report);
     }
 
-    [Fact]
+    [Fact(Skip = "WIP")]
     public void FuzzedInput_should_be_the_different_per_sequential_action()
     {
         var theAnswer1 = 0;

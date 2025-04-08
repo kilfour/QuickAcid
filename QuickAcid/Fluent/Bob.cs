@@ -48,8 +48,8 @@ public class Bob<T> // Bob the Architect of Causality
     //
     // public Bob<Acid> AlwaysReported<TNew>(string label, Func<TNew> func)
     //     => Bind(_ => label.AlwaysReported(func)).ToAcid();
-    public Bob<Acid> Input<TNew>(QKey<TNew> key, Func<TNew> func)
-        => Bind(_ => key.Label.Input(func)).ToAcid();
+    // public Bob<Acid> AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func)
+    //     => Bind(_ => key.Label.AlwaysReported(func)).ToAcid();
     // using Context
     // public Bob<Acid> AlwaysReported<TNew>(string label, Func<QAcidContext, TNew> generator)
     //     => BindState(state => label.AlwaysReported(() => generator(state))).ToAcid();

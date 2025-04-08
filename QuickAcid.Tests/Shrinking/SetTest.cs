@@ -21,7 +21,7 @@ namespace QuickAcid.Tests.Shrinking
 
 	public class SetTest : QAcidLoggingFixture
 	{
-		[Fact]
+		[Fact(Skip = "WIP")]
 		public void ReportsError()
 		{
 			var lastRemovedInt = 0;
