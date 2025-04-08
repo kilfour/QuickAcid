@@ -1,4 +1,4 @@
-namespace QuickAcid.Nuts;
+namespace QuickAcid.Bolts;
 
 public class ThisNotesOnYou : Exception
 {

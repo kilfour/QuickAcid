@@ -1,6 +1,7 @@
 namespace QuickAcid.Tests.Bugs;
-using QuickAcid.Nuts;
-using QuickAcid.Nuts.Bolts;
+
+using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts;
 public class WhenTheHeartIsA
 {
     [Fact]

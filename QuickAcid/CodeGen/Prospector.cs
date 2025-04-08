@@ -1,5 +1,5 @@
 using System.Text;
-using QuickAcid.Nuts;
+using QuickAcid.Bolts;
 using QuickMGenerate;
 
 namespace QuickAcid.CodeGen

@@ -1,8 +1,6 @@
-
-
-using QuickAcid.Nuts;
 using QuickMGenerate;
-using QuickAcid.Nuts.Bolts;
+using QuickAcid.Bolts.Nuts;
+using QuickAcid.Bolts;
 
 namespace QuickAcid.Tests;
 

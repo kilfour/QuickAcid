@@ -3,7 +3,7 @@ using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 
-namespace QuickAcid.Nuts;
+namespace QuickAcid.Bolts;
 
 public class Memory
 {

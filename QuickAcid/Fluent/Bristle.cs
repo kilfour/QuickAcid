@@ -1,5 +1,5 @@
 using QuickAcid.MonadiXEtAl;
-using QuickAcid.Nuts.Bolts;
+using QuickAcid.Bolts.Nuts;
 
 namespace QuickAcid.Fluent;
 

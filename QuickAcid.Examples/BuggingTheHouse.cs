@@ -1,6 +1,6 @@
 ﻿using QuickMGenerate;
-using QuickAcid.Nuts;
-using QuickAcid.Nuts.Bolts;
+using QuickAcid.Bolts.Nuts;
+using QuickAcid.Bolts;
 
 namespace QuickAcid.Examples
 {

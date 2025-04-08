@@ -1,5 +1,5 @@
-using QuickAcid.Nuts;
-using QuickAcid.Nuts.Bolts;
+using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Fluent;

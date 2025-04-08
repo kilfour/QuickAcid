@@ -1,6 +1,6 @@
-﻿using QuickAcid.Nuts;
-using QuickAcid.Reporting;
-using QuickAcid.Nuts.Bolts;
+﻿using QuickAcid.Reporting;
+using QuickAcid.Bolts.Nuts;
+using QuickAcid.Bolts;
 
 namespace QuickAcid.Tests
 {

@@ -3,8 +3,8 @@ using FsCheck.Fluent;
 using FsCheck.Xunit;
 using QuickAcid;
 using QuickMGenerate;
-using QuickAcid.Nuts;
-using QuickAcid.Nuts.Bolts;
+using QuickAcid.Bolts.Nuts;
+using QuickAcid.Bolts;
 
 namespace QuickAcid.Examples;
 

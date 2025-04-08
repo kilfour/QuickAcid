@@ -1,6 +1,6 @@
-﻿using QuickAcid.Nuts;
+﻿using QuickAcid.Bolts;
 
-namespace QuickAcid.Nuts.Bolts
+namespace QuickAcid.Bolts.Nuts
 {
 	public class QAcidResult<TValue>
 	{

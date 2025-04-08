@@ -1,7 +1,8 @@
 ﻿using QuickAcid.CodeGen;
+using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 
-namespace QuickAcid.Nuts;
+namespace QuickAcid.Bolts;
 
 public class QAcidState : QAcidContext
 {
@@ -15,6 +16,7 @@ public class QAcidState : QAcidContext
 
 
     public bool Shrinking { get; private set; }
+    public bool ShrinkingActions { get; private set; }
     public Memory Shrunk { get; private set; }
     private int shrinkCount = 0;
 
@@ -84,7 +86,7 @@ public class QAcidState : QAcidContext
 
     public bool IsNormalRun()
     {
-        return Verifying == false && Shrinking == false;
+        return Verifying == false && Shrinking == false && ShrinkingActions == false;
     }
 
     public void FailedWithException(Exception exception)
@@ -141,6 +143,7 @@ public class QAcidState : QAcidContext
     private void ShrinkActions()
     {
         Verifying = true;
+        ShrinkingActions = true;
         Shrinking = false;
         BreakRun = false;
 
@@ -177,6 +180,11 @@ public class QAcidState : QAcidContext
         Failed = true;
         FailingSpec = failingSpec;
         Exception = exception;
+
+        // Verifying = false;
+        ShrinkingActions = false;
+        // Shrinking = false;
+        // BreakRun = false;
     }
 
     private void ShrinkInputs()

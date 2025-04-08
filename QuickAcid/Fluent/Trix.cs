@@ -1,5 +1,5 @@
 namespace QuickAcid.Fluent;
-using QuickAcid.Nuts.Bolts;
+using QuickAcid.Bolts.Nuts;
 
 // Okey-dokey, J.J.!
 public class Trix

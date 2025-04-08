@@ -55,7 +55,7 @@ public class FuzzedInputTests
     }
 
     [Fact]
-    public void FuzzedInput_should_be_the_different_per_action()
+    public void FuzzedInput_should_be_the_different_per_options_action()
     {
         var theAnswer1 = 0;
         var theAnswer2 = 0;
@@ -78,7 +78,7 @@ public class FuzzedInputTests
         Assert.Null(report);
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact(Skip = "not sure this is the right test")]
     public void FuzzedInput_should_be_the_different_per_sequential_action()
     {
         var theAnswer1 = 0;
