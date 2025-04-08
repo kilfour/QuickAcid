@@ -1,16 +1,17 @@
 using QuickAcid.MonadiXEtAl;
 using QuickAcid.Nuts;
+using QuickAcid.Nuts.Bolts;
 
 namespace QuickAcid.Fluent;
 
 public class BristlesBrooms<T>
 {
-    private readonly Bob<Acid> bob;
+    private readonly Bob bob;
     private readonly string label;
     private readonly Maybe<Func<bool>> iPass;
     private readonly Maybe<QKey<T>> key;
 
-    public BristlesBrooms(Bob<Acid> bob, string label, Maybe<QKey<T>> key = default, Maybe<Func<bool>> iPass = default)
+    public BristlesBrooms(Bob bob, string label, Maybe<QKey<T>> key = default, Maybe<Func<bool>> iPass = default)
     {
         this.bob = bob;
         this.label = label;
@@ -30,7 +31,7 @@ public class BristlesBrooms<T>
             none: () => throw new ThisNotesOnYou("You're singing in the wrong key, buddy.")
         );
     }
-    public Bob<Acid> Ensure(Func<T, bool> mustHold)
+    public Bob Ensure(Func<T, bool> mustHold)
     {
         return key.Match2(
             iPass,
@@ -47,12 +48,12 @@ public class BristlesBrooms<T>
 
 public class BroomsWithGate<T>
 {
-    private readonly Bob<Acid> bob;
+    private readonly Bob bob;
     private readonly string label;
     private readonly Func<QAcidContext, bool> gate;
     private readonly Maybe<QKey<T>> key;
 
-    public BroomsWithGate(Bob<Acid> bob, string label, Func<QAcidContext, bool> gate, Maybe<QKey<T>> key)
+    public BroomsWithGate(Bob bob, string label, Func<QAcidContext, bool> gate, Maybe<QKey<T>> key)
     {
         this.bob = bob;
         this.label = label;
@@ -60,7 +61,7 @@ public class BroomsWithGate<T>
         this.key = key;
     }
 
-    public Bob<Acid> Ensure(Func<T, bool> mustHold)
+    public Bob Ensure(Func<T, bool> mustHold)
     {
         return key.Match(
             some: realKey => bob.BindState(state =>
@@ -70,28 +71,26 @@ public class BroomsWithGate<T>
     }
 }
 
-public class AnotherGate<T>
+public class AnotherGate
 {
-    private readonly Bob<Acid> bob;
+    private readonly Bob bob;
     private readonly string label;
     private readonly Func<QAcidContext, bool> iPass;
-    private readonly Maybe<QKey<T>> key;
 
-    public AnotherGate(Bob<Acid> bob, string label, Maybe<QKey<T>> key = default, Func<QAcidContext, bool> iPass = default)
+    public AnotherGate(Bob bob, string label, Func<QAcidContext, bool> iPass = default)
     {
         this.bob = bob;
         this.label = label;
         this.iPass = iPass;
-        this.key = key;
     }
 
-    public Bob<Acid> Ensure(Func<QAcidContext, bool> mustHold)
+    public Bob Ensure(Func<QAcidContext, bool> mustHold)
     {
         return bob.BindState(state =>
             label.SpecIf(() => iPass(state), () => mustHold(state)));
     }
 
-    // public Bob<Acid> Ensure(Func<T, bool> mustHold)
+    // public Bob Ensure(Func<T, bool> mustHold)
     // {
     //     return key.Match(
     //         some: realKey => bob.BindState(state =>

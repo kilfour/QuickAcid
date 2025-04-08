@@ -1,15 +1,20 @@
 using QuickAcid.Nuts;
+using QuickAcid.Nuts.Bolts;
 using QuickAcid.Reporting;
 
 namespace QuickAcid.Fluent;
 
 // Let’s wrap this up and get the Report!
-public class Wendy : Bob<Acid>
+public class Wendy
 {
     private bool verbose = false;
 
+    private readonly QAcidRunner<Acid> runner;
+
     public Wendy(QAcidRunner<Acid> runner)
-        : base(runner) { }
+    {
+        this.runner = runner;
+    }
 
     public Wendy KeepOneEyeOnTheTouchStone()
     {

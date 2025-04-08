@@ -1,4 +1,4 @@
-﻿namespace QuickAcid
+﻿namespace QuickAcid.Nuts.Bolts
 {
     public static partial class QAcid
     {

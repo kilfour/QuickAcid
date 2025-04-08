@@ -1,6 +1,6 @@
 ﻿using QuickAcid.CodeGen;
 
-namespace QuickAcid
+namespace QuickAcid.Nuts.Bolts
 {
 	public static partial class QAcid
 	{

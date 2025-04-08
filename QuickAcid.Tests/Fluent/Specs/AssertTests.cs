@@ -9,7 +9,7 @@ public class AssertTests
     public void Assert_returns_true_nothing_happens()
     {
         var report =
-            SystemSpecs.DefineN()
+            SystemSpecs.Define()
                 .Assert("should be true", () => true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
@@ -20,7 +20,7 @@ public class AssertTests
     public void Assert_returns_false_gets_reported()
     {
         var report =
-            SystemSpecs.DefineN()
+            SystemSpecs.Define()
                 .Assert("should be true", () => false)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

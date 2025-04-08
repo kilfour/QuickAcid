@@ -2,6 +2,7 @@
 
 using QuickAcid.Nuts;
 using QuickMGenerate;
+using QuickAcid.Nuts.Bolts;
 
 namespace QuickAcid.Tests;
 

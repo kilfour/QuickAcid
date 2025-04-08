@@ -1,4 +1,6 @@
 using QuickMGenerate;
+using QuickAcid.Nuts;
+using QuickAcid.Nuts.Bolts;
 
 namespace QuickAcid.Examples.Elevators;
 

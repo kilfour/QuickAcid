@@ -1,26 +1,24 @@
-using QuickAcid.MonadiXEtAl;
+using QuickAcid.Nuts.Bolts;
 
 namespace QuickAcid.Fluent;
 
 // I can lift it. and Er, yeah, I think so!
-public class Lofty<T>
+public class Lofty
 {
-    private readonly Bob<Acid> bob;
+    private readonly Bob bob;
     private readonly string label;
-    private readonly Maybe<QKey<T>> key;
 
-    public Lofty(Bob<Acid> bob
-        , string label
-        , Maybe<QKey<T>> key = default)
+
+    public Lofty(Bob bob
+        , string label)
     {
         this.bob = bob;
         this.label = label;
-        this.key = key;
     }
 
-    public LoftysCrane<TNew> UseThe<TNew>(QKey<TNew> key)
-        => new LoftysCrane<TNew>(bob, label, key);
+    public LoftysCrane<T> UseThe<T>(QKey<T> key)
+        => new LoftysCrane<T>(bob, label, key);
 
-    public Bob<Acid> Now(Action action)
-        => bob.Bind(_ => label.Act(() => action())).ToAcid();
+    public Bob Now(Action action)
+        => bob.Bind(_ => label.Act(() => action()));
 }

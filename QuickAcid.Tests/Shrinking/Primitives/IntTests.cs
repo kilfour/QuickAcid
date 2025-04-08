@@ -1,5 +1,7 @@
 ﻿using QuickAcid.Reporting;
 using QuickMGenerate;
+using QuickAcid.Nuts;
+using QuickAcid.Nuts.Bolts;
 
 namespace QuickAcid.Tests.Shrinking.Primitives
 {

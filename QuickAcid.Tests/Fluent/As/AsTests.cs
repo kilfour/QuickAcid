@@ -17,7 +17,7 @@ public class AsTests
     {
         var flag = false;
         var report =
-            SystemSpecs.DefineN()
+            SystemSpecs.Define()
                 .As("flag it").Now(() => flag = true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
@@ -30,7 +30,7 @@ public class AsTests
     {
         var flag = "";
         var report =
-            SystemSpecs.DefineN()
+            SystemSpecs.Define()
                 .As("flag it once").Now(() => flag += "a")
                 .As("flag it again").Now(() => flag += "b")
                 .DumpItInAcid()
@@ -43,7 +43,7 @@ public class AsTests
     public void As_that_throws_should_report_failure()
     {
         var report =
-            SystemSpecs.DefineN()
+            SystemSpecs.Define()
                 .As("throws").Now(() => throw new Exception("Boom"))
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

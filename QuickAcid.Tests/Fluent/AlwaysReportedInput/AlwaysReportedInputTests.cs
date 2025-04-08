@@ -31,7 +31,7 @@ public class AlwaysReportedInputTests
     {
         var report =
             SystemSpecs
-                .DefineN()
+                .Define()
                 .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .Do("throw", _ => throw new Exception())
                 .DumpItInAcid()

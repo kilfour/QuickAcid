@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
-using QuickAcid;
-using QuickAcid.Nuts;
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid
+namespace QuickAcid.Nuts.Bolts
 {
     public class Shrink
     {
