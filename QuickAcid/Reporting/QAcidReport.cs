@@ -24,6 +24,11 @@ public class QAcidReport
             stringBuilder.AppendLine(entry.ToString());
         }
         return stringBuilder.ToString();
+        // string.Join(Environment.NewLine,
+        //     stringBuilder
+        //         .ToString()
+        //         .Split(Environment.NewLine)
+        //         .Select(s => $"// {s}"));
     }
 
     public bool FailedWith<T>()

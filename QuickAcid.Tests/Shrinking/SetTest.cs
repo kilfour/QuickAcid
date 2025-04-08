@@ -21,7 +21,7 @@ namespace QuickAcid.Tests.Shrinking
 
 	public class SetTest : QAcidLoggingFixture
 	{
-		[Fact(Skip = "WIP")]
+		[Fact]
 		public void ReportsError()
 		{
 			var lastRemovedInt = 0;
@@ -44,7 +44,7 @@ namespace QuickAcid.Tests.Shrinking
 					])
 					.PickOne()
 					.DumpItInAcid()
-					.KeepOneEyeOnTheTouchStone()
+					//.KeepOneEyeOnTheTouchStone()
 					.AndCheckForGold(30, 50);
 
 			Assert.NotNull(report);
