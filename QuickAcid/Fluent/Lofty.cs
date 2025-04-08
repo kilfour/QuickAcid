@@ -8,7 +8,6 @@ public class Lofty
     private readonly Bob bob;
     private readonly string label;
 
-
     public Lofty(Bob bob
         , string label)
     {
@@ -21,4 +20,7 @@ public class Lofty
 
     public Bob Now(Action action)
         => bob.Bind(_ => label.Act(() => action()));
+
+    public Bob Now(Action<QAcidContext> effect)
+        => bob.BindState(state => label.Act(() => effect(state)));
 }

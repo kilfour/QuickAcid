@@ -56,14 +56,14 @@ public class AsTests
         Assert.Equal("Boom", entry.Exception.Message);
     }
 
-    [Fact(Skip = "WIP ... Maybe")]
+    [Fact]
     public void As_can_use_context()
     {
         var flag = false;
         var report =
             SystemSpecs.Define()
                 .AlwaysReported(Keys.TheBool, () => true)
-                //.As("flag it").Now(ctx => flag = ctx.Get(Keys.TheBool))
+                .As("flag it").Now(ctx => flag = ctx.Get(Keys.TheBool))
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
