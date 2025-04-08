@@ -31,9 +31,8 @@ public class AlwaysReportedInputTests
     {
         var report =
             SystemSpecs
-                .Define()
+                .DefineN()
                 .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
-                .As("throw").Now(() => throw new Exception())
                 .Do("throw", _ => throw new Exception())
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

@@ -2,13 +2,13 @@ namespace QuickAcid.Fluent;
 
 public static class SystemSpecs
 {
-    public static Bob<Acid> Define()
+    public static FluentNew.Bob Define()
     {
-        return new Bob<Acid>(state => new QAcidResult<Acid>(state, Acid.Test));
+        return new FluentNew.Bob(state => new QAcidResult<Acid>(state, Acid.Test));
     }
 
-    public static NewBob DefineN()
+    public static FluentNew.Bob DefineN()
     {
-        return new NewBob(state => new QAcidResult<Acid>(state, Acid.Test));
+        return new FluentNew.Bob(state => new QAcidResult<Acid>(state, Acid.Test));
     }
 }
