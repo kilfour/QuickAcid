@@ -55,6 +55,11 @@ public class Memory
 				? Maybe<T>.Some((T)value.Value!)
 				: Maybe<T>.None;
 		}
+		// public void SetIfNotAllReadyThere<T>(object key, T value)
+		// {
+		// 	if (dictionary.ContainsKey(key)) return;
+		// 	dictionary[key] = new DecoratedValue { Value = value!, IsIrrelevant = false };
+		// }
 
 		public void Set<T>(object key, T value)
 		{
@@ -162,7 +167,7 @@ public class Memory
 		// You've tried it before, ... more than once, it never worked and broke stuff.
 		// Why do you think it will solve your problems now ?
 		// --
-		// AlwaysReportedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
+		AlwaysReportedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
 		// -------------------------------------------------------------------------------
 	}
 
@@ -184,21 +189,21 @@ public class Memory
 		var sb = new StringBuilder();
 		sb.AppendLine("=== Memory Dump ===");
 
-		// sb.AppendLine("--- OnceOnlyInputsPerRun ---");
-		// foreach (var kvp in OnceOnlyInputsPerRun.GetAll())
-		// {
-		// 	sb.AppendLine($"{kvp.Key} = {kvp.Value.ToDiagnosticString()}");
-		// }
+		sb.AppendLine("--- OnceOnlyInputsPerRun ---");
+		foreach (var kvp in AlwaysReportedInputsPerRun.GetAll())
+		{
+			sb.AppendLine($"{kvp.Key} = {kvp.Value.ToDiagnosticString()}");
+		}
 
-		// sb.AppendLine("--- MemoryPerAction ---");
-		// foreach (var action in MemoryPerAction)
-		// {
-		// 	sb.AppendLine($"Action {action.Key}:");
-		// 	foreach (var kvp in action.Value.GetAll())
-		// 	{
-		// 		sb.AppendLine($"  {kvp.Key} = {kvp.Value.ToDiagnosticString()}");
-		// 	}
-		// }
+		sb.AppendLine("--- MemoryPerAction ---");
+		foreach (var action in MemoryPerAction)
+		{
+			sb.AppendLine($"Action {action.Key}:");
+			foreach (var kvp in action.Value.GetAll())
+			{
+				sb.AppendLine($"  {kvp.Key} = {kvp.Value.ToDiagnosticString()}");
+			}
+		}
 
 		return sb.ToString();
 	}

@@ -28,6 +28,10 @@ public class ExceptionNotReported
 		Assert.NotNull(entry1);
 		Assert.Equal("BugHouse", entry1.Key);
 
+		var entryAR2 = report.SecondOrDefault<QAcidReportAlwaysReportedInputEntry>();
+		Assert.NotNull(entry1);
+		Assert.Equal("BugHouse", entry1.Key);
+
 		var entry2 = report.FirstOrDefault<ReportActEntry>();
 		Assert.NotNull(entry2);
 		Assert.Equal("BugHouse.Run", entry2.Key);

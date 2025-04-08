@@ -1,3 +1,4 @@
+using System.Globalization;
 using QuickAcid.Fluent;
 
 using QuickAcid.Reporting;
@@ -26,6 +27,40 @@ public class FuzzedInputTests
         {
             return ItsOnlyAModel.ToString();
         }
+    }
+
+    [Fact]
+    public void FuzzedInput_should_be_the_same_all_through_the_action()
+    {
+        var theAnswer = 0;
+        var report =
+            SystemSpecs
+                .Define()
+                .Fuzzed(Keys.TheAnswer, MGen.Int(1, 1000))
+                .As("to local storage").UseThe(Keys.TheAnswer).Now(a => theAnswer = a)
+                .Expect("check local storage").UseThe(Keys.TheAnswer).Ensure(a => a == theAnswer)
+                .DumpItInAcid()
+                .AndCheckForGold(10, 1);
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void FuzzedInput_should_be_the_different_per_action()
+    {
+        var theAnswer1 = 0;
+        var theAnswer2 = 0;
+        var report =
+            SystemSpecs
+                .Define()
+                .Fuzzed(Keys.TheAnswer, MGen.Int(1, 1000))
+                .As("to local storage").UseThe(Keys.TheAnswer).Now(a => theAnswer1 = a)
+                .Expect("check local storage").UseThe(Keys.TheAnswer).Ensure(a => a == theAnswer1)
+                .As("to local storage again").UseThe(Keys.TheAnswer).Now(a => theAnswer2 = a)
+                .Expect("check local storage again").UseThe(Keys.TheAnswer).Ensure(a => a == theAnswer2)
+                .Assert("differs per action", () => theAnswer1 != theAnswer2)
+                .DumpItInAcid()
+                .AndCheckForGold(10, 1);
+        Assert.Null(report);
     }
 
     [Fact]

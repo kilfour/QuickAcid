@@ -60,7 +60,7 @@ public class ContextTests
         var theAnswer = 0;
         var report =
             SystemSpecs.Define()
-                .Do("arthur", ctx => () =>
+                .Do("arthur", ctx =>
                     theAnswer = ctx.GetItAtYourOwnRisk<Container>("not there").ItsOnlyAModel)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

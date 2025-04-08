@@ -63,7 +63,7 @@ public class DoTests
         var report =
             SystemSpecs.Define()
                 .AlwaysReported(Keys.TheBool, () => true)
-                .Do("flag it", ctx => () => flag = ctx.Get(Keys.TheBool))
+                .Do("flag it", ctx => flag = ctx.Get(Keys.TheBool))
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);

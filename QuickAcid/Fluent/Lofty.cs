@@ -5,11 +5,11 @@ namespace QuickAcid.Fluent;
 // I can lift it. and Er, yeah, I think so!
 public class Lofty<T>
 {
-    private readonly Bob<T> bob;
+    private readonly Bob<Acid> bob;
     private readonly string label;
     private readonly Maybe<QKey<T>> key;
 
-    public Lofty(Bob<T> bob
+    public Lofty(Bob<Acid> bob
         , string label
         , Maybe<QKey<T>> key = default)
     {
@@ -18,9 +18,9 @@ public class Lofty<T>
         this.key = key;
     }
 
-    public LoftysCrane<T> UseThe(QKey<T> key)
-        => new(bob, label, key);
+    public LoftysCrane<TNew> UseThe<TNew>(QKey<TNew> key)
+        => new LoftysCrane<TNew>(bob, label, key);
 
     public Bob<Acid> Now(Action action)
-        => bob.Bind(_ => label.Act(() => action()));
+        => bob.Bind(_ => label.Act(() => action())).ToAcid();
 }

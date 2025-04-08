@@ -44,45 +44,68 @@ public class Bob<T> // Bob the Architect of Causality
     // -------------------------------------------------------------------------
     // register AlwaysReported Input
     //
-    public Bob<TNew> AlwaysReported<TNew>(string label, Func<TNew> func)
-        => Bind(_ => label.AlwaysReported(func));
-    public Bob<TNew> AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func)
-        => Bind(_ => key.Label.AlwaysReported(func));
+    // public Bob<Acid> AlwaysReported<TNew>(string label, Func<TNew> func)
+    //     => Bind(_ => label.AlwaysReported(func)).ToAcid();
+    public Bob<Acid> Input<TNew>(QKey<TNew> key, Func<TNew> func)
+        => Bind(_ => key.Label.Input(func)).ToAcid();
     // using Context
-    public Bob<TNew> AlwaysReported<TNew>(string label, Func<QAcidContext, TNew> generator)
-        => BindState(state => label.AlwaysReported(() => generator(state)));
-    public Bob<TNew> AlwaysReported<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
-        => BindState(state => key.Label.AlwaysReported(() => generator(state)));
+    // public Bob<Acid> AlwaysReported<TNew>(string label, Func<QAcidContext, TNew> generator)
+    //     => BindState(state => label.AlwaysReported(() => generator(state))).ToAcid();
+    // public Bob<Acid> AlwaysReported<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
+    //     => BindState(state => key.Label.AlwaysReported(() => generator(state))).ToAcid();
+    // -------------------------------------------------------------------------
+
+
+    // -------------------------------------------------------------------------
+    // register AlwaysReported Input
+    //
+    public Bob<Acid> AlwaysReported<TNew>(string label, Func<TNew> func)
+        => Bind(_ => label.AlwaysReported(func)).ToAcid();
+    public Bob<Acid> AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func)
+        => Bind(_ => key.Label.AlwaysReported(func)).ToAcid();
+    public Bob<Acid> AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func, Func<TNew, string> stringify)
+        => Bind(_ => key.Label.AlwaysReported(func, stringify)).ToAcid();
+    // using Context
+    public Bob<Acid> AlwaysReported<TNew>(string label, Func<QAcidContext, TNew> generator)
+        => BindState(state => label.AlwaysReported(() => generator(state))).ToAcid();
+    public Bob<Acid> AlwaysReported<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
+        => BindState(state => key.Label.AlwaysReported(() => generator(state))).ToAcid();
+    // -------------------------------------------------------------------------
+
+
     // -------------------------------------------------------------------------
     // register Fuzzed Input
     //
-    public Bob<TNew> Fuzzed<TNew>(string label, Generator<TNew> func)
-        => Bind(_ => label.ShrinkableInput(func));
-    public Bob<TNew> Fuzzed<TNew>(QKey<TNew> key, Generator<TNew> func)
-        => Bind(_ => key.Label.ShrinkableInput(func));
+    public Bob<Acid> Fuzzed<TNew>(string label, Generator<TNew> func)
+        => Bind(_ => label.ShrinkableInput(func)).ToAcid();
+    public Bob<Acid> Fuzzed<TNew>(QKey<TNew> key, Generator<TNew> func)
+        => Bind(_ => key.Label.ShrinkableInput(func)).ToAcid();
     // using Context
-    public Bob<TNew> Fuzzed<TNew>(string label, Func<QAcidContext, Generator<TNew>> generator)
-        => BindState(state => label.ShrinkableInput(s => generator(state)(s)));
-    public Bob<TNew> Fuzzed<TNew>(QKey<TNew> key, Func<QAcidContext, Generator<TNew>> generator)
-        => BindState(state => key.Label.ShrinkableInput(s => generator(state)(s)));
+    public Bob<Acid> Fuzzed<TNew>(string label, Func<QAcidContext, Generator<TNew>> generator)
+        => BindState(state => label.ShrinkableInput(s => generator(state)(s))).ToAcid();
+    public Bob<Acid> Fuzzed<TNew>(QKey<TNew> key, Func<QAcidContext, Generator<TNew>> generator)
+        => BindState(state => key.Label.ShrinkableInput(s => generator(state)(s))).ToAcid();
 
     // -------------------------------------------------------------------------
 
+
+    public Bob<Acid> Capture<TNew>(QKey<int> key, Func<QAcidContext, TNew> generator)
+        => BindState(state => key.Label.Input(() => generator(state))).ToAcid();
     // -------------------------------------------------------------------------
     // Doing Stuff
     //
     public Bob<Acid> Do(string label, Action action)
        => Bind(_ => label.Act(action));
 
-    public Bob<Acid> Do(string label, Func<QAcidContext, Action> effect)
-        => BindState(state => label.Act(effect(state)));
+    public Bob<Acid> Do(string label, Action<QAcidContext> effect)
+        => BindState(state => label.Act(() => effect(state)));
 
-    public Lofty<T> As(string label)
-        => new(this, label);
+    public Lofty<Acid> As(string label)
+        => new Lofty<Acid>(this.ToAcid(), label);
 
-    public Trix<T> Options(Func<Bob<T>, IEnumerable<Bob<Acid>>> choicesBuilder)
+    public Trix<T> Options(Func<Bob<Acid>, IEnumerable<Bob<Acid>>> choicesBuilder)
     {
-        var options = choicesBuilder(this).ToList();
+        var options = choicesBuilder(ToAcid()).ToList();
         return new Trix<T>(this, options);
     }
 
