@@ -57,23 +57,16 @@ public class Memory
 		return MemoryPerExecution[getCurrentActionId()];
 	}
 
-	public void ResetAllRunInputs()
+	public void ResetAllRunInputs() // Why: just explain we know it's needed 
 	{
 		AlwaysReportedInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
-		// -------------------------------------------------------------------------------
-		// Let's really think if you want to do something like that below.
-		// You've tried it before, ... more than once, it never worked and broke stuff.
-		// Why do you think it will solve your problems now ?
-		// --
 		AlwaysReportedInputValuePerExecution = new Dictionary<int, Dictionary<string, string>>();
-		// -------------------------------------------------------------------------------
 	}
 
 	public void AddAlwaysReportedInputValueForCurrentRun(string key, string value)
 	{
 		if (!AlwaysReportedInputValuePerExecution.ContainsKey(getCurrentActionId()))
 			AlwaysReportedInputValuePerExecution[getCurrentActionId()] = [];
-		//if (!AlwaysReportedInputValuePerAction[getCurrentActionId()].ContainsKey(key))
 		AlwaysReportedInputValuePerExecution[getCurrentActionId()][key] = value;
 	}
 

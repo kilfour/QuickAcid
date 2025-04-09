@@ -6,36 +6,35 @@ namespace QuickAcid.Bolts;
 public class QAcidState : QAcidContext
 {
     public QAcidRunner<Acid> Runner { get; private set; }
-
     public int CurrentExcutionNumber { get; private set; }
-
     public List<int> ExcutionNumbers { get; private set; }
 
     public Memory Memory { get; private set; }
-
-
-    public bool Shrinking { get; private set; }
-    public bool ShrinkingExecutions { get; private set; }
     public Memory Shrunk { get; private set; }
-    private int shrinkCount = 0;
 
     public bool Verifying { get; private set; } // NEEDS TO GO replace all flags with phase struct
+    public bool Shrinking { get; private set; }
+    public bool ShrinkingExecutions { get; private set; }
+    private int shrinkCount = 0;
 
     public bool Failed { get; private set; }
+    public bool BreakRun { get; private set; }
+
     public string? FailingSpec { get; private set; }
     public Exception? Exception { get; private set; }
 
     private readonly QAcidReport report;
-
     public bool Verbose { get; set; }
 
 
-    // only used by codegen, also usefull for tracking runners with QAcidDebug 
+    // ----------------------------------------------------------------------------------
+    // only used by codegen, also usefull for tracking combinators with QAcidDebug 
     public XMarksTheSpot XMarksTheSpot { get; set; }
     public void MarkMyLocation(Tracker tracker)
     {
         XMarksTheSpot.TheTracker = tracker;
     }
+    // ----------------------------------------------------------------------------------
 
     public QAcidState(QAcidRunner<Acid> runner)
     {
@@ -59,13 +58,13 @@ public class QAcidState : QAcidContext
     {
         for (int j = 0; j < executionsPerScope; j++)
         {
-            StepAction();
+            ExecuteRun();
             if (Failed)
                 return;
         }
     }
 
-    private void StepAction()
+    private void ExecuteRun()
     {
         ExcutionNumbers.Add(CurrentExcutionNumber);
         Runner(this);
@@ -76,7 +75,6 @@ public class QAcidState : QAcidContext
                 report.AddEntry(new ReportTitleSectionEntry("FIRST FAILED RUN"));
                 AddMemoryToReport(report);
             }
-
             HandleFailure();
             return;
         }
@@ -136,8 +134,6 @@ public class QAcidState : QAcidContext
 
         AddMemoryToReport(report);
     }
-
-    public bool BreakRun { get; private set; }
 
     private void ShrinkActions()
     {
@@ -228,7 +224,6 @@ public class QAcidState : QAcidContext
         Verifying = false;
         Shrinking = true;
         Memory.ForThisAction().Set(key, oldVal);
-
         return failed;
     }
 
