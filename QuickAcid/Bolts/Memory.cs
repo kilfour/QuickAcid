@@ -77,11 +77,6 @@ public class Memory
 		AlwaysReportedInputValuePerExecution[getCurrentActionId()][key] = value;
 	}
 
-	public void AddToReport(QAcidReport report, Exception exception) // only used in test, bweurk
-	{
-		MemoryPerExecution.ForEach(a => a.Value.AddToReport(report, exception));
-	}
-
 	public string ToDiagnosticString()
 	{
 		var sb = new StringBuilder();
