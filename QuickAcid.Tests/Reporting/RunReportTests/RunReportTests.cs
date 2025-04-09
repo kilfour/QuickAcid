@@ -1,9 +1,21 @@
 using QuickAcid.Reporting;
+using QuickAcid.Bolts;
 
 namespace QuickAcid.Tests.Reporting.RunReportTests;
 
 public class RunReportTests : QAcidLoggingFixture
 {
+    private readonly int IrrelevantNumberForReporting = 666;
+    private Memory EmptyMemory =>
+        new(() => IrrelevantNumberForReporting);
+
+    [Fact]
+    public void RunReport_can_be_converted_to_stringlist()
+    {
+        var report = new RunReport("It's only a model");
+        Assert.NotNull(report.AsStringList());
+    }
+
     [Fact]
     public void RunReport_contains_its_given_title()
     {
