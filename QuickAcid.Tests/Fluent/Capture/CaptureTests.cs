@@ -4,7 +4,7 @@ using QuickAcid.Fluent;
 
 namespace QuickAcid.Tests.Fluent.AlwaysReportedInput;
 
-public class CaptureTests
+public class CaptureTests : QAcidLoggingFixture
 {
     public static class Keys
     {
@@ -68,5 +68,21 @@ public class CaptureTests
         Assert.Null(report);
         Assert.Equal(1, theCapturedPropertyBefore);
         Assert.Equal(2, theCapturedPropertyAfter);
+    }
+
+    [Fact(Skip = "not yet implemented")]
+    public void Capture_never_shows_up_in_report()
+    {
+        var report =
+            SystemSpecs
+                .Define()
+                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Capture(Keys.Property, ctx => ctx.Get(Keys.Container).ItsOnlyAModel)
+                .Do("increment", ctx => { throw new Exception(); })
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.NotNull(report);
+        QAcidDebug.WriteLine(report.ToString());
+        Assert.DoesNotContain("Property", report.ToString());
     }
 }
