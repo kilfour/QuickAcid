@@ -243,7 +243,7 @@ public class QAcidState : QAcidContext
     {
         foreach (var actionNumber in ExcutionNumbers.ToList())
         {
-            Memory.AddActionToReport(actionNumber, report, Exception!);
+            Memory.AddExecutionToReport(actionNumber, report, Exception!);
         }
         if (!string.IsNullOrEmpty(FailingSpec))
             report.AddEntry(new ReportSpecEntry(FailingSpec));

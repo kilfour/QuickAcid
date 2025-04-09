@@ -10,51 +10,51 @@ public class Memory
 	private readonly Func<int> getCurrentActionId;
 
 	public Access AlwaysReportedInputsPerRun { get; set; }
-	private Dictionary<int, Dictionary<string, string>> AlwaysReportedInputValuePerAction { get; set; }
+	private Dictionary<int, Dictionary<string, string>> AlwaysReportedInputValuePerExecution { get; set; }
 
-	private Dictionary<int, Access> MemoryPerAction { get; set; }
+	private Dictionary<int, Access> MemoryPerExecution { get; set; }
 
 	public Memory(Func<int> getCurrentActionId)
 	{
 		this.getCurrentActionId = getCurrentActionId;
 		AlwaysReportedInputsPerRun = new Access() { ActionKey = "AlwaysReported Inputs" };
-		AlwaysReportedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
-		MemoryPerAction = [];
+		AlwaysReportedInputValuePerExecution = [];
+		MemoryPerExecution = [];
 	}
 
-	public void AddActionToReport(int actionNumber, QAcidReport report, Exception exception)
+	public void AddExecutionToReport(int executionNumber, QAcidReport report, Exception exception)
 	{
-		if (AlwaysReportedInputValuePerAction.TryGetValue(actionNumber, out Dictionary<string, string>? values))
+		if (AlwaysReportedInputValuePerExecution.TryGetValue(executionNumber, out Dictionary<string, string>? values))
 		{
 			values.ForEach(pair =>
 				report.AddEntry(new ReportAlwaysReportedInputEntry(pair.Key) { Value = pair.Value })
 			);
 		}
-		if (MemoryPerAction.ContainsKey(actionNumber))
-			MemoryPerAction[actionNumber].AddToReport(report, exception);
+		if (MemoryPerExecution.ContainsKey(executionNumber))
+			MemoryPerExecution[executionNumber].AddToReport(report, exception);
 	}
 
 	public bool Has(int actionId) // used by codegen, leaving a bit of a mess all over
 	{
-		return MemoryPerAction.ContainsKey(actionId);
+		return MemoryPerExecution.ContainsKey(actionId);
 	}
 
 	public Access For(int actionId) // used by codegen, assumes it exists, ... careful now
 	{
 		// might go ploef
-		return MemoryPerAction[actionId];
+		return MemoryPerExecution[actionId];
 	}
 
 	public Access ForLastAction() // used by codegen
 	{
-		return MemoryPerAction.Last().Value;
+		return MemoryPerExecution.Last().Value;
 	}
 
 	public Access ForThisAction()
 	{
-		if (!MemoryPerAction.ContainsKey(getCurrentActionId()))
-			MemoryPerAction[getCurrentActionId()] = new Access();
-		return MemoryPerAction[getCurrentActionId()];
+		if (!MemoryPerExecution.ContainsKey(getCurrentActionId()))
+			MemoryPerExecution[getCurrentActionId()] = new Access();
+		return MemoryPerExecution[getCurrentActionId()];
 	}
 
 	public void ResetAllRunInputs()
@@ -65,21 +65,21 @@ public class Memory
 		// You've tried it before, ... more than once, it never worked and broke stuff.
 		// Why do you think it will solve your problems now ?
 		// --
-		AlwaysReportedInputValuePerAction = new Dictionary<int, Dictionary<string, string>>();
+		AlwaysReportedInputValuePerExecution = new Dictionary<int, Dictionary<string, string>>();
 		// -------------------------------------------------------------------------------
 	}
 
 	public void AddAlwaysReportedInputValueForCurrentRun(string key, string value)
 	{
-		if (!AlwaysReportedInputValuePerAction.ContainsKey(getCurrentActionId()))
-			AlwaysReportedInputValuePerAction[getCurrentActionId()] = [];
+		if (!AlwaysReportedInputValuePerExecution.ContainsKey(getCurrentActionId()))
+			AlwaysReportedInputValuePerExecution[getCurrentActionId()] = [];
 		//if (!AlwaysReportedInputValuePerAction[getCurrentActionId()].ContainsKey(key))
-		AlwaysReportedInputValuePerAction[getCurrentActionId()][key] = value;
+		AlwaysReportedInputValuePerExecution[getCurrentActionId()][key] = value;
 	}
 
 	public void AddToReport(QAcidReport report, Exception exception) // only used in test, bweurk
 	{
-		MemoryPerAction.ForEach(a => a.Value.AddToReport(report, exception));
+		MemoryPerExecution.ForEach(a => a.Value.AddToReport(report, exception));
 	}
 
 	public string ToDiagnosticString()
@@ -94,7 +94,7 @@ public class Memory
 		}
 
 		sb.AppendLine("--- MemoryPerAction ---");
-		foreach (var action in MemoryPerAction)
+		foreach (var action in MemoryPerExecution)
 		{
 			sb.AppendLine($"Action {action.Key}:");
 			foreach (var kvp in action.Value.GetAll())
