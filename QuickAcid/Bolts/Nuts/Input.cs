@@ -22,7 +22,7 @@ namespace QuickAcid.Bolts.Nuts
 			return
 				s =>
 				{
-					if (s.Shrinking || s.Verifying)
+					if (s.Shrinking || s.Verifying) // PHASERS ON STUN
 					{
 						var value1 = s.Memory.ForThisAction().Get<T>(key);
 						return new QAcidResult<T>(s, value1) { Key = key };

@@ -10,12 +10,12 @@ namespace QuickAcid.Bolts.Nuts
 				state =>
 				{
 					state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.SpecRunner });
-					if (state.FailingSpec != null && state.FailingSpec != key)
+					if (state.FailingSpec != null && state.FailingSpec != key) // PHASERS ON STUN
 					{
 						return new QAcidResult<Acid>(state, Acid.Test);
 					}
 
-					if (state.Verifying && state.FailingSpec == null)
+					if (state.Verifying && state.FailingSpec == null) // PHASERS ON STUN
 					{
 						return new QAcidResult<Acid>(state, Acid.Test);
 					}

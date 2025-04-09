@@ -14,6 +14,7 @@ namespace QuickAcid.Bolts.Nuts
 		{
 			return state =>
 				{
+					// PHASERS ON STUN
 					if (state.Shrinking && !state.Shrunk.ForThisAction().ContainsKey(key))
 					{
 						var value = state.Memory.ForThisAction().Get<T>(key);
@@ -26,7 +27,7 @@ namespace QuickAcid.Bolts.Nuts
 						return new QAcidResult<T>(state, valueAfterShrinking) { Key = key };
 					}
 
-					if (state.Verifying)
+					if (state.Verifying) // PHASERS ON STUN
 					{
 						return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
 					}
