@@ -90,7 +90,7 @@ public class QAcidState : QAcidContext
 
     public void FailedWithException(Exception exception)
     {
-        if (Verifying)
+        if (ShrinkingExecutions)
         {
             if (Exception == null)
             {
@@ -180,7 +180,6 @@ public class QAcidState : QAcidContext
         FailingSpec = failingSpec;
         Exception = exception;
 
-        // Verifying = false;
         ShrinkingExecutions = false;
         // Shrinking = false;
         // BreakRun = false;
@@ -188,15 +187,10 @@ public class QAcidState : QAcidContext
 
     private void ShrinkInputs()
     {
-        Verifying = false;
         Shrinking = true;
-
         Failed = false;
-
-
         var failingSpec = FailingSpec;
         var exception = Exception;
-
         foreach (var run in ExcutionNumbers.ToList())
         {
             Memory.ResetAllRunInputs();
@@ -204,7 +198,6 @@ public class QAcidState : QAcidContext
             Runner(this);
             shrinkCount++;
         }
-
         Failed = true;
         FailingSpec = failingSpec;
         Exception = exception;

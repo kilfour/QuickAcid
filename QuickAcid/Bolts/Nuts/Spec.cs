@@ -10,12 +10,16 @@ namespace QuickAcid.Bolts.Nuts
 				state =>
 				{
 					state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.SpecRunner });
+
+					// PHASERS ON STUN
 					if (state.FailingSpec != null && state.FailingSpec != key) // PHASERS ON STUN
 					{
 						return new QAcidResult<Acid>(state, Acid.Test);
 					}
 
-					if (state.Verifying && state.FailingSpec == null) // PHASERS ON STUN
+					// .Exception used to be State.Verifying, can be .ShrinkingExecutions ...
+					// see if above, __Please_ put this thing out of it's misery
+					if (state.Exception != null && state.FailingSpec == null) // PHASERS ON STUN
 					{
 						return new QAcidResult<Acid>(state, Acid.Test);
 					}
