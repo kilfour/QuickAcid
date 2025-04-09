@@ -5,7 +5,7 @@ namespace QuickAcid.CodeGen
 {
     public static class CodeGenExtensions
     {
-        public static QAcidRunner<T> AddCode<T>(this QAcidRunner<T> runner, Func<string, Memory.Access, string> toCode)
+        public static QAcidRunner<T> AddCode<T>(this QAcidRunner<T> runner, Func<string, Access, string> toCode)
         {
             return
                 s =>

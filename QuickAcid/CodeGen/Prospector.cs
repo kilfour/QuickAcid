@@ -16,19 +16,19 @@ namespace QuickAcid.CodeGen
             return "public void Throws()";
         }
 
-        private static string FollowTheLead(Clue clue, Memory.Access access)
+        private static string FollowTheLead(Clue clue, Access access)
         {
             if (clue.SeeWhereItLeads == null)
                 return "DEFAULT";
             return clue.SeeWhereItLeads.Invoke(clue.Key, access);
         }
-        private static string GetAlwaysReportedInputCode(Clue clue, Memory.Access access)
+        private static string GetAlwaysReportedInputCode(Clue clue, Access access)
         {
             var trackedString = $"AlwaysReported: {clue.Key}: DEFAULT";
             return "    " + FollowTheLead(clue, access);
         }
 
-        private static string GetAlwaysReportedInputsCode(XMarksTheSpot xMarksTheSpot, Memory.Access access)
+        private static string GetAlwaysReportedInputsCode(XMarksTheSpot xMarksTheSpot, Access access)
         {
             var lines =
                 xMarksTheSpot.TheMap
@@ -37,7 +37,7 @@ namespace QuickAcid.CodeGen
             return string.Join(Environment.NewLine, lines);
         }
 
-        private static string GetActionCode(XMarksTheSpot xMarksTheSpot, Memory.Access access)
+        private static string GetActionCode(XMarksTheSpot xMarksTheSpot, Access access)
         {
             var clue = xMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == access.ActionKey);
             if (clue == null)
@@ -70,7 +70,7 @@ namespace QuickAcid.CodeGen
             return GetAssertThrowsCode();
         }
 
-        private static string GetAssertTrueCode(Clue clue, Memory.Access access)
+        private static string GetAssertTrueCode(Clue clue, Access access)
         {
             return "    Assert.True(" + FollowTheLead(clue, access) + ");";
         }

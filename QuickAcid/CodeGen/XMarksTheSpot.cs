@@ -8,7 +8,7 @@ namespace QuickAcid.CodeGen
     {
         public string Key { get; set; }
         public RunnerType RunnerType { get; set; }
-        public Func<string, Memory.Access, string> SeeWhereItLeads { get; set; }
+        public Func<string, Access, string> SeeWhereItLeads { get; set; }
     }
 
     public class XMarksTheSpot
