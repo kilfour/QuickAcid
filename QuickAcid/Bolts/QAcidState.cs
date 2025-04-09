@@ -30,8 +30,8 @@ public class QAcidState : QAcidContext
     public bool Verbose { get; set; }
 
 
+    // only used by codegen, also usefull for tracking runners with QAcidDebug 
     public XMarksTheSpot XMarksTheSpot { get; set; }
-
     public void MarkMyLocation(Tracker tracker)
     {
         XMarksTheSpot.TheTracker = tracker;

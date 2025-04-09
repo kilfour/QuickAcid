@@ -77,6 +77,6 @@ public class StackAcidSpec
             from popsInReverse in "PopsInReverse".Spec(
                 () => popped.SequenceEqual(expectedPops))
             select Acid.Test;
-        run.VerifyWith(10.Runs(), 20.ActionsPerRun());
+        run.Verify(10, 20);
     }
 }
