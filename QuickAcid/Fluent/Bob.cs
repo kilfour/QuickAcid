@@ -74,9 +74,9 @@ public class Bob
     // Capturing Stuff
     //
     public Bob Capture<TNew>(string label, Func<QAcidContext, TNew> generator)
-        => BindState(state => label.Input(() => generator(state)));
+        => BindState(state => label.Capture(() => generator(state)));
     public Bob Capture<TNew>(QKey<int> key, Func<QAcidContext, TNew> generator)
-        => BindState(state => key.Label.Input(() => generator(state)));
+        => BindState(state => key.Label.Capture(() => generator(state)));
 
 
     // -------------------------------------------------------------------------

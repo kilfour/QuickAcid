@@ -80,7 +80,7 @@ public class ElevatorQAcidTest : QAcidLoggingFixture
     private static QAcidRunner<Acid> CallFloor(Elevator elevator, Tracker tracker)
     {
         return
-            from floor in "callFloor".Input(MGen.Int(0, Elevator.MaxFloor))
+            from floor in "callFloor".ShrinkableInput(MGen.Int(0, Elevator.MaxFloor))
             from _a in "Call".Act(() =>
             {
                 elevator.Call(floor);

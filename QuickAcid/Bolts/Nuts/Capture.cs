@@ -5,20 +5,7 @@ namespace QuickAcid.Bolts.Nuts
 {
 	public static partial class QAcid
 	{
-		// USED TO CAPTURE INPUTS, MAINLY BY BOB
-		public static QAcidRunner<T> Input<T>(this string key, Generator<T> generator)
-		{
-			return Input(key, generator.Generate);
-		}
-
-		public static QAcidRunner<T> InputIf<T>(this string key, Func<bool> predicate, Generator<T> generator)
-		{
-			if (!predicate())
-				return s => new QAcidResult<T>(s, default!);
-			return Input(key, generator.Generate);
-		}
-
-		public static QAcidRunner<T> Input<T>(this string key, Func<T> func, Func<T, string> stringify = null)
+		public static QAcidRunner<T> Capture<T>(this string key, Func<T> func, Func<T, string> stringify = null)
 		{
 			return
 				s =>
