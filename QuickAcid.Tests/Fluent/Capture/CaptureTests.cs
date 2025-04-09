@@ -70,7 +70,7 @@ public class CaptureTests : QAcidLoggingFixture
         Assert.Equal(2, theCapturedPropertyAfter);
     }
 
-    [Fact(Skip = "not yet implemented")]
+    [Fact]
     public void Capture_never_shows_up_in_report()
     {
         var report =

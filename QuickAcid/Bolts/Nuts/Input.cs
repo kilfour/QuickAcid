@@ -30,6 +30,7 @@ namespace QuickAcid.Bolts.Nuts
 					}
 					var value2 = func();
 					s.Memory.ForThisAction().Set(key, value2);
+					s.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
 					return new QAcidResult<T>(s, value2) { Key = key };
 				};
 		}

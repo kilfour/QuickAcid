@@ -35,8 +35,6 @@ namespace QuickAcid.MonadiXEtAl
             return HasValue ? _value : defaultValue;
         }
 
-
-
         public void Do(Action<T> action)
         {
             if (HasValue) action(_value);
