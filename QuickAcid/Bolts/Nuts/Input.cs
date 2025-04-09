@@ -5,6 +5,7 @@ namespace QuickAcid.Bolts.Nuts
 {
 	public static partial class QAcid
 	{
+		// USED TO CAPTURE INPUTS, MAINLY BY BOB
 		public static QAcidRunner<T> Input<T>(this string key, Generator<T> generator)
 		{
 			return Input(key, generator.Generate);
@@ -22,7 +23,7 @@ namespace QuickAcid.Bolts.Nuts
 			return
 				s =>
 				{
-					if (s.Shrinking || s.Verifying) // PHASERS ON STUN
+					if (s.Shrinking || s.ShrinkingExecutions) // PHASERS ON STUN
 					{
 						var value1 = s.Memory.ForThisAction().Get<T>(key);
 						return new QAcidResult<T>(s, value1) { Key = key };

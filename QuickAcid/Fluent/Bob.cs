@@ -68,14 +68,20 @@ public class Bob
     public Bob Fuzzed<TNew>(QKey<TNew> key, Func<QAcidContext, Generator<TNew>> generator)
         => BindState(state => key.Label.ShrinkableInput(s => generator(state)(s)));
 
-    // // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
-
+    // -------------------------------------------------------------------------
+    // Capturing Stuff
+    //
+    public Bob Capture<TNew>(string label, Func<QAcidContext, TNew> generator)
+        => BindState(state => label.Input(() => generator(state)));
     public Bob Capture<TNew>(QKey<int> key, Func<QAcidContext, TNew> generator)
         => BindState(state => key.Label.Input(() => generator(state)));
-    // // -------------------------------------------------------------------------
-    // // Doing Stuff
-    // //
+
+
+    // -------------------------------------------------------------------------
+    // Doing Stuff
+    //
     public Bob Do(string label, Action action)
        => Bind(_ => label.Act(action));
 

@@ -45,4 +45,27 @@ public class CaptureTests
         Assert.Equal(2, theContainerProperty);
         Assert.Equal(1, theCapturedProperty);
     }
+
+    [Fact]
+    public void Capture_checking_before_and_after()
+    {
+        var theContainerProperty = 0;
+        var theCapturedProperty = 0;
+        var report =
+            SystemSpecs
+                .Define()
+                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Capture("before", ctx => ctx.Get(Keys.Container).ItsOnlyAModel)
+                .Do("increment", ctx => { ctx.Get(Keys.Container).ItsOnlyAModel++; })
+                .Do("report", ctx =>
+                {
+                    theContainerProperty = ctx.Get(Keys.Container).ItsOnlyAModel;
+                    theCapturedProperty = ctx.Get(Keys.Property);
+                })
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.Null(report);
+        Assert.Equal(2, theContainerProperty);
+        Assert.Equal(1, theCapturedProperty);
+    }
 }
