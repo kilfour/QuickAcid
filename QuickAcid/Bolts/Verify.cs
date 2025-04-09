@@ -5,12 +5,12 @@ namespace QuickAcid.Bolts;
 
 public static partial class QAcid
 {
-	public static void Verify(this QAcidRunner<Acid> runner, int loops, int actions)
+	public static void Verify(this QAcidRunner<Acid> runner, int scopes, int executionsPerScope)
 	{
-		for (int i = 0; i < loops; i++)
+		for (int i = 0; i < scopes; i++)
 		{
 			var state = new QAcidState(runner);
-			state.Run(actions);
+			state.Run(executionsPerScope);
 			state.ThrowFalsifiableExceptionIfFailed();
 		}
 	}
@@ -20,12 +20,12 @@ public static partial class QAcid
 		runner.Verify(1, 1);
 	}
 
-	public static QAcidReport ReportIfFailed(this QAcidRunner<Acid> runner, int runs, int actions)
+	public static QAcidReport ReportIfFailed(this QAcidRunner<Acid> runner, int scopes, int executionsPerScope)
 	{
-		for (int i = 0; i < runs; i++)
+		for (int i = 0; i < scopes; i++)
 		{
 			var state = new QAcidState(runner);
-			state.Run(actions);
+			state.Run(executionsPerScope);
 			if (state.Failed)
 				return state.GetReport();
 		}
@@ -37,12 +37,12 @@ public static partial class QAcid
 		return runner.ReportIfFailed(1, 1);
 	}
 
-	public static string ToCodeIfFailed(this QAcidRunner<Acid> runner, int runs, int actions)
+	public static string ToCodeIfFailed(this QAcidRunner<Acid> runner, int scopes, int executionsPerScope)
 	{
-		for (int i = 0; i < runs; i++)
+		for (int i = 0; i < scopes; i++)
 		{
 			var state = new QAcidState(runner);
-			state.Run(actions);
+			state.Run(executionsPerScope);
 			if (state.Failed)
 				return Prospector.Pan(state);
 		}

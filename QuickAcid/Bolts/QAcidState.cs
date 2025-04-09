@@ -7,15 +7,15 @@ public class QAcidState : QAcidContext
 {
     public QAcidRunner<Acid> Runner { get; private set; }
 
-    public int CurrentActionNumber { get; private set; }
+    public int CurrentExcutionNumber { get; private set; }
 
-    public List<int> ActionNumbers { get; private set; }
+    public List<int> ExcutionNumbers { get; private set; }
 
     public Memory Memory { get; private set; }
 
 
     public bool Shrinking { get; private set; }
-    public bool ShrinkingActions { get; private set; }
+    public bool ShrinkingExecutions { get; private set; }
     public Memory Shrunk { get; private set; }
     private int shrinkCount = 0;
 
@@ -40,9 +40,9 @@ public class QAcidState : QAcidContext
     public QAcidState(QAcidRunner<Acid> runner)
     {
         Runner = runner;
-        ActionNumbers = new List<int>();
-        Memory = new Memory(() => CurrentActionNumber);
-        Shrunk = new Memory(() => CurrentActionNumber);
+        ExcutionNumbers = new List<int>();
+        Memory = new Memory(() => CurrentExcutionNumber);
+        Shrunk = new Memory(() => CurrentExcutionNumber);
         XMarksTheSpot = new XMarksTheSpot();
         report = new QAcidReport();
     }
@@ -55,9 +55,9 @@ public class QAcidState : QAcidContext
     // -----------------------------------------------------------------
 
 
-    public void Run(int actionsPerRun)
+    public void Run(int executionsPerScope)
     {
-        for (int j = 0; j < actionsPerRun; j++)
+        for (int j = 0; j < executionsPerScope; j++)
         {
             StepAction();
             if (Failed)
@@ -67,7 +67,7 @@ public class QAcidState : QAcidContext
 
     private void StepAction()
     {
-        ActionNumbers.Add(CurrentActionNumber);
+        ExcutionNumbers.Add(CurrentExcutionNumber);
         Runner(this);
         if (Failed)
         {
@@ -80,12 +80,12 @@ public class QAcidState : QAcidContext
             HandleFailure();
             return;
         }
-        CurrentActionNumber++;
+        CurrentExcutionNumber++;
     }
 
     public bool IsNormalRun()
     {
-        return Verifying == false && Shrinking == false && ShrinkingActions == false;
+        return Verifying == false && Shrinking == false && ShrinkingExecutions == false;
     }
 
     public void FailedWithException(Exception exception)
@@ -121,17 +121,17 @@ public class QAcidState : QAcidContext
         ShrinkActions();
         if (Verbose)
         {
-            report.AddEntry(new ReportTitleSectionEntry("AFTER ACTION SHRINKING"));
+            report.AddEntry(new ReportTitleSectionEntry("AFTER EXECUTION SHRINKING"));
             AddMemoryToReport(report);
         }
         ShrinkInputs();
         if (Verbose)
         {
-            report.AddEntry(new ReportTitleSectionEntry($"AFTER INPUT SHRINKING : Falsified after {ActionNumbers.Count} actions, {shrinkCount} shrinks"));
+            report.AddEntry(new ReportTitleSectionEntry($"AFTER INPUT SHRINKING : Falsified after {ExcutionNumbers.Count} actions, {shrinkCount} shrinks"));
         }
         else
         {
-            report.AddEntry(new ReportTitleSectionEntry($"Falsified after {ActionNumbers.Count} actions, {shrinkCount} shrinks"));
+            report.AddEntry(new ReportTitleSectionEntry($"Falsified after {ExcutionNumbers.Count} actions, {shrinkCount} shrinks"));
         }
 
         AddMemoryToReport(report);
@@ -142,7 +142,7 @@ public class QAcidState : QAcidContext
     private void ShrinkActions()
     {
         Verifying = true;
-        ShrinkingActions = true;
+        ShrinkingExecutions = true;
         Shrinking = false;
         BreakRun = false;
 
@@ -150,7 +150,7 @@ public class QAcidState : QAcidContext
         var failingSpec = FailingSpec;
         var exception = Exception;
 
-        var max = ActionNumbers.Max();
+        var max = ExcutionNumbers.Max();
         var current = 0;
 
         while (current <= max)
@@ -160,9 +160,9 @@ public class QAcidState : QAcidContext
             FailingSpec = failingSpec;
             Exception = exception;
 
-            foreach (var run in ActionNumbers.ToList())
+            foreach (var run in ExcutionNumbers.ToList())
             {
-                CurrentActionNumber = run;
+                CurrentExcutionNumber = run;
                 if (run != current)
                     Runner(this);
                 if (BreakRun)
@@ -170,7 +170,7 @@ public class QAcidState : QAcidContext
             }
             if (Failed && !BreakRun)
             {
-                ActionNumbers.Remove(current);
+                ExcutionNumbers.Remove(current);
             }
             current++;
             shrinkCount++;
@@ -181,7 +181,7 @@ public class QAcidState : QAcidContext
         Exception = exception;
 
         // Verifying = false;
-        ShrinkingActions = false;
+        ShrinkingExecutions = false;
         // Shrinking = false;
         // BreakRun = false;
     }
@@ -197,10 +197,10 @@ public class QAcidState : QAcidContext
         var failingSpec = FailingSpec;
         var exception = Exception;
 
-        foreach (var run in ActionNumbers.ToList())
+        foreach (var run in ExcutionNumbers.ToList())
         {
             Memory.ResetAllRunInputs();
-            CurrentActionNumber = run;
+            CurrentExcutionNumber = run;
             Runner(this);
             shrinkCount++;
         }
@@ -218,17 +218,17 @@ public class QAcidState : QAcidContext
         Memory.ResetAllRunInputs();
         var failingSpec = FailingSpec;
         var exception = Exception;
-        var runNumber = CurrentActionNumber;
+        var runNumber = CurrentExcutionNumber;
         var oldVal = Memory.ForThisAction().Get<object>(key);
         Memory.ForThisAction().Set(key, value);
 
-        foreach (var actionNumber in ActionNumbers)
+        foreach (var actionNumber in ExcutionNumbers)
         {
-            CurrentActionNumber = actionNumber;
+            CurrentExcutionNumber = actionNumber;
             Runner(this);
         }
         var failed = Failed;
-        CurrentActionNumber = runNumber;
+        CurrentExcutionNumber = runNumber;
         Failed = false;
         FailingSpec = failingSpec;
         Exception = exception;
@@ -241,7 +241,7 @@ public class QAcidState : QAcidContext
 
     private QAcidReport AddMemoryToReport(QAcidReport report)
     {
-        foreach (var actionNumber in ActionNumbers.ToList())
+        foreach (var actionNumber in ExcutionNumbers.ToList())
         {
             Memory.AddActionToReport(actionNumber, report, Exception!);
         }
