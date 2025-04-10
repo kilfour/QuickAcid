@@ -1,5 +1,4 @@
 using QuickAcid.Bolts;
-using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 

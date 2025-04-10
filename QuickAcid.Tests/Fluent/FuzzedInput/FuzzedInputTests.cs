@@ -1,6 +1,3 @@
-using System.Globalization;
-using QuickAcid.Fluent;
-
 using QuickAcid.Reporting;
 using QuickMGenerate;
 

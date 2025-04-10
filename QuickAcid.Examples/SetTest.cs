@@ -1,5 +1,4 @@
 ﻿using QuickMGenerate;
-using QuickAcid.Fluent;
 
 namespace QuickAcid.Examples
 {

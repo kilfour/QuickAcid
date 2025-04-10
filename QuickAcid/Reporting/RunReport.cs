@@ -1,5 +1,3 @@
-using QuickAcid.Bolts;
-
 namespace QuickAcid.Reporting;
 
 public class RunReport(string title)

@@ -1,7 +1,6 @@
 using FsCheck;
 using FsCheck.Fluent;
 using FsCheck.Xunit;
-using QuickAcid;
 using QuickMGenerate;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;

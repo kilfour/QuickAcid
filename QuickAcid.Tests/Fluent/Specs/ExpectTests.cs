@@ -1,6 +1,3 @@
-using QuickAcid.Fluent;
-
-
 namespace QuickAcid.Tests.Fluent.Spec;
 
 public class ExpectTests

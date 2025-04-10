@@ -1,7 +1,4 @@
 ﻿using QuickMGenerate;
-using QuickAcid.Fluent;
-using QuickAcid;
-using QuickAcid.Reporting;
 
 
 namespace QuickAcid.Tests.Shrinking;

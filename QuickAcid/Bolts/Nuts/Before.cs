@@ -1,14 +1,13 @@
-﻿namespace QuickAcid.Bolts.Nuts
+﻿namespace QuickAcid.Bolts.Nuts;
+
+public static partial class QAcid
 {
-	public static partial class QAcid
+	public static QAcidRunner<TOutput> Before<TOutput>(this QAcidRunner<TOutput> runner, Action act)
 	{
-		public static QAcidRunner<TOutput> Before<TOutput>(this QAcidRunner<TOutput> runner, Action act)
+		return state =>
 		{
-			return state =>
-			{
-				act();
-				return runner(state);
-			};
-		}
+			act();
+			return runner(state);
+		};
 	}
 }

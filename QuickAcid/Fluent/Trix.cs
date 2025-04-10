@@ -1,4 +1,6 @@
 namespace QuickAcid.Fluent;
+
+using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 
 // Okey-dokey, J.J.!

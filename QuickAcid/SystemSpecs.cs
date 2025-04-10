@@ -1,5 +1,5 @@
 namespace QuickAcid;
-using QuickAcid.Bolts.Nuts;
+using QuickAcid.Bolts;
 
 public static class SystemSpecs
 {
