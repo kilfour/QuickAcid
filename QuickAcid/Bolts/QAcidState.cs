@@ -116,7 +116,7 @@ public class QAcidState : QAcidContext
 
     private void HandleFailure()
     {
-        ShrinkActions();
+        ShrinkExecutions();
         if (Verbose)
         {
             report.AddEntry(new ReportTitleSectionEntry("AFTER EXECUTION SHRINKING"));
@@ -135,7 +135,7 @@ public class QAcidState : QAcidContext
         AddMemoryToReport(report);
     }
 
-    private void ShrinkActions()
+    private void ShrinkExecutions()
     {
         Verifying = true;
         ShrinkingExecutions = true;
