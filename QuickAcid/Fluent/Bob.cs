@@ -30,7 +30,7 @@ public class Bob
             {
                 var result = runner(state);
                 if (result.State.Failed)
-                    return new QAcidResult<TNext>(state, default(TNext));
+                    return QAcidResult.None<TNext>(state);
 
                 return bind(result.State)(result.State);
             };

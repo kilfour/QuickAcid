@@ -18,7 +18,7 @@ public static partial class QAcid
 					var value = s.Memory.AlwaysReportedInputsPerRun.GetOrAdd(key, func, stringify);
 					//if (!s.Shrinking)
 					s.Memory.AddAlwaysReportedInputValueForCurrentRun(key, stringify(value));
-					return new QAcidResult<T>(s, value);
+					return QAcidResult.Some(s, value);
 				};
 	}
 }

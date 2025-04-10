@@ -1,16 +1,9 @@
-﻿using QuickMGenerate.UnderTheHood;
+﻿namespace QuickAcid.Bolts;
 
-namespace QuickAcid.Bolts;
-
-public class QAcidResult<TValue>
+public class QAcidResult<TValue>(QAcidState state, TValue value)
 {
-	public QAcidState State { get; set; }
-	public TValue Value { get; set; }
-	public QAcidResult(QAcidState state, TValue value)
-	{
-		State = state;
-		Value = value;
-	}
+	public QAcidState State { get; set; } = state;
+	public TValue Value { get; set; } = value;
 }
 
 public class QAcidResult

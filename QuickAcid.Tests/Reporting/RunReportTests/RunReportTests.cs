@@ -3,7 +3,7 @@ using QuickAcid.Bolts;
 
 namespace QuickAcid.Tests.Reporting.RunReportTests;
 
-public class RunReportTests : QAcidLoggingFixture
+public class RunReportTests // : QAcidLoggingFixture
 {
     private readonly int IrrelevantNumberForReporting = 666;
     private Memory EmptyMemory =>

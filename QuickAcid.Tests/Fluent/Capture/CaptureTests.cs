@@ -1,6 +1,6 @@
 namespace QuickAcid.Tests.Fluent.AlwaysReportedInput;
 
-public class CaptureTests : QAcidLoggingFixture
+public class CaptureTests
 {
     public static class Keys
     {

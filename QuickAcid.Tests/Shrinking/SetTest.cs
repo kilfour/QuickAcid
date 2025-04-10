@@ -17,7 +17,7 @@ public static class C
 	public static int IntToRemove(this QAcidContext ctx) => ctx.Get(K.IntToRemove);
 }
 
-public class SetTest : QAcidLoggingFixture
+public class SetTest
 {
 	[Fact]
 	public void ReportsError()
