@@ -18,7 +18,7 @@ namespace QuickAcid.Bolts.Nuts
 						var value = s.Memory.AlwaysReportedInputsPerRun.GetOrAdd(key, func, stringify);
 						//if (!s.Shrinking)
 						s.Memory.AddAlwaysReportedInputValueForCurrentRun(key, stringify(value));
-						return new QAcidResult<T>(s, value) { Key = key };
+						return new QAcidResult<T>(s, value);
 					};
 		}
 	}

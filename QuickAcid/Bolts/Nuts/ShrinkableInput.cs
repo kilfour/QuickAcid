@@ -24,12 +24,12 @@ namespace QuickAcid.Bolts.Nuts
 						else
 							state.Memory.ForThisAction().AddReportingMessage<T>(key, shrunk.ToString()!);
 						var valueAfterShrinking = state.Memory.ForThisAction().Get<T>(key);
-						return new QAcidResult<T>(state, valueAfterShrinking) { Key = key };
+						return new QAcidResult<T>(state, valueAfterShrinking);
 					}
 
 					if (state.Verifying) // PHASERS ON STUN
 					{
-						return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key)) { Key = key };
+						return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key));
 					}
 
 					var value2 = generator.Generate();

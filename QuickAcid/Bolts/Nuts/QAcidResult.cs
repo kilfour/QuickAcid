@@ -6,7 +6,6 @@ namespace QuickAcid.Bolts.Nuts
 	{
 		public QAcidState State { get; set; }
 		public TValue Value { get; set; }
-		public string Key { get; set; }
 		public QAcidResult(QAcidState state, TValue value)
 		{
 			State = state;

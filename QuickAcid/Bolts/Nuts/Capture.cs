@@ -13,12 +13,12 @@ namespace QuickAcid.Bolts.Nuts
 					if (s.Shrinking || s.ShrinkingExecutions) // PHASERS ON STUN
 					{
 						var value1 = s.Memory.ForThisAction().Get<T>(key);
-						return new QAcidResult<T>(s, value1) { Key = key };
+						return new QAcidResult<T>(s, value1);
 					}
 					var value2 = func();
 					s.Memory.ForThisAction().Set(key, value2);
 					s.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
-					return new QAcidResult<T>(s, value2) { Key = key };
+					return new QAcidResult<T>(s, value2);
 				};
 		}
 	}
