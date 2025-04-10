@@ -13,14 +13,14 @@ public static partial class QAcid
 					state.Memory.ForThisAction().ActionKey = key;
 					try
 					{
-						var result = new QAcidResult<TOutput>(state, func());
+						var result = QAcidResult.Some(state, func());
 						return result;
 					}
 					catch (Exception exception)
 					{
 						state.Memory.ForThisAction().LastException = exception;
 						state.FailedWithException(exception);
-						return new QAcidResult<TOutput>(state, default(TOutput));
+						return QAcidResult.None<TOutput>(state);
 					}
 				};
 	}
@@ -31,7 +31,7 @@ public static partial class QAcid
 			state =>
 			{
 				if (!predicate())
-					return new QAcidResult<TOutput>(state, default(TOutput));
+					return QAcidResult.None<TOutput>(state);
 				return key.Act(func)(state);
 			};
 	}
@@ -46,13 +46,13 @@ public static partial class QAcid
 				try
 				{
 					action();
-					return new QAcidResult<Acid>(state, Acid.Test);
+					return QAcidResult.None<Acid>(state);
 				}
 				catch (Exception exception)
 				{
 					state.Memory.ForThisAction().LastException = exception;
 					state.FailedWithException(exception);
-					return new QAcidResult<Acid>(state, Acid.Test);
+					return QAcidResult.AcidOnly(state);
 				}
 			};
 	}
@@ -63,7 +63,7 @@ public static partial class QAcid
 			state =>
 			{
 				if (!predicate())
-					return new QAcidResult<Acid>(state, Acid.Test);
+					return QAcidResult.AcidOnly(state);
 				return key.Act(func)(state);
 			};
 	}

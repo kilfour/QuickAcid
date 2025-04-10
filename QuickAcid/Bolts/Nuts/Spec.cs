@@ -14,14 +14,14 @@ public static partial class QAcid
 				// PHASERS ON STUN
 				if (state.FailingSpec != null && state.FailingSpec != key) // PHASERS ON STUN
 				{
-					return new QAcidResult<Acid>(state, Acid.Test);
+					return QAcidResult.AcidOnly(state);
 				}
 
 				// .Exception used to be State.Verifying, can be .ShrinkingExecutions ...
 				// see if above, __Please_ put this thing out of it's misery
 				if (state.Exception != null && state.FailingSpec == null) // PHASERS ON STUN
 				{
-					return new QAcidResult<Acid>(state, Acid.Test);
+					return QAcidResult.AcidOnly(state);
 				}
 
 				var result = func();
@@ -29,7 +29,7 @@ public static partial class QAcid
 				{
 					state.SpecFailed(key);
 				}
-				return new QAcidResult<Acid>(state, Acid.Test);
+				return QAcidResult.AcidOnly(state);
 			};
 	}
 
@@ -39,7 +39,7 @@ public static partial class QAcid
 			state =>
 			{
 				if (!predicate())
-					return new QAcidResult<Acid>(state, Acid.Test);
+					return QAcidResult.AcidOnly(state);
 				return key.Spec(func)(state);
 			};
 	}

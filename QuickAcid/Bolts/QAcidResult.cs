@@ -11,15 +11,22 @@ public class QAcidResult<TValue>
 		State = state;
 		Value = value;
 	}
+}
 
-	public static QAcidResult<TValue> Some(QAcidState state, TValue value)
+public class QAcidResult
+{
+	public static QAcidResult<TValue> Some<TValue>(QAcidState state, TValue value)
 	{
 		return new QAcidResult<TValue>(state, value);
 	}
 
-	public static QAcidResult<TValue> None(QAcidState state)
+	public static QAcidResult<TValue> None<TValue>(QAcidState state)
 	{
 		return new QAcidResult<TValue>(state, default);
 	}
 
+	public static QAcidResult<Acid> AcidOnly(QAcidState state)
+	{
+		return QAcidResult.Some<Acid>(state, Acid.Test);
+	}
 }

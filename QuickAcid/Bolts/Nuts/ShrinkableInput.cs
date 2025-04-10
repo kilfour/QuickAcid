@@ -24,18 +24,18 @@ public static partial class QAcid
 					else
 						state.Memory.ForThisAction().AddReportingMessage<T>(key, shrunk.ToString()!);
 					var valueAfterShrinking = state.Memory.ForThisAction().Get<T>(key);
-					return new QAcidResult<T>(state, valueAfterShrinking);
+					return QAcidResult.Some(state, valueAfterShrinking);
 				}
 
 				if (state.Verifying) // PHASERS ON STUN
 				{
-					return new QAcidResult<T>(state, state.Memory.ForThisAction().Get<T>(key));
+					return QAcidResult.Some(state, state.Memory.ForThisAction().Get<T>(key));
 				}
 
 				var value2 = generator.Generate();
 				state.Memory.ForThisAction().SetIfNotAllReadyThere(key, value2);
 				//state.Memory.ForThisAction().Set(key, value2);
-				return new QAcidResult<T>(state, value2);
+				return QAcidResult.Some(state, value2);
 			};
 	}
 }
