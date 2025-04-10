@@ -5,17 +5,17 @@ public static partial class QAcid
 	public static QAcidRunner<T> Capture<T>(this string key, Func<T> func, Func<T, string> stringify = null)
 	{
 		return
-			s =>
+			state =>
 			{
-				if (s.Shrinking || s.ShrinkingExecutions) // PHASERS ON STUN
+				if (state.Shrinking || state.ShrinkingExecutions) // PHASERS ON STUN
 				{
-					var value1 = s.Memory.ForThisAction().Get<T>(key);
-					return new QAcidResult<T>(s, value1);
+					var value1 = state.Memory.ForThisAction().Get<T>(key);
+					return QAcidResult<T>.Some(state, value1);
 				}
 				var value2 = func();
-				s.Memory.ForThisAction().Set(key, value2);
-				s.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
-				return new QAcidResult<T>(s, value2);
+				state.Memory.ForThisAction().Set(key, value2);
+				state.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
+				return QAcidResult<T>.Some(state, value2);
 			};
 	}
 }

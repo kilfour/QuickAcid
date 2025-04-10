@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Bolts;
+﻿using QuickMGenerate.UnderTheHood;
+
+namespace QuickAcid.Bolts;
 
 public class QAcidResult<TValue>
 {
@@ -9,4 +11,15 @@ public class QAcidResult<TValue>
 		State = state;
 		Value = value;
 	}
+
+	public static QAcidResult<TValue> Some(QAcidState state, TValue value)
+	{
+		return new QAcidResult<TValue>(state, value);
+	}
+
+	public static QAcidResult<TValue> None(QAcidState state)
+	{
+		return new QAcidResult<TValue>(state, default);
+	}
+
 }
