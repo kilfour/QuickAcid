@@ -38,9 +38,9 @@ public class Bob
     }
 
 
-    // // -------------------------------------------------------------------------
-    // // register AlwaysReported Input
-    // //
+    // -------------------------------------------------------------------------
+    // register AlwaysReported Input
+    //
     public Bob AlwaysReported<TNew>(string label, Func<TNew> func)
         => Bind(_ => label.AlwaysReported(func));
     public Bob AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func)
@@ -52,12 +52,12 @@ public class Bob
         => BindState(state => label.AlwaysReported(() => generator(state)));
     public Bob AlwaysReported<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
         => BindState(state => key.Label.AlwaysReported(() => generator(state)));
-    // // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
 
-    // // -------------------------------------------------------------------------
-    // // register Fuzzed Input
-    // //
+    // -------------------------------------------------------------------------
+    // register Fuzzed Input
+    //
     public Bob Fuzzed<TNew>(string label, Generator<TNew> func)
         => Bind(_ => label.ShrinkableInput(func));
     public Bob Fuzzed<TNew>(QKey<TNew> key, Generator<TNew> func)
@@ -97,9 +97,9 @@ public class Bob
         return new Trix(this, options);
     }
 
-    // // -------------------------------------------------------------------------
-    // // Verifying
-    // //
+    // -------------------------------------------------------------------------
+    // Verifying
+    //
     public Bristle Expect(string label)
         => new(this, label);
 
