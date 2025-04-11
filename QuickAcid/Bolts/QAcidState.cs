@@ -11,7 +11,7 @@ public class QAcidState : QAcidContext
 
     public Memory Memory { get; private set; }
     public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
-
+    public AlwaysReportedInputMemory AlwaysReportedInputsMemory { get; private set; }
     public bool Verifying { get; private set; } // NEEDS TO GO replace all flags with phase struct
     public bool ShrinkingInputs { get; private set; }
     public bool ShrinkingExecutions { get; private set; }
@@ -41,8 +41,8 @@ public class QAcidState : QAcidContext
         Runner = runner;
         ExecutionNumbers = [];
         Memory = new Memory(() => CurrentExecutionNumber);
-        // Shrunk = new Memory(() => CurrentExecutionNumber);
         ShrinkableInputsTracker = new ShrinkableInputsTracker(() => CurrentExecutionNumber);
+        AlwaysReportedInputsMemory = new AlwaysReportedInputMemory(() => CurrentExecutionNumber);
         XMarksTheSpot = new XMarksTheSpot();
         report = new QAcidReport();
     }

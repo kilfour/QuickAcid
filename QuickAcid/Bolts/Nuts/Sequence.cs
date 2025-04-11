@@ -6,7 +6,7 @@ public static partial class QAcid
     {
         var counter = 0;
         var max = runners.Count();
-        var memory = new Dictionary<string, int>();
+        var memory = new Dictionary<string, int>(); // should just be an int No ?
         return
             s =>
             {

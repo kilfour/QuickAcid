@@ -11,6 +11,7 @@ public class Access
     public bool IsIrrelevant { get; set; }
     private Dictionary<object, DecoratedValue> dictionary = [];
 
+    // only for alwaysReported
     public T GetOrAdd<T>(object key, Func<T> factory, Func<T, string> stringify)
     {
         if (!dictionary.ContainsKey(key))
