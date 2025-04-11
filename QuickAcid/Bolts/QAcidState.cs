@@ -3,6 +3,17 @@ using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
 
+// -----------------------------------------------------------------------------------------------
+// just thinking out silently
+// --
+public interface IRememberThingsAboutTheRun
+{
+    public Dictionary<int, IRememberThingsAboutAnExecution> ExecutionMemory { get; set; }
+}
+
+public interface IRememberThingsAboutAnExecution { }
+// -----------------------------------------------------------------------------------------------
+
 public class QAcidState : QAcidContext
 {
     public QAcidRunner<Acid> Runner { get; private set; }
@@ -10,10 +21,12 @@ public class QAcidState : QAcidContext
     public List<int> ExcutionNumbers { get; private set; }
 
     public Memory Memory { get; private set; }
-    public Memory Shrunk { get; private set; }
+    public Memory Shrunk { get; private set; } // NEEDS TO GO
+
+    //public List<string> ShrinkableInputsAllreadyTriedKeys = [];
 
     public bool Verifying { get; private set; } // NEEDS TO GO replace all flags with phase struct
-    public bool Shrinking { get; private set; }
+    public bool ShrinkingInputs { get; private set; }
     public bool ShrinkingExecutions { get; private set; }
     private int shrinkCount = 0;
 
@@ -83,7 +96,7 @@ public class QAcidState : QAcidContext
 
     public bool IsNormalRun()
     {
-        return Verifying == false && Shrinking == false && ShrinkingExecutions == false;
+        return Verifying == false && ShrinkingInputs == false && ShrinkingExecutions == false;
     }
 
     public void FailedWithException(Exception exception)
@@ -139,7 +152,7 @@ public class QAcidState : QAcidContext
     {
         Verifying = true;
         ShrinkingExecutions = true;
-        Shrinking = false;
+        ShrinkingInputs = false;
         BreakRun = false;
 
         Failed = false;
@@ -183,14 +196,14 @@ public class QAcidState : QAcidContext
 
     private void ShrinkInputs()
     {
-        Shrinking = true;
+        ShrinkingInputs = true;
         Failed = false;
         var failingSpec = FailingSpec;
         var exception = Exception;
-        foreach (var run in ExcutionNumbers.ToList())
+        foreach (var executionNumber in ExcutionNumbers.ToList())
         {
             Memory.ResetAllRunInputs();
-            CurrentExcutionNumber = run;
+            CurrentExcutionNumber = executionNumber;
             Runner(this);
             shrinkCount++;
         }
@@ -202,7 +215,7 @@ public class QAcidState : QAcidContext
     public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
     {
         Verifying = true;
-        Shrinking = false;
+        ShrinkingInputs = false;
         Failed = false;
         Memory.ResetAllRunInputs();
         var failingSpec = FailingSpec;
@@ -222,7 +235,7 @@ public class QAcidState : QAcidContext
         FailingSpec = failingSpec;
         Exception = exception;
         Verifying = false;
-        Shrinking = true;
+        ShrinkingInputs = true;
         Memory.ForThisAction().Set(key, oldVal);
         return failed;
     }

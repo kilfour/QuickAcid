@@ -15,7 +15,7 @@ public static partial class QAcid
 		return state =>
 			{
 				// PHASERS ON STUN
-				if (state.Shrinking && !state.Shrunk.ForThisAction().ContainsKey(key))
+				if (state.ShrinkingInputs && !state.Shrunk.ForThisAction().ContainsKey(key))
 				{
 					var value = state.Memory.ForThisAction().Get<T>(key);
 					var shrunk = Shrink.Input(state, key, value, obj => shrinkingGuard((T)obj));

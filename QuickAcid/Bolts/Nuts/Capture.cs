@@ -7,7 +7,7 @@ public static partial class QAcid
 		return
 			state =>
 			{
-				if (state.Shrinking || state.ShrinkingExecutions) // PHASERS ON STUN
+				if (state.ShrinkingInputs || state.ShrinkingExecutions) // PHASERS ON STUN
 				{
 					var value1 = state.Memory.ForThisAction().Get<T>(key);
 					return QAcidResult.Some(state, value1);
