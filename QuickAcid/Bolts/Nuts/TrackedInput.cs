@@ -12,12 +12,12 @@ public static partial class QAcid
 	public static QAcidRunner<T> AlwaysReported<T>(this string key, Func<T> func, Func<T, string> stringify)
 	{
 		return
-			s =>
+			state =>
 				{
-					s.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.AlwaysReportedInputRunner });
-					var value = s.Memory.AlwaysReportedInputsPerRun.GetOrAdd(key, func, stringify);
-					s.Memory.AddAlwaysReportedInputValueForCurrentRun(key, stringify(value));
-					return QAcidResult.Some(s, value);
+					state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.AlwaysReportedInputRunner });
+					var value = state.Memory.AlwaysReportedInputsPerRun.GetOrAdd(key, func, stringify);
+					state.Memory.AddAlwaysReportedInputValueForCurrentRun(key, stringify(value));
+					return QAcidResult.Some(state, value);
 				};
 	}
 }
