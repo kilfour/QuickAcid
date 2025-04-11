@@ -48,7 +48,7 @@ namespace QuickAcid.CodeGen
         private static string GetActionsCode(QAcidState state)
         {
             var sb = new StringBuilder();
-            foreach (int actionNumber in state.ExcutionNumbers)
+            foreach (int actionNumber in state.ExecutionNumbers)
             {
                 if (state.Memory.Has(actionNumber))
                     sb.AppendLine(GetActionCode(state.XMarksTheSpot, state.Memory.For(actionNumber)));

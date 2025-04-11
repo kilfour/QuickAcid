@@ -3,27 +3,14 @@ using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
 
-// -----------------------------------------------------------------------------------------------
-// just thinking out silently
-// --
-public interface IRememberThingsAboutTheRun
-{
-    public Dictionary<int, IRememberThingsAboutAnExecution> ExecutionMemory { get; set; }
-}
-
-public interface IRememberThingsAboutAnExecution { }
-// -----------------------------------------------------------------------------------------------
-
 public class QAcidState : QAcidContext
 {
     public QAcidRunner<Acid> Runner { get; private set; }
-    public int CurrentExcutionNumber { get; private set; }
-    public List<int> ExcutionNumbers { get; private set; }
+    public int CurrentExecutionNumber { get; private set; }
+    public List<int> ExecutionNumbers { get; private set; }
 
     public Memory Memory { get; private set; }
-    public Memory Shrunk { get; private set; } // NEEDS TO GO
-
-    //public List<string> ShrinkableInputsAllreadyTriedKeys = [];
+    public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
 
     public bool Verifying { get; private set; } // NEEDS TO GO replace all flags with phase struct
     public bool ShrinkingInputs { get; private set; }
@@ -52,9 +39,10 @@ public class QAcidState : QAcidContext
     public QAcidState(QAcidRunner<Acid> runner)
     {
         Runner = runner;
-        ExcutionNumbers = new List<int>();
-        Memory = new Memory(() => CurrentExcutionNumber);
-        Shrunk = new Memory(() => CurrentExcutionNumber);
+        ExecutionNumbers = [];
+        Memory = new Memory(() => CurrentExecutionNumber);
+        // Shrunk = new Memory(() => CurrentExecutionNumber);
+        ShrinkableInputsTracker = new ShrinkableInputsTracker(() => CurrentExecutionNumber);
         XMarksTheSpot = new XMarksTheSpot();
         report = new QAcidReport();
     }
@@ -79,7 +67,7 @@ public class QAcidState : QAcidContext
 
     private void ExecuteRun()
     {
-        ExcutionNumbers.Add(CurrentExcutionNumber);
+        ExecutionNumbers.Add(CurrentExecutionNumber);
         Runner(this);
         if (Failed)
         {
@@ -91,7 +79,7 @@ public class QAcidState : QAcidContext
             HandleFailure();
             return;
         }
-        CurrentExcutionNumber++;
+        CurrentExecutionNumber++;
     }
 
     public bool IsNormalRun()
@@ -138,11 +126,11 @@ public class QAcidState : QAcidContext
         ShrinkInputs();
         if (Verbose)
         {
-            report.AddEntry(new ReportTitleSectionEntry($"AFTER INPUT SHRINKING : Falsified after {ExcutionNumbers.Count} actions, {shrinkCount} shrinks"));
+            report.AddEntry(new ReportTitleSectionEntry($"AFTER INPUT SHRINKING : Falsified after {ExecutionNumbers.Count} actions, {shrinkCount} shrinks"));
         }
         else
         {
-            report.AddEntry(new ReportTitleSectionEntry($"Falsified after {ExcutionNumbers.Count} actions, {shrinkCount} shrinks"));
+            report.AddEntry(new ReportTitleSectionEntry($"Falsified after {ExecutionNumbers.Count} actions, {shrinkCount} shrinks"));
         }
 
         AddMemoryToReport(report);
@@ -159,7 +147,7 @@ public class QAcidState : QAcidContext
         var failingSpec = FailingSpec;
         var exception = Exception;
 
-        var max = ExcutionNumbers.Max();
+        var max = ExecutionNumbers.Max();
         var current = 0;
 
         while (current <= max)
@@ -169,9 +157,9 @@ public class QAcidState : QAcidContext
             FailingSpec = failingSpec;
             Exception = exception;
 
-            foreach (var run in ExcutionNumbers.ToList())
+            foreach (var run in ExecutionNumbers.ToList())
             {
-                CurrentExcutionNumber = run;
+                CurrentExecutionNumber = run;
                 if (run != current)
                     Runner(this);
                 if (BreakRun)
@@ -179,7 +167,7 @@ public class QAcidState : QAcidContext
             }
             if (Failed && !BreakRun)
             {
-                ExcutionNumbers.Remove(current);
+                ExecutionNumbers.Remove(current);
             }
             current++;
             shrinkCount++;
@@ -200,10 +188,10 @@ public class QAcidState : QAcidContext
         Failed = false;
         var failingSpec = FailingSpec;
         var exception = Exception;
-        foreach (var executionNumber in ExcutionNumbers.ToList())
+        foreach (var executionNumber in ExecutionNumbers.ToList())
         {
             Memory.ResetAllRunInputs();
-            CurrentExcutionNumber = executionNumber;
+            CurrentExecutionNumber = executionNumber;
             Runner(this);
             shrinkCount++;
         }
@@ -220,17 +208,17 @@ public class QAcidState : QAcidContext
         Memory.ResetAllRunInputs();
         var failingSpec = FailingSpec;
         var exception = Exception;
-        var runNumber = CurrentExcutionNumber;
+        var runNumber = CurrentExecutionNumber;
         var oldVal = Memory.ForThisAction().Get<object>(key);
         Memory.ForThisAction().Set(key, value);
 
-        foreach (var actionNumber in ExcutionNumbers)
+        foreach (var actionNumber in ExecutionNumbers)
         {
-            CurrentExcutionNumber = actionNumber;
+            CurrentExecutionNumber = actionNumber;
             Runner(this);
         }
         var failed = Failed;
-        CurrentExcutionNumber = runNumber;
+        CurrentExecutionNumber = runNumber;
         Failed = false;
         FailingSpec = failingSpec;
         Exception = exception;
@@ -242,7 +230,7 @@ public class QAcidState : QAcidContext
 
     private QAcidReport AddMemoryToReport(QAcidReport report)
     {
-        foreach (var actionNumber in ExcutionNumbers.ToList())
+        foreach (var actionNumber in ExecutionNumbers.ToList())
         {
             Memory.AddExecutionToReport(actionNumber, report, Exception!);
         }

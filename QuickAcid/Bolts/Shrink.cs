@@ -15,19 +15,14 @@ public class Shrink
     public static object Input<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var shrunk = "Busy";
-        state.Shrunk.ForThisAction().Set(key, shrunk);
         if (typeof(IEnumerable<int>).IsAssignableFrom(typeof(T)))
         {
-            shrunk = ShrinkIEnumerable(state, key, value);
-            state.Shrunk.ForThisAction().Set(key, shrunk);
-            return shrunk;
+            return ShrinkIEnumerable(state, key, value);
         }
         var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(typeof(T)));
         if (primitiveKey != null)
         {
-            shrunk = ShrinkPrimitive(state, key, value, PrimitiveValues[primitiveKey], shrinkingGuard);
-            state.Shrunk.ForThisAction().Set(key, shrunk);
-            return shrunk;
+            return ShrinkPrimitive(state, key, value, PrimitiveValues[primitiveKey], shrinkingGuard);
         }
 
         if (typeof(T).IsClass)
@@ -64,8 +59,6 @@ public class Shrink
                 }
             }
         }
-
-        state.Shrunk.ForThisAction().Set(key, shrunk);
         return shrunk;
     }
 

@@ -15,16 +15,18 @@ public static partial class QAcid
 		return state =>
 			{
 				// PHASERS ON STUN
-				if (state.ShrinkingInputs && !state.Shrunk.ForThisAction().ContainsKey(key))
+				if (state.ShrinkingInputs && !state.ShrinkableInputsTracker.ForThisExecution().AlreadyTried(key))
 				{
+
 					var value = state.Memory.ForThisAction().Get<T>(key);
 					var shrunk = Shrink.Input(state, key, value, obj => shrinkingGuard((T)obj));
 					if (shrunk as string == "Irrelevant")
 						state.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
 					else
 						state.Memory.ForThisAction().AddReportingMessage<T>(key, shrunk.ToString()!);
-					var valueAfterShrinking = state.Memory.ForThisAction().Get<T>(key);
-					return QAcidResult.Some(state, valueAfterShrinking);
+
+					state.ShrinkableInputsTracker.ForThisExecution().MarkAsTriedToShrink(key);
+					return QAcidResult.Some(state, value);
 				}
 
 				if (state.Verifying) // PHASERS ON STUN
@@ -34,7 +36,6 @@ public static partial class QAcid
 
 				var value2 = generator.Generate();
 				state.Memory.ForThisAction().SetIfNotAllReadyThere(key, value2);
-				//state.Memory.ForThisAction().Set(key, value2);
 				return QAcidResult.Some(state, value2);
 			};
 	}
