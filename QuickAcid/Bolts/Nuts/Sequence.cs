@@ -11,7 +11,7 @@ public static partial class QAcid
             s =>
             {
                 int value;
-                if (s.IsNormalRun()) // PHASERS ON STUN
+                if (s.IsNormalRun) // PHASERS ON STUN
                 {
                     value = counter;
                     memory[key] = counter;

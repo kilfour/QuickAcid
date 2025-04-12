@@ -10,7 +10,7 @@ public static partial class QAcid
 			s =>
 			{
 				int value;
-				if (s.IsNormalRun()) // PHASERS ON STUN
+				if (s.IsNormalRun) // PHASERS ON STUN
 				{
 					value = MGen.Int(0, runners.Length).Generate();
 					var thisActionsMemory = s.Memory.ForThisExecution();

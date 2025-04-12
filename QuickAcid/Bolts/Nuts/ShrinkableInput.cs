@@ -17,8 +17,17 @@ public static partial class QAcid
 			{
 				var executionContext = state.GetExecutionContext();
 
+				if (state.CurrentPhase == QAcidPhase.ShrinkInputEval)
+				{
+					return QAcidResult.Some(state, state.Memory.ForThisExecution().Get<T>(key));
+				}
 
-				if (state.ShrinkingInputs && !executionContext.AlreadyTried(key))
+				if (state.CurrentPhase == QAcidPhase.ShrinkingExecutions)
+				{
+					return QAcidResult.Some(state, state.Memory.ForThisExecution().Get<T>(key));
+				}
+
+				if (state.CurrentPhase == QAcidPhase.ShrinkingInputs && !executionContext.AlreadyTried(key))
 				{
 					var value = executionContext.Get<T>(key);
 					var shrunk = Shrink.Input(state, key, value, obj => shrinkingGuard((T)obj));
@@ -26,10 +35,7 @@ public static partial class QAcid
 					return QAcidResult.Some(state, value);
 				}
 
-				if (state.Verifying)
-				{
-					return QAcidResult.Some(state, state.Memory.ForThisExecution().Get<T>(key));
-				}
+
 
 				var value2 = generator.Generate();
 				state.Memory.ForThisExecution().SetIfNotAllReadyThere(key, value2);

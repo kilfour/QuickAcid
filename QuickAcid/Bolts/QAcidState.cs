@@ -13,9 +13,14 @@ public class QAcidState : QAcidContext
     public Memory Memory { get; private set; }
     public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
     public AlwaysReportedInputMemory AlwaysReportedInputsMemory { get; private set; }
-    public bool Verifying { get; private set; } // NEEDS TO GO replace all flags with phase struct
-    public bool ShrinkingInputs { get; private set; }
-    public bool ShrinkingExecutions { get; private set; }
+
+    public QAcidPhase CurrentPhase { get; set; } = QAcidPhase.NormalRun;
+
+    public bool IsNormalRun => CurrentPhase == QAcidPhase.NormalRun;
+    public bool IsShrinkingInputs => CurrentPhase == QAcidPhase.ShrinkingInputs;
+    public bool IsShrinkInputEval => CurrentPhase == QAcidPhase.ShrinkInputEval;
+    public bool IsShrinkingExecutions => CurrentPhase == QAcidPhase.ShrinkingExecutions;
+
     private int shrinkCount = 0;
 
     public bool Failed { get; private set; }
@@ -83,14 +88,9 @@ public class QAcidState : QAcidContext
         CurrentExecutionNumber++;
     }
 
-    public bool IsNormalRun()
-    {
-        return Verifying == false && ShrinkingInputs == false && ShrinkingExecutions == false;
-    }
-
     public void FailedWithException(Exception exception)
     {
-        if (ShrinkingExecutions)
+        if (CurrentPhase == QAcidPhase.ShrinkingExecutions)
         {
             if (Exception == null)
             {
@@ -139,9 +139,7 @@ public class QAcidState : QAcidContext
 
     private void ShrinkExecutions()
     {
-        Verifying = true;
-        ShrinkingExecutions = true;
-        ShrinkingInputs = false;
+        CurrentPhase = QAcidPhase.ShrinkingExecutions;
         BreakRun = false;
 
         Failed = false;
@@ -177,15 +175,11 @@ public class QAcidState : QAcidContext
         Failed = true;
         FailingSpec = failingSpec;
         Exception = exception;
-
-        ShrinkingExecutions = false;
-        // Shrinking = false;
-        // BreakRun = false;
     }
 
     private void ShrinkInputs()
     {
-        ShrinkingInputs = true;
+        CurrentPhase = QAcidPhase.ShrinkingInputs;
         Failed = false;
         var failingSpec = FailingSpec;
         var exception = Exception;
@@ -203,8 +197,8 @@ public class QAcidState : QAcidContext
 
     public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
     {
-        Verifying = true;
-        ShrinkingInputs = false;
+        var oldPhase = CurrentPhase;
+        CurrentPhase = QAcidPhase.ShrinkInputEval;
         Failed = false;
         Memory.ResetAllRunInputs();
         var failingSpec = FailingSpec;
@@ -223,9 +217,9 @@ public class QAcidState : QAcidContext
         Failed = false;
         FailingSpec = failingSpec;
         Exception = exception;
-        Verifying = false;
-        ShrinkingInputs = true;
+        // USES CURRENT EXECUTION NUMBER (see above)
         Memory.ForThisExecution().Set(key, oldVal);
+        CurrentPhase = oldPhase;
         return failed;
     }
 
