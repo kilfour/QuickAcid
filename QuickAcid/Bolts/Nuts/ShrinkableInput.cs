@@ -7,7 +7,7 @@ public static partial class QAcid
 {
 	public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator)
 	{
-		return ShrinkableInput<T>(key, generator, _ => true);
+		return ShrinkableInput(key, generator, _ => true);
 	}
 
 	public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator, Func<T, bool> shrinkingGuard)
@@ -18,17 +18,17 @@ public static partial class QAcid
 				if (state.ShrinkingInputs && !state.ShrinkableInputsTracker.ForThisExecution().AlreadyTried(key))
 				{
 
-					var value = state.Memory.ForThisAction().Get<T>(key);
+					var value = state.Memory.ForThisExecution().Get<T>(key);
 					var shrunk = Shrink.Input(state, key, value, obj => shrinkingGuard((T)obj));
 
 					switch (shrunk)
 					{
 						case ShrinkOutcome.IrrelevantOutcome:
-							state.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
+							state.Memory.ForThisExecution().MarkAsIrrelevant<T>(key);
 							break;
 
 						case ShrinkOutcome.ReportedOutcome(var msg):
-							state.Memory.ForThisAction().AddReportingMessage<T>(key, msg);
+							state.Memory.ForThisExecution().AddReportingMessage<T>(key, msg);
 							break;
 					}
 
@@ -38,11 +38,11 @@ public static partial class QAcid
 
 				if (state.Verifying) // PHASERS ON STUN
 				{
-					return QAcidResult.Some(state, state.Memory.ForThisAction().Get<T>(key));
+					return QAcidResult.Some(state, state.Memory.ForThisExecution().Get<T>(key));
 				}
 
 				var value2 = generator.Generate();
-				state.Memory.ForThisAction().SetIfNotAllReadyThere(key, value2);
+				state.Memory.ForThisExecution().SetIfNotAllReadyThere(key, value2);
 				return QAcidResult.Some(state, value2);
 			};
 	}

@@ -10,7 +10,7 @@ public static partial class QAcid
 			state =>
 				{
 					state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
-					state.Memory.ForThisAction().ActionKey = key;
+					state.Memory.ForThisExecution().ActionKey = key;
 					try
 					{
 						var result = QAcidResult.Some(state, func());
@@ -18,7 +18,7 @@ public static partial class QAcid
 					}
 					catch (Exception exception)
 					{
-						state.Memory.ForThisAction().LastException = exception;
+						state.Memory.ForThisExecution().LastException = exception;
 						state.FailedWithException(exception);
 						return QAcidResult.None<TOutput>(state);
 					}
@@ -42,7 +42,7 @@ public static partial class QAcid
 			state =>
 			{
 				state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
-				state.Memory.ForThisAction().ActionKey = key;
+				state.Memory.ForThisExecution().ActionKey = key;
 				try
 				{
 					action();
@@ -50,7 +50,7 @@ public static partial class QAcid
 				}
 				catch (Exception exception)
 				{
-					state.Memory.ForThisAction().LastException = exception;
+					state.Memory.ForThisExecution().LastException = exception;
 					state.FailedWithException(exception);
 					return QAcidResult.AcidOnly(state);
 				}

@@ -65,7 +65,7 @@ namespace QuickAcid.CodeGen
                     return $"Failing Spec: {state.FailingSpec} : DEFAULT";
                 return GetAssertTrueCode(
                     state.XMarksTheSpot.TheMap.Single(a => a.Key == state.FailingSpec),
-                    state.Memory.ForLastAction());
+                    state.Memory.ForLastExecution());
             }
             return GetAssertThrowsCode();
         }

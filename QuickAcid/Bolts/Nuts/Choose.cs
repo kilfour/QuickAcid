@@ -13,11 +13,11 @@ public static partial class QAcid
 				if (s.IsNormalRun()) // PHASERS ON STUN
 				{
 					value = MGen.Int(0, runners.Length).Generate();
-					var thisActionsMemory = s.Memory.ForThisAction();
+					var thisActionsMemory = s.Memory.ForThisExecution();
 					thisActionsMemory.Set(key, value);
 					thisActionsMemory.MarkAsIrrelevant<T>(key); // why ?
 				}
-				value = s.Memory.ForThisAction().Get<int>(key);
+				value = s.Memory.ForThisExecution().Get<int>(key);
 				return runners[value](s);
 			};
 	}

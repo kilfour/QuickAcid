@@ -9,12 +9,12 @@ public static partial class QAcid
 			{
 				if (state.ShrinkingInputs || state.ShrinkingExecutions) // PHASERS ON STUN
 				{
-					var value1 = state.Memory.ForThisAction().Get<T>(key);
+					var value1 = state.Memory.ForThisExecution().Get<T>(key);
 					return QAcidResult.Some(state, value1);
 				}
 				var value2 = func();
-				state.Memory.ForThisAction().Set(key, value2);
-				state.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
+				state.Memory.ForThisExecution().Set(key, value2);
+				state.Memory.ForThisExecution().MarkAsIrrelevant<T>(key);
 				return QAcidResult.Some(state, value2);
 			};
 	}

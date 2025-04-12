@@ -209,8 +209,8 @@ public class QAcidState : QAcidContext
         var failingSpec = FailingSpec;
         var exception = Exception;
         var runNumber = CurrentExecutionNumber;
-        var oldVal = Memory.ForThisAction().Get<object>(key);
-        Memory.ForThisAction().Set(key, value);
+        var oldVal = Memory.ForThisExecution().Get<object>(key);
+        Memory.ForThisExecution().Set(key, value);
 
         foreach (var actionNumber in ExecutionNumbers)
         {
@@ -224,7 +224,7 @@ public class QAcidState : QAcidContext
         Exception = exception;
         Verifying = false;
         ShrinkingInputs = true;
-        Memory.ForThisAction().Set(key, oldVal);
+        Memory.ForThisExecution().Set(key, oldVal);
         return failed;
     }
 

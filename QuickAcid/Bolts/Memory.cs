@@ -51,7 +51,7 @@ public class Memory
 					$"You're singing in the wrong key. '{key}' wasn't found in AlwaysReported(...) or Fuzzed(...).")
 			);
 
-	public Access ForThisAction()
+	public Access ForThisExecution()
 	{
 		var actionId = getCurrentActionId();
 		if (!memoryPerExecution.ContainsKey(actionId))
@@ -59,7 +59,7 @@ public class Memory
 		return memoryPerExecution[actionId];
 	}
 
-	public Access ForLastAction() // used by codegen
+	public Access ForLastExecution() // used by codegen
 	{
 		return memoryPerExecution.Last().Value;
 	}
