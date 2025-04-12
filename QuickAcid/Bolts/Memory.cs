@@ -66,4 +66,14 @@ public class Memory
 
 	public bool Has(int actionId) // used by codegen
 		=> memoryPerExecution.ContainsKey(actionId);
+
+	public IDisposable ScopedSwap(object key, object newValue)
+	{
+
+		var memory = ForThisExecution();
+		var oldValue = memory.Get<object>(key);
+		memory.Set(key, newValue);
+
+		return new DisposableAction(() => memory.Set(key, oldValue));
+	}
 }

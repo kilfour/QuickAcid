@@ -12,7 +12,6 @@ public class QAcidState : QAcidContext
 
     public Memory Memory { get; private set; }
     public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
-    public AlwaysReportedInputMemory AlwaysReportedInputsMemory { get; private set; }
 
     public ExecutionContext GetExecutionContext()
     {
@@ -34,20 +33,17 @@ public class QAcidState : QAcidContext
     public void RecordFailure(Exception ex)
     {
         GetExecutionContext().AddException(ex);
-        CurrentContext.FailedWithException(ex, IsShrinkingExecutions, OriginalRun);
+        CurrentContext.MarkFailure(ex, OriginalRun);
     }
 
     // ---------------------------------------------------------------------------------------
     // -- PHASERS
     private readonly Dictionary<QAcidPhase, PhaseContext> phaseContexts =
-        Enum.GetValues<QAcidPhase>().ToDictionary(phase => phase, _ => new PhaseContext());
+        Enum.GetValues<QAcidPhase>().ToDictionary(phase => phase, phase => new PhaseContext(phase));
     public QAcidPhase CurrentPhase { get; private set; } = QAcidPhase.NormalRun;
     public PhaseContext CurrentContext => phaseContexts[CurrentPhase];
     public PhaseContext Phase(QAcidPhase phase) => phaseContexts[phase];
 
-    public bool IsNormalRun => CurrentPhase == QAcidPhase.NormalRun;
-    public bool IsShrinkingInputs => CurrentPhase == QAcidPhase.ShrinkingInputs;
-    public bool IsShrinkInputEval => CurrentPhase == QAcidPhase.ShrinkInputEval;
     public bool IsShrinkingExecutions => CurrentPhase == QAcidPhase.ShrinkingExecutions;
 
     public IDisposable EnterPhase(QAcidPhase phase)
@@ -86,7 +82,6 @@ public class QAcidState : QAcidContext
         ExecutionNumbers = [];
         Memory = new Memory(() => CurrentExecutionNumber);
         ShrinkableInputsTracker = new ShrinkableInputsTracker(() => CurrentExecutionNumber);
-        AlwaysReportedInputsMemory = new AlwaysReportedInputMemory(() => CurrentExecutionNumber);
         XMarksTheSpot = new XMarksTheSpot();
         report = new QAcidReport();
     }
@@ -125,11 +120,6 @@ public class QAcidState : QAcidContext
         CurrentExecutionNumber++;
     }
 
-    public void FailedWithException(Exception exception)
-    {
-        CurrentContext.FailedWithException(exception, IsShrinkingExecutions, OriginalRun);
-    }
-
     private void HandleFailure()
     {
         ShrinkExecutions();
@@ -153,18 +143,13 @@ public class QAcidState : QAcidContext
 
     private void ShrinkExecutions()
     {
-        using (EnterPhase(QAcidPhase.ShrinkingExecutions))
+        var max = ExecutionNumbers.Max();
+        var current = 0;
+        while (current <= max)
         {
-            var failingSpec = FailingSpec;
-            var exception = Exception;
-            var max = ExecutionNumbers.Max();
-            var current = 0;
-            while (current <= max)
+            using (EnterPhase(QAcidPhase.ShrinkingExecutions))
             {
-                CurrentContext.Failed = false;
                 Memory.ResetAllRunInputs();
-                CurrentContext.FailingSpec = failingSpec;
-                CurrentContext.Exception = exception;
                 foreach (var run in ExecutionNumbers.ToList())
                 {
                     CurrentExecutionNumber = run;
@@ -180,9 +165,6 @@ public class QAcidState : QAcidContext
                 current++;
                 shrinkCount++;
             }
-            CurrentContext.Failed = true;
-            CurrentContext.FailingSpec = failingSpec;
-            CurrentContext.Exception = exception;
         }
     }
 
@@ -190,8 +172,6 @@ public class QAcidState : QAcidContext
     {
         using (EnterPhase(QAcidPhase.ShrinkingInputs))
         {
-            // var failingSpec = FailingSpec;
-            // var exception = Exception;
             Memory.ResetAllRunInputs();
             foreach (var executionNumber in ExecutionNumbers.ToList())
             {
@@ -199,9 +179,6 @@ public class QAcidState : QAcidContext
                 Runner(this);
                 shrinkCount++;
             }
-            // CurrentContext.Failed = true;
-            // CurrentContext.FailingSpec = failingSpec;
-            // Exception = exception;
         }
     }
 
@@ -210,25 +187,17 @@ public class QAcidState : QAcidContext
         using (EnterPhase(QAcidPhase.ShrinkInputEval))
         {
             Memory.ResetAllRunInputs();
-            var failingSpec = FailingSpec;
-            var exception = Exception;
             var runNumber = CurrentExecutionNumber;
-            var oldVal = Memory.ForThisExecution().Get<object>(key);
-            Memory.ForThisExecution().Set(key, value);
-
-            foreach (var actionNumber in ExecutionNumbers)
+            using (Memory.ScopedSwap(key, value))
             {
-                CurrentExecutionNumber = actionNumber;
-                Runner(this);
+                foreach (var actionNumber in ExecutionNumbers)
+                {
+                    CurrentExecutionNumber = actionNumber;
+                    Runner(this);
+                }
             }
-            var failed = CurrentContext.Failed;
             CurrentExecutionNumber = runNumber;
-            CurrentContext.Failed = false;
-            CurrentContext.FailingSpec = failingSpec;
-            CurrentContext.Exception = exception;
-            // USES CURRENT EXECUTION NUMBER (see above)
-            Memory.ForThisExecution().Set(key, oldVal);
-            return failed;
+            return CurrentContext.Failed;
         }
     }
 

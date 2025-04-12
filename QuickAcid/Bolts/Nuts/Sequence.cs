@@ -5,23 +5,17 @@ public static partial class QAcid
     public static QAcidRunner<T> Sequence<T>(this string key, params QAcidRunner<T>[] runners)
     {
         var counter = 0;
-        var max = runners.Length;
-        int memory = 0;
-        return
-            s =>
+        return state =>
             {
-                int value;
-                if (s.IsNormalRun) // PHASERS ON STUN
-                {
-                    value = counter;
-                    memory = counter;
-                    counter++;
-                    if (counter >= max)
-                        counter = 0;
-                }
-                else
-                    value = memory;
-                return runners[value](s);
+                var factory = () =>
+                    {
+                        var value = counter;
+                        counter = (counter + 1) % runners.Length;
+                        return value;
+                    };
+
+                var index = state.Remember(key, factory);
+                return runners[index](state);
             };
     }
 }

@@ -11,18 +11,5 @@ public static partial class QAcid
 				var index = state.Remember(key, () => MGen.Int(0, runners.Length).Generate());
 				return runners[index](state);
 			};
-		// return
-		// 	s =>
-		// 	{
-		// 		int value;
-		// 		if (s.IsNormalRun) // PHASERS ON STUN
-		// 		{
-		// 			value = MGen.Int(0, runners.Length).Generate();
-		// 			var thisActionsMemory = s.Memory.ForThisExecution();
-		// 			thisActionsMemory.Set(key, value);
-		// 		}
-		// 		value = s.Memory.ForThisExecution().Get<int>(key);
-		// 		return runners[value](s);
-		// 	};
 	}
 }

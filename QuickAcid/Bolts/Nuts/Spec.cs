@@ -14,7 +14,7 @@ public static partial class QAcid
 					return QAcidResult.AcidOnly(state);
 				bool passed = condition();
 				if (!passed)
-					state.CurrentContext.SpecFailed(key);
+					state.CurrentContext.MarkFailure(key);
 				return QAcidResult.AcidOnly(state);
 			};
 	}
