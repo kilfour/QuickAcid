@@ -1,4 +1,5 @@
-﻿using QuickMGenerate;
+﻿using QuickAcid.Reporting;
+using QuickMGenerate;
 
 
 namespace QuickAcid.Tests.Shrinking;
@@ -41,15 +42,14 @@ public class SetTest : QAcidLoggingFixture
 				])
 				.PickOne()
 				.DumpItInAcid()
-				//s.KeepOneEyeOnTheTouchStone()
 				.AndCheckForGold(30, 50);
 		Assert.NotNull(report);
 
 		QAcidDebug.Write(report.ToString());
 
-		// var actionEntries = report.Entries.OfType<ReportActEntry>();
-		// var inputEntries = report.Entries.OfType<ReportInputEntry>();
-		// Assert.Equal(3, actionEntries.Count());
-		// Assert.Equal(3, inputEntries.Count());
+		var actionEntries = report.Entries.OfType<ReportActEntry>();
+		var inputEntries = report.Entries.OfType<ReportInputEntry>();
+		Assert.Equal(3, actionEntries.Count());
+		Assert.Equal(3, inputEntries.Count());
 	}
 }

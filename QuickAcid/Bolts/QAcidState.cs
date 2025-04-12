@@ -230,9 +230,9 @@ public class QAcidState : QAcidContext
 
     private QAcidReport AddMemoryToReport(QAcidReport report)
     {
-        foreach (var actionNumber in ExecutionNumbers.ToList())
+        foreach (var executionNumber in ExecutionNumbers.ToList())
         {
-            Memory.AddExecutionToReport(actionNumber, report, Exception!);
+            MemoryReportAssembler.AddAllMemoryToReport(report, Memory, executionNumber, Exception!);
         }
         if (!string.IsNullOrEmpty(FailingSpec))
             report.AddEntry(new ReportSpecEntry(FailingSpec));

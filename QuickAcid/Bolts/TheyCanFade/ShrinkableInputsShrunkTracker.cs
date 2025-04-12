@@ -1,12 +1,6 @@
 namespace QuickAcid.Bolts;
 
-// -----------------------------------------------------------------------------------------------
-// just thinking out silently
-// --
-public interface IRememberThingsAboutAnExecution { }
-// -----------------------------------------------------------------------------------------------
-
-public class ShrinkableInputsTracker // is gonna be an abstract class with tea
+public class ShrinkableInputsTracker
 {
     private readonly Func<int> getCurrentActionId;
     public Dictionary<int, ShrinkableInputsTrackerPerExecution> MemoryPerExecution { get; set; }
@@ -25,7 +19,7 @@ public class ShrinkableInputsTracker // is gonna be an abstract class with tea
     }
 }
 
-public class ShrinkableInputsTrackerPerExecution : IRememberThingsAboutAnExecution
+public class ShrinkableInputsTrackerPerExecution
 {
     private List<string> ShrinkableInputKeysAlreadyTried { get; set; } = [];
 

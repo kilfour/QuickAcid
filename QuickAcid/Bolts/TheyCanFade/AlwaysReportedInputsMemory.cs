@@ -60,4 +60,15 @@ public class AlwaysReportedInputMemory
             reportPerExecution[id] = [];
         return reportPerExecution[id];
     }
+
+    public IReadOnlyDictionary<int, Dictionary<string, string>> ReportPerExecutionSnapshot()
+    {
+        // If you're okay exposing the actual dictionary (it's not modified externally):
+        return reportPerExecution;
+
+        // OR: if you'd rather clone it to avoid accidental mutation:
+        // return reportPerExecution.ToDictionary(
+        //     entry => entry.Key,
+        //     entry => new Dictionary<string, string>(entry.Value));
+    }
 }

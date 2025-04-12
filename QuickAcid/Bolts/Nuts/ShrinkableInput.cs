@@ -20,10 +20,17 @@ public static partial class QAcid
 
 					var value = state.Memory.ForThisAction().Get<T>(key);
 					var shrunk = Shrink.Input(state, key, value, obj => shrinkingGuard((T)obj));
-					if (shrunk as string == "Irrelevant")
-						state.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
-					else
-						state.Memory.ForThisAction().AddReportingMessage<T>(key, shrunk.ToString()!);
+
+					switch (shrunk)
+					{
+						case ShrinkOutcome.IrrelevantOutcome:
+							state.Memory.ForThisAction().MarkAsIrrelevant<T>(key);
+							break;
+
+						case ShrinkOutcome.ReportedOutcome(var msg):
+							state.Memory.ForThisAction().AddReportingMessage<T>(key, msg);
+							break;
+					}
 
 					state.ShrinkableInputsTracker.ForThisExecution().MarkAsTriedToShrink(key);
 					return QAcidResult.Some(state, value);

@@ -1,5 +1,6 @@
 using QuickAcid.Reporting;
 using QuickMGenerate;
+using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Tests.Fluent.FuzzedInput;
 
@@ -51,6 +52,12 @@ public class FuzzedInputTests
             QKey<int>.New("Capture2");
     }
 
+    public Generator<int> Counter()
+    {
+        var counter = 0;
+        return state => new Result<int>(counter++, state);
+    }
+
     [Fact]
     public void FuzzedInput_should_be_the_different_per_options_action()
     {
@@ -59,7 +66,7 @@ public class FuzzedInputTests
         var report =
             SystemSpecs
                 .Define()
-                .Fuzzed(FKDPA.TheAnswer, MGen.Int(1, 1000))
+                .Fuzzed(FKDPA.TheAnswer, Counter())
                 .Options(o => [
                     o.As("to local storage").UseThe(FKDPA.TheAnswer).Now(a => theAnswer1 = a)
                         .Expect("check local storage").UseThe(FKDPA.TheAnswer).Ensure(a => a == theAnswer1),

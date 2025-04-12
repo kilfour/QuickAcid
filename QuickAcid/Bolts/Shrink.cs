@@ -3,6 +3,22 @@ using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Bolts;
 
+public abstract record ShrinkOutcome
+{
+    public static readonly ShrinkOutcome Irrelevant = new IrrelevantOutcome();
+    public static ShrinkOutcome Report(string message) => new ReportedOutcome(message);
+
+    public sealed record IrrelevantOutcome : ShrinkOutcome;
+    public sealed record ReportedOutcome(string Message) : ShrinkOutcome;
+
+    public override string ToString() => this switch
+    {
+        ReportedOutcome r => r.Message,
+        IrrelevantOutcome => "Irrelevant",
+        _ => "Unknown"
+    };
+}
+
 public class Shrink
 {
     private static readonly Dictionary<Type, object[]> PrimitiveValues =
@@ -12,9 +28,9 @@ public class Shrink
             {typeof(string), new object[] { null, "", new string('-', 256), new string('-', 1024) }},
         };
 
-    public static object Input<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public static ShrinkOutcome Input<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
-        var shrunk = "Busy";
+        var shrunk = ShrinkOutcome.Irrelevant;
         if (typeof(IEnumerable<int>).IsAssignableFrom(typeof(T)))
         {
             return ShrinkIEnumerable(state, key, value);
@@ -29,7 +45,7 @@ public class Shrink
         {
             shrunk = HandleProperties(state, key, value);
 
-            if (shrunk == "Irrelevant")
+            if (shrunk == ShrinkOutcome.Irrelevant)
             {
                 var oldValues = new Dictionary<string, object>();
                 foreach (var propertyInfo in value.GetType().GetProperties(MyBinding.Flags))
@@ -39,7 +55,7 @@ public class Shrink
 
                 foreach (var set in GetPowerSet(value.GetType().GetProperties(MyBinding.Flags).ToList()))
                 {
-                    if (shrunk != "Irrelevant")
+                    if (shrunk != ShrinkOutcome.Irrelevant)
                         break;
 
                     foreach (var propertyInfo in set)
@@ -49,7 +65,7 @@ public class Shrink
 
                     if (!state.ShrinkRun(key, value))
                     {
-                        shrunk = string.Join(", ", set.Select(x => $"{x.Name} : {oldValues[x.Name]}"));
+                        shrunk = ShrinkOutcome.Report(string.Join(", ", set.Select(x => $"{x.Name} : {oldValues[x.Name]}")));
                     }
 
                     foreach (var propertyInfo in set)
@@ -71,23 +87,37 @@ public class Shrink
                    select list[i];
     }
 
-    private static string HandleProperties<T>(QAcidState state, object key, T value)
+    // private static ShrinkOutcome HandleProperties<T>(QAcidState state, object key, T value)
+    // {
+    //     var list = new List<string>();
+    //     foreach (var propertyInfo in value.GetType().GetProperties(MyBinding.Flags))
+    //     {
+    //         var prop = HandleProperty(state, key, value, propertyInfo);
+    //         if (prop != ShrinkOutcome.Irrelevant)
+    //         {
+    //             list.Add(prop);
+    //         }
+    //     }
+    //     if (list.Any())
+    //         return ShrinkOutcome.Report(string.Join(", ", list));
+    //     return ShrinkOutcome.Irrelevant;
+    // }
+
+    private static ShrinkOutcome HandleProperties<T>(QAcidState state, object key, T value)
     {
-        var list = new List<string>();
-        foreach (var propertyInfo in value.GetType().GetProperties(MyBinding.Flags))
-        {
-            var prop = HandleProperty(state, key, value, propertyInfo);
-            if (prop != "Irrelevant")
-            {
-                list.Add(prop);
-            }
-        }
-        if (list.Any())
-            return string.Join(", ", list);
-        return "Irrelevant";
+        var messages = value.GetType()
+            .GetProperties(MyBinding.Flags)
+            .Select(p => HandleProperty(state, key, value, p))
+            .OfType<ShrinkOutcome.ReportedOutcome>()
+            .Select(r => r.Message)
+            .ToList();
+
+        return messages.Any()
+            ? ShrinkOutcome.Report(string.Join(", ", messages))
+            : ShrinkOutcome.Irrelevant;
     }
 
-    private static string HandleProperty(QAcidState state, object key, object value, PropertyInfo propertyInfo)
+    private static ShrinkOutcome HandleProperty(QAcidState state, object key, object value, PropertyInfo propertyInfo)
     {
         var propertyValue = propertyInfo.GetValue(value);
         var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(propertyInfo.PropertyType));
@@ -99,12 +129,12 @@ public class Shrink
                 if (!state.ShrinkRun(key, value))
                 {
                     SetPropertyValue(propertyInfo, value, propertyValue);
-                    return $"{propertyInfo.Name} : {propertyValue}";
+                    return ShrinkOutcome.Report($"{propertyInfo.Name} : {propertyValue}");
                 }
             }
             SetPropertyValue(propertyInfo, value, propertyValue);
         }
-        return "Irrelevant";
+        return ShrinkOutcome.Irrelevant;
     }
 
     private static void SetPropertyValue(PropertyInfo propertyInfo, object target, object value)
@@ -117,7 +147,7 @@ public class Shrink
             prop.SetValue(target, value, null);
     }
 
-    private static string ShrinkIEnumerable<T>(QAcidState state, object key, T value)
+    private static ShrinkOutcome ShrinkIEnumerable<T>(QAcidState state, object key, T value)
     {
         var theList = ((IEnumerable<int>)value).ToList();
         int index = 0;
@@ -144,19 +174,19 @@ public class Shrink
                 index++;
             }
         }
-        return $"[ {string.Join(", ", theList.Select(v => v.ToString()))} ]";
+        return ShrinkOutcome.Report($"[ {string.Join(", ", theList.Select(v => v.ToString()))} ]");
     }
 
-    private static string? ShrinkPrimitive(QAcidState state, string key, object value, object[] primitiveVals, Func<object, bool> shrinkingGuard)
+    private static ShrinkOutcome ShrinkPrimitive(QAcidState state, string key, object value, object[] primitiveVals, Func<object, bool> shrinkingGuard)
     {
         var originalFails = state.ShrinkRun(key, value);
         if (!originalFails)
-            return "Irrelevant";
+            return ShrinkOutcome.Irrelevant;
         var filtered = primitiveVals.Where(val => shrinkingGuard(val)).ToArray();
         bool failureAlwaysOccurs =
             filtered
                 .Where(x => !Equals(x, value))
                 .All(x => state.ShrinkRun(key, x));
-        return failureAlwaysOccurs ? "Irrelevant" : value.ToString();
+        return failureAlwaysOccurs ? ShrinkOutcome.Irrelevant : ShrinkOutcome.Report(value.ToString());
     }
 }
