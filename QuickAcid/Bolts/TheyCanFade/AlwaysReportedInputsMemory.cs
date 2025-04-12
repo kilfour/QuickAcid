@@ -1,31 +1,63 @@
+using QuickAcid.MonadiXEtAl;
+using QuickAcid.Reporting;
+
 namespace QuickAcid.Bolts;
 
 public class AlwaysReportedInputMemory
 {
-    private Dictionary<string, object> AlwaysReportedInputValues = [];
-
-    private Dictionary<int, Dictionary<string, string>> AlwaysReportedInputReportsPerExecution = [];
-
     private readonly Func<int> getCurrentActionId;
+
+    private readonly Dictionary<string, object> values = [];
+    private readonly Dictionary<int, Dictionary<string, string>> reportPerExecution = [];
 
     public AlwaysReportedInputMemory(Func<int> getCurrentActionId)
     {
         this.getCurrentActionId = getCurrentActionId;
     }
 
-    public T GetOrAdd<T>(string key, Func<T> factory, Func<T, string> stringify)
+    public T Store<T>(string key, Func<T> factory, Func<T, string> stringify)
     {
-        if (!AlwaysReportedInputValues.ContainsKey(key))
-            AlwaysReportedInputValues[key] = factory()!;
-        var value = (T)AlwaysReportedInputValues[key]!;
-        ForThisExecution().Add(key, stringify(value));
-        return factory();
+        if (!values.ContainsKey(key))
+        {
+            var value = factory();
+            values[key] = value!;
+        }
+
+        var val = (T)values[key]!;
+        ReportForCurrent()[key] = stringify(val);
+        return val;
     }
 
-    public Dictionary<string, string> ForThisExecution()
+    public Maybe<T> Retrieve<T>(string key)
     {
-        if (!AlwaysReportedInputReportsPerExecution.ContainsKey(getCurrentActionId()))
-            AlwaysReportedInputReportsPerExecution[getCurrentActionId()] = [];
-        return AlwaysReportedInputReportsPerExecution[getCurrentActionId()];
+        return values.TryGetValue(key, out var value) ? Maybe<T>.Some((T)value!) : Maybe<T>.None;
+    }
+
+    public void Reset()
+    {
+        values.Clear();
+        reportPerExecution.Clear();
+    }
+
+    public void AddToReport(QAcidReport report, int executionId)
+    {
+        if (reportPerExecution.TryGetValue(executionId, out var dict))
+        {
+            foreach (var kv in dict)
+            {
+                report.AddEntry(new ReportAlwaysReportedInputEntry(kv.Key)
+                {
+                    Value = kv.Value
+                });
+            }
+        }
+    }
+
+    private Dictionary<string, string> ReportForCurrent()
+    {
+        var id = getCurrentActionId();
+        if (!reportPerExecution.ContainsKey(id))
+            reportPerExecution[id] = [];
+        return reportPerExecution[id];
     }
 }

@@ -9,27 +9,34 @@ public class Memory
 {
 	private readonly Func<int> getCurrentActionId;
 
-	public Access AlwaysReportedInputsPerRun { get; set; }
-	private Dictionary<int, Dictionary<string, string>> AlwaysReportedInputValuePerExecution { get; set; }
+	private AlwaysReportedInputMemory alwaysReportedInputMemory;
 
 	private Dictionary<int, Access> MemoryPerExecution { get; set; }
 
 	public Memory(Func<int> getCurrentActionId)
 	{
 		this.getCurrentActionId = getCurrentActionId;
-		AlwaysReportedInputsPerRun = new Access() { ActionKey = "AlwaysReported Inputs" };
-		AlwaysReportedInputValuePerExecution = [];
+		alwaysReportedInputMemory = new AlwaysReportedInputMemory(getCurrentActionId);
 		MemoryPerExecution = [];
 	}
+	public T StoreAlwaysReported<T>(string key, Func<T> factory, Func<T, string> stringify)
+	{
+		return alwaysReportedInputMemory.Store(key, factory, stringify);
+	}
 
+	public Maybe<T> RetrieveAlwaysReported<T>(string key)
+	{
+		return alwaysReportedInputMemory.Retrieve<T>(key);
+	}
 	public void AddExecutionToReport(int executionNumber, QAcidReport report, Exception exception)
 	{
-		if (AlwaysReportedInputValuePerExecution.TryGetValue(executionNumber, out Dictionary<string, string>? values))
-		{
-			values.ForEach(pair =>
-				report.AddEntry(new ReportAlwaysReportedInputEntry(pair.Key) { Value = pair.Value })
-			);
-		}
+		alwaysReportedInputMemory.AddToReport(report, executionNumber);
+		// if (alwaysReportedInputMemory.AddToReport(executionNumber, out Dictionary<string, string>? values))
+		// {
+		// 	values.ForEach(pair =>
+		// 		report.AddEntry(new ReportAlwaysReportedInputEntry(pair.Key) { Value = pair.Value })
+		// 	);
+		// }
 		if (MemoryPerExecution.ContainsKey(executionNumber))
 			MemoryPerExecution[executionNumber].AddToReport(report, exception);
 	}
@@ -57,46 +64,22 @@ public class Memory
 		return MemoryPerExecution[getCurrentActionId()];
 	}
 
-	public void ResetAllRunInputs() // Why: just explain we know it's needed 
+	public void ResetAllRunInputs()
 	{
-		AlwaysReportedInputsPerRun = new Access() { ActionKey = "Once Only Inputs" };
-		AlwaysReportedInputValuePerExecution = new Dictionary<int, Dictionary<string, string>>();
+		alwaysReportedInputMemory.Reset();
 	}
 
-	public void AddAlwaysReportedInputValueForCurrentRun(string key, string value)
-	{
-		if (!AlwaysReportedInputValuePerExecution.ContainsKey(getCurrentActionId()))
-			AlwaysReportedInputValuePerExecution[getCurrentActionId()] = [];
-		AlwaysReportedInputValuePerExecution[getCurrentActionId()][key] = value;
-	}
+	// public void AddAlwaysReportedInputValueForCurrentRun(string key, string value)
+	// {
+	// 	if (!AlwaysReportedInputValuePerExecution.ContainsKey(getCurrentActionId()))
+	// 		AlwaysReportedInputValuePerExecution[getCurrentActionId()] = [];
+	// 	AlwaysReportedInputValuePerExecution[getCurrentActionId()][key] = value;
+	// }
 
-	public string ToDiagnosticString()
-	{
-		var sb = new StringBuilder();
-		sb.AppendLine("=== Memory Dump ===");
-
-		sb.AppendLine("--- OnceOnlyInputsPerRun ---");
-		foreach (var kvp in AlwaysReportedInputsPerRun.GetAll())
-		{
-			sb.AppendLine($"{kvp.Key} = {kvp.Value.ToDiagnosticString()}");
-		}
-
-		sb.AppendLine("--- MemoryPerAction ---");
-		foreach (var action in MemoryPerExecution)
-		{
-			sb.AppendLine($"Action {action.Key}:");
-			foreach (var kvp in action.Value.GetAll())
-			{
-				sb.AppendLine($"  {kvp.Key} = {kvp.Value.ToDiagnosticString()}");
-			}
-		}
-
-		return sb.ToString();
-	}
 
 	public T GetForFluentInterface<T>(string key)
 	{
-		return AlwaysReportedInputsPerRun.GetMaybe<T>(key)
+		return alwaysReportedInputMemory.Retrieve<T>(key)
 			.OrElse(ForThisAction().GetMaybe<T>(key))
 			.Match(
 				some: x => x,

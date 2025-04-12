@@ -17,14 +17,14 @@ public static class C
 	public static int IntToRemove(this QAcidContext ctx) => ctx.Get(K.IntToRemove);
 }
 
-public class SetTest
+public class SetTest : QAcidLoggingFixture
 {
 	[Fact]
 	public void ReportsError()
 	{
 		var report =
 			SystemSpecs.Define()
-				.AlwaysReported(K.Set, () => new List<int>(), l => "[ " + string.Join(", ", l.Select(item => item.ToString()).ToArray()) + " ]")
+				.AlwaysReported(K.Set, () => new List<int>())
 				.Fuzzed(K.IntToAdd, MGen.Int(0, 10))
 				.Fuzzed(K.IntToRemove, MGen.Int(0, 10))
 				.Options(opt => [
@@ -41,7 +41,7 @@ public class SetTest
 				])
 				.PickOne()
 				.DumpItInAcid()
-				.KeepOneEyeOnTheTouchStone()
+				//s.KeepOneEyeOnTheTouchStone()
 				.AndCheckForGold(30, 50);
 		Assert.NotNull(report);
 

@@ -251,7 +251,6 @@ public class QAcidState : QAcidContext
             throw new FalsifiableException(report.ToString(), Exception!)
             {
                 QAcidReport = report,
-                MemoryDump = Memory.ToDiagnosticString()
             };
         }
     }
