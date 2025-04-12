@@ -1,9 +1,8 @@
-
-using QuickAcid;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickMGenerate.UnderTheHood;
 
+namespace QuickAcid.Tests;
 public class DocumentingBehavior
 {
     public Generator<int> Counter()
