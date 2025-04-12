@@ -114,8 +114,3 @@ public class Bob
         return new Wendy(runner);
     }
 }
-
-// Character	Role in the show	Role in QuickAcid
-// Lofty	 cautious	Conditionally performs actions (OnlyPerform(...).If(...))
-// Scoop / Muck	
-// Digger / Muck truck	Potential future: mutation, shrinking inspection, failure replay
