@@ -87,22 +87,6 @@ public class Shrink
                    select list[i];
     }
 
-    // private static ShrinkOutcome HandleProperties<T>(QAcidState state, object key, T value)
-    // {
-    //     var list = new List<string>();
-    //     foreach (var propertyInfo in value.GetType().GetProperties(MyBinding.Flags))
-    //     {
-    //         var prop = HandleProperty(state, key, value, propertyInfo);
-    //         if (prop != ShrinkOutcome.Irrelevant)
-    //         {
-    //             list.Add(prop);
-    //         }
-    //     }
-    //     if (list.Any())
-    //         return ShrinkOutcome.Report(string.Join(", ", list));
-    //     return ShrinkOutcome.Irrelevant;
-    // }
-
     private static ShrinkOutcome HandleProperties<T>(QAcidState state, object key, T value)
     {
         var messages = value.GetType()
