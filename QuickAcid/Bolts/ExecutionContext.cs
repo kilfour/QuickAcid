@@ -29,4 +29,9 @@ public class ExecutionContext
     public Maybe<T> GetMaybe<T>(string key) => memory.GetMaybe<T>(key);
 
     public void SetIfAbsent<T>(string key, T value) => memory.SetIfNotAllReadyThere(key, value);
+
+    public void AddException(Exception ex)
+    {
+        memory.LastException = ex;
+    }
 }

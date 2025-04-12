@@ -31,6 +31,12 @@ public class QAcidState : QAcidContext
         return execution.Get<T>(key);
     }
 
+    public void RecordFailure(Exception ex)
+    {
+        GetExecutionContext().AddException(ex);
+        CurrentContext.FailedWithException(ex, IsShrinkingExecutions, OriginalRun);
+    }
+
     // ---------------------------------------------------------------------------------------
     // -- PHASERS
     private readonly Dictionary<QAcidPhase, PhaseContext> phaseContexts =

@@ -35,8 +35,6 @@ public static partial class QAcid
 					return QAcidResult.Some(state, value);
 				}
 
-
-
 				var value2 = generator.Generate();
 				state.Memory.ForThisExecution().SetIfNotAllReadyThere(key, value2);
 				return QAcidResult.Some(state, value2);

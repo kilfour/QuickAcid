@@ -5,66 +5,32 @@ namespace QuickAcid.Bolts.Nuts;
 public static partial class QAcid
 {
 	public static QAcidRunner<TOutput> Act<TOutput>(this string key, Func<TOutput> func)
-	{
-		return
-			state =>
-				{
-					state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
-					state.Memory.ForThisExecution().ActionKey = key;
-					try
-					{
-						var result = QAcidResult.Some(state, func());
-						return result;
-					}
-					catch (Exception exception)
-					{
-						state.Memory.ForThisExecution().LastException = exception;
-						state.FailedWithException(exception);
-						return QAcidResult.None<TOutput>(state);
-					}
-				};
-	}
+		=> TryCatch(key, func);
 
 	public static QAcidRunner<TOutput> ActIf<TOutput>(this string key, Func<bool> predicate, Func<TOutput> func)
-	{
-		return
-			state =>
-			{
-				if (!predicate())
-					return QAcidResult.None<TOutput>(state);
-				return key.Act(func)(state);
-			};
-	}
+		=> state => predicate() ? key.Act(func)(state) : QAcidResult.None<TOutput>(state);
 
 	public static QAcidRunner<Acid> Act(this string key, Action action)
-	{
-		return
-			state =>
-			{
-				state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
-				state.Memory.ForThisExecution().ActionKey = key;
-				try
-				{
-					action();
-					return QAcidResult.None<Acid>(state);
-				}
-				catch (Exception exception)
-				{
-					state.Memory.ForThisExecution().LastException = exception;
-					state.FailedWithException(exception);
-					return QAcidResult.AcidOnly(state);
-				}
-			};
-	}
+		=> TryCatch(key, () => { action(); return Acid.Test; });
 
 	public static QAcidRunner<Acid> ActIf(this string key, Func<bool> predicate, Action func)
+		=> state => predicate() ? key.Act(func)(state) : QAcidResult.AcidOnly(state);
+
+	private static QAcidRunner<T> TryCatch<T>(string key, Func<T> func)
 	{
-		return
-			state =>
+		return state =>
+		{
+			state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
+			state.GetExecutionContext().memory.ActionKey = key;
+			try
 			{
-				if (!predicate())
-					return QAcidResult.AcidOnly(state);
-				return key.Act(func)(state);
-			};
+				return QAcidResult.Some(state, func());
+			}
+			catch (Exception ex)
+			{
+				state.RecordFailure(ex);
+				return QAcidResult.None<T>(state);
+			}
+		};
 	}
 }

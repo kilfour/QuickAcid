@@ -20,6 +20,6 @@ public class QAcidResult
 
 	public static QAcidResult<Acid> AcidOnly(QAcidState state)
 	{
-		return QAcidResult.Some<Acid>(state, Acid.Test);
+		return Some(state, Acid.Test);
 	}
 }
