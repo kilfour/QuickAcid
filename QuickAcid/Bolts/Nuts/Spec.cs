@@ -11,23 +11,30 @@ public static partial class QAcid
 			{
 				state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.SpecRunner });
 
-				// PHASERS ON STUN
-				if (state.FailingSpec != null && state.FailingSpec != key) // PHASERS ON STUN
-				{
-					return QAcidResult.AcidOnly(state);
-				}
 
-				// .Exception used to be State.Verifying, can be .ShrinkingExecutions ...
-				// see if above, __Please_ put this thing out of it's misery
-				if (state.Exception != null && state.FailingSpec == null) // PHASERS ON STUN
-				{
+				if (state.OriginalRun.FailingSpec != null && state.OriginalRun.FailingSpec != key)
 					return QAcidResult.AcidOnly(state);
-				}
+
+				if (state.OriginalRun.Exception != null && state.OriginalRun.FailingSpec == null)
+					return QAcidResult.AcidOnly(state);
+
+				// // PHASERS ON STUN
+				// if (state.FailingSpec != null && state.FailingSpec != key) // PHASERS ON STUN
+				// {
+				// 	return QAcidResult.AcidOnly(state);
+				// }
+
+				// // .Exception used to be State.Verifying, can be .ShrinkingExecutions ...
+				// // see if above, __Please_ put this thing out of it's misery
+				// if (state.Exception != null && state.FailingSpec == null) // PHASERS ON STUN
+				// {
+				// 	return QAcidResult.AcidOnly(state);
+				// }
 
 				var result = func();
 				if (!result)
 				{
-					state.SpecFailed(key);
+					state.CurrentContext.SpecFailed(key);
 				}
 				return QAcidResult.AcidOnly(state);
 			};

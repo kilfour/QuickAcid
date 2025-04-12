@@ -4,7 +4,7 @@ namespace QuickAcid.Bolts;
 
 public class ExecutionContext
 {
-    private readonly Access memory;
+    public Access memory;
     private readonly ShrinkableInputsTrackerPerExecution shrinkTracker;
 
     public ExecutionContext(Access memory, ShrinkableInputsTrackerPerExecution shrinkTracker)

@@ -43,4 +43,33 @@ public class DocumentingBehavior
         run.ReportIfFailed(1, 3);
         Assert.False(alwaysReportedChanged);
     }
+
+    [Fact]
+    public void ShrinkingInputs_phase_should_not_clear_failure()
+    {
+        var report =
+            SystemSpecs
+                .Define()
+                .Do("fail", () => throw new Exception("boom"))
+                .DumpItInAcid()
+                .AndCheckForGold(1, 3);
+
+        Assert.NotNull(report);
+        Assert.Contains("boom", report.ToString());
+    }
+
+    [Fact]
+    public void Only_failing_spec_should_be_retried_on_consecutive_runs()
+    {
+        var secondSpecFailed = false;
+
+        var run =
+            from _ in "first".Spec(() => { if (secondSpecFailed) throw new Exception("BOOM"); return true; })
+            from _2 in "second".Spec(() => { secondSpecFailed = true; return false; })
+            select Acid.Test;
+
+        var report = run.ReportIfFailed(1, 1);
+
+        Assert.Equal("second", report.GetSpecEntry().Key);
+    }
 }

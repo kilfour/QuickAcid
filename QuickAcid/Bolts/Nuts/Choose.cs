@@ -6,18 +6,23 @@ public static partial class QAcid
 {
 	public static QAcidRunner<T> Choose<T>(this string key, params QAcidRunner<T>[] runners)
 	{
-		return
-			s =>
+		return state =>
 			{
-				int value;
-				if (s.IsNormalRun) // PHASERS ON STUN
-				{
-					value = MGen.Int(0, runners.Length).Generate();
-					var thisActionsMemory = s.Memory.ForThisExecution();
-					thisActionsMemory.Set(key, value);
-				}
-				value = s.Memory.ForThisExecution().Get<int>(key);
-				return runners[value](s);
+				var index = state.Remember(key, () => MGen.Int(0, runners.Length).Generate());
+				return runners[index](state);
 			};
+		// return
+		// 	s =>
+		// 	{
+		// 		int value;
+		// 		if (s.IsNormalRun) // PHASERS ON STUN
+		// 		{
+		// 			value = MGen.Int(0, runners.Length).Generate();
+		// 			var thisActionsMemory = s.Memory.ForThisExecution();
+		// 			thisActionsMemory.Set(key, value);
+		// 		}
+		// 		value = s.Memory.ForThisExecution().Get<int>(key);
+		// 		return runners[value](s);
+		// 	};
 	}
 }

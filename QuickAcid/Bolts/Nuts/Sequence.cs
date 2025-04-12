@@ -5,8 +5,8 @@ public static partial class QAcid
     public static QAcidRunner<T> Sequence<T>(this string key, params QAcidRunner<T>[] runners)
     {
         var counter = 0;
-        var max = runners.Count();
-        var memory = new Dictionary<string, int>(); // should just be an int No ?
+        var max = runners.Length;
+        int memory = 0;
         return
             s =>
             {
@@ -14,13 +14,13 @@ public static partial class QAcid
                 if (s.IsNormalRun) // PHASERS ON STUN
                 {
                     value = counter;
-                    memory[key] = counter;
+                    memory = counter;
                     counter++;
                     if (counter >= max)
                         counter = 0;
                 }
                 else
-                    value = memory[key];
+                    value = memory;
                 return runners[value](s);
             };
     }

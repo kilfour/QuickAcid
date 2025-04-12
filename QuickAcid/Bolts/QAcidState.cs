@@ -14,12 +14,30 @@ public class QAcidState : QAcidContext
     public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
     public AlwaysReportedInputMemory AlwaysReportedInputsMemory { get; private set; }
 
+    public ExecutionContext GetExecutionContext()
+    {
+        return new ExecutionContext(Memory.ForThisExecution(), ShrinkableInputsTracker.ForThisExecution());
+    }
+
+    public T Remember<T>(string key, Func<T> factory)
+    {
+        var execution = GetExecutionContext();
+        if (!execution.memory.ContainsKey(key))
+        {
+            var value = factory();
+            execution.memory.Set(key, value);
+            return value;
+        }
+        return execution.Get<T>(key);
+    }
+
     // ---------------------------------------------------------------------------------------
     // -- PHASERS
     private readonly Dictionary<QAcidPhase, PhaseContext> phaseContexts =
         Enum.GetValues<QAcidPhase>().ToDictionary(phase => phase, _ => new PhaseContext());
     public QAcidPhase CurrentPhase { get; private set; } = QAcidPhase.NormalRun;
     public PhaseContext CurrentContext => phaseContexts[CurrentPhase];
+    public PhaseContext Phase(QAcidPhase phase) => phaseContexts[phase];
 
     public bool IsNormalRun => CurrentPhase == QAcidPhase.NormalRun;
     public bool IsShrinkingInputs => CurrentPhase == QAcidPhase.ShrinkingInputs;
@@ -33,12 +51,14 @@ public class QAcidState : QAcidContext
         CurrentContext.Reset();
         return new DisposableAction(() => { CurrentPhase = previousPhase; });
     }
+
+    public PhaseContext OriginalRun => Phase(QAcidPhase.NormalRun);
     // ---------------------------------------------------------------------------------------
 
     private int shrinkCount = 0;
 
-    public string? FailingSpec { get; private set; }
-    public Exception? Exception { get; private set; }
+    public string? FailingSpec { get { return CurrentContext.FailingSpec; } }
+    public Exception? Exception { get { return CurrentContext.Exception; } }
 
 
     private readonly QAcidReport report;
@@ -99,32 +119,9 @@ public class QAcidState : QAcidContext
         CurrentExecutionNumber++;
     }
 
-    public void SpecFailed(string failingSpec)
-    {
-        CurrentContext.Failed = true;
-        FailingSpec = failingSpec;
-    }
-
     public void FailedWithException(Exception exception)
     {
-        if (IsShrinkingExecutions)
-        {
-            if (Exception == null)
-            {
-                CurrentContext.BreakRun = true;
-                CurrentContext.Failed = true;
-                return;
-            }
-
-            if (Exception.GetType() != exception.GetType())
-            {
-                CurrentContext.BreakRun = true;
-                CurrentContext.Failed = true;
-                return;
-            }
-        }
-        CurrentContext.Failed = true;
-        Exception = exception;
+        CurrentContext.FailedWithException(exception, IsShrinkingExecutions, OriginalRun);
     }
 
     private void HandleFailure()
@@ -160,8 +157,8 @@ public class QAcidState : QAcidContext
             {
                 CurrentContext.Failed = false;
                 Memory.ResetAllRunInputs();
-                FailingSpec = failingSpec;
-                Exception = exception;
+                CurrentContext.FailingSpec = failingSpec;
+                CurrentContext.Exception = exception;
                 foreach (var run in ExecutionNumbers.ToList())
                 {
                     CurrentExecutionNumber = run;
@@ -178,8 +175,8 @@ public class QAcidState : QAcidContext
                 shrinkCount++;
             }
             CurrentContext.Failed = true;
-            FailingSpec = failingSpec;
-            Exception = exception;
+            CurrentContext.FailingSpec = failingSpec;
+            CurrentContext.Exception = exception;
         }
     }
 
@@ -187,8 +184,8 @@ public class QAcidState : QAcidContext
     {
         using (EnterPhase(QAcidPhase.ShrinkingInputs))
         {
-            var failingSpec = FailingSpec;
-            var exception = Exception;
+            // var failingSpec = FailingSpec;
+            // var exception = Exception;
             Memory.ResetAllRunInputs();
             foreach (var executionNumber in ExecutionNumbers.ToList())
             {
@@ -196,9 +193,9 @@ public class QAcidState : QAcidContext
                 Runner(this);
                 shrinkCount++;
             }
-            CurrentContext.Failed = true;
-            FailingSpec = failingSpec;
-            Exception = exception;
+            // CurrentContext.Failed = true;
+            // CurrentContext.FailingSpec = failingSpec;
+            // Exception = exception;
         }
     }
 
@@ -221,8 +218,8 @@ public class QAcidState : QAcidContext
             var failed = CurrentContext.Failed;
             CurrentExecutionNumber = runNumber;
             CurrentContext.Failed = false;
-            FailingSpec = failingSpec;
-            Exception = exception;
+            CurrentContext.FailingSpec = failingSpec;
+            CurrentContext.Exception = exception;
             // USES CURRENT EXECUTION NUMBER (see above)
             Memory.ForThisExecution().Set(key, oldVal);
             return failed;
@@ -254,10 +251,5 @@ public class QAcidState : QAcidContext
                 QAcidReport = report,
             };
         }
-    }
-
-    public ExecutionContext GetExecutionContext()
-    {
-        return new ExecutionContext(Memory.ForThisExecution(), ShrinkableInputsTracker.ForThisExecution());
     }
 }
