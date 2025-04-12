@@ -30,13 +30,19 @@ public static class MemoryReportAssembler
 
                 foreach (var (key, val) in access.GetAll())
                 {
-                    if (val.IsIrrelevant) continue;
-
-                    var output = string.IsNullOrEmpty(val.ReportingMessage)
-                        ? val.Value
-                        : val.ReportingMessage;
-
-                    report.AddEntry(new ReportInputEntry(key) { Value = output });
+                    // 🧠📉 REPORT FILTERING LOGIC COMMENT – DO NOT DELETE:
+                    // Only values with a shrink outcome are considered reportable.
+                    // This includes explicitly reported shrinks and irrelevant-but-shrunk markers.
+                    // Values without any ShrinkOutcome are deliberately excluded from the report.
+                    // They are NOT broken — just not participating in reporting.
+                    switch (val.ShrinkOutcome)
+                    {
+                        case ShrinkOutcome.IrrelevantOutcome:
+                            continue;
+                        case ShrinkOutcome.ReportedOutcome(var msg):
+                            report.AddEntry(new ReportInputEntry(key) { Value = msg });
+                            break;
+                    }
                 }
                 return Acid.Test;
             },

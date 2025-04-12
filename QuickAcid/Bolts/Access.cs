@@ -8,7 +8,7 @@ public class Access
     public string? ActionKey { get; set; }
 
     public Exception? LastException { get; set; }
-    public bool IsIrrelevant { get; set; }
+
     private Dictionary<object, DecoratedValue> dictionary = [];
 
     public T Get<T>(object key)
@@ -26,25 +26,23 @@ public class Access
     public void SetIfNotAllReadyThere<T>(object key, T value)
     {
         if (dictionary.ContainsKey(key)) return;
-        dictionary[key] = new DecoratedValue { Value = value!, IsIrrelevant = false };
+        dictionary[key] = new DecoratedValue { Value = value! };
     }
 
     public void Set<T>(object key, T value)
     {
         if (!dictionary.ContainsKey(key))
-            dictionary[key] = new DecoratedValue { Value = value!, IsIrrelevant = false };
+            dictionary[key] = new DecoratedValue { Value = value! };
         else
             dictionary[key].Value = value!;
     }
 
-    public void MarkAsIrrelevant<T>(object key)
+    public void SetShrinkOutcome(string key, ShrinkOutcome outcome)
     {
-        dictionary[key].IsIrrelevant = true;
-    }
-
-    public void AddReportingMessage<T>(object key, string message)
-    {
-        dictionary[key].ReportingMessage = message;
+        if (dictionary.TryGetValue(key, out var decorated))
+        {
+            decorated.ShrinkOutcome = outcome;
+        }
     }
 
     public bool ContainsKey(object key)

@@ -15,7 +15,6 @@ public static partial class QAcid
 					value = MGen.Int(0, runners.Length).Generate();
 					var thisActionsMemory = s.Memory.ForThisExecution();
 					thisActionsMemory.Set(key, value);
-					thisActionsMemory.MarkAsIrrelevant<T>(key); // why ?
 				}
 				value = s.Memory.ForThisExecution().Get<int>(key);
 				return runners[value](s);

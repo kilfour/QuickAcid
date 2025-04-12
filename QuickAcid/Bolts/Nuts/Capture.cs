@@ -14,7 +14,6 @@ public static partial class QAcid
 				}
 				var value2 = func();
 				state.Memory.ForThisExecution().Set(key, value2);
-				state.Memory.ForThisExecution().MarkAsIrrelevant<T>(key);
 				return QAcidResult.Some(state, value2);
 			};
 	}
