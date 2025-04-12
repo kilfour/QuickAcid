@@ -1,4 +1,5 @@
-﻿using QuickAcid.CodeGen;
+﻿using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.CodeGen;
 using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;
 
@@ -13,9 +14,9 @@ public class QAcidState : QAcidContext
     public Memory Memory { get; private set; }
     public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
 
-    public ExecutionContext GetExecutionContext()
+    public RunExecutionContext GetExecutionContext()
     {
-        return new ExecutionContext(Memory.ForThisExecution(), ShrinkableInputsTracker.ForThisExecution());
+        return new RunExecutionContext(Memory.ForThisExecution(), ShrinkableInputsTracker.ForThisExecution());
     }
 
     public T Remember<T>(string key, Func<T> factory)

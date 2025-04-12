@@ -1,7 +1,6 @@
 using QuickAcid.MonadiXEtAl;
-using QuickAcid.Reporting;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Bolts.TheyCanFade;
 
 public class Access
 {

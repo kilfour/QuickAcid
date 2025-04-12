@@ -1,4 +1,4 @@
-using QuickAcid.Bolts;
+using QuickAcid.Bolts.TheyCanFade;
 
 namespace QuickAcid.CodeGen
 {

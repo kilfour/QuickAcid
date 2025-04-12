@@ -1,5 +1,6 @@
 using System.Text;
 using QuickAcid.Bolts;
+using QuickAcid.Bolts.TheyCanFade;
 using QuickMGenerate;
 
 namespace QuickAcid.CodeGen

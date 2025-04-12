@@ -1,4 +1,4 @@
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Bolts.TheyCanFade;
 
 public class DecoratedValue
 {

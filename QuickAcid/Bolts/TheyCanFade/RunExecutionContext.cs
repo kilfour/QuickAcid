@@ -1,13 +1,13 @@
 using QuickAcid.MonadiXEtAl;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Bolts.TheyCanFade;
 
-public class ExecutionContext
+public class RunExecutionContext
 {
     public Access memory;
     private readonly ShrinkableInputsTrackerPerExecution shrinkTracker;
 
-    public ExecutionContext(Access memory, ShrinkableInputsTrackerPerExecution shrinkTracker)
+    public RunExecutionContext(Access memory, ShrinkableInputsTrackerPerExecution shrinkTracker)
     {
         this.memory = memory;
         this.shrinkTracker = shrinkTracker;

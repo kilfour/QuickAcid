@@ -1,7 +1,7 @@
-﻿using QuickAcid.MonadiXEtAl;
-using QuickAcid.Reporting;
+﻿using QuickAcid.Bolts;
+using QuickAcid.MonadiXEtAl;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Bolts.TheyCanFade;
 
 public class Memory
 {
@@ -12,7 +12,7 @@ public class Memory
 	public Memory(Func<int> getCurrentActionId)
 	{
 		this.getCurrentActionId = getCurrentActionId;
-		this.alwaysReportedInputMemory = new AlwaysReportedInputMemory(getCurrentActionId);
+		alwaysReportedInputMemory = new AlwaysReportedInputMemory(getCurrentActionId);
 	}
 
 	public T StoreAlwaysReported<T>(string key, Func<T> factory, Func<T, string> stringify)
