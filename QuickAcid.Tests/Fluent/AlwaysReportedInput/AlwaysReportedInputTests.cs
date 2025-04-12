@@ -35,7 +35,6 @@ public class AlwaysReportedInputTests
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
-
         var entry = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
         Assert.NotNull(entry);
         Assert.Equal("container", entry.Key);
@@ -54,5 +53,22 @@ public class AlwaysReportedInputTests
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
         Assert.Equal(42, container.ItsOnlyAModel);
+    }
+
+    [Fact]
+    public void AlwaysReportedInput_can_be_stringified()
+    {
+        var container = new Container();
+        var report =
+            SystemSpecs.Define()
+                .AlwaysReported(Keys.TheAnswer, () => 42, a => "it is " + a)
+                .Do("throw", _ => throw new Exception())
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.NotNull(report);
+        var entry = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
+        Assert.NotNull(entry);
+        Assert.Equal("theAnswer", entry.Key);
+        Assert.Equal("   => theAnswer (tracked) : it is 42", entry.ToString());
     }
 }
