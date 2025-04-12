@@ -20,6 +20,4 @@ namespace QuickAcid.MonadiXEtAl
             return lastValue;
         }
     }
-
-
 }

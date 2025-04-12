@@ -14,20 +14,32 @@ public class QAcidState : QAcidContext
     public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
     public AlwaysReportedInputMemory AlwaysReportedInputsMemory { get; private set; }
 
-    public QAcidPhase CurrentPhase { get; set; } = QAcidPhase.NormalRun;
+    // ---------------------------------------------------------------------------------------
+    // -- PHASERS
+    private readonly Dictionary<QAcidPhase, PhaseContext> phaseContexts =
+        Enum.GetValues<QAcidPhase>().ToDictionary(phase => phase, _ => new PhaseContext());
+    public QAcidPhase CurrentPhase { get; private set; } = QAcidPhase.NormalRun;
+    public PhaseContext CurrentContext => phaseContexts[CurrentPhase];
 
     public bool IsNormalRun => CurrentPhase == QAcidPhase.NormalRun;
     public bool IsShrinkingInputs => CurrentPhase == QAcidPhase.ShrinkingInputs;
     public bool IsShrinkInputEval => CurrentPhase == QAcidPhase.ShrinkInputEval;
     public bool IsShrinkingExecutions => CurrentPhase == QAcidPhase.ShrinkingExecutions;
 
-    private int shrinkCount = 0;
+    public IDisposable EnterPhase(QAcidPhase phase)
+    {
+        var previousPhase = CurrentPhase;
+        CurrentPhase = phase;
+        CurrentContext.Reset();
+        return new DisposableAction(() => { CurrentPhase = previousPhase; });
+    }
+    // ---------------------------------------------------------------------------------------
 
-    public bool Failed { get; private set; }
-    public bool BreakRun { get; private set; }
+    private int shrinkCount = 0;
 
     public string? FailingSpec { get; private set; }
     public Exception? Exception { get; private set; }
+
 
     private readonly QAcidReport report;
     public bool Verbose { get; set; }
@@ -60,22 +72,21 @@ public class QAcidState : QAcidContext
     public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
     // -----------------------------------------------------------------
 
-
     public void Run(int executionsPerScope)
     {
         for (int j = 0; j < executionsPerScope; j++)
         {
-            ExecuteRun();
-            if (Failed)
+            ExecuteStep();
+            if (CurrentContext.Failed)
                 return;
         }
     }
 
-    private void ExecuteRun()
+    private void ExecuteStep()
     {
         ExecutionNumbers.Add(CurrentExecutionNumber);
         Runner(this);
-        if (Failed)
+        if (CurrentContext.Failed)
         {
             if (Verbose)
             {
@@ -88,32 +99,32 @@ public class QAcidState : QAcidContext
         CurrentExecutionNumber++;
     }
 
+    public void SpecFailed(string failingSpec)
+    {
+        CurrentContext.Failed = true;
+        FailingSpec = failingSpec;
+    }
+
     public void FailedWithException(Exception exception)
     {
-        if (CurrentPhase == QAcidPhase.ShrinkingExecutions)
+        if (IsShrinkingExecutions)
         {
             if (Exception == null)
             {
-                BreakRun = true;
-                Failed = true;
+                CurrentContext.BreakRun = true;
+                CurrentContext.Failed = true;
                 return;
             }
 
             if (Exception.GetType() != exception.GetType())
             {
-                BreakRun = true;
-                Failed = true;
+                CurrentContext.BreakRun = true;
+                CurrentContext.Failed = true;
                 return;
             }
         }
-        Failed = true;
+        CurrentContext.Failed = true;
         Exception = exception;
-    }
-
-    public void SpecFailed(string failingSpec)
-    {
-        Failed = true;
-        FailingSpec = failingSpec;
     }
 
     private void HandleFailure()
@@ -139,88 +150,83 @@ public class QAcidState : QAcidContext
 
     private void ShrinkExecutions()
     {
-        CurrentPhase = QAcidPhase.ShrinkingExecutions;
-        BreakRun = false;
-
-        Failed = false;
-        var failingSpec = FailingSpec;
-        var exception = Exception;
-
-        var max = ExecutionNumbers.Max();
-        var current = 0;
-
-        while (current <= max)
+        using (EnterPhase(QAcidPhase.ShrinkingExecutions))
         {
-            Failed = false;
-            Memory.ResetAllRunInputs();
+            var failingSpec = FailingSpec;
+            var exception = Exception;
+            var max = ExecutionNumbers.Max();
+            var current = 0;
+            while (current <= max)
+            {
+                CurrentContext.Failed = false;
+                Memory.ResetAllRunInputs();
+                FailingSpec = failingSpec;
+                Exception = exception;
+                foreach (var run in ExecutionNumbers.ToList())
+                {
+                    CurrentExecutionNumber = run;
+                    if (run != current)
+                        Runner(this);
+                    if (CurrentContext.BreakRun)
+                        break;
+                }
+                if (CurrentContext.Failed && !CurrentContext.BreakRun)
+                {
+                    ExecutionNumbers.Remove(current);
+                }
+                current++;
+                shrinkCount++;
+            }
+            CurrentContext.Failed = true;
             FailingSpec = failingSpec;
             Exception = exception;
-
-            foreach (var run in ExecutionNumbers.ToList())
-            {
-                CurrentExecutionNumber = run;
-                if (run != current)
-                    Runner(this);
-                if (BreakRun)
-                    break;
-            }
-            if (Failed && !BreakRun)
-            {
-                ExecutionNumbers.Remove(current);
-            }
-            current++;
-            shrinkCount++;
         }
-
-        Failed = true;
-        FailingSpec = failingSpec;
-        Exception = exception;
     }
 
     private void ShrinkInputs()
     {
-        CurrentPhase = QAcidPhase.ShrinkingInputs;
-        Failed = false;
-        var failingSpec = FailingSpec;
-        var exception = Exception;
-        foreach (var executionNumber in ExecutionNumbers.ToList())
+        using (EnterPhase(QAcidPhase.ShrinkingInputs))
         {
+            var failingSpec = FailingSpec;
+            var exception = Exception;
             Memory.ResetAllRunInputs();
-            CurrentExecutionNumber = executionNumber;
-            Runner(this);
-            shrinkCount++;
+            foreach (var executionNumber in ExecutionNumbers.ToList())
+            {
+                CurrentExecutionNumber = executionNumber;
+                Runner(this);
+                shrinkCount++;
+            }
+            CurrentContext.Failed = true;
+            FailingSpec = failingSpec;
+            Exception = exception;
         }
-        Failed = true;
-        FailingSpec = failingSpec;
-        Exception = exception;
     }
 
     public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
     {
-        var oldPhase = CurrentPhase;
-        CurrentPhase = QAcidPhase.ShrinkInputEval;
-        Failed = false;
-        Memory.ResetAllRunInputs();
-        var failingSpec = FailingSpec;
-        var exception = Exception;
-        var runNumber = CurrentExecutionNumber;
-        var oldVal = Memory.ForThisExecution().Get<object>(key);
-        Memory.ForThisExecution().Set(key, value);
-
-        foreach (var actionNumber in ExecutionNumbers)
+        using (EnterPhase(QAcidPhase.ShrinkInputEval))
         {
-            CurrentExecutionNumber = actionNumber;
-            Runner(this);
+            Memory.ResetAllRunInputs();
+            var failingSpec = FailingSpec;
+            var exception = Exception;
+            var runNumber = CurrentExecutionNumber;
+            var oldVal = Memory.ForThisExecution().Get<object>(key);
+            Memory.ForThisExecution().Set(key, value);
+
+            foreach (var actionNumber in ExecutionNumbers)
+            {
+                CurrentExecutionNumber = actionNumber;
+                Runner(this);
+            }
+            var failed = CurrentContext.Failed;
+            CurrentExecutionNumber = runNumber;
+            CurrentContext.Failed = false;
+            FailingSpec = failingSpec;
+            Exception = exception;
+            // USES CURRENT EXECUTION NUMBER (see above)
+            Memory.ForThisExecution().Set(key, oldVal);
+            return failed;
         }
-        var failed = Failed;
-        CurrentExecutionNumber = runNumber;
-        Failed = false;
-        FailingSpec = failingSpec;
-        Exception = exception;
-        // USES CURRENT EXECUTION NUMBER (see above)
-        Memory.ForThisExecution().Set(key, oldVal);
-        CurrentPhase = oldPhase;
-        return failed;
     }
 
     private QAcidReport AddMemoryToReport(QAcidReport report)
@@ -241,7 +247,7 @@ public class QAcidState : QAcidContext
 
     public void ThrowFalsifiableExceptionIfFailed()
     {
-        if (Failed)
+        if (CurrentContext.Failed)
         {
             throw new FalsifiableException(report.ToString(), Exception!)
             {
@@ -250,45 +256,8 @@ public class QAcidState : QAcidContext
         }
     }
 
-    internal ExecutionContext GetExecutionContext()
+    public ExecutionContext GetExecutionContext()
     {
         return new ExecutionContext(Memory.ForThisExecution(), ShrinkableInputsTracker.ForThisExecution());
     }
-}
-
-public class ExecutionContext
-{
-    private readonly Access memory;
-    private readonly ShrinkableInputsTrackerPerExecution shrinkTracker;
-
-    public ExecutionContext(Access memory, ShrinkableInputsTrackerPerExecution shrinkTracker)
-    {
-        this.memory = memory;
-        this.shrinkTracker = shrinkTracker;
-    }
-
-    public bool AlreadyTried(string key) => shrinkTracker.AlreadyTried(key);
-
-    public void SetShrinkOutcome(string key, ShrinkOutcome outcome)
-    {
-        shrinkTracker.MarkAsTriedToShrink(key);
-        if (memory.ContainsKey(key))
-        {
-            memory.SetShrinkOutcome(key, outcome);
-        }
-    }
-
-    public T Get<T>(string key) => memory.Get<T>(key);
-
-    public Maybe<T> GetMaybe<T>(string key) => memory.GetMaybe<T>(key);
-
-    public void SetIfAbsent<T>(string key, T value) => memory.SetIfNotAllReadyThere(key, value);
-}
-
-public enum QAcidPhase
-{
-    NormalRun,
-    ShrinkingExecutions,
-    ShrinkingInputs,
-    ShrinkInputEval
 }

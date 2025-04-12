@@ -3,22 +3,6 @@ using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Bolts;
 
-public abstract record ShrinkOutcome
-{
-    public static readonly ShrinkOutcome Irrelevant = new IrrelevantOutcome();
-    public static ShrinkOutcome Report(string message) => new ReportedOutcome(message);
-
-    public sealed record IrrelevantOutcome : ShrinkOutcome;
-    public sealed record ReportedOutcome(string Message) : ShrinkOutcome;
-
-    public override string ToString() => this switch
-    {
-        ReportedOutcome r => r.Message,
-        IrrelevantOutcome => "Irrelevant",
-        _ => "Unknown"
-    };
-}
-
 public class Shrink
 {
     private static readonly Dictionary<Type, object[]> PrimitiveValues =

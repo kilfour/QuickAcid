@@ -27,7 +27,7 @@ public class Wendy
         {
             var state = new QAcidState(runner) { Verbose = verbose };
             state.Run(executionsPerScope);
-            if (state.Failed)
+            if (state.CurrentContext.Failed)
                 return state.GetReport();
         }
         return null!;

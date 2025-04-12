@@ -26,7 +26,7 @@ public static partial class QAcid
 		{
 			var state = new QAcidState(runner);
 			state.Run(executionsPerScope);
-			if (state.Failed)
+			if (state.CurrentContext.Failed)
 				return state.GetReport();
 		}
 		return null!;
@@ -43,7 +43,7 @@ public static partial class QAcid
 		{
 			var state = new QAcidState(runner);
 			state.Run(executionsPerScope);
-			if (state.Failed)
+			if (state.CurrentContext.Failed)
 				return Prospector.Pan(state);
 		}
 		return null!;

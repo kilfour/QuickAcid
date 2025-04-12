@@ -7,7 +7,7 @@ public static class QAcidRunnerToLinq
 		Func<TValueOne, TValueTwo> selector) =>
 			state =>
 				{
-					if (state.Failed)
+					if (state.CurrentContext.Failed)
 						return QAcidResult.None<TValueTwo>(state);
 					return QAcidResult.Some(state, selector(runner(state).Value));
 				};
@@ -18,10 +18,10 @@ public static class QAcidRunnerToLinq
 		Func<TSource, QAcidRunner<TResult>> selector) =>
 			state =>
 				{
-					if (state.Failed)
+					if (state.CurrentContext.Failed)
 						return QAcidResult.None<TResult>(state);
 					var result = source(state);
-					if (state.Failed)
+					if (state.CurrentContext.Failed)
 						return QAcidResult.None<TResult>(state);
 					return selector(result.Value)(state);
 				};
