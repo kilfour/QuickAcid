@@ -4,50 +4,23 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcid
 {
-	public static QAcidRunner<Acid> Spec(this string key, Func<bool> func)
+	public static QAcidRunner<Acid> Spec(this string key, Func<bool> condition)
 	{
 		return
 			state =>
 			{
 				state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.SpecRunner });
-
-
-				if (state.OriginalRun.FailingSpec != null && state.OriginalRun.FailingSpec != key)
+				if (ShouldSkipSpec(key, state))
 					return QAcidResult.AcidOnly(state);
-
-				if (state.OriginalRun.Exception != null && state.OriginalRun.FailingSpec == null)
-					return QAcidResult.AcidOnly(state);
-
-				// // PHASERS ON STUN
-				// if (state.FailingSpec != null && state.FailingSpec != key) // PHASERS ON STUN
-				// {
-				// 	return QAcidResult.AcidOnly(state);
-				// }
-
-				// // .Exception used to be State.Verifying, can be .ShrinkingExecutions ...
-				// // see if above, __Please_ put this thing out of it's misery
-				// if (state.Exception != null && state.FailingSpec == null) // PHASERS ON STUN
-				// {
-				// 	return QAcidResult.AcidOnly(state);
-				// }
-
-				var result = func();
-				if (!result)
-				{
+				bool passed = condition();
+				if (!passed)
 					state.CurrentContext.SpecFailed(key);
-				}
 				return QAcidResult.AcidOnly(state);
 			};
 	}
+	public static QAcidRunner<Acid> SpecIf(this string key, Func<bool> predicate, Func<bool> condition)
+		=> state => predicate() ? key.Spec(condition)(state) : QAcidResult.AcidOnly(state);
 
-	public static QAcidRunner<Acid> SpecIf(this string key, Func<bool> predicate, Func<bool> func)
-	{
-		return
-			state =>
-			{
-				if (!predicate())
-					return QAcidResult.AcidOnly(state);
-				return key.Spec(func)(state);
-			};
-	}
+	private static bool ShouldSkipSpec(string key, QAcidState state)
+		=> state.OriginalRun.FailingSpec is { } failedKey && failedKey != key;
 }

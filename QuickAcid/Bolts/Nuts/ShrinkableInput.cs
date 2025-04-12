@@ -11,33 +11,38 @@ public static partial class QAcid
 		return ShrinkableInput(key, generator, _ => true);
 	}
 
-	public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator, Func<T, bool> shrinkingGuard)
+	public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator, Func<T, bool> guard)
 	{
 		return state =>
 			{
-				var executionContext = state.GetExecutionContext();
+				return state.HandleShrinkableInput(key, generator, guard);
+			};
+	}
 
-				if (state.CurrentPhase == QAcidPhase.ShrinkInputEval)
-				{
-					return QAcidResult.Some(state, state.Memory.ForThisExecution().Get<T>(key));
-				}
+	public static QAcidResult<T> HandleShrinkableInput<T>(this QAcidState state, string key, Generator<T> generator, Func<T, bool> guard)
+	{
+		var execution = state.GetExecutionContext();
 
-				if (state.CurrentPhase == QAcidPhase.ShrinkingExecutions)
-				{
-					return QAcidResult.Some(state, state.Memory.ForThisExecution().Get<T>(key));
-				}
+		switch (state.CurrentPhase)
+		{
+			case QAcidPhase.ShrinkInputEval:
+			case QAcidPhase.ShrinkingExecutions:
+				return QAcidResult.Some(state, execution.Get<T>(key));
 
-				if (state.CurrentPhase == QAcidPhase.ShrinkingInputs && !executionContext.AlreadyTried(key))
+			case QAcidPhase.ShrinkingInputs when !execution.AlreadyTried(key):
 				{
-					var value = executionContext.Get<T>(key);
-					var shrunk = Shrink.Input(state, key, value, obj => shrinkingGuard((T)obj));
-					executionContext.SetShrinkOutcome(key, shrunk);
+					var value = execution.Get<T>(key);
+					var shrunk = Shrink.Input(state, key, value, obj => guard((T)obj));
+					execution.SetShrinkOutcome(key, shrunk);
 					return QAcidResult.Some(state, value);
 				}
 
-				var value2 = generator.Generate();
-				state.Memory.ForThisExecution().SetIfNotAllReadyThere(key, value2);
-				return QAcidResult.Some(state, value2);
-			};
+			default:
+				{
+					var value = generator.Generate();
+					execution.SetIfNotAlreadyThere(key, value);
+					return QAcidResult.Some(state, value);
+				}
+		}
 	}
 }

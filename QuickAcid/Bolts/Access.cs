@@ -23,7 +23,7 @@ public class Access
             : Maybe<T>.None;
     }
 
-    public void SetIfNotAllReadyThere<T>(object key, T value)
+    public void SetIfNotAlreadyThere<T>(object key, T value)
     {
         if (dictionary.ContainsKey(key)) return;
         dictionary[key] = new DecoratedValue { Value = value! };
