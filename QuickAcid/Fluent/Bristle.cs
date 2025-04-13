@@ -21,7 +21,7 @@ public class Bristle
     public Bristle OnlyWhen(Func<bool> iPass)
     => new(bob, label, iPass);
 
-    public AnotherGate OnlyWhen(Func<QAcidContext, bool> iPass)
+    public BristlesBroomsOnTheRight OnlyWhen(Func<QAcidContext, bool> iPass)
     => new(bob, label, iPass);
 
     // public Bob Do(string label, Action action)

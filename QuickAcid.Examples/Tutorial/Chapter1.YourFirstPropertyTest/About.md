@@ -28,7 +28,7 @@ The rule is simple: the counter’s value should **never** be negative. It only 
 
 ## The Property
 
-In property-based testing, we don’t write individual examples — we describe **invariants** and let the framework discover counterexamples for us.\n
+In property-based testing, we don’t write individual examples — we describe **invariants** and let the framework discover counterexamples for us.  
 Here's what we want to verify:
 
 > The value of the counter should always be greater than or equal to zero.
