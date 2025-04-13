@@ -1,4 +1,4 @@
-namespace QuickAcid.Examples.Tutorial.Chapter2;
+namespace QuickAcid.Examples.Tutorial.Chapter2.SneakyBugs;
 
 public class Test
 {
@@ -16,14 +16,14 @@ public class Test
                 .AlwaysReported(K.TheDie, () => new LoadedDie())
                 .AlwaysReported(K.TheObserver, () => new HashSet<int>())
                 .Do("Roll", c => c.Get(K.TheObserver).Add(c.Get(K.TheDie).Roll()))
-                // .FinalSpec("Die rolls 1", c => c.Get(K.TheObserver).Contains(1))
-                // .FinalSpec("Die rolls 2", c => c.Get(K.TheObserver).Contains(2))
-                // .FinalSpec("Die rolls 3", c => c.Get(K.TheObserver).Contains(3))
-                // .FinalSpec("Die rolls 4", c => c.Get(K.TheObserver).Contains(4))
-                // .FinalSpec("Die rolls 5", c => c.Get(K.TheObserver).Contains(5))
-                // .FinalSpec("Die rolls 6", c => c.Get(K.TheObserver).Contains(6))
+                .Assay("Die rolls 1", c => c.Get(K.TheObserver).Contains(1))
+                .Assay("Die rolls 2", c => c.Get(K.TheObserver).Contains(2))
+                .Assay("Die rolls 3", c => c.Get(K.TheObserver).Contains(3))
+                .Assay("Die rolls 4", c => c.Get(K.TheObserver).Contains(4))
+                .Assay("Die rolls 5", c => c.Get(K.TheObserver).Contains(5))
+                .Assay("Die rolls 6", c => c.Get(K.TheObserver).Contains(6))
                 .DumpItInAcid()
-                .AndCheckForGold(10, 10);
+                .AndCheckForGold(1, 100);
         if (report != null)
             Assert.Fail(report.ToString());
     }
