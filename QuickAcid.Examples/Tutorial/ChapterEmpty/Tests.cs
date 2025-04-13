@@ -1,5 +1,3 @@
-using QuickMGenerate;
-
 namespace QuickAcid.Examples.Tutorial.Chapter;
 
 public class Test

@@ -1,5 +1,4 @@
-﻿using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
-using QuickMGenerate;
+﻿using QuickMGenerate;
 
 namespace QuickAcid.Bolts.Nuts;
 

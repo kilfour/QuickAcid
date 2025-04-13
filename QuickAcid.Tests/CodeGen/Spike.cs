@@ -2,7 +2,6 @@ using QuickMGenerate;
 using QuickAcid.CodeGen;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
 
 namespace QuickAcid.Examples.CodeGen;
 

@@ -1,4 +1,3 @@
-using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
