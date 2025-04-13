@@ -10,7 +10,7 @@ These tools help you refine your test space and catch deeper issues — even whe
 
 ---
 
-## Guards: Keep the Noise Out (During Shrinking)
+## Guards: Keep the Noise Out — or Keep It Out Entirely
 
 Imagine you're fuzzing a value like this:
 
@@ -18,17 +18,62 @@ Imagine you're fuzzing a value like this:
 .Fuzzed("num", MGen.Int(-10, 10))
 ```
 
-But your system doesn't support `0`, and throwing on it is expected. You *could* let QuickAcid find it, shrink to it, and report the explosion...
+But your system doesn’t support `0`, and it throws when it encounters one. You have a few ways to control this:
 
-Or you could tell QuickAcid not to shrink to bad input:
+---
+
+### 🧪 Guard **only the shrinking**
+
+Let QuickAcid generate everything (including bad values),  
+but tell it **not to shrink toward them**:
 
 ```csharp
 .Fuzzed("nonZero", MGen.Int(-10, 10), x => x != 0)
 ```
 
-This does **not** affect the generator itself — only the **shrinking process**. QuickAcid may still generate `0`, but it will not shrink **toward** `0` if it violates the guard. You’re focusing the search and expressing intent.
+This does **not** affect generation — `0` might still be picked —  
+but once a failure is found, QuickAcid will never shrink **toward** `0` if the guard rejects it.
+
+✅ Great when:
+- You want to find edge cases like `0`
+- But shrinking into them would misrepresent the minimal bug
 
 ---
+
+### 🎲 Filter **only the generation**
+
+Use `.Where(...)` to completely exclude values from being generated:
+
+```csharp
+.Fuzzed("nonZero", MGen.Int(-10, 10).Where(x => x != 0))
+```
+
+QuickAcid will never *generate* `0`.  
+However, if `0` *was* generated earlier and caused a failure, QuickAcid might still shrink *toward* it — unless a separate guard is added.
+
+✅ Great when:
+- You want to prevent bad values *from entering the system at all*
+- But you’re okay with shrinkers potentially exploring toward them unless further constrained
+
+---
+
+### 🛡️ Use a **contract guard** — affect both
+
+Declare your intention **once**, and apply it to both generation *and* shrinking:
+
+```csharp
+.Fuzzed("nonZero", MGen.Int(-10, 10).Claim(x => x != 0))
+```
+
+This:
+- Filters generation (like `.Where(...)`)
+- Prevents shrinking toward bad values (like the third `Fuzzed` parameter)
+- Reads clearly as a **property-level constraint**
+
+✅ Best when:
+- Your test input space is clearly defined
+- You want generation and shrinking to respect the same rules
+
 
 ## Touchstones: Did We Even Try?
 

@@ -44,7 +44,8 @@ public static class MemoryReportAssembler
                     else if (phase == QAcidPhase.NormalRun)
                     {
                         // First run fallback: just show the raw value
-                        report.AddEntry(new ReportInputEntry(key) { Value = QuickAcidStringify.Default()(val.Value) });
+                        // report.AddEntry(new ReportInputEntry(key) { Value = QuickAcidStringify.Default()(val.Value) });
+                        // TODO
                     }
                 }
                 return Acid.Test;

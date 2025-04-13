@@ -1,4 +1,5 @@
-﻿using QuickMGenerate;
+﻿using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
+using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Bolts.Nuts;
@@ -8,6 +9,8 @@ public static partial class QAcid
 {
 	public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator)
 	{
+		if (generator is IKnowMyGuard<T> guarded)
+			return key.ShrinkableInput(generator, guarded.Guard);
 		return ShrinkableInput(key, generator, _ => true);
 	}
 
@@ -19,7 +22,7 @@ public static partial class QAcid
 			};
 	}
 
-	public static QAcidResult<T> HandleShrinkableInput<T>(this QAcidState state, string key, Generator<T> generator, Func<T, bool> guard)
+	private static QAcidResult<T> HandleShrinkableInput<T>(this QAcidState state, string key, Generator<T> generator, Func<T, bool> guard)
 	{
 		var execution = state.GetExecutionContext();
 

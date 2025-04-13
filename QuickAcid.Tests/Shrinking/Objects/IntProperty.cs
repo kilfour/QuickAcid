@@ -2,6 +2,7 @@
 using QuickMGenerate;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {

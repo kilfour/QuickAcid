@@ -1,3 +1,4 @@
+using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
@@ -128,7 +129,7 @@ public class FuzzedInputTests
     public void FuzzedInput_should_not_exist_in_per_action_report_if_irrelevant()
     {
         var report =
-            SystemSpecs
+            SystemSpecs //
                 .Define()
                 .Fuzzed(Keys.TheAnswer, MGen.Constant(2))
                 .As("throw")
@@ -139,6 +140,48 @@ public class FuzzedInputTests
         Assert.NotNull(report);
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.Null(inputEntry);
+    }
+
+    [Fact]
+    public void FuzzedInput_shrinking_should_respect_the_guards()
+    {
+        var report =
+            SystemSpecs
+                .Define()
+                .Fuzzed(Keys.TheAnswer, MGen.Constant(2), a => a != 0)
+                .Do("act", () => { })
+                .Assert("should never throw", ctx =>
+                {
+                    if (ctx.Get(Keys.TheAnswer) == 0) // normal int shrinking always uses 0
+                        throw new Exception("BOOM");
+                    return false;
+                })
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.NotNull(report);
+    }
+
+    [Fact]
+    public void FuzzedInput_guards_with_sugar()
+    {
+        var report =
+            SystemSpecs
+                .Define()
+                .Fuzzed(Keys.TheAnswer, MGen.Int(-2, 2).Claim(a => a != 0))
+                .Do("act", ctx =>
+                {
+                    if (ctx.Get(Keys.TheAnswer) == 0)
+                        throw new Exception("BOOM");
+                })
+                .Assert("should never throw", ctx =>
+                {
+                    if (ctx.Get(Keys.TheAnswer) == 0)
+                        throw new Exception("BOOM");
+                    return true;
+                })
+                .DumpItInAcid()
+                .AndCheckForGold(1, 10);
+        Assert.Null(report);
     }
 
     [Fact]
