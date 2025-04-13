@@ -1,0 +1,3 @@
+- Formal model support
+- Code Gen : see prospector and QuickAcid.Tests\CodeGen\Spike.cs
+- custom shrinkers
