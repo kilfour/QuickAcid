@@ -131,7 +131,7 @@ public class QAcidState : QAcidContext
             {
                 report.AddEntry(new ReportTitleSectionEntry(["FIRST FAILED RUN"]));
                 report.AddEntry(new ReportRunStartEntry());
-                AddMemoryToReport(report);
+                AddMemoryToReport(report, false);
             }
             HandleFailure();
             return;
@@ -147,7 +147,7 @@ public class QAcidState : QAcidContext
         {
             report.AddEntry(new ReportTitleSectionEntry(["AFTER EXECUTION SHRINKING"]));
             report.AddEntry(new ReportRunStartEntry());
-            AddMemoryToReport(report);
+            AddMemoryToReport(report, false);
         }
         ShrinkInputs();
         if (Verbose)
@@ -162,7 +162,7 @@ public class QAcidState : QAcidContext
             report.AddEntry(new ReportTitleSectionEntry(GetReportHeaderInfo().ToList()));
             report.AddEntry(new ReportRunStartEntry());
         }
-        AddMemoryToReport(report);
+        AddMemoryToReport(report, true);
         if (Exception != null)
             report.Exception = Exception;
     }
@@ -238,12 +238,12 @@ public class QAcidState : QAcidContext
         }
     }
 
-    private QAcidReport AddMemoryToReport(QAcidReport report)
+    private QAcidReport AddMemoryToReport(QAcidReport report, bool isFinalRun)
     {
         foreach (var executionNumber in ExecutionNumbers.ToList())
         {
             MemoryReportAssembler
-                .AddAllMemoryToReport(report, Memory, executionNumber, Exception!, CurrentPhase);
+                .AddAllMemoryToReport(report, Memory, executionNumber, Exception!, isFinalRun);
         }
         if (!string.IsNullOrEmpty(FailingSpec))
             report.AddEntry(new ReportSpecEntry(FailingSpec));

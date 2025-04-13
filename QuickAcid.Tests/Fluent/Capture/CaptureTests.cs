@@ -81,4 +81,21 @@ public class CaptureTests
         QAcidDebug.WriteLine(report.ToString());
         Assert.DoesNotContain("Property", report.ToString());
     }
+
+    [Fact(Skip = "WIP")]
+    public void Capture_never_shows_up_in_report_with_touch()
+    {
+        var report =
+            SystemSpecs
+                .Define()
+                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Capture(Keys.Property, ctx => ctx.Get(Keys.Container).ItsOnlyAModel)
+                .Do("increment", ctx => { throw new Exception(); })
+                .DumpItInAcid()
+                .KeepOneEyeOnTheTouchStone()
+                .AndCheckForGold(1, 1);
+        Assert.NotNull(report);
+        QAcidDebug.WriteLine(report.ToString());
+        Assert.DoesNotContain("Property", report.ToString());
+    }
 }
