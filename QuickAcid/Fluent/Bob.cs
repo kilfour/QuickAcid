@@ -106,8 +106,9 @@ public class Bob
     public BristlesBrooms<T> Expect<T>(string label, QKey<T> key)
         => new BristlesBrooms<T>(this, label, key);
 
-    public Bob Assert(string label, Func<bool> predicate)
-        => Bind(_ => label.Spec(predicate));
+    public Bob Assert(string label, Func<QAcidContext, bool> predicate)
+        //=> Bind(_ => label.Spec(predicate));
+        => BindState(state => label.Spec(() => predicate(state)));
 
     public Wendy DumpItInAcid()
     {

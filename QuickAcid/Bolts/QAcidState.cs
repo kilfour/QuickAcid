@@ -11,6 +11,9 @@ public class QAcidState : QAcidContext
     public int CurrentExecutionNumber { get; private set; }
     public List<int> ExecutionNumbers { get; private set; }
 
+    //only for report
+    public int OriginalFailingRunExecutionCount { get; private set; }
+
     public Memory Memory { get; private set; }
     public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
 
@@ -112,7 +115,7 @@ public class QAcidState : QAcidContext
         {
             if (Verbose)
             {
-                report.AddEntry(new ReportTitleSectionEntry("FIRST FAILED RUN"));
+                report.AddEntry(new ReportTitleSectionEntry(["FIRST FAILED RUN"]));
                 AddMemoryToReport(report);
             }
             HandleFailure();
@@ -123,23 +126,38 @@ public class QAcidState : QAcidContext
 
     private void HandleFailure()
     {
+        OriginalFailingRunExecutionCount = ExecutionNumbers.Count;
         ShrinkExecutions();
         if (Verbose)
         {
-            report.AddEntry(new ReportTitleSectionEntry("AFTER EXECUTION SHRINKING"));
+            report.AddEntry(new ReportTitleSectionEntry(["AFTER EXECUTION SHRINKING"]));
             AddMemoryToReport(report);
         }
         ShrinkInputs();
         if (Verbose)
         {
-            report.AddEntry(new ReportTitleSectionEntry($"AFTER INPUT SHRINKING : Falsified after {ExecutionNumbers.Count} actions, {shrinkCount} shrinks"));
+            var title = new List<string>(["AFTER INPUT SHRINKING :"]);
+            title.AddRange(GetReportHeaderInfo().ToList());
+            report.AddEntry(new ReportTitleSectionEntry(title));
         }
         else
         {
-            report.AddEntry(new ReportTitleSectionEntry($"Falsified after {ExecutionNumbers.Count} actions, {shrinkCount} shrinks"));
+            report.AddEntry(new ReportTitleSectionEntry(GetReportHeaderInfo().ToList()));
         }
-
         AddMemoryToReport(report);
+        if (Exception != null)
+            report.Exception = Exception;
+    }
+
+    private IEnumerable<string> GetReportHeaderInfo()
+    {
+        if (!string.IsNullOrEmpty(FailingSpec))
+            yield return $"Property '{FailingSpec}' was falsified";
+        if (Exception != null)
+            yield return "Exception thrown";
+        yield return $"Original failing run: {OriginalFailingRunExecutionCount} execution(s)";
+        yield return $"Shrunk to minimal case:  {ExecutionNumbers.Count} execution(s) ({shrinkCount} shrinks)";
+        yield break;
     }
 
     private void ShrinkExecutions()

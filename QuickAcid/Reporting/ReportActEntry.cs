@@ -18,11 +18,11 @@ public class ReportActEntry : ReportEntry
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(" ---------------------------");
         stringBuilder.Append($" EXECUTE : {Key}");
-        if (Exception != null)
-        {
-            stringBuilder.AppendLine();
-            stringBuilder.Append(Exception);
-        }
+        // if (Exception != null)
+        // {
+        //     stringBuilder.AppendLine();
+        //     //stringBuilder.Append(Exception);
+        // }
         return stringBuilder.ToString();
     }
 }

@@ -37,7 +37,7 @@ namespace QuickAcid.Examples
 			}
 		}
 
-		[Fact(Skip = "Explicit")]
+		[Fact]
 		public void BugHouse2Error()
 		{
 			var run =
@@ -46,7 +46,9 @@ namespace QuickAcid.Examples
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			run.Verify(100, 100);
+			var report = run.ReportIfFailed(1, 50);
+			if (report != null)
+				Assert.Fail(report.ToString());
 		}
 
 		public class BugHouse3

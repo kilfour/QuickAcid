@@ -4,15 +4,17 @@ namespace QuickAcid.Reporting;
 
 public class ReportTitleSectionEntry : IAmAReportEntry
 {
-    private string title = "";
-    public ReportTitleSectionEntry(string title) { this.title = title; }
+    private List<string> title;
+    public ReportTitleSectionEntry(List<string> title) { this.title = title; }
 
 
     public override string ToString()
     {
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(" ----------------------------------------");
-        stringBuilder.AppendLine($" -- {title}");
+        foreach (var str in title)
+            stringBuilder.AppendLine($" -- {str}");
+
         stringBuilder.AppendLine(" ----------------------------------------");
         stringBuilder.Append(" RUN START :");
         return stringBuilder.ToString();

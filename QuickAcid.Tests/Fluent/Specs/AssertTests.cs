@@ -7,7 +7,7 @@ public class AssertTests
     {
         var report =
             SystemSpecs.Define()
-                .Assert("should be true", () => true)
+                .Assert("should be true", _ => true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -18,7 +18,7 @@ public class AssertTests
     {
         var report =
             SystemSpecs.Define()
-                .Assert("should be true", () => false)
+                .Assert("should be true", _ => false)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
@@ -33,8 +33,8 @@ public class AssertTests
         var flag = false;
         var report =
             SystemSpecs.Define()
-                .As("flag it").Now(() => flag = true)
-                .Assert("should be true", () => flag == true)
+                .As("flag it").Now(_ => flag = true)
+                .Assert("should be true", _ => flag == true)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -47,13 +47,31 @@ public class AssertTests
         var flag = false;
         var report =
             SystemSpecs.Define()
-                .As("flag it").Now(() => flag = true)
-                .Assert("should be true", () => flag == false)
+                .As("flag it").Now(_ => flag = true)
+                .Assert("should be true", _ => flag == false)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
         var entry = report.GetSpecEntry();
         Assert.NotNull(entry);
         Assert.Equal("should be true", entry.Key);
+    }
+
+    public static class K
+    {
+        public static readonly QKey<int> TheAnswer =
+            QKey<int>.New("TheAnswer");
+    }
+
+    [Fact]
+    public void Assert_can_access_the_context()
+    {
+        var report =
+            SystemSpecs.Define()
+                .AlwaysReported(K.TheAnswer, _ => 42)
+                .Assert("should be true", ctx => ctx.Get(K.TheAnswer) == 42)
+                .DumpItInAcid()
+                .AndCheckForGold(1, 1);
+        Assert.Null(report);
     }
 }
