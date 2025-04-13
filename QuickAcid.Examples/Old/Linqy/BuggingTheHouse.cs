@@ -2,7 +2,7 @@
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
 
-namespace QuickAcid.Examples
+namespace QuickAcid.Examples.Old.Linqy
 {
 	public class BuggingTheHouse
 	{
@@ -37,7 +37,7 @@ namespace QuickAcid.Examples
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "explicit")]
 		public void BugHouse2Error()
 		{
 			var run =

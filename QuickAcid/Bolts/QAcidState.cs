@@ -105,6 +105,20 @@ public class QAcidState : QAcidContext
             if (CurrentContext.Failed)
                 return;
         }
+        CheckAssays();
+    }
+
+    private void CheckAssays()
+    {
+        foreach (var (_, assay) in FinalChecks)
+        {
+            if (!assay.Check())
+            {
+                report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees : {assay.Label}."]));
+                CurrentContext.Failed = true;
+                break;
+            }
+        }
     }
 
     private void ExecuteStep()
@@ -116,6 +130,7 @@ public class QAcidState : QAcidContext
             if (Verbose)
             {
                 report.AddEntry(new ReportTitleSectionEntry(["FIRST FAILED RUN"]));
+                report.AddEntry(new ReportRunStartEntry());
                 AddMemoryToReport(report);
             }
             HandleFailure();
@@ -131,6 +146,7 @@ public class QAcidState : QAcidContext
         if (Verbose)
         {
             report.AddEntry(new ReportTitleSectionEntry(["AFTER EXECUTION SHRINKING"]));
+            report.AddEntry(new ReportRunStartEntry());
             AddMemoryToReport(report);
         }
         ShrinkInputs();
@@ -139,10 +155,12 @@ public class QAcidState : QAcidContext
             var title = new List<string>(["AFTER INPUT SHRINKING :"]);
             title.AddRange(GetReportHeaderInfo().ToList());
             report.AddEntry(new ReportTitleSectionEntry(title));
+            report.AddEntry(new ReportRunStartEntry());
         }
         else
         {
             report.AddEntry(new ReportTitleSectionEntry(GetReportHeaderInfo().ToList()));
+            report.AddEntry(new ReportRunStartEntry());
         }
         AddMemoryToReport(report);
         if (Exception != null)
@@ -245,5 +263,13 @@ public class QAcidState : QAcidContext
                 QAcidReport = report,
             };
         }
+    }
+
+    public record AssaySpecEntry(string Label, Func<bool> Check);
+    public Dictionary<string, AssaySpecEntry> FinalChecks = new();
+
+    public void AddAssay(string Label, Func<bool> Check)
+    {
+        FinalChecks[Label] = new AssaySpecEntry(Label, Check);
     }
 }

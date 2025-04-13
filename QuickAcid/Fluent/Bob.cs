@@ -107,8 +107,14 @@ public class Bob
         => new BristlesBrooms<T>(this, label, key);
 
     public Bob Assert(string label, Func<QAcidContext, bool> predicate)
-        //=> Bind(_ => label.Spec(predicate));
         => BindState(state => label.Spec(() => predicate(state)));
+
+    public Bob Assay(string label, Func<QAcidContext, bool> predicate)
+        => BindState<Acid>(state =>
+        {
+            state.AddAssay(label, () => predicate(state));
+            return _ => QAcidResult.AcidOnly(state); ;
+        });
 
     public Wendy DumpItInAcid()
     {
