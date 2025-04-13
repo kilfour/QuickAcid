@@ -8,7 +8,7 @@ namespace QuickAcid.Tests.Fluent.Assay;
 public class AssayTests
 {
     [Fact]
-    public void Assay_works_but_could_with_more_tests()
+    public void Assay_works_but_could_do_with_more_tests()
     {
         var report =
             SystemSpecs.Define()
