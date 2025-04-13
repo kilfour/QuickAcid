@@ -10,7 +10,8 @@ public static class MemoryReportAssembler
         QAcidReport report,
         Memory memory,
         int executionId,
-        Exception exception)
+        Exception exception,
+        QAcidPhase phase)
     {
         // Always-reported snapshot
         if (memory.AlwaysReportedSnapshot().TryGetValue(executionId, out var snapshot))
@@ -36,13 +37,14 @@ public static class MemoryReportAssembler
                     // This includes explicitly reported shrinks and irrelevant-but-shrunk markers.
                     // Values without any ShrinkOutcome are deliberately excluded from the report.
                     // They are NOT broken — just not participating in reporting.
-                    switch (val.ShrinkOutcome)
+                    if (val.ShrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
                     {
-                        case ShrinkOutcome.IrrelevantOutcome:
-                            continue;
-                        case ShrinkOutcome.ReportedOutcome(var msg):
-                            report.AddEntry(new ReportInputEntry(key) { Value = msg });
-                            break;
+                        report.AddEntry(new ReportInputEntry(key) { Value = msg });
+                    }
+                    else if (phase == QAcidPhase.NormalRun)
+                    {
+                        // First run fallback: just show the raw value
+                        report.AddEntry(new ReportInputEntry(key) { Value = QuickAcidStringify.Default()(val.Value) });
                     }
                 }
                 return Acid.Test;

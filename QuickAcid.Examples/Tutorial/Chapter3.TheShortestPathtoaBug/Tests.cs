@@ -9,7 +9,8 @@ public class Test
         public static QKey<List<string>> Commands => QKey<List<string>>.New("Commands");
     }
 
-    [Fact(Skip = "This one Fails, ... intentionally")]
+    //[Fact(Skip = "This one Fails, ... intentionally")]
+    [Fact]
     public void CrashesOnBadInput()
     {
         var report =
@@ -24,6 +25,7 @@ public class Test
                 })
                 .Assay("should not throw", _ => true)
                 .DumpItInAcid()
+                .KeepOneEyeOnTheTouchStone()
                 .AndCheckForGold(1, 100);
 
         if (report != null)

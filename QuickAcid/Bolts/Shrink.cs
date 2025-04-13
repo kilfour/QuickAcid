@@ -33,7 +33,7 @@ public class Shrink
     public static ShrinkOutcome Input<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var shrunk = ShrinkOutcome.Irrelevant;
-        if (typeof(System.Collections.IEnumerable).IsAssignableFrom(typeof(T)))
+        if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
         {
             return ShrinkIEnumerable(state, key, value);
         }

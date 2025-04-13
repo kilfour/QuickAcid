@@ -242,7 +242,8 @@ public class QAcidState : QAcidContext
     {
         foreach (var executionNumber in ExecutionNumbers.ToList())
         {
-            MemoryReportAssembler.AddAllMemoryToReport(report, Memory, executionNumber, Exception!);
+            MemoryReportAssembler
+                .AddAllMemoryToReport(report, Memory, executionNumber, Exception!, CurrentPhase);
         }
         if (!string.IsNullOrEmpty(FailingSpec))
             report.AddEntry(new ReportSpecEntry(FailingSpec));

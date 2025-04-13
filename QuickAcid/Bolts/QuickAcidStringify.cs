@@ -4,7 +4,8 @@ namespace QuickAcid.Bolts;
 
 public static class QuickAcidStringify
 {
-    public static Func<T, string> Default<T>() => obj =>
+    public static Func<T, string> Default<T>() => obj => Default()(obj);
+    public static Func<object, string> Default() => obj =>
     {
         if (obj is null)
             return "null";
