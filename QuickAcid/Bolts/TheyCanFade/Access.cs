@@ -4,7 +4,7 @@ namespace QuickAcid.Bolts.TheyCanFade;
 
 public class Access
 {
-    public string? ActionKey { get; set; }
+    public HashSet<string> ActionKeys { get; set; } = [];
 
     public Exception? LastException { get; set; }
 

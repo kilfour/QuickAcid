@@ -24,7 +24,7 @@ public static class MemoryReportAssembler
             some: access =>
             {
                 bool same = access.LastException?.ToString() == exception?.ToString();
-                report.AddEntry(new ReportActEntry(access.ActionKey!)
+                report.AddEntry(new ReportActEntry(string.Join(", ", access.ActionKeys))
                 {
                     Exception = same ? access.LastException : null
                 });

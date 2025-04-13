@@ -38,7 +38,7 @@ namespace QuickAcid.Tests
                 select Acid.Test;
             var entry = run.ReportIfFailed().FirstOrDefault<ReportActEntry>();
             Assert.NotNull(entry);
-            Assert.Equal("bar", entry.Key);
+            Assert.Equal("foo, bar", entry.Key);
             Assert.NotNull(entry.Exception);
         }
     }

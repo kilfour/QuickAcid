@@ -21,7 +21,7 @@ public static partial class QAcid
 		return state =>
 		{
 			state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
-			state.GetExecutionContext().memory.ActionKey = key;
+			state.GetExecutionContext().memory.ActionKeys.Add(key);
 			try
 			{
 				return QAcidResult.Some(state, func());

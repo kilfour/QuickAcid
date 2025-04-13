@@ -40,9 +40,9 @@ namespace QuickAcid.CodeGen
 
         private static string GetActionCode(XMarksTheSpot xMarksTheSpot, Access access)
         {
-            var clue = xMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == access.ActionKey);
+            var clue = xMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == access.ActionKeys.First());
             if (clue == null)
-                return $"Action: {access.ActionKey}: DEFAULT";
+                return $"Action: {clue.Key}: DEFAULT";
             return "    " + FollowTheLead(clue, access) + ";";
         }
 
