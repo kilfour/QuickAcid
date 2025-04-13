@@ -9,8 +9,8 @@ public class Test
         public static QKey<List<string>> Commands => QKey<List<string>>.New("Commands");
     }
 
-    //[Fact(Skip = "This one Fails, ... intentionally")]
-    [Fact]
+    [Fact(Skip = "This one Fails, ... intentionally")]
+    //[Fact]
     public void CrashesOnBadInput()
     {
         var report =
