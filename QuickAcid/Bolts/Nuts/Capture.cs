@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Bolts.Nuts;
+﻿using QuickAcid.Bolts.TheyCanFade;
+
+namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcid
 {
@@ -6,7 +8,7 @@ public static partial class QAcid
 	{
 		return state =>
 		{
-			return QAcidResult.Some(state, state.Remember(key, func));
+			return QAcidResult.Some(state, state.Remember(key, func, ReportingIntent.Never));
 		};
 	}
 }

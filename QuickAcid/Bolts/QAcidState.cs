@@ -22,13 +22,13 @@ public class QAcidState : QAcidContext
         return new RunExecutionContext(Memory.ForThisExecution(), ShrinkableInputsTracker.ForThisExecution());
     }
 
-    public T Remember<T>(string key, Func<T> factory)
+    public T Remember<T>(string key, Func<T> factory, ReportingIntent reportingIntent = ReportingIntent.Shrinkable)
     {
         var execution = GetExecutionContext();
         if (!execution.memory.ContainsKey(key))
         {
             var value = factory();
-            execution.memory.Set(key, value);
+            execution.memory.Set(key, value, reportingIntent);
             return value;
         }
         return execution.Get<T>(key);

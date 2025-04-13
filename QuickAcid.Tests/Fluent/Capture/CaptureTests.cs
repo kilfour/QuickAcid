@@ -82,7 +82,7 @@ public class CaptureTests
         Assert.DoesNotContain("Property", report.ToString());
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact]
     public void Capture_never_shows_up_in_report_with_touch()
     {
         var report =

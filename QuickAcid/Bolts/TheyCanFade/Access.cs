@@ -28,12 +28,20 @@ public class Access
         dictionary[key] = new DecoratedValue { Value = value! };
     }
 
-    public void Set<T>(object key, T value)
+    public void Set<T>(object key, T value, ReportingIntent reportingIntent)
     {
         if (!dictionary.ContainsKey(key))
-            dictionary[key] = new DecoratedValue { Value = value! };
+            dictionary[key] = new DecoratedValue { Value = value!, ReportingIntent = reportingIntent };
         else
+        {
             dictionary[key].Value = value!;
+            dictionary[key].ReportingIntent = reportingIntent;
+        }
+    }
+
+    public void SetReportingIntent<T>(object key, ReportingIntent reportingIntent)
+    {
+        dictionary[key].ReportingIntent = reportingIntent;
     }
 
     public void SetShrinkOutcome(string key, ShrinkOutcome outcome)

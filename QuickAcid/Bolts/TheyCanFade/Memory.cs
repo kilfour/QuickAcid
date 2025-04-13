@@ -72,8 +72,8 @@ public class Memory
 
 		var memory = ForThisExecution();
 		var oldValue = memory.Get<object>(key);
-		memory.Set(key, newValue);
+		memory.Set(key, newValue, ReportingIntent.Never);
 
-		return new DisposableAction(() => memory.Set(key, oldValue));
+		return new DisposableAction(() => memory.Set(key, oldValue, ReportingIntent.Shrinkable));
 	}
 }

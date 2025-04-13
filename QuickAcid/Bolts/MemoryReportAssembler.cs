@@ -32,25 +32,14 @@ public static class MemoryReportAssembler
 
                 foreach (var (key, val) in access.GetAll())
                 {
-                    switch (val.ReportingIntent)
-                    {
-                        // case ReportingIntent.Shrinkable when val.ShrinkOutcome is ReportedOutcome msg:
-                        //     report.Add(...);
-                        //     break;
-                        // case Always:
-                        //     report.Add(...);
-                        //     break;
-                        // case Never:
-                        // default:
-                        //     break;
-                    }
                     if (val.ShrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
                     {
                         report.AddEntry(new ReportInputEntry(key) { Value = msg });
                     }
                     else if (!isFinalRun)
                     {
-                        report.AddEntry(new ReportInputEntry(key) { Value = QuickAcidStringify.Default()(val.Value) });
+                        if (val.ReportingIntent != ReportingIntent.Never)
+                            report.AddEntry(new ReportInputEntry(key) { Value = QuickAcidStringify.Default()(val.Value) });
                     }
                 }
                 return Acid.Test;
