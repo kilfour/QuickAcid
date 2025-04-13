@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections;
+using System.Reflection;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Bolts;
@@ -32,7 +33,7 @@ public class Shrink
     public static ShrinkOutcome Input<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var shrunk = ShrinkOutcome.Irrelevant;
-        if (typeof(IEnumerable<int>).IsAssignableFrom(typeof(T)))
+        if (typeof(System.Collections.IEnumerable).IsAssignableFrom(typeof(T)))
         {
             return ShrinkIEnumerable(state, key, value);
         }
@@ -134,15 +135,16 @@ public class Shrink
 
     private static ShrinkOutcome ShrinkIEnumerable<T>(QAcidState state, object key, T value)
     {
-        var theList = ((IEnumerable<int>)value).ToList();
+        var theList = CloneAsOriginalTypeList(value);
         int index = 0;
         while (index < theList.Count)
         {
             var ix = index;
             var before = theList[ix];
-            var primitiveVals = new[] { -1, 0, 1 };
+            var primitiveKey = before.GetType();
+            var primitiveVals = PrimitiveValues[primitiveKey];
             var removed = false;
-            foreach (var primitiveVal in primitiveVals.Where(p => !p.Equals(before)))
+            foreach (var primitiveVal in primitiveVals.Where(p => p == null || !p.Equals(before)))
             {
                 theList[ix] = primitiveVal;
                 var shrinkstate = state.ShrinkRun(key, theList);
@@ -159,9 +161,32 @@ public class Shrink
                 index++;
             }
         }
-        return ShrinkOutcome.Report($"[ {string.Join(", ", theList.Select(v => v.ToString()))} ]");
+        return ShrinkOutcome.Report($"[ {string.Join(", ", theList.Cast<object>().Select(v => v.ToString()))} ]");
     }
 
+    public static IList CloneAsOriginalTypeList(object value)
+    {
+        if (value is not IEnumerable enumerable)
+            throw new ArgumentException("Value is not an IEnumerable", nameof(value));
+
+        var valueType = value.GetType();
+        var elementType = valueType.IsGenericType
+            ? valueType.GetGenericArguments().FirstOrDefault()
+            : typeof(object); // fallback, though it shouldn't happen with real List<T>
+
+        if (elementType == null)
+            throw new InvalidOperationException("Could not determine the element type of the list.");
+
+        var typedListType = typeof(List<>).MakeGenericType(elementType);
+        var typedList = (IList)Activator.CreateInstance(typedListType)!;
+
+        foreach (var item in enumerable)
+        {
+            typedList.Add(item);
+        }
+
+        return typedList;
+    }
     private static ShrinkOutcome ShrinkPrimitive(QAcidState state, string key, object value, object[] primitiveVals, Func<object, bool> shrinkingGuard)
     {
         var originalFails = state.ShrinkRun(key, value);
