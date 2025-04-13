@@ -1,4 +1,3 @@
-using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
 using QuickMGenerate;
 
 namespace QuickAcid.Examples.Tutorial.Chapter3.TheShortestPathtoaBug;
