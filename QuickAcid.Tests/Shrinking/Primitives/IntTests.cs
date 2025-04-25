@@ -11,8 +11,8 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void OneRelevantInt()
         {
             var run =
-                from input1 in "input1".ShrinkableInput(MGen.Int(5, 7))
-                from input2 in "input2".ShrinkableInput(MGen.Int(5, 7))
+                from input1 in "input1".Shrinkable(MGen.Int(5, 7))
+                from input2 in "input2".Shrinkable(MGen.Int(5, 7))
                 from foo in "act".Act(() =>
                 {
                     if (input1 == 6) throw new Exception();
@@ -36,8 +36,8 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void TwoRelevantInts()
         {
             var run =
-                from input1 in "input1".ShrinkableInput(MGen.Int(5, 7))
-                from input2 in "input2".ShrinkableInput(MGen.Int(5, 7))
+                from input1 in "input1".Shrinkable(MGen.Int(5, 7))
+                from input2 in "input2".Shrinkable(MGen.Int(5, 7))
                 from foo in "act".Act(() =>
                 {
                     if (input1 == 6 && input2 == 6) throw new Exception();
@@ -66,8 +66,8 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void TwoRelevantIntsTricky()
         {
             var run =
-                from input1 in "input1".ShrinkableInput(MGen.Int(0, 100))
-                from input2 in "input2".ShrinkableInput(MGen.Int(0, 100))
+                from input1 in "input1".Shrinkable(MGen.Int(0, 100))
+                from input2 in "input2".Shrinkable(MGen.Int(0, 100))
                 from foo in "act".Act(() =>
                 {
                     if (input1 > 3 && input2 == 3) throw new Exception();

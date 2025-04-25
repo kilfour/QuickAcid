@@ -21,11 +21,11 @@ public class Spike
             from account in "account".AlwaysReported(() => new Account())
                 .AddCode((key, store) => $"var {key} = new Account();")
             from _ in "ops".Choose(
-                from depositAmount in "deposit amount".ShrinkableInput(MGen.Int(0, 10))
+                from depositAmount in "deposit amount".Shrinkable(MGen.Int(0, 10))
                 from act in "deposit".Act(() => account.Deposit(depositAmount))
                     .AddCode((key, store) => $"account.Deposit({store.Get<int>("deposit amount")})")
                 select Acid.Test,
-                from withdrawAmount in "withdraw amount".ShrinkableInput(MGen.Int(42, 42))
+                from withdrawAmount in "withdraw amount".Shrinkable(MGen.Int(42, 42))
                 from withdraw in "withdraw".Act(() => account.Withdraw(withdrawAmount))
                     .AddCode((key, store) => $"account.Withdraw({store.Get<int>("withdraw amount")})")
                 select Acid.Test

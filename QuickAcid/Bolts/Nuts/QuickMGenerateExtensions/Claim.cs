@@ -1,3 +1,4 @@
+using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
@@ -22,7 +23,20 @@ public class ClaimedGenerator<T> : IKnowMyGuard<T>
 
 	public Func<T, bool> Guard => _guard;
 
-	// Optional: implicit conversion so it can be used like a delegate
 	public static implicit operator Generator<T>(ClaimedGenerator<T> wrapper)
 		=> wrapper._inner;
+}
+
+
+public static class MGenExtensions
+{
+	public static Generator<T> ChooseFromFrozen<T>(IEnumerable<T> source)
+	{
+		var frozenList = source.ToList(); // <- Freeze here
+
+		if (!frozenList.Any())
+			throw new ArgumentException("ChooseFromFrozen requires at least one item.");
+
+		return MGen.Int(0, frozenList.Count).Select(index => frozenList[index]);
+	}
 }

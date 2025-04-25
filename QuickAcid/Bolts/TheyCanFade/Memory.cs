@@ -15,8 +15,8 @@ public class Memory
 		alwaysReportedInputMemory = new AlwaysReportedInputMemory(getCurrentActionId);
 	}
 
-	public T StoreAlwaysReported<T>(string key, Func<T> factory, Func<T, string> stringify)
-		=> alwaysReportedInputMemory.Store(key, factory, stringify);
+	public T StoreAlwaysReported<T>(string key, Func<T> factory, Func<T, string> stringify, bool reportIt)
+		=> alwaysReportedInputMemory.Store(key, factory, stringify, reportIt);
 
 	public Maybe<T> RetrieveAlwaysReported<T>(string key)
 		=> alwaysReportedInputMemory.Retrieve<T>(key);

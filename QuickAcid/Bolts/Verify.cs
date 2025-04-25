@@ -9,7 +9,7 @@ public static partial class QAcid
 	{
 		for (int i = 0; i < scopes; i++)
 		{
-			var state = new QAcidState(runner);
+			var state = new QAcidState(runner);//{ Verbose = true };
 			state.Run(executionsPerScope);
 			state.ThrowFalsifiableExceptionIfFailed();
 		}

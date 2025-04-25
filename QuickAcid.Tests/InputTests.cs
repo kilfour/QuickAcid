@@ -12,7 +12,7 @@ namespace QuickAcid.Tests
         public void UnusedInputIsNotReported()
         {
             var run =
-                from input in "input".ShrinkableInput(MGen.Int())
+                from input in "input".Shrinkable(MGen.Int())
                 from foo in "foo".Act(() =>
                 {
                     if (true) throw new Exception();

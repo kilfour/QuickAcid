@@ -7,14 +7,14 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcid
 {
-	public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator)
+	public static QAcidRunner<T> Shrinkable<T>(this string key, Generator<T> generator)
 	{
 		if (generator is IKnowMyGuard<T> guarded)
-			return key.ShrinkableInput(generator, guarded.Guard);
-		return ShrinkableInput(key, generator, _ => true);
+			return key.Shrinkable(generator, guarded.Guard);
+		return Shrinkable(key, generator, _ => true);
 	}
 
-	public static QAcidRunner<T> ShrinkableInput<T>(this string key, Generator<T> generator, Func<T, bool> guard)
+	public static QAcidRunner<T> Shrinkable<T>(this string key, Generator<T> generator, Func<T, bool> guard)
 	{
 		return state =>
 			{
@@ -30,7 +30,9 @@ public static partial class QAcid
 		{
 			case QAcidPhase.ShrinkInputEval:
 			case QAcidPhase.ShrinkingExecutions:
-				return QAcidResult.Some(state, execution.Get<T>(key));
+				return execution.GetMaybe<T>(key).Match(
+					some: x => QAcidResult.Some(state, x),
+					none: () => QAcidResult.None<T>(state));
 
 			case QAcidPhase.ShrinkingInputs when !execution.AlreadyTried(key):
 				{
@@ -47,5 +49,16 @@ public static partial class QAcid
 					return QAcidResult.Some(state, value);
 				}
 		}
+	}
+
+	public static QAcidRunner<T> DynamicInput<T>(this string key, Generator<T> generator)
+	{
+		return state =>
+		{
+			var execution = state.GetExecutionContext();
+			//execution.Set
+			var value = generator.Generate(); // re-evaluate every execution, always fresh
+			return QAcidResult.Some(state, value);
+		};
 	}
 }

@@ -16,7 +16,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 select thing;
             var run =
 
-                    from input in "input".ShrinkableInput(generator)
+                    from input in "input".Shrinkable(generator)
                     from foo in "act".Act(() =>
                     {
                         if (input.MyFirstProperty == "6") throw new Exception();
@@ -45,7 +45,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 select thing;
             var run =
 
-                    from input in "input".ShrinkableInput(generator)
+                    from input in "input".Shrinkable(generator)
                     from foo in "act".Act(() =>
                     {
                         if (input.MyFirstProperty == "6" && input.MySecondProperty == "6") throw new Exception();
@@ -82,7 +82,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             {
                 var run =
 
-                        from input in "input".ShrinkableInput(generator)
+                        from input in "input".Shrinkable(generator)
                         from foo in "act".Act(() =>
                         {
                             if (input.MyFirstProperty == "6" || input.MySecondProperty == "6") throw new Exception();
@@ -125,7 +125,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
 
             var run =
 
-                    from input in "input".ShrinkableInput(generator)
+                    from input in "input".Shrinkable(generator)
                     from result in "act".Act(() => new Something { MyFirstProperty = input.MyFirstProperty })
                     from spec in "equal".Spec(() =>
                         input.MyFirstProperty == result.MyFirstProperty

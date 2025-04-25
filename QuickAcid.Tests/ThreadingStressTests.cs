@@ -19,8 +19,8 @@ public class ThreadingStressTests
                     try
                     {
                         var run =
-                            from ignored in "not used".ShrinkableInput(MGen.Int(1, 100))
-                            from trigger in "failing value".ShrinkableInput(MGen.Int(0, 5))
+                            from ignored in "not used".Shrinkable(MGen.Int(1, 100))
+                            from trigger in "failing value".Shrinkable(MGen.Int(0, 5))
                             from check in "must fail".Spec(() =>
                                 {
                                     QAcidDebug.WriteLine($"[spec eval] trigger = {trigger}");
