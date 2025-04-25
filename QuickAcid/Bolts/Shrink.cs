@@ -80,7 +80,7 @@ public class Shrink
         return shrunk;
     }
 
-    public static IEnumerable<IEnumerable<T>> GetPowerSet<T>(List<T> list)
+    private static IEnumerable<IEnumerable<T>> GetPowerSet<T>(List<T> list)
     {
         return from m in Enumerable.Range(0, 1 << list.Count)
                select

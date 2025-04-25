@@ -27,11 +27,11 @@ public partial class LinqyTest
                             () => GetBroadcastersClients(broadcaster).Contains(clientProxyFactory.CreatedClients.Last()))
                     select Acid.Test,
 
-                    // from faultyClient in "Faulty Client".DynamicInput(MGen.ChooseFromWithDefaultWhenEmpty(GetBroadcastersClients(broadcaster)))
-                    // from _a2 in "Registered Client Faults".ActIf(() => faultyClient != null,
-                    //     () => ((TestClientProxy)faultyClient).Fault())
-                    // from _s2 in "Client Is Removed From Collection".Spec(() => !GetBroadcastersClients(broadcaster).Contains(faultyClient))
-                    // select Acid.Test,
+                    from faultyClient in "Faulty Client".DynamicInput(MGen.ChooseFromWithDefaultWhenEmpty(GetBroadcastersClients(broadcaster)))
+                    from _a2 in "Registered Client Faults".ActIf(() => faultyClient != null,
+                        () => ((TestClientProxy)faultyClient).Fault())
+                    from _s2 in "Client Is Removed From Collection".Spec(() => !GetBroadcastersClients(broadcaster).Contains(faultyClient))
+                    select Acid.Test,
 
                     from _a3 in "Broadcast".ActIf(
                         () => !needler.ThreadSwitch,
@@ -56,63 +56,3 @@ public partial class LinqyTest
     }
 }
 
-public class ChaosConcurrencyInterceptor : IInterceptor
-{
-    private static readonly Random rng = new Random();
-
-    private readonly HashSet<string> targetedMethods;
-
-    public ChaosConcurrencyInterceptor(params string[] methodNames)
-    {
-        targetedMethods = methodNames.ToHashSet();
-    }
-
-    public void Intercept(IInvocation invocation)
-    {
-        if (targetedMethods.Contains(invocation.Method.Name))
-        {
-            MaybeYield();
-        }
-
-        invocation.Proceed();
-    }
-
-    private void MaybeYield()
-    {
-        var roll = rng.Next(0, 100);
-
-        if (roll < 10) // 10% yield
-        {
-            Thread.Yield();
-        }
-        else if (roll < 15) // 5% tiny sleep
-        {
-            Thread.Sleep(rng.Next(1, 5));
-        }
-        else if (roll < 18) // 3% longer sleep
-        {
-            Thread.Sleep(rng.Next(10, 20));
-        }
-    }
-}
-
-public static class Spread
-{
-    public class Builder<T>
-    {
-        private object[] constructorArgs;
-        public Builder(object[] constructorArgs)
-        {
-            this.constructorArgs = constructorArgs;
-        }
-
-        public T On(params string[] methods)
-        {
-            return (T)new ProxyGenerator().CreateClassProxy(
-                typeof(T),
-                constructorArgs,
-                new ChaosConcurrencyInterceptor(methods));
-        }
-    }
-    public static Builder<T> Chaos<T>(object[] constructorArgs) { return new Builder<T>(constructorArgs); }
-}
