@@ -219,6 +219,9 @@ public class QAcidState : QAcidContext
         }
     }
 
+    public readonly Dictionary<Type, IShrinkStrategy> ShrinkingStrategies
+            = new Dictionary<Type, IShrinkStrategy>();
+
     public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
     {
         using (EnterPhase(QAcidPhase.ShrinkInputEval))

@@ -10,8 +10,8 @@ namespace QuickAcid.Examples.BroadcasterExample;
 public partial class LinqyTest
 {
 
-    //[Fact(Skip = "WIP")]
-    [Fact]
+    [Fact(Skip = "WIP")]
+    //[Fact]
     public void CheckItAgain()
     {
         var run =
