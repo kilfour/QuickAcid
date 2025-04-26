@@ -15,6 +15,11 @@ public class Access
         return (T)dictionary[key].Value!;
     }
 
+    public string GetAsString(object key) // for codegen
+    {
+        return dictionary[key].Value!.ToString();
+    }
+
     public Maybe<T> GetMaybe<T>(object key)
     {
         return dictionary.TryGetValue(key, out var value)

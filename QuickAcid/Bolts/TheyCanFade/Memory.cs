@@ -59,6 +59,11 @@ public class Memory
 		return memoryPerExecution[actionId];
 	}
 
+	public IEnumerable<string> GetAllAlwaysReportedKeys() // used by code gen
+	{
+		return alwaysReportedInputMemory.GetAllAlwaysReportedKeys();
+	}
+
 	public Access ForLastExecution() // used by codegen
 	{
 		return memoryPerExecution.Last().Value;

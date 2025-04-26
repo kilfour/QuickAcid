@@ -11,7 +11,7 @@ namespace QuickAcid.CodeGen
         {
             if (state.FailingSpec != null)
             {
-                var name = state.FailingSpec.Replace(" ", "_");
+                var name = state.FailingSpec.Split(":")[0].Replace(" ", "_");
                 return $"public void {name}()";
             }
             return "public void Throws()";
@@ -23,36 +23,58 @@ namespace QuickAcid.CodeGen
                 return "DEFAULT";
             return clue.SeeWhereItLeads.Invoke(clue.Key, access);
         }
-        private static string GetAlwaysReportedInputCode(Clue clue, Access access)
+
+        private static string Lowered(string a) => char.ToLowerInvariant(a[0]) + a[1..];
+
+        private static string GetAlwaysReportedInputsCode(string key, XMarksTheSpot xMarksTheSpot, Access access)
         {
-            var trackedString = $"AlwaysReported: {clue.Key}: DEFAULT";
+            var clue = xMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == key);
+            if (clue == null)
+                return $"    var {Lowered(key)} = new {key}();";
             return "    " + FollowTheLead(clue, access);
         }
 
-        private static string GetAlwaysReportedInputsCode(XMarksTheSpot xMarksTheSpot, Access access)
+        private static string? GetAlwaysReportedInputsCodes(QAcidState state)
         {
             var lines =
-                xMarksTheSpot.TheMap
-                    .Where(a => a.RunnerType == RunnerType.AlwaysReportedInputRunner)
-                    .Select(a => GetAlwaysReportedInputCode(a, access));
+                state.Memory.GetAllAlwaysReportedKeys()
+                .Select(a => GetAlwaysReportedInputsCode(a, state.XMarksTheSpot, state.Memory.For(0)));
+
             return string.Join(Environment.NewLine, lines);
         }
 
-        private static string GetActionCode(XMarksTheSpot xMarksTheSpot, Access access)
+        private static string GetActionCode(XMarksTheSpot xMarksTheSpot, string key, Access access)
         {
-            var clue = xMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == access.ActionKeys.First());
+            var clue = xMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == key);
             if (clue == null)
-                return $"Action: {clue.Key}: DEFAULT";
+            {
+                if (key.Contains(':'))
+                {
+                    var split = key.Split(':');
+                    var name = split[0];
+                    var arg = split[1];
+                    return $"    {name}({access.GetAsString(arg)});";
+                }
+                return $"    {key}();";
+            }
+
             return "    " + FollowTheLead(clue, access) + ";";
         }
 
-        private static string GetActionsCode(QAcidState state)
+        private static string GetExecutionCode(XMarksTheSpot xMarksTheSpot, Access access)
+        {
+            return string.Join(Environment.NewLine,
+                access.ActionKeys
+                    .Select(a => GetActionCode(xMarksTheSpot, a, access)));
+        }
+
+        private static string GetExecutionsCode(QAcidState state)
         {
             var sb = new StringBuilder();
             foreach (int actionNumber in state.ExecutionNumbers)
             {
                 if (state.Memory.Has(actionNumber))
-                    sb.AppendLine(GetActionCode(state.XMarksTheSpot, state.Memory.For(actionNumber)));
+                    sb.AppendLine(GetExecutionCode(state.XMarksTheSpot, state.Memory.For(actionNumber)));
             }
             return sb.ToString();
         }
@@ -63,7 +85,14 @@ namespace QuickAcid.CodeGen
             {
                 var clue = state.XMarksTheSpot.TheMap.SingleOrDefault(a => a.Key == state.FailingSpec);
                 if (clue == null)
-                    return $"Failing Spec: {state.FailingSpec} : DEFAULT";
+                {
+                    if (state.FailingSpec.Contains(':'))
+                    {
+                        return $"    Assert.True({state.FailingSpec.Split(":")[1].Trim()});";
+                    }
+                    return $"    Assert.True({state.FailingSpec});";
+                }
+
                 return GetAssertTrueCode(
                     state.XMarksTheSpot.TheMap.Single(a => a.Key == state.FailingSpec),
                     state.Memory.ForLastExecution());
@@ -87,11 +116,13 @@ namespace QuickAcid.CodeGen
             sb.AppendLine("[Fact]");
             sb.AppendLine(GetFunctionDeclaration(state));
             sb.AppendLine("{");
-            sb.AppendLine(GetAlwaysReportedInputsCode(state.XMarksTheSpot, state.Memory.For(0)));
-            sb.Append(GetActionsCode(state));
+            sb.AppendLine(GetAlwaysReportedInputsCodes(state));
+            sb.Append(GetExecutionsCode(state));
             sb.AppendLine(GetAssertionCode(state));
             sb.AppendLine("}");
             return sb.ToString();
         }
+
+
     }
 }

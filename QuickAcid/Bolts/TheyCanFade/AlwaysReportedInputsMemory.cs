@@ -72,4 +72,9 @@ public class AlwaysReportedInputMemory
         //     entry => entry.Key,
         //     entry => new Dictionary<string, string>(entry.Value));
     }
+
+    public IEnumerable<string> GetAllAlwaysReportedKeys()
+    {
+        return values.Keys;
+    }
 }
