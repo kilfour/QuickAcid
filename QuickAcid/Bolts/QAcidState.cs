@@ -1,4 +1,5 @@
-﻿using QuickAcid.Bolts.TheyCanFade;
+﻿using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.CodeGen;
 using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;

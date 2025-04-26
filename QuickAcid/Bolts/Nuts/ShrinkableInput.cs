@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
+using QuickAcid.Bolts.ShrinkStrats;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class Shrink
 {

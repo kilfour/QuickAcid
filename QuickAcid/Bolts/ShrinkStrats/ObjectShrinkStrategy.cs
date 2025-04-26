@@ -1,8 +1,9 @@
 
 using System.Reflection;
+using QuickAcid.Bolts;
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class ObjectShrinkStrategy : IShrinkStrategy
 {

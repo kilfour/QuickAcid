@@ -1,3 +1,5 @@
+using QuickAcid.Bolts.ShrinkStrats;
+
 namespace QuickAcid.Bolts;
 public class PrimitiveShrinkStrategy : IShrinkStrategy
 {
