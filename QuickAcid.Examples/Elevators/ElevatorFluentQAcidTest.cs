@@ -42,7 +42,6 @@ public class ElevatorFluentQAcidTest : QAcidLoggingFixture
                     opt.As("OpenDoors").UseThe(Keys.Elevator).Now(e => e.OpenDoors()),
                     opt.As("CloseDoors").UseThe(Keys.Elevator).Now(e => e.CloseDoors())
                 ])
-                .PickOne()
                 .DumpItInAcid()
                 .AndCheckForGold(30, 10);
 

@@ -1,4 +1,5 @@
 using QuickAcid.Bolts;
+using QuickAcid.CodeGen;
 using QuickAcid.Reporting;
 
 namespace QuickAcid.Fluent;
@@ -31,5 +32,10 @@ public class Wendy
                 return state.GetReport();
         }
         return null!;
+    }
+
+    public void AndRunTheWohlwillProcess(int scopes, int executionsPerScope)
+    {
+        runner.TheWohlwillProcess(scopes, executionsPerScope);
     }
 }

@@ -8,10 +8,11 @@ public static class QAcidDebug
 
     public static void Disable() => _log = null;
 
-    public static void EnableFileLogging(string fileName = "log.txt")
+    public static void EnableFileLogging(string fileName = "log.txt", bool append = false)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", fileName);
-        File.Delete(path);
+        if (!append)
+            File.Delete(path);
         _log = msg => File.AppendAllText(Path.GetFullPath(path), msg);
     }
 

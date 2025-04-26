@@ -28,7 +28,6 @@ namespace QuickAcid.Examples
 							.Expect("Set does not contain removed int")
 							.Ensure(ctx => !ctx.Get(K.Set).Contains(ctx.Get(K.IntToRemove)))
 					])
-					.PickOne()
 					.DumpItInAcid()
 					.KeepOneEyeOnTheTouchStone()
 					.AndCheckForGold(30, 50);

@@ -16,7 +16,6 @@ public class OptionsTests
                     .Options(opt => [
                         opt.Do("1", () => { collector+= "a"; }),
                         opt.Do("2", () => { collector+= "b"; }) ])
-                    .PickOne()
                     .DumpItInAcid()
                     .AndCheckForGold(1, 2);
             outcomes.Add(collector);

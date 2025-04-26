@@ -1,6 +1,7 @@
-using QuickAcid;
 using QuickAcid.Reporting;
 using QuickMGenerate;
+
+namespace QuickAcid.Tests.Reporting;
 
 public class FuzzedInputTests
 {

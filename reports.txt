@@ -1,0 +1,38 @@
+===================================================
+QuickAcid Report:
+ ----------------------------------------
+ -- Property 'No Overdraft' was falsified
+ -- Original failing run: 1 execution(s)
+ -- Shrunk to minimal case:  1 execution(s) (2 shrinks)
+ ----------------------------------------
+ RUN START :
+   => Account (tracked) : 1000
+ ---------------------------
+ EXECUTE : account.Withdraw
+   - Input : withdraw = 61
+ ***************************
+  Spec Failed : No Overdraft
+ ***************************
+
+
+===================================================
+QuickAcid Report:
+ ----------------------------------------
+ -- Property 'Balance Has Maximum' was falsified
+ -- Original failing run: 2 execution(s)
+ -- Shrunk to minimal case:  2 execution(s) (4 shrinks)
+ ----------------------------------------
+ RUN START :
+   => Account (tracked) : 178
+ ---------------------------
+ EXECUTE : account.Deposit
+   - Input : deposit = 89
+   => Account (tracked) : 89
+ ---------------------------
+ EXECUTE : account.Deposit
+ **********************************
+  Spec Failed : Balance Has Maximum
+ **********************************
+
+
+===================================================

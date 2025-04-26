@@ -75,7 +75,6 @@ public class FuzzedInputTests
                         .Expect("differs per action")
                             .OnlyWhen(_ => theAnswer1 != 0 && theAnswer2 != 0)
                             .Ensure(_ => theAnswer1 != theAnswer2)])
-                .PickOne()
                 .DumpItInAcid()
                 .KeepOneEyeOnTheTouchStone()
                 .AndCheckForGold(10, 1);

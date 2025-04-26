@@ -18,7 +18,7 @@ public static class C
 	public static int IntToRemove(this QAcidContext ctx) => ctx.Get(K.IntToRemove);
 }
 
-public class SetTest : QAcidLoggingFixture
+public class SetTest
 {
 	[Fact]
 	public void ReportsError()
@@ -40,7 +40,6 @@ public class SetTest : QAcidLoggingFixture
 							.Expect("Set does not contain removed int")
 							.Ensure(ctx => !ctx.Get(K.Set).Contains(ctx.IntToRemove()))
 				])
-				.PickOne()
 				.DumpItInAcid()
 				.AndCheckForGold(30, 50);
 		Assert.NotNull(report);

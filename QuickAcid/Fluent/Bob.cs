@@ -45,6 +45,8 @@ public class Bob
         => Bind(_ => label.AlwaysReported(func));
     public Bob AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func)
         => Bind(_ => key.Label.AlwaysReported(func));
+    public Bob AlwaysReported<TNew>(string label, Func<TNew> func, Func<TNew, string> stringify)
+        => Bind(_ => label.AlwaysReported(func, stringify));
     public Bob AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func, Func<TNew, string> stringify)
         => Bind(_ => key.Label.AlwaysReported(func, stringify));
     // using Context
@@ -102,10 +104,14 @@ public class Bob
     public Lofty As(string label)
         => new Lofty(this, label);
 
-    public Trix Options(Func<Bob, IEnumerable<Bob>> choicesBuilder)
+    public Bob Options(Func<Bob, IEnumerable<Bob>> choicesBuilder)
     {
-        var options = choicesBuilder(this).ToList();
-        return new Trix(this, options);
+        var options = choicesBuilder(this).Select(opt => opt.runner).ToArray();
+        var combined =
+            from _ in this.runner
+            from result in "__00__".Choose(options)
+            select Acid.Test;
+        return new Bob(combined);
     }
 
     // -------------------------------------------------------------------------

@@ -2,12 +2,10 @@ using QuickMGenerate;
 using QuickAcid.CodeGen;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
-using QuickAcid.Tests.CodeGen;
-using QuickAcid.Tests;
 
-namespace QuickAcid.Examples.CodeGen;
+namespace QuickAcid.Tests.CodeGen;
 
-public class Spike : QAcidLoggingFixture
+public class Spike
 {
     public class Account
     {
@@ -79,7 +77,5 @@ public class Spike : QAcidLoggingFixture
         Assert.Equal("}", reader.NextLine());
         Assert.Equal("", reader.NextLine());
         Assert.True(reader.EndOfCode());
-
-
     }
 }

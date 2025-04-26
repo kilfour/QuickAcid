@@ -17,7 +17,6 @@ public class Test
                     opt.Do("Increment", c => c.Get(K.Counter).Increment()),
                     opt.Do("Decrement", c => c.Get(K.Counter).Decrement())
                 ])
-                .PickOne()
                 .Assert("always positive", c => c.Get(K.Counter).Value >= 0)
                 .DumpItInAcid()
                 .AndCheckForGold(10, 10);
