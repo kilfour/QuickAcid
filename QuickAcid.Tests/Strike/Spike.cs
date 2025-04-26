@@ -19,7 +19,7 @@ public class Spike
         public void Withdraw(int amount) { Balance -= amount; }
     }
 
-    [Fact]
+    [Fact(Skip = "demo")]
     public void InitialIdea()
     {
         var report =
@@ -37,7 +37,7 @@ public class Spike
             Assert.Fail(report.ToString());
     }
 
-    [Fact]
+    [Fact(Skip = "demo")]
     public void Unit()
     {
         var report =

@@ -2,7 +2,8 @@ using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid.Tests;
+namespace QuickAcid.Tests.Bugs;
+
 public class DocumentingBehavior
 {
     public Generator<int> Counter()
@@ -14,8 +15,6 @@ public class DocumentingBehavior
     [Fact]
     public void AlwaysReported_should_be_consistent_across_executions()
     {
-        // 🧪 Verifies that AlwaysReported(...) is stable across executions in the same run
-        // Fails if Memory.ResetAllRunInputs() is called per execution instead of per run
         var executionCount = 0;
         var specHolds = true;
         var alwaysReportedChanged = false;

@@ -16,7 +16,6 @@ public partial class LinqyTest
         var run =
             from clientProxyFactory in "ClientProxyFactory".Stashed(() => new TestClientProxyFactory())
             from broadcaster in "Broadcaster".Stashed(
-                //() => Spread.Chaos<Broadcaster>([clientProxyFactory]).On())
                 () => new Broadcaster(clientProxyFactory))
             from needler in "Needler".Stashed(() => new Needler())
             from _o1 in "ops".Choose(

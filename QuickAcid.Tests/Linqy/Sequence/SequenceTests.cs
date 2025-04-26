@@ -2,7 +2,7 @@
 using QuickAcid.Reporting;
 using QuickAcid.Bolts;
 
-namespace QuickAcid.Tests;
+namespace QuickAcid.Tests.Linqy.Sequence;
 
 public class SequenceTests
 {
