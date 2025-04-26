@@ -1,5 +1,4 @@
 using System.Reflection;
-using Castle.DynamicProxy;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Examples.BroadcasterExample.SimpleModel;

@@ -1,6 +1,5 @@
 using System.Reflection;
 using QuickAcid.Examples.BroadcasterExample.SimpleModel;
-using QuickAcid.MonadiXEtAl;
 
 namespace QuickAcid.Examples.BroadcasterExample;
 
