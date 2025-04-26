@@ -34,6 +34,18 @@ public class Wendy
         return null!;
     }
 
+    public string ToCodeIfFailed(int scopes, int executionsPerScope)
+    {
+        for (int i = 0; i < scopes; i++)
+        {
+            var state = new QAcidState(runner) { Verbose = verbose };
+            state.Run(executionsPerScope);
+            if (state.CurrentContext.Failed)
+                return Prospector.Pan(state); ;
+        }
+        return null!;
+    }
+
     public void AndRunTheWohlwillProcess(int scopes, int executionsPerScope)
     {
         runner.TheWohlwillProcess(scopes, executionsPerScope);

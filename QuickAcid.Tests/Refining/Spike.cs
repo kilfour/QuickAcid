@@ -14,9 +14,7 @@ public class Account
 
 public class Spike
 {
-
-
-    [Fact]
+    [Fact(Skip = "demo")]
     public void Lets_see_where_this_vein_leads()
     {
         var run =
@@ -36,7 +34,7 @@ public class Spike
         run.TheWohlwillProcess(20, 20);
     }
 
-    [Fact]
+    [Fact(Skip = "demo")]
     public void FluentRefining()
     {
         SystemSpecs.Define()
