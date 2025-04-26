@@ -26,42 +26,19 @@ A guided walkthrough in bite-sized chapters:
 
 ---
 
-## Example
+## Examples
 
 ```csharp
-public static class K
-{
-    public static QKey<ICollection<int>> Set => QKey<ICollection<int>>.New("Set");
-    public static QKey<int> IntToAdd => QKey<int>.New("IntToAdd");
-    public static QKey<int> IntToRemove => QKey<int>.New("IntToRemove");
-}
-
-public class SetTest
-{
-    [Fact]
-    public void ReportsError()
-    {
-        var report =
-            SystemSpecs.Define()
-                .AlwaysReported(K.Set, () => new List<int>())
-                .Fuzzed(K.IntToAdd, MGen.Int(1, 10))
-                .Fuzzed(K.IntToRemove, MGen.Int(1, 10))
-                .Options(opt => [
-                    opt.Do("Add", c => c.Get(K.Set).Add(c.Get(K.IntToAdd)))
-                        .Expect("Set contains added int")
-                        .Ensure(ctx => ctx.Get(K.Set).Contains(ctx.Get(K.IntToAdd))),
-                    opt.Do("Remove", c => c.Get(K.Set).Remove(c.Get(K.IntToRemove)))
-                        .Expect("Set does not contain removed int")
-                        .Ensure(ctx => !ctx.Get(K.Set).Contains(ctx.Get(K.IntToRemove)))
-                ])
-                .PickOne()
-                .DumpItInAcid()
-                .AndCheckForGold(30, 50);
-
-        if (report != null)
-            Assert.Fail(report.ToString());
-    }
-}
+Test.This(() => new Account())
+    .Arrange(
+        ("deposit", MGen.Int(0, 100).AsObject()),
+        ("withdraw", MGen.Int(0, 100).AsObject()))
+    .Act(
+        Perform.Action("deposit", (Account account, int deposit) => account.Deposit(deposit)),
+        Perform.Action("withdraw", (Account account, int withdraw) => account.Withdraw(withdraw)))
+    .Assert("No Overdraft", account => account.Balance >= 0)
+    .Assert("Balance Capped", account => account.Balance <= 100)
+    .Run(50, 10);
 ```
 
 ### Sample Output
@@ -90,11 +67,6 @@ public class SetTest
 ```
 
 ---
-
-## Why Keys?
-
-Keys like `QKey<T>` are **optional**, but they give you type safety, IDE refactor support, and protection from stringly-typed bugs.  
-You *can* just use strings, but the keys are there for your own safety.
 
 
 
