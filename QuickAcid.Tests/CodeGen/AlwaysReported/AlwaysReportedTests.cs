@@ -11,7 +11,7 @@ namespace QuickAcid.Tests.CodeGen.Act
             var run =
                 from _ in "MyObject".AlwaysReported(() => new object())
                 select Acid.Test;
-            var reader = CodeReader.FromRun(run);
+            var reader = LinesReader.FromRun(run);
             Assert.Equal("[Fact]", reader.NextLine());
             Assert.Equal("public void Throws()", reader.NextLine());
             Assert.Equal("{", reader.NextLine());
@@ -30,7 +30,7 @@ namespace QuickAcid.Tests.CodeGen.Act
                 from _ in "MyObject".AlwaysReported(() => new object())
                 from __ in "MyOtherObject".AlwaysReported(() => new object())
                 select Acid.Test;
-            var reader = CodeReader.FromRun(run);
+            var reader = LinesReader.FromRun(run);
             reader.Skip(3);
             Assert.Equal("    var myObject = new MyObject();", reader.NextLine());
             Assert.Equal("    var myOtherObject = new MyOtherObject();", reader.NextLine());

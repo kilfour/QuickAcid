@@ -24,7 +24,7 @@ public static class MemoryReportAssembler
             some: access =>
             {
                 bool same = access.LastException?.ToString() == exception?.ToString();
-                report.AddEntry(new ReportActEntry(string.Join(", ", access.ActionKeys))
+                report.AddEntry(new ReportActEntry(string.Join(", ", access.ActionKeys.Select(LabelPrettifier.Prettify)))
                 {
                     Exception = same ? access.LastException : null
                 });
@@ -34,12 +34,12 @@ public static class MemoryReportAssembler
                 {
                     if (val.ShrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
                     {
-                        report.AddEntry(new ReportInputEntry(key) { Value = msg });
+                        report.AddEntry(new ReportInputEntry(LabelPrettifier.Prettify(key)) { Value = msg });
                     }
                     else if (!isFinalRun)
                     {
                         if (val.ReportingIntent != ReportingIntent.Never)
-                            report.AddEntry(new ReportInputEntry(key) { Value = QuickAcidStringify.Default()(val.Value) });
+                            report.AddEntry(new ReportInputEntry(LabelPrettifier.Prettify(key)) { Value = QuickAcidStringify.Default()(val.Value) });
                     }
                 }
                 return Acid.Test;

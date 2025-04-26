@@ -3,44 +3,50 @@ using QuickAcid.CodeGen;
 
 namespace QuickAcid.Tests.CodeGen;
 
-public class CodeReader
+public class LinesReader
 {
     private string[] lines;
     private int currentIndex = -1;
 
-    public CodeReader(string code)
+    private LinesReader(string text)
     {
-        lines = code.Split(Environment.NewLine);
+        lines = text.Split(Environment.NewLine);
         if (lines.Count() > 0)
             currentIndex = 0;
     }
 
-    public static CodeReader FromRun(QAcidRunner<Acid> runner)
+    public static LinesReader FromText(string text)
+    {
+        return new LinesReader(text);
+    }
+
+    public static LinesReader FromRun(QAcidRunner<Acid> runner)
     {
         var state = new QAcidState(runner);
         state.Run(1);
-        return new CodeReader(Prospector.Pan(state));
+        return new LinesReader(Prospector.Pan(state));
     }
 
-    public static CodeReader FromFailingRun(QAcidRunner<Acid> runner)
+    public static LinesReader FromFailingRun(QAcidRunner<Acid> runner)
     {
-        return new CodeReader(runner.ToCodeIfFailed(1, 1));
+        return new LinesReader(runner.ToCodeIfFailed(1, 1));
     }
 
-    public static CodeReader FromFailingRunTryFiftyTimes(QAcidRunner<Acid> runner)
+    public static LinesReader FromFailingRunTryFiftyTimes(QAcidRunner<Acid> runner)
     {
-        return new CodeReader(runner.ToCodeIfFailed(1, 50));
+        return new LinesReader(runner.ToCodeIfFailed(1, 50));
     }
 
     public string NextLine()
     {
-        if (currentIndex == -1) return "-- NO CODE RECEIVED --";
-        if (currentIndex > lines.Count() - 1) return "-- READ BEYOND THE CODE --";
+        if (currentIndex == -1) return "-- NO TEXT RECEIVED --";
+        if (currentIndex > lines.Count() - 1) return "-- READ BEYOND THE TEXT --";
         var result = lines[currentIndex];
         currentIndex++;
         return result;
     }
-    public CodeReader Skip()
+
+    public LinesReader Skip()
     {
         currentIndex++;
         return this;

@@ -1,4 +1,5 @@
-﻿using QuickAcid.Bolts.ShrinkStrats;
+﻿using System.Security.Cryptography;
+using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.CodeGen;
 using QuickAcid.MonadiXEtAl;
@@ -171,7 +172,7 @@ public class QAcidState : QAcidContext
     private IEnumerable<string> GetReportHeaderInfo()
     {
         if (!string.IsNullOrEmpty(FailingSpec))
-            yield return $"Property '{FailingSpec}' was falsified";
+            yield return $"Property '{LabelPrettifier.Prettify(FailingSpec)}' was falsified";
         if (Exception != null)
             yield return "Exception thrown";
         yield return $"Original failing run: {OriginalFailingRunExecutionCount} execution(s)";
@@ -250,7 +251,7 @@ public class QAcidState : QAcidContext
                 .AddAllMemoryToReport(report, Memory, executionNumber, Exception!, isFinalRun);
         }
         if (!string.IsNullOrEmpty(FailingSpec))
-            report.AddEntry(new ReportSpecEntry(FailingSpec));
+            report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(FailingSpec)));
         return report;
     }
 

@@ -10,7 +10,7 @@ namespace QuickAcid.Tests.CodeGen.Act
         {
             var run = from _ in "The_Key_From_Test".Act(() => { }) select Acid.Test;
 
-            var reader = CodeReader.FromRun(run);
+            var reader = LinesReader.FromRun(run);
             Assert.Equal("[Fact]", reader.NextLine());
             Assert.Equal("public void Throws()", reader.NextLine());
             Assert.Equal("{", reader.NextLine());
@@ -29,7 +29,7 @@ namespace QuickAcid.Tests.CodeGen.Act
                 from _2 in "The_Key_From_Test2".Act(() => { })
                 select Acid.Test;
 
-            var reader = CodeReader.FromRun(run);
+            var reader = LinesReader.FromRun(run);
             reader.Skip(4);
             Assert.Equal("    The_Key_From_Test1();", reader.NextLine());
             Assert.Equal("    The_Key_From_Test2();", reader.NextLine());

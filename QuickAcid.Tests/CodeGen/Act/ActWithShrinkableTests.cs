@@ -14,7 +14,7 @@ namespace QuickAcid.Tests.CodeGen.Act
                 from a in "DoingStuff:input".Act(() => { })
                 select Acid.Test;
 
-            var reader = CodeReader.FromRun(run);
+            var reader = LinesReader.FromRun(run);
             reader.Skip(4);
             Assert.Equal("    DoingStuff(42);", reader.NextLine());
 

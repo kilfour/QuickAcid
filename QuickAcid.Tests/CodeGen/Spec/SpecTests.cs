@@ -10,7 +10,7 @@ namespace QuickAcid.Tests.CodeGen.Act
         {
             var run = from _ in "TheSpec".Spec(() => false) select Acid.Test;
 
-            var reader = CodeReader.FromFailingRun(run);
+            var reader = LinesReader.FromFailingRun(run);
             Assert.Equal("[Fact]", reader.NextLine());
             Assert.Equal("public void TheSpec()", reader.NextLine());
             Assert.Equal("{", reader.NextLine());
@@ -25,7 +25,7 @@ namespace QuickAcid.Tests.CodeGen.Act
         {
             var run = from _ in "TheSpec".Spec(() => false) select Acid.Test;
 
-            var reader = CodeReader.FromFailingRun(run);
+            var reader = LinesReader.FromFailingRun(run);
             reader.Skip();
             Assert.Equal("public void TheSpec()", reader.NextLine());
         }
@@ -35,7 +35,7 @@ namespace QuickAcid.Tests.CodeGen.Act
         {
             var run = from _ in "TheSpec: ignore me".Spec(() => false) select Acid.Test;
 
-            var reader = CodeReader.FromFailingRun(run);
+            var reader = LinesReader.FromFailingRun(run);
             reader.Skip();
             Assert.Equal("public void TheSpec()", reader.NextLine());
         }
