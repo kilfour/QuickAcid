@@ -17,7 +17,7 @@ public class QAcidReport
     public override string ToString()
     {
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine();
+        stringBuilder.AppendLine("QuickAcid Report:");
         foreach (var entry in entries)
         {
             stringBuilder.AppendLine(entry.ToString());

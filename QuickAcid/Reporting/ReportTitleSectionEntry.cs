@@ -14,7 +14,7 @@ public class ReportTitleSectionEntry : IAmAReportEntry
         stringBuilder.AppendLine(" ----------------------------------------");
         foreach (var str in title)
             stringBuilder.AppendLine($" -- {str}");
-        stringBuilder.AppendLine(" ----------------------------------------");
+        stringBuilder.Append(" ----------------------------------------");
         return stringBuilder.ToString();
     }
 }

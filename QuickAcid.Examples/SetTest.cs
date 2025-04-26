@@ -11,7 +11,8 @@ namespace QuickAcid.Examples
 
 	public class SetTest
 	{
-		[Fact(Skip = "Demo")]
+		//[Fact(Skip = "Demo")]
+		[Fact]
 		public void ReportsError()
 		{
 			var report =
@@ -29,6 +30,7 @@ namespace QuickAcid.Examples
 					])
 					.PickOne()
 					.DumpItInAcid()
+					//.KeepOneEyeOnTheTouchStone()
 					.AndCheckForGold(30, 50);
 			if (report != null)
 				Assert.Fail(report.ToString());
