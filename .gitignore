@@ -7,3 +7,5 @@ _ReSharper.*/
 /packages
 **/log*.txt
 temp.md
+reports.txt
+Tests.cs
