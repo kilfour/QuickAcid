@@ -8,7 +8,7 @@ public static class QAcidDebug
 
     public static void Disable() => _log = null;
 
-    public static void EnableFileLogging(string fileName = "log.txt", bool append = false)
+    public static void EnableFileLogging(string fileName = "log.txt", bool append = true)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", fileName);
         if (!append)

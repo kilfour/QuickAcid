@@ -34,6 +34,16 @@ public class Wendy
         return null!;
     }
 
+    public void ThrowFalsifiableExceptionIfFailed(int scopes, int executionsPerScope)
+    {
+        for (int i = 0; i < scopes; i++)
+        {
+            var state = new QAcidState(runner) { Verbose = verbose };
+            state.Run(executionsPerScope);
+            state.ThrowFalsifiableExceptionIfFailed();
+        }
+    }
+
     public string ToCodeIfFailed(int scopes, int executionsPerScope)
     {
         for (int i = 0; i < scopes; i++)

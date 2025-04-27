@@ -44,8 +44,6 @@ public class SetTest
 				.AndCheckForGold(30, 50);
 		Assert.NotNull(report);
 
-		QAcidDebug.Write(report.ToString());
-
 		var actionEntries = report.Entries.OfType<ReportActEntry>();
 		var inputEntries = report.Entries.OfType<ReportInputEntry>();
 		Assert.Equal(3, actionEntries.Count());

@@ -19,6 +19,7 @@ public class Test
                 ])
                 .Assert("always positive", c => c.Get(K.Counter).Value >= 0)
                 .DumpItInAcid()
+                .KeepOneEyeOnTheTouchStone()
                 .AndCheckForGold(10, 10);
         if (report != null)
             Assert.Fail(report.ToString());

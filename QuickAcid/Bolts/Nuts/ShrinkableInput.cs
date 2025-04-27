@@ -26,7 +26,6 @@ public static partial class QAcid
 	private static QAcidResult<T> HandleShrinkableInput<T>(this QAcidState state, string key, Generator<T> generator, Func<T, bool> guard)
 	{
 		var execution = state.GetExecutionContext();
-
 		switch (state.CurrentPhase)
 		{
 			case QAcidPhase.ShrinkInputEval:

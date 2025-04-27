@@ -78,7 +78,6 @@ public class CaptureTests
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
-        QAcidDebug.WriteLine(report.ToString());
         Assert.DoesNotContain("Property", report.ToString());
     }
 
@@ -95,7 +94,6 @@ public class CaptureTests
                 .KeepOneEyeOnTheTouchStone()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
-        QAcidDebug.WriteLine(report.ToString());
         Assert.DoesNotContain("Property", report.ToString());
     }
 }

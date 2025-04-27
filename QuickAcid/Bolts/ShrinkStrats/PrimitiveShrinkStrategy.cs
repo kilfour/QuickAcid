@@ -29,7 +29,10 @@ public class PrimitiveShrinkStrategy : IShrinkStrategy
 
     public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
-        var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(typeof(T)));
+        var actualType = typeof(T) == typeof(object) && value != null
+            ? value.GetType()
+            : typeof(T);
+        var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(actualType));
         var primitiveVals = PrimitiveValues[primitiveKey];
         var originalFails = state.ShrinkRun(key, value);
         if (!originalFails)

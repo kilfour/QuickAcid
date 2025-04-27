@@ -23,6 +23,8 @@ public class Memory
 
 	public void ResetAllRunInputs()
 		=> alwaysReportedInputMemory.Reset();
+	public void ResetAlwaysReportedMemory() // NOT HAPPY ABOUT THIS, Strike needs this somehow
+		=> alwaysReportedInputMemory.ResetReportPerExecution();
 
 	public Access For(int actionId)
 	{

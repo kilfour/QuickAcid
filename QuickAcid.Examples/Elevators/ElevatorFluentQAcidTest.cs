@@ -16,7 +16,7 @@ public static class FluentElevatorHelpers
         => ctx.Get(Keys.PreviousFloor);
 }
 
-public class ElevatorFluentQAcidTest : QAcidLoggingFixture
+public class ElevatorFluentQAcidTest
 {
     [Fact]
     public void FluentElevatorRequestSystemWorks()

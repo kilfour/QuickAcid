@@ -40,6 +40,11 @@ public class AlwaysReportedInputMemory
         reportPerExecution.Clear();
     }
 
+    public void ResetReportPerExecution() // NOT HAPPY ABOUT THIS, Strike needs this somehow
+    {
+        reportPerExecution.Clear();
+    }
+
     public void AddToReport(QAcidReport report, int executionId)
     {
         if (reportPerExecution.TryGetValue(executionId, out var dict))
