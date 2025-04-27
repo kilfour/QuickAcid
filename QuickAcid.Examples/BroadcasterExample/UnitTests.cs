@@ -41,13 +41,4 @@ public class UnitTests
         needler.Stop();
         Assert.Null(needler.ExceptionFromThread);
     }
-
-
-
-    private static List<IClientProxy> GetBroadcastersClients(Broadcaster caster)
-    {
-        var clientsFieldInfo =
-            typeof(Broadcaster).GetField("clients", BindingFlags.NonPublic | BindingFlags.Instance);
-        return (List<IClientProxy>)clientsFieldInfo!.GetValue(caster)!;
-    }
 }

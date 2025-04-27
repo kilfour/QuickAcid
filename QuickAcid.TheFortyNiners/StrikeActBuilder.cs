@@ -1,6 +1,6 @@
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid.Strike;
+namespace QuickAcid.TheFortyNiners;
 
 public class StrikeActBuilder<TModel>
 {

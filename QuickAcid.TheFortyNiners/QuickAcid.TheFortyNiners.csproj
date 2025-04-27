@@ -5,4 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+      <Reference Include="QuickMGenerate">
+          <HintPath>../Libs/QuickMGenerate/QuickMGenerate.dll</HintPath>
+      </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuickAcid\QuickAcid.csproj" />
+  </ItemGroup>
+  
 </Project>

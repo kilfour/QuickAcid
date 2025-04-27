@@ -1,7 +1,6 @@
 using QuickMGenerate;
-using QuickAcid.Strike;
 
-namespace QuickAcid.Examples.Strike;
+namespace QuickAcid.TheFortyNiners.Tests.Examples;
 
 public class ItsOnlyAModel
 {

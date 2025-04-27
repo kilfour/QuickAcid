@@ -1,10 +1,9 @@
 
 using System.Linq.Expressions;
-using QuickAcid.Strike;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid.Strike;
+namespace QuickAcid.TheFortyNiners;
 
 public class StrikeArrangeBuilder<TModel>
 {
@@ -60,6 +59,6 @@ public static class TestForgeHelpers
 {
     public static IResult<object> CastResultToObject<T>(IResult<T> result)
     {
-        return new Result<object>((object)result.Value, ((Result<T>)result).State);
+        return new Result<object>((object)result.Value!, ((Result<T>)result).State);
     }
 }

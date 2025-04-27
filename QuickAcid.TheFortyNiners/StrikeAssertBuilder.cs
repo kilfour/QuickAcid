@@ -3,7 +3,7 @@ using QuickMGenerate.UnderTheHood;
 using QuickAcid.Fluent;
 using QuickAcid.Bolts;
 
-namespace QuickAcid.Strike;
+namespace QuickAcid.TheFortyNiners;
 
 public class StrikeAssertBuilder<TModel>
 {

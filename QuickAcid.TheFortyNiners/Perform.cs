@@ -1,4 +1,4 @@
-namespace QuickAcid.Strike;
+namespace QuickAcid.TheFortyNiners;
 
 public static class Perform
 {
