@@ -1,10 +1,9 @@
 # QuickAcid.TheFortyNiners
 
-**Welcome to the gold rush!** 
 
 `QuickAcid.TheFortyNiners` is a lightweight starting point for property-based testing (PBT) in C#, powered by [QuickAcid](https://github.com/kilfour/QuickAcid) under the hood.
 
-Just like the Forty-Niners, you can **travel light**, **strike gold fast**, and **dig deeper later** when you're ready.
+With it you can **travel light**, **strike gold fast**, and **dig deeper later** when you're ready.
 
 - **Simple, clean syntax** — familiar to unit testing fans
 - **Full property-based power** under the surface
