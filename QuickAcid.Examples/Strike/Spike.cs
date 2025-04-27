@@ -1,7 +1,7 @@
 using QuickMGenerate;
 using QuickAcid.Strike;
 
-namespace QuickAcid.Examples.QuickStrike;
+namespace QuickAcid.Examples.Strike;
 
 public class ItsOnlyAModel
 {
@@ -12,7 +12,7 @@ public class ItsOnlyAModel
         public void Withdraw(int amount) { Balance -= amount; }
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact(Skip = "demo")]
     public void QuickAcid_as_a_unit_test_tool()
     {
         Test.This(
@@ -24,7 +24,7 @@ public class ItsOnlyAModel
             .UnitRun();
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact(Skip = "demo")]
     public void QuickAcid_babies_first_pbt()
     {
         Test.This(() => new Account(), a => a.Balance.ToString())
