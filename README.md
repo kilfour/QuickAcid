@@ -24,6 +24,7 @@ A guided walkthrough in bite-sized chapters:
 | 3       | [The Shortest Path to a Bug](https://github.com/kilfour/QuickAcid/blob/master/QuickAcid.Examples/Tutorial/Chapter3.TheShortestPathtoaBug/About.md) | ✅ Test + Markdown |
 | 4       | [Controlling the Chaos](https://github.com/kilfour/QuickAcid/blob/master/QuickAcid.Examples/Tutorial/Chapter4.ControllingTheChaos/About.md)        | 📄 Markdown only   |
 
+Or in order to get started **super fast** have a look at [The Forty Niners](https://github.com/kilfour/QuickAcid/blob/master/QuickAcid.TheFortyNiners/README.md)
 ---
 
 ## Examples
