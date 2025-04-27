@@ -29,16 +29,32 @@ A guided walkthrough in bite-sized chapters:
 ## Examples
 
 ```csharp
-Test.This(() => new Account())
-    .Arrange(
-        ("deposit", MGen.Int(0, 100).AsObject()),
-        ("withdraw", MGen.Int(0, 100).AsObject()))
-    .Act(
-        Perform.Action("deposit", (Account account, int deposit) => account.Deposit(deposit)),
-        Perform.Action("withdraw", (Account account, int withdraw) => account.Withdraw(withdraw)))
-    .Assert("No Overdraft", account => account.Balance >= 0)
-    .Assert("Balance Capped", account => account.Balance <= 100)
-    .Run(50, 10);
+public class SetTest
+ {
+     [Fact]
+     public void ReportsError()
+     {
+         var report =
+             SystemSpecs.Define()
+                 .AlwaysReported(K.Set, () => new List<int>())
+                 .Fuzzed(K.IntToAdd, MGen.Int(1, 10))
+                 .Fuzzed(K.IntToRemove, MGen.Int(1, 10))
+                 .Options(opt => [
+                     opt.Do("Add", c => c.Get(K.Set).Add(c.Get(K.IntToAdd)))
+                         .Expect("Set contains added int")
+                         .Ensure(ctx => ctx.Get(K.Set).Contains(ctx.Get(K.IntToAdd))),
+                     opt.Do("Remove", c => c.Get(K.Set).Remove(c.Get(K.IntToRemove)))
+                         .Expect("Set does not contain removed int")
+                         .Ensure(ctx => !ctx.Get(K.Set).Contains(ctx.Get(K.IntToRemove)))
+                 ])
+                 .PickOne()
+                 .DumpItInAcid()
+                 .AndCheckForGold(30, 50);
+ 
+         if (report != null)
+             Assert.Fail(report.ToString());
+     }
+ }
 ```
 
 ### Sample Output
