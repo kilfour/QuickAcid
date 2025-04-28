@@ -23,3 +23,4 @@ public class QAcidResult
 		return Some(state, Acid.Test);
 	}
 }
+
