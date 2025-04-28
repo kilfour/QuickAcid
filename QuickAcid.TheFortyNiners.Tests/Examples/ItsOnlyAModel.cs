@@ -17,14 +17,14 @@ public class ItsOnlyAModel
         Test.This(
             () => new Account()
             , a => a.Balance.ToString())
-            .Arrange(("withdraw", 42))
+            .Arrange(("withdraw", MGen.Int()))
             .Act(Perform.This("withdraw", (Account account, int withdraw) => account.Withdraw(withdraw)))
             .Assert("No Overdraft", account => account.Balance >= 0)
             .UnitRun();
     }
 
     [Fact(Skip = "demo")]
-    public void QuickAcid_babies_first_pbt()
+    public void QuickAcid_first_pbt()
     {
         Test.This(() => new Account(), a => a.Balance.ToString())
             .Arrange(
