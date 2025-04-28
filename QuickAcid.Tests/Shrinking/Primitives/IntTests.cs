@@ -21,6 +21,8 @@ namespace QuickAcid.Tests.Shrinking.Primitives
 
             var report = run.ReportIfFailed(1, 50);
 
+            Assert.Single(report.OfType<ReportInputEntry>());
+
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
             Assert.Equal("input1", inputEntry.Key);

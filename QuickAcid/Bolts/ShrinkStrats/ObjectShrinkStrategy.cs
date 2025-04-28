@@ -83,7 +83,7 @@ public class ObjectShrinkStrategy : IShrinkStrategy
         if (!prop.CanWrite)
             prop = propertyInfo.DeclaringType.GetProperty(propertyInfo.Name);
 
-        if (prop.CanWrite) // todo check this
+        if (prop != null && prop.CanWrite) // todo check this
             prop.SetValue(target, value, null);
     }
 

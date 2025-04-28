@@ -9,46 +9,74 @@ public class EnumerableShrinkStrategy : IShrinkStrategy
     public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var theList = CloneAsOriginalTypeList(value);
+        QAcidDebug.WriteLine($"theList: {theList.GetType()}, value: {value.GetType()}.");
         int index = 0;
+        var shrinkValues = new List<string>();
         while (index < theList.Count)
         {
             var ix = index;
             var before = theList[ix];
-            var primitiveKey = before.GetType();
-            var primitiveVals = PrimitiveShrinkStrategy.PrimitiveValues[primitiveKey];
+            var valueType = before.GetType();
+            var elementType = valueType.IsGenericType
+                ? valueType.GetGenericArguments().First()
+                : typeof(object);
+            //-------------------------------------------------------
             var removed = false;
-            foreach (var primitiveVal in primitiveVals.Where(p => p == null || !p.Equals(before)))
+            state.Memory.GetNestedValue = list => ((IList)list)[ix];
+            state.Memory.SetNestedValue = element =>
             {
-                theList[ix] = primitiveVal;
-                var shrinkstate = state.ShrinkRun(key, theList);
-                if (shrinkstate)
+                if (element == null || elementType.IsAssignableFrom(element.GetType()))
                 {
-                    theList.RemoveAt(index);
-                    removed = true;
-                    break;
+                    theList[ix] = element;
                 }
+                else
+                {
+                    throw new Exception("BOOM");
+                }
+                return theList;
+            };
+            var shrinkOutcome = ShrinkStrats.Shrink.Input(state, key, before, _ => true);
+
+            if (shrinkOutcome == ShrinkOutcome.Irrelevant)
+            {
+                theList.RemoveAt(index);
+                removed = true;
+            }
+            else if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
+            {
+                shrinkValues.Add($"{{ {msg} }}");
             }
             if (!removed)
             {
                 theList[ix] = before;
                 index++;
             }
+            state.Memory.GetNestedValue = null;
+            state.Memory.SetNestedValue = null;
         }
-        return ShrinkOutcome.Report($"[ {string.Join(", ", theList.Cast<object>().Select(v => v.ToString()))} ]");
+        return ShrinkOutcome.Report($"[ {string.Join(", ", shrinkValues)} ]");
     }
 
-    private static IList CloneAsOriginalTypeList(object value)
+    public static IList CloneAsOriginalTypeList(object value)
     {
         if (value is not IEnumerable enumerable)
             throw new ArgumentException("Value is not an IEnumerable", nameof(value));
 
         var valueType = value.GetType();
-        var elementType = valueType.IsGenericType
-            ? valueType.GetGenericArguments().FirstOrDefault()
-            : typeof(object); // fallback, though it shouldn't happen with real List<T>
+        Type elementType;
 
-        if (elementType == null)
-            throw new InvalidOperationException("Could not determine the element type of the list.");
+        if (valueType.IsArray)
+        {
+            elementType = valueType.GetElementType(); // ✅ Correct for arrays
+        }
+        else if (valueType.IsGenericType)
+        {
+            elementType = valueType.GetGenericArguments().First();
+        }
+        else
+        {
+            elementType = typeof(object);
+        }
 
         var typedListType = typeof(List<>).MakeGenericType(elementType);
         var typedList = (IList)Activator.CreateInstance(typedListType)!;

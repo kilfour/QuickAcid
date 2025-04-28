@@ -74,13 +74,35 @@ public class Memory
 	public bool Has(int actionId) // used by codegen
 		=> memoryPerExecution.ContainsKey(actionId);
 
+	public Func<object, object>? GetNestedValue = null;
+	public Func<object, object>? SetNestedValue = null;
+
 	public IDisposable ScopedSwap(object key, object newValue)
 	{
-
 		var memory = ForThisExecution();
-		var oldValue = memory.Get<object>(key);
-		memory.Set(key, newValue, ReportingIntent.Never);
 
-		return new DisposableAction(() => memory.Set(key, oldValue, ReportingIntent.Shrinkable));
+		object oldValue = null;
+		if (GetNestedValue != null)
+		{
+			oldValue = GetNestedValue(memory.Get<object>(key));
+			memory.Set(key, SetNestedValue(newValue), ReportingIntent.Never);
+		}
+		else
+		{
+			oldValue = memory.Get<object>(key);
+			memory.Set(key, newValue, ReportingIntent.Never);
+		}
+
+		// var oldValue = memory.Get<object>(key);
+		// memory.Set(key, newValue, ReportingIntent.Never);
+
+		return new DisposableAction(() =>
+		 {
+			 if (GetNestedValue != null)
+			 	memory.Set(key, SetNestedValue(oldValue), ReportingIntent.Shrinkable);
+			 else
+				 memory.Set(key, oldValue, ReportingIntent.Shrinkable);
+		 });
+
 	}
 }
