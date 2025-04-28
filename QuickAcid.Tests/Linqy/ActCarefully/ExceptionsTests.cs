@@ -46,6 +46,10 @@ public class ExceptionsTests
         var report = run.ReportIfFailed();
         Assert.Null(report);
     }
+
+    // Stack multiple DelayedResults	            ActCarefully many things, mix and match thrown/values
+    // Pass DelayedResult into another Act	        Chain based on success/failure of prior acts
+    // Shrink based on DelayedResults	            Shrinker path depends on whether exception occurred
 }
 
 
