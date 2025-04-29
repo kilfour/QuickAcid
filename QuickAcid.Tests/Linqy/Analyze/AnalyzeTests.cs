@@ -1,0 +1,61 @@
+using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts;
+using QuickAcid.Reporting;
+using QuickMGenerate;
+
+namespace QuickAcid.Tests.Linqy.Analyze;
+
+public class AnalyzeTests
+{
+    [Fact]
+    public void Analyze_excutes_only_at_end_of_run()
+    {
+        var counter = 0;
+        var run =
+            from _a1 in "record".Act(() => counter++)
+            from as1 in "spec".Analyze(() => false)
+            select Acid.Test;
+
+        var report = run.ReportIfFailed(1, 2);
+
+        var timesActShouldHaveRunOriginally = 2;
+        var timesActShouldHaveRunDuringExcutionShrinking = 1;
+        var timesActShouldHaveRunDuringInputShrinking = 1;
+
+        var timesRun =
+            timesActShouldHaveRunOriginally
+            + timesActShouldHaveRunDuringExcutionShrinking
+            + timesActShouldHaveRunDuringInputShrinking;
+
+        Assert.NotNull(report);
+        Assert.Equal(timesRun, counter);
+
+        var entry = report.GetSpecEntry();
+        Assert.NotNull(entry);
+    }
+
+    [Fact]
+    public void Analyze_as_assay()
+    {
+        var run =
+            from observer in "observer".AlwaysReported(() => new HashSet<int>())
+            from roll in "roll".Act(() => MGen.Int(1, 3).Generate())
+            from _a1 in "record".Act(() => observer.Add(roll))
+            from as1 in "gens 3".Analyze(() => observer.Contains(3))
+            select Acid.Test;
+
+        var report = run.ReportIfFailed(1, 20);
+        Assert.NotNull(report);
+
+        var entry = report.GetSpecEntry();
+        Assert.Equal("gens 3", entry.Key);
+
+        // even though the test above will fails
+        // and we expect all actions to be shrunk away, 
+        // but because during shrinking the spec will not fail without an act
+        // shrinking will leave one behind.
+        // for test like the one above Assay is a better candidate
+        var actEntry = report.Single<ReportActEntry>();
+        Assert.NotNull(actEntry);
+    }
+}

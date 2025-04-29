@@ -5,10 +5,10 @@ using QuickMGenerate;
 
 namespace QuickAcid.Tests.Linqy.Assay;
 
-public class AssayTests
+public class AssayTests : QAcidLoggingFixture
 {
     [Fact]
-    public void Spike()
+    public void Assay_something_did_not_happen()
     {
         var run =
             from observer in "observer".AlwaysReported(() => new HashSet<int>())

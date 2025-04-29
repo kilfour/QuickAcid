@@ -11,6 +11,10 @@ public class QAcidState : QAcidContext
     public QAcidRunner<Acid> Runner { get; private set; }
     public int CurrentExecutionNumber { get; private set; }
     public List<int> ExecutionNumbers { get; private set; }
+    public bool IsThisTheRunsLastExecution()
+    {
+        return CurrentExecutionNumber == ExecutionNumbers.Last();
+    }
 
     //only for report
     public int OriginalFailingRunExecutionCount { get; private set; }
@@ -100,6 +104,8 @@ public class QAcidState : QAcidContext
 
     public void Run(int executionsPerScope)
     {
+        ExecutionNumbers = Enumerable.Repeat(-1, executionsPerScope).ToList();
+
         for (int j = 0; j < executionsPerScope; j++)
         {
             ExecuteStep();
@@ -124,7 +130,7 @@ public class QAcidState : QAcidContext
 
     private void ExecuteStep()
     {
-        ExecutionNumbers.Add(CurrentExecutionNumber);
+        ExecutionNumbers[CurrentExecutionNumber] = CurrentExecutionNumber;
         Runner(this);
         if (CurrentContext.Failed)
         {
@@ -142,6 +148,7 @@ public class QAcidState : QAcidContext
 
     private void HandleFailure()
     {
+        ExecutionNumbers = ExecutionNumbers.Where(x => x != -1).ToList();
         OriginalFailingRunExecutionCount = ExecutionNumbers.Count;
         ShrinkExecutions();
         if (Verbose)
