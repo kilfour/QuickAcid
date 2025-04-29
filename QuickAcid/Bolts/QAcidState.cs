@@ -66,8 +66,8 @@ public class QAcidState : QAcidContext
     public PhaseContext OriginalRun => Phase(QAcidPhase.NormalRun);
     // ---------------------------------------------------------------------------------------
 
+    public bool AllowShrinking = true;
     private int shrinkCount = 0;
-
     public string? FailingSpec { get { return CurrentContext.FailingSpec; } }
     public Exception? Exception { get { return CurrentContext.Exception; } }
 
@@ -104,7 +104,7 @@ public class QAcidState : QAcidContext
 
     public void Run(int executionsPerScope)
     {
-        ExecutionNumbers = Enumerable.Repeat(-1, executionsPerScope).ToList();
+        ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
 
         for (int j = 0; j < executionsPerScope; j++)
         {
@@ -148,27 +148,30 @@ public class QAcidState : QAcidContext
 
     private void HandleFailure()
     {
-        ExecutionNumbers = ExecutionNumbers.Where(x => x != -1).ToList();
+        ExecutionNumbers = [.. ExecutionNumbers.Where(x => x != -1)];
         OriginalFailingRunExecutionCount = ExecutionNumbers.Count;
-        ShrinkExecutions();
-        if (Verbose)
+        if (AllowShrinking)
         {
-            report.AddEntry(new ReportTitleSectionEntry(["AFTER EXECUTION SHRINKING"]));
-            report.AddEntry(new ReportRunStartEntry());
-            AddMemoryToReport(report, false);
-        }
-        ShrinkInputs();
-        if (Verbose)
-        {
-            var title = new List<string>(["AFTER INPUT SHRINKING :"]);
-            title.AddRange(GetReportHeaderInfo().ToList());
-            report.AddEntry(new ReportTitleSectionEntry(title));
-            report.AddEntry(new ReportRunStartEntry());
-        }
-        else
-        {
-            report.AddEntry(new ReportTitleSectionEntry(GetReportHeaderInfo().ToList()));
-            report.AddEntry(new ReportRunStartEntry());
+            ShrinkExecutions();
+            if (Verbose)
+            {
+                report.AddEntry(new ReportTitleSectionEntry(["AFTER EXECUTION SHRINKING"]));
+                report.AddEntry(new ReportRunStartEntry());
+                AddMemoryToReport(report, false);
+            }
+            ShrinkInputs();
+            if (Verbose)
+            {
+                var title = new List<string>(["AFTER INPUT SHRINKING :"]);
+                title.AddRange([.. GetReportHeaderInfo()]);
+                report.AddEntry(new ReportTitleSectionEntry(title));
+                report.AddEntry(new ReportRunStartEntry());
+            }
+            else
+            {
+                report.AddEntry(new ReportTitleSectionEntry([.. GetReportHeaderInfo()]));
+                report.AddEntry(new ReportRunStartEntry());
+            }
         }
         AddMemoryToReport(report, true);
         if (Exception != null)
