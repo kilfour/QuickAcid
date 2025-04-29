@@ -112,20 +112,6 @@ public class QAcidState : QAcidContext
             if (CurrentContext.Failed)
                 return;
         }
-        CheckAssays();
-    }
-
-    private void CheckAssays()
-    {
-        foreach (var (_, assay) in FinalChecks)
-        {
-            if (!assay.Check())
-            {
-                report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees : {assay.Label}."]));
-                CurrentContext.Failed = true;
-                break;
-            }
-        }
     }
 
     private void ExecuteStep()
@@ -172,8 +158,12 @@ public class QAcidState : QAcidContext
                 report.AddEntry(new ReportTitleSectionEntry([.. GetReportHeaderInfo()]));
                 report.AddEntry(new ReportRunStartEntry());
             }
+            AddMemoryToReport(report, true);
         }
-        AddMemoryToReport(report, true);
+        else
+        {
+            report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees : {FailingSpec}."]));
+        }
         if (Exception != null)
             report.Exception = Exception;
     }
@@ -279,13 +269,5 @@ public class QAcidState : QAcidContext
                 QAcidReport = report,
             };
         }
-    }
-
-    public record AssaySpecEntry(string Label, Func<bool> Check);
-    public Dictionary<string, AssaySpecEntry> FinalChecks = new();
-
-    public void AddAssay(string Label, Func<bool> Check)
-    {
-        FinalChecks[Label] = new AssaySpecEntry(Label, Check);
     }
 }

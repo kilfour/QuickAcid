@@ -127,11 +127,7 @@ public class Bob
         => BindState(state => label.Spec(() => predicate(state)));
 
     public Bob Assay(string label, Func<QAcidContext, bool> predicate)
-        => BindState<Acid>(state =>
-        {
-            state.AddAssay(label, () => predicate(state));
-            return _ => QAcidResult.AcidOnly(state); ;
-        });
+        => BindState(state => label.Assay(() => predicate(state)));
 
     public Wendy DumpItInAcid()
     {

@@ -1,10 +1,11 @@
 ﻿using QuickAcid.CodeGen;
+using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcid
 {
-	public static QAcidRunner<Acid> Spec(this string key, Func<bool> condition)
+	private static QAcidRunner<Acid> InnerSpec(this string key, Func<bool> condition, bool allowShrinking = true)
 	{
 		return
 			state =>
@@ -14,17 +15,26 @@ public static partial class QAcid
 					return QAcidResult.AcidOnly(state);
 				bool passed = condition();
 				if (!passed)
+				{
+					state.AllowShrinking = allowShrinking;
 					state.CurrentContext.MarkFailure(key);
+				}
 				return QAcidResult.AcidOnly(state);
 			};
 	}
 
+	public static QAcidRunner<Acid> Spec(this string key, Func<bool> condition)
+		=> InnerSpec(key, condition);
+
 	public static QAcidRunner<Acid> SpecIf(this string key, Func<bool> predicate, Func<bool> condition)
-		=> state => predicate() ? key.Spec(condition)(state) : QAcidResult.AcidOnly(state);
+		=> state => predicate() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
 
 	private static bool ShouldSkipSpec(string key, QAcidState state)
 		=> state.OriginalRun.FailingSpec is { } failedKey && failedKey != key;
 
 	public static QAcidRunner<Acid> Analyze(this string key, Func<bool> condition)
-		=> state => state.IsThisTheRunsLastExecution() ? key.Spec(condition)(state) : QAcidResult.AcidOnly(state);
+		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
+
+	public static QAcidRunner<Acid> Assay(this string key, Func<bool> condition)
+		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition, false)(state) : QAcidResult.AcidOnly(state);
 }
