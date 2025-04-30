@@ -10,7 +10,6 @@ public class Bristle
     private readonly string label;
     private readonly Maybe<Func<bool>> iPass;
 
-
     public Bristle(Bob bob, string label, Maybe<Func<bool>> iPass = default)
     {
         this.bob = bob;
@@ -23,12 +22,6 @@ public class Bristle
 
     public BristlesBroomsOnTheRight OnlyWhen(Func<QAcidContext, bool> iPass)
     => new(bob, label, iPass);
-
-    // public Bob Do(string label, Action action)
-    //    => Bind(_ => label.Act(action));
-
-    // public Bob Do(string label, Func<QAcidContext, Action> effect)
-    //     => BindState(state => label.Act(effect(state)));
 
     public Bob Ensure(Func<bool> mustHold)
     => iPass.Match(

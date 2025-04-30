@@ -109,7 +109,7 @@ public class Bob
         var options = choicesBuilder(this).Select(opt => opt.runner).ToArray();
         var combined =
             from _ in this.runner
-            from result in "__00__".Choose(options)
+            from result in "__00__".Choose(options) // $"__choose__{Guid.NewGuid()}"
             select Acid.Test;
         return new Bob(combined);
     }

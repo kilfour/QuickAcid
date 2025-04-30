@@ -122,7 +122,5 @@ namespace QuickAcid.CodeGen
             sb.AppendLine("}");
             return sb.ToString();
         }
-
-
     }
 }

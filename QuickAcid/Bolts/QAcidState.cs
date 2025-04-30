@@ -246,7 +246,6 @@ public class QAcidState : QAcidContext
             {
                 foreach (var actionNumber in ExecutionNumbers)
                 {
-                    Memory.ResetAlwaysReportedMemory(); // NOT HAPPY ABOUT THIS, Strike needs this somehow
                     CurrentExecutionNumber = actionNumber;
                     Runner(this);
                 }

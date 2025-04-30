@@ -23,8 +23,6 @@ public class Memory
 
 	public void ResetAllRunInputs()
 		=> alwaysReportedInputMemory.Reset();
-	public void ResetAlwaysReportedMemory() // NOT HAPPY ABOUT THIS, Strike needs this somehow
-		=> alwaysReportedInputMemory.ResetReportPerExecution();
 
 	public Access For(int actionId)
 	{
@@ -92,9 +90,6 @@ public class Memory
 			oldValue = memory.Get<object>(key);
 			memory.Set(key, newValue, ReportingIntent.Never);
 		}
-
-		// var oldValue = memory.Get<object>(key);
-		// memory.Set(key, newValue, ReportingIntent.Never);
 
 		return new DisposableAction(() =>
 		 {
