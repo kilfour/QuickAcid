@@ -12,14 +12,16 @@ public class Shrink
             ? value.GetType()
             : typeof(T);
 
-        if (typeof(IEnumerable).IsAssignableFrom(actualType))
-        {
-            return new EnumerableShrinkStrategy().Shrink(state, key, value, _ => true);
-        }
-        var primitiveKey = PrimitiveShrinkStrategy.PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(actualType));
+        var normalizedType = Nullable.GetUnderlyingType(actualType) ?? actualType;
+        var primitiveKey = PrimitiveShrinkStrategy.PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(normalizedType));
         if (primitiveKey != null)
         {
             return new PrimitiveShrinkStrategy().Shrink(state, key, value, shrinkingGuard);
+        }
+
+        if (typeof(IEnumerable).IsAssignableFrom(actualType))
+        {
+            return new EnumerableShrinkStrategy().Shrink(state, key, value, _ => true);
         }
 
         if (actualType.IsClass)

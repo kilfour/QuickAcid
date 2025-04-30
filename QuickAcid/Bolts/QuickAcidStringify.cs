@@ -8,14 +8,14 @@ public static class QuickAcidStringify
     public static Func<object, string> Default() => obj =>
     {
         if (obj is null)
-            return "null";
+            return "<null>";
+
+        if (obj is string str)
+            return $"\"{str}\"";
 
         var actualType = obj.GetType(); // TODO DOC THIS WITH TEST
         if (actualType.GetMethod("ToString", Type.EmptyTypes)?.DeclaringType != typeof(object))
             return obj.ToString();
-
-        if (obj is string str)
-            return $"\"{str}\"";
 
         if (obj is IEnumerable enumerable && obj is not IDictionary)
         {
@@ -31,7 +31,7 @@ public static class QuickAcidStringify
                     break;
                 }
 
-                items.Add(item == null ? "null" : item.ToString());
+                items.Add(item == null ? "<null>" : item.ToString());
             }
 
             return "[ " + string.Join(", ", items) + " ]";
@@ -53,7 +53,7 @@ public static class QuickAcidStringify
             props.Select(p =>
             {
                 var val = p.GetValue(obj);
-                var valStr = val == null ? "null" : val.ToString();
+                var valStr = val == null ? "<null>" : val.ToString();
                 return $"{p.Name} = {valStr}";
             }));
 

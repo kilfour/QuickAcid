@@ -42,6 +42,6 @@ public class PrimitiveShrinkStrategy : IShrinkStrategy
             filtered
                 .Where(x => !Equals(x, value))
                 .All(x => state.ShrinkRun(key, x));
-        return failureAlwaysOccurs ? ShrinkOutcome.Irrelevant : ShrinkOutcome.Report(value.ToString());
+        return failureAlwaysOccurs ? ShrinkOutcome.Irrelevant : ShrinkOutcome.Report(QuickAcidStringify.Default()(value));
     }
 }

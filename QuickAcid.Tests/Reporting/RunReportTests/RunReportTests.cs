@@ -1,14 +1,9 @@
 using QuickAcid.Reporting;
-using QuickAcid.Bolts.TheyCanFade;
 
 namespace QuickAcid.Tests.Reporting.RunReportTests;
 
 public class RunReportTests
 {
-    private readonly int IrrelevantNumberForReporting = 666;
-    private Memory EmptyMemory =>
-        new(() => IrrelevantNumberForReporting);
-
     [Fact]
     public void RunReport_can_be_converted_to_stringlist()
     {
