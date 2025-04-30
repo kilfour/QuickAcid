@@ -66,6 +66,22 @@ public class QAcidState : QAcidContext
     public PhaseContext OriginalRun => Phase(QAcidPhase.NormalRun);
     // ---------------------------------------------------------------------------------------
 
+
+    // ----------------------------------------------------------------------------------
+    // Shrinking Strategies
+    private readonly Dictionary<Type, object> shrinkers = new();
+    public void RegisterShrinker<T>(IShrinker<T> shrinker)
+    {
+        shrinkers[typeof(T)] = shrinker;
+    }
+
+    public IShrinker<T>? TryGetShrinker<T>()
+    {
+        return shrinkers.TryGetValue(typeof(T), out var shrinker)
+            ? shrinker as IShrinker<T>
+            : null;
+    }
+    // ---------------------------------------------------------------------------------------
     public bool AllowShrinking = true;
     private int shrinkCount = 0;
     public string? FailingSpec { get { return CurrentContext.FailingSpec; } }
@@ -219,9 +235,6 @@ public class QAcidState : QAcidContext
             }
         }
     }
-
-    public readonly Dictionary<Type, IShrinkStrategy> ShrinkingStrategies
-            = new Dictionary<Type, IShrinkStrategy>();
 
     public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
     {

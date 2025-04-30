@@ -5,7 +5,7 @@ using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Bolts.ShrinkStrats;
 
-public class ObjectShrinkStrategy : IShrinkStrategy
+public class ObjectShrinkStrategy //: IShrinkStrategy
 {
     public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
