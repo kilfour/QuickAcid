@@ -9,7 +9,6 @@ public class EnumerableShrinkStrategy : IShrinkStrategy
     public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var theList = CloneAsOriginalTypeList(value);
-        QAcidDebug.WriteLine($"theList: {theList.GetType()}, value: {value.GetType()}.");
         int index = 0;
         var shrinkValues = new List<string>();
         while (index < theList.Count)
@@ -31,7 +30,7 @@ public class EnumerableShrinkStrategy : IShrinkStrategy
                 }
                 else
                 {
-                    throw new Exception("BOOM");
+                    throw new Exception("Ouch, QUuickAcid Went BOOM !");
                 }
                 return theList;
             };
@@ -44,7 +43,7 @@ public class EnumerableShrinkStrategy : IShrinkStrategy
             }
             else if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
             {
-                shrinkValues.Add($"{{ {msg} }}");
+                shrinkValues.Add($"{msg}");
             }
             if (!removed)
             {

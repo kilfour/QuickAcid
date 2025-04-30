@@ -28,7 +28,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);
-            Assert.Equal("MyFirstProperty : 6", inputEntry.Value);
+            Assert.Equal("{ MyFirstProperty : \"6\" }", inputEntry.Value);
 
             var actEntry = report.FirstOrDefault<ReportActEntry>();
             Assert.NotNull(actEntry);
@@ -58,7 +58,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);
-            Assert.Equal("MyFirstProperty : 6, MySecondProperty : 6", inputEntry.Value);
+            Assert.Equal("{ MyFirstProperty : \"6\", MySecondProperty : \"6\" }", inputEntry.Value);
 
             var actEntry = report.FirstOrDefault<ReportActEntry>();
             Assert.NotNull(actEntry);
@@ -93,11 +93,11 @@ namespace QuickAcid.Tests.Shrinking.Objects
 
                 var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
                 Assert.Equal("input", inputEntry.Key);
-                if ((string)inputEntry.Value == "MyFirstProperty : 6")
+                if ((string)inputEntry.Value == "{ MyFirstProperty : \"6\" }")
                     sometimesPropOne = true;
-                else if ((string)inputEntry.Value == "MySecondProperty : 6")
+                else if ((string)inputEntry.Value == "{ MySecondProperty : \"6\" }")
                     sometimesPropTwo = true;
-                else if ((string)inputEntry.Value == "MyFirstProperty : 6, MySecondProperty : 6")
+                else if ((string)inputEntry.Value == "{ MyFirstProperty : \"6\", MySecondProperty : \"6\" }")
                     sometimesBothProps = true;
                 else
                     somethingElse = (string)inputEntry.Value;
@@ -138,7 +138,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);
-            Assert.Equal("MySecondProperty : 42, MyThirdProperty : 42", inputEntry.Value);
+            Assert.Equal("{ MySecondProperty : \"42\", MyThirdProperty : \"42\" }", inputEntry.Value);
 
             var actEntry = report.FirstOrDefault<ReportActEntry>();
             Assert.NotNull(actEntry);

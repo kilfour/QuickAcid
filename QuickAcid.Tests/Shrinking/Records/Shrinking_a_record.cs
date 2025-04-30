@@ -30,7 +30,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);
-            Assert.Equal("Age : 42", inputEntry.Value);
+            Assert.Equal("{ Age : 42 }", inputEntry.Value);
 
             var actEntry = report.FirstOrDefault<ReportActEntry>();
             Assert.NotNull(actEntry);
@@ -39,7 +39,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
         }
 
         [Fact]
-        public void Shrinker_cannot_shrink_relevant_field_in_record()
+        public void Shrinker_cannot_shrink_relevant_field_in_record_YES_IT_CAN()
         {
             var generator1 =
                 from name in MGen.Constant("any")
@@ -66,11 +66,11 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.NotNull(inputEntry);
 
             Assert.Equal("input2", inputEntry.Key);
-            Assert.Equal("Age : 40", inputEntry.Value);
+            Assert.Equal("{ Age : 40 }", inputEntry.Value);
         }
 
         [Fact]
-        public void Shrinker_cannot_mutate_Age_in_record()
+        public void Shrinker_cannot_mutate_Age_in_record_YES_IT_CAN()
         {
 
             100.Times(() =>

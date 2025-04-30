@@ -34,7 +34,7 @@ public class ObjectShrinkStrategy : IShrinkStrategy
 
                     if (!state.ShrinkRun(key, value))
                     {
-                        shrunk = ShrinkOutcome.Report(string.Join(", ", set.Select(x => $"{x.Name} : {oldValues[x.Name]}")));
+                        shrunk = ShrinkOutcome.Report("{ " + string.Join(", ", set.Select(x => $"{x.Name} : {QuickAcidStringify.Default()(oldValues[x.Name])}")) + " }");
                     }
 
                     foreach (var propertyInfo in set)
@@ -57,7 +57,7 @@ public class ObjectShrinkStrategy : IShrinkStrategy
             .ToList();
 
         return messages.Any()
-            ? ShrinkOutcome.Report(string.Join(", ", messages))
+            ? ShrinkOutcome.Report("{ " + string.Join(", ", messages) + " }")
             : ShrinkOutcome.Irrelevant;
     }
 
@@ -73,7 +73,7 @@ public class ObjectShrinkStrategy : IShrinkStrategy
                 if (!state.ShrinkRun(key, value))
                 {
                     SetPropertyValue(propertyInfo, value, propertyValue);
-                    return ShrinkOutcome.Report($"{propertyInfo.Name} : {propertyValue}");
+                    return ShrinkOutcome.Report($"{propertyInfo.Name} : {QuickAcidStringify.Default()(propertyValue)}");
                 }
             }
             SetPropertyValue(propertyInfo, value, propertyValue);
