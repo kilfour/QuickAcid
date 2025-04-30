@@ -14,29 +14,33 @@ public class ObjectShrinkStrategy : IShrinkStrategy
         if (shrunk == ShrinkOutcome.Irrelevant)
         {
             var oldValues = new Dictionary<string, object>();
-            foreach (var propertyInfo in value.GetType().GetProperties(MyBinding.Flags))
+            var propertyInfos = value.GetType().GetProperties(MyBinding.Flags).ToList();
+            foreach (var propertyInfo in propertyInfos)
             {
                 oldValues[propertyInfo.Name] = propertyInfo.GetValue(value);
             }
-
-            foreach (var set in GetPowerSet(value.GetType().GetProperties(MyBinding.Flags).ToList()))
+            const int MaxPropertyCountForPowerset = 8;
+            if (propertyInfos.Count < MaxPropertyCountForPowerset)
             {
-                if (shrunk != ShrinkOutcome.Irrelevant)
-                    break;
-
-                foreach (var propertyInfo in set)
+                foreach (var set in GetPowerSet(propertyInfos))
                 {
-                    SetPropertyValue(propertyInfo, value, null);
-                }
+                    if (shrunk != ShrinkOutcome.Irrelevant)
+                        break;
 
-                if (!state.ShrinkRun(key, value))
-                {
-                    shrunk = ShrinkOutcome.Report(string.Join(", ", set.Select(x => $"{x.Name} : {oldValues[x.Name]}")));
-                }
+                    foreach (var propertyInfo in set)
+                    {
+                        SetPropertyValue(propertyInfo, value, null);
+                    }
 
-                foreach (var propertyInfo in set)
-                {
-                    SetPropertyValue(propertyInfo, value, oldValues[propertyInfo.Name]);
+                    if (!state.ShrinkRun(key, value))
+                    {
+                        shrunk = ShrinkOutcome.Report(string.Join(", ", set.Select(x => $"{x.Name} : {oldValues[x.Name]}")));
+                    }
+
+                    foreach (var propertyInfo in set)
+                    {
+                        SetPropertyValue(propertyInfo, value, oldValues[propertyInfo.Name]);
+                    }
                 }
             }
         }
