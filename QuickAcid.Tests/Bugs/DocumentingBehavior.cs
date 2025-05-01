@@ -38,6 +38,8 @@ public class DocumentingBehavior
                 }
             )
             select Acid.Test;
+
+        // new QState(run).Testify(3);
         run.ReportIfFailed(1, 3);
         Assert.False(alwaysReportedChanged);
     }

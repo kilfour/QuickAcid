@@ -27,7 +27,7 @@ public class ActAndSpecExceptionTests
             from foo in "foo".Act(() => true)
             from spec in "spec".Spec(Throw)
             select Acid.Test;
-        var ex = Assert.Throws<Exception>(() => new QState(run).TestifyOnce().ThrowIfFailed());
+        var ex = Assert.Throws<Exception>(() => new QState(run).TestifyOnce());
         Assert.IsNotType<FalsifiableException>(ex);
         Assert.Contains("QuickAcid.Tests.Linqy.Act.ActAndSpecExceptionTests.Throw()", ex.StackTrace);
     }

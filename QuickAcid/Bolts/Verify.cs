@@ -10,7 +10,7 @@ public static partial class QAcid
 		for (int i = 0; i < scopes; i++)
 		{
 			var state = new QState(runner);
-			state.Testify(executionsPerScope);
+			state.Observe(executionsPerScope);
 			if (state.CurrentContext.Failed)
 				return state.GetReport();
 		}
@@ -27,7 +27,7 @@ public static partial class QAcid
 		for (int i = 0; i < scopes; i++)
 		{
 			var state = new QState(runner);
-			state.Testify(executionsPerScope);
+			state.Observe(executionsPerScope);
 			if (state.CurrentContext.Failed)
 				return Prospector.Pan(state);
 		}

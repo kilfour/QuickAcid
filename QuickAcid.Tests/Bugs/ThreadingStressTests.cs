@@ -28,7 +28,7 @@ public class ThreadingStressTests
                                 })
                             select Acid.Test;
 
-                        var ex = Record.Exception(() => 20.Times(() => new QState(run).Testify(1).ThrowIfFailed()));
+                        var ex = Record.Exception(() => 20.Times(() => new QState(run).Testify(1)));
                         if (ex is FalsifiableException fex)
                         {
                             var msg = fex.ToString();

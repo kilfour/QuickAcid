@@ -12,7 +12,7 @@ namespace QuickAcid.Tests.Linqy.Spec
                 Assert.Throws<Exception>(() =>
                     new QState(
                         from spec in "spec".Spec(Throw) select Acid.Test
-                    ).Testify(1).ThrowIfFailed()
+                    ).TestifyOnce()
                 );
             Assert.IsNotType<FalsifiableException>(ex);
             Assert.Contains("QuickAcid.Tests.Linqy.Spec.SpecExceptionTests.Throw()", ex.StackTrace);

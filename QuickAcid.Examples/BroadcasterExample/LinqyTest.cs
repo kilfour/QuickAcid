@@ -44,7 +44,7 @@ public partial class LinqyTest
             )
             select Acid.Test;
 
-        10.Times(() => new QState(run).Testify(50).ThrowIfFailed());
+        10.Times(() => new QState(run).Testify(50));
     }
 
     private static List<IClientProxy> GetBroadcastersClients(Broadcaster caster)

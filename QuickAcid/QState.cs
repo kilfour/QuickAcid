@@ -119,12 +119,12 @@ public class QState : QAcidContext
     public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
     // -----------------------------------------------------------------
 
-    public QState TestifyOnce()
+    public void TestifyOnce()
     {
-        return Testify(1);
+        Testify(1);
     }
 
-    public QState Testify(int executionsPerScope)
+    public void Testify(int executionsPerScope)
     {
         ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
 
@@ -132,9 +132,26 @@ public class QState : QAcidContext
         {
             ExecuteStep();
             if (CurrentContext.Failed)
-                return this;
+                throw new FalsifiableException(report.ToString(), Exception!) { QAcidReport = report }; ;
         }
-        return this;
+    }
+
+    public QAcidReport ObserveOnce()
+    {
+        return Observe(1);
+    }
+
+    public QAcidReport Observe(int executionsPerScope)
+    {
+        ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
+
+        for (int j = 0; j < executionsPerScope; j++)
+        {
+            ExecuteStep();
+            if (CurrentContext.Failed)
+                return report;
+        }
+        return null;
     }
 
     private void ExecuteStep()
@@ -277,16 +294,5 @@ public class QState : QAcidContext
     public QAcidReport GetReport()
     {
         return report;
-    }
-
-    public void ThrowIfFailed()
-    {
-        if (CurrentContext.Failed)
-        {
-            throw new FalsifiableException(report.ToString(), Exception!)
-            {
-                QAcidReport = report,
-            };
-        }
     }
 }
