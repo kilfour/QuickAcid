@@ -19,7 +19,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
                 })
                 select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 50);
+            var report = new QState(run).Observe(50);
 
             Assert.Single(report.OfType<ReportInputEntry>());
 
@@ -46,7 +46,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
                 })
                 select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 50);
+            var report = new QState(run).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
@@ -76,7 +76,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
                 })
                 select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 100);
+            var report = new QState(run).Observe(100);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);

@@ -22,7 +22,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 })
                 select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 50);
+            var report = new QState(run).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
@@ -51,7 +51,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 50);
+            var report = new QState(run).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
@@ -87,7 +87,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                         })
                         select Acid.Test;
 
-                var report = run.ReportIfFailed(1, 50);
+                var report = new QState(run).Observe(50);
 
                 var inputEntry = report.FirstOrDefault<ReportInputEntry>();
                 Assert.NotNull(inputEntry);
@@ -132,8 +132,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                         && input.MyThirdProperty == result.MyThirdProperty)
                     select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 50);
-
+            var report = new QState(run).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
@@ -168,7 +167,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                         && input.MyThirdProperty == result.MyThirdProperty)
                     select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 50);
+            var report = new QState(run).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
@@ -204,7 +203,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                         && input.MyFourthProperty == result.MyFourthProperty)
                     select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 50);
+            var report = new QState(run).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);

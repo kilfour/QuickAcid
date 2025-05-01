@@ -88,7 +88,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-                var report = run.ReportIfFailed(1, 30);
+                var report = new QState(run).Observe(30);
 
                 var inputEntry = report.Single<ReportInputEntry>();
                 Assert.NotNull(inputEntry);

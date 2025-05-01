@@ -20,7 +20,7 @@ public class SpecIfProblems
 			from _s2 in "s".Spec(() => counter.Val > 4)
 			select Acid.Test;
 
-		var report = run.ReportIfFailed(1, 5);
+		var report = new QState(run).Observe(5);
 		Assert.NotNull(report);
 	}
 
@@ -48,7 +48,7 @@ public class SpecIfProblems
 				() => true)
 			select Acid.Test;
 
-		var report = run.ReportIfFailed(1, 5);
+		var report = new QState(run).Observe(3);
 
 		Assert.NotNull(report); // still failed as expected
 		Assert.False(predicateRan); // ✅ predicate must not run

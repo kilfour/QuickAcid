@@ -14,7 +14,7 @@ public class WhenTheHeartIsA
             from _s1 in "spec if".SpecIf(() => true, () => true)
             from _s2 in MinimalSpec(obj)
             select Acid.Test;
-        var report = run.ReportIfFailed(30, 10);
+        var report = new QState(run).ObserveOnce();
         Assert.NotNull(report);
     }
 

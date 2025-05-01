@@ -16,7 +16,7 @@ public class AnalyzeTests
             from as1 in "spec".Analyze(() => false)
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 2);
+        var report = new QState(run).Observe(2);
 
         var timesActShouldHaveRunOriginally = 2;
         var timesActShouldHaveRunDuringExcutionShrinking = 1;
@@ -44,7 +44,7 @@ public class AnalyzeTests
             from as1 in "gens 3".Analyze(() => observer.Contains(3))
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 20);
+        var report = new QState(run).Observe(20);
         Assert.NotNull(report);
 
         var entry = report.GetSpecEntry();

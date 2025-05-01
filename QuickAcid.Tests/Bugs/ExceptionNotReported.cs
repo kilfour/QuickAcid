@@ -25,7 +25,7 @@ public class ExceptionNotReported
 			from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
 			select Acid.Test;
 
-		var report = run.ReportIfFailed(1, 3);
+		var report = new QState(run).Observe(3);
 
 		var entry1 = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
 		Assert.NotNull(entry1);

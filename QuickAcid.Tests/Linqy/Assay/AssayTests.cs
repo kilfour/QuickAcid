@@ -17,7 +17,7 @@ public class AssayTests : QAcidLoggingFixture
             from as1 in "gens 3".Assay(() => observer.Contains(3))
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 20);
+        var report = new QState(run).Observe(20);
 
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
