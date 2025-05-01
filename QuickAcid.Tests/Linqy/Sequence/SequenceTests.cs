@@ -9,10 +9,11 @@ public class SequenceTests
     [Fact]
     public void TwoActionsExceptionThrownOnFirst()
     {
-        var report =
-            "foobar".Sequence(
-            "foo".Act(() => throw new Exception()),
-            "bar".Act(() => { })).ReportIfFailed();
+        var report = new QState(
+                "foobar".Sequence(
+                "foo".Act(() => throw new Exception()),
+                "bar".Act(() => { })))
+            .ObserveOnce();
         var entry = report.FirstOrDefault<ReportActEntry>();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);

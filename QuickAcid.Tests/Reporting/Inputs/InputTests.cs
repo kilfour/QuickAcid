@@ -16,7 +16,7 @@ public class InputTests
             from foo in "spec".Spec(() => input != null)
             select Acid.Test;
 
-        var report = run.ReportIfFailed();
+        var report = new QState(run).ObserveOnce();
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
@@ -33,7 +33,7 @@ public class InputTests
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
-        var report = run.ReportIfFailed();
+        var report = new QState(run).ObserveOnce(); ;
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
@@ -50,7 +50,7 @@ public class InputTests
             from foo in "spec".Spec(() => string.IsNullOrEmpty(input))
             select Acid.Test;
 
-        var report = run.ReportIfFailed();
+        var report = new QState(run).ObserveOnce(); ;
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();

@@ -15,7 +15,7 @@ public class ExceptionsTests
             from throws in "throws".Spec(result.Throws<Exception>)
             select Acid.Test;
 
-        var report = run.ReportIfFailed();
+        var report = new QState(run).ObserveOnce(); ;
         Assert.Null(report);
     }
 
@@ -29,7 +29,7 @@ public class ExceptionsTests
             from throws in "throws".Spec(() => result1.Throws<Exception>() || result2.Throws<Exception>())
             select Acid.Test;
 
-        var report = run.ReportIfFailed();
+        var report = new QState(run).ObserveOnce(); ;
         Assert.Null(report);
     }
 
@@ -43,7 +43,7 @@ public class ExceptionsTests
             from throws in "throws".Spec(() => !flag || result2.Throws<Exception>())
             select Acid.Test;
 
-        var report = run.ReportIfFailed();
+        var report = new QState(run).ObserveOnce(); ;
         Assert.Null(report);
     }
 

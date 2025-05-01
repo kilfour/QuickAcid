@@ -9,13 +9,13 @@ public class SpecTests
     [Fact]
     public void SpecOnlyReturnsTrue()
     {
-        Assert.Null("foo".Spec(() => true).ReportIfFailed());
+        Assert.Null(new QState("foo".Spec(() => true)).ObserveOnce());
     }
 
     [Fact]
     public void SpecOnlyReturnsFalse()
     {
-        var report = "foo".Spec(() => false).ReportIfFailed();
+        var report = new QState("foo".Spec(() => false)).ObserveOnce();
         var entry = report.Entries.OfType<ReportSpecEntry>().FirstOrDefault();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);
@@ -30,7 +30,7 @@ public class SpecTests
             from _s2 in "second passed".Spec(() => true)
             select Acid.Test;
 
-        var entry = run.ReportIfFailed().Single<ReportSpecEntry>();
+        var entry = new QState(run).ObserveOnce().Single<ReportSpecEntry>();
 
         Assert.NotNull(entry);
         Assert.Equal("first failed", entry.Key);
@@ -45,7 +45,7 @@ public class SpecTests
             from _s2 in "second failed".Spec(() => false)
             select Acid.Test;
 
-        var entry = run.ReportIfFailed().Single<ReportSpecEntry>();
+        var entry = new QState(run).ObserveOnce().Single<ReportSpecEntry>();
 
         Assert.NotNull(entry);
         Assert.Equal("second failed", entry.Key);

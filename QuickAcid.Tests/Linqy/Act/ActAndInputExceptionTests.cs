@@ -16,7 +16,7 @@ public class ActAndInputExceptionTests
             from spec in "spec".Spec(() => true)
             select Acid.Test;
 
-        var report = run.ReportIfFailed();
+        var report = new QState(run).ObserveOnce();
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);

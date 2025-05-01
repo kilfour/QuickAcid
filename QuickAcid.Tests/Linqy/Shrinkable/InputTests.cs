@@ -18,7 +18,7 @@ public class InputTests
                 if (true) throw new Exception();
             })
             select Acid.Test;
-        var report = run.ReportIfFailed();
+        var report = new QState(run).ObserveOnce(); ;
         var entry = report.FirstOrDefault<ReportActEntry>();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);
