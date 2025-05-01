@@ -10,7 +10,6 @@ public static partial class QAcid
 		return
 			state =>
 			{
-				state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.SpecRunner });
 				if (ShouldSkipSpec(key, state))
 					return QAcidResult.AcidOnly(state);
 				bool passed = condition();

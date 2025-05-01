@@ -14,7 +14,6 @@ public static partial class QAcid
 		return
 			state =>
 				{
-					state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.AlwaysReportedInputRunner });
 					return QAcidResult.Some(state, state.Memory.StoreAlwaysReported(key, func, stringify, false));
 				};
 	}

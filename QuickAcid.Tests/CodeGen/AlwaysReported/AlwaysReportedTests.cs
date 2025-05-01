@@ -16,7 +16,6 @@ namespace QuickAcid.Tests.CodeGen.Act
             Assert.Equal("public void Throws()", reader.NextLine());
             Assert.Equal("{", reader.NextLine());
             Assert.Equal("    var myObject = new MyObject();", reader.NextLine());
-            Assert.Equal("", reader.NextLine());
             Assert.Equal("    Assert.Throws(--------- NOT YET ---------);", reader.NextLine());
             Assert.Equal("}", reader.NextLine());
             Assert.Equal("", reader.NextLine());

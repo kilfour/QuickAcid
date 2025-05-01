@@ -16,7 +16,6 @@ public sealed class QAcidState : QAcidContext
         ExecutionNumbers = [];
         Memory = new Memory(() => CurrentExecutionNumber);
         ShrinkableInputsTracker = new ShrinkableInputsTracker(() => CurrentExecutionNumber);
-        XMarksTheSpot = new XMarksTheSpot();
         report = new QAcidReport();
     }
 
@@ -102,16 +101,6 @@ public sealed class QAcidState : QAcidContext
 
     private readonly QAcidReport report;
     public bool Verbose { get; set; }
-
-
-    // ----------------------------------------------------------------------------------
-    // only used by codegen, also usefull for tracking combinators with QAcidDebug 
-    public XMarksTheSpot XMarksTheSpot { get; set; }
-    public void MarkMyLocation(Tracker tracker)
-    {
-        XMarksTheSpot.TheTracker = tracker;
-    }
-    // ----------------------------------------------------------------------------------
 
     // -----------------------------------------------------------------
     // implementing context

@@ -7,7 +7,6 @@ public static partial class QAcid
 	private static QAcidRunner<TOutput> TryCatch<TOutput>(string key, Func<TOutput> func)
 	=> state =>
 		{
-			state.MarkMyLocation(new Tracker { Key = key, RunnerType = RunnerType.ActionRunner });
 			state.GetExecutionContext().memory.ActionKeys.Add(key);
 			try
 			{
