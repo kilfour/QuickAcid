@@ -21,9 +21,9 @@ public class QState
         Testify(1);
     }
 
-    public void Testify(int executionsPerScope)
+    public void Testify(int numberOfExecutions)
     {
-        state.Testify(executionsPerScope);
+        state.Testify(numberOfExecutions);
     }
 
     public QAcidReport ObserveOnce()
