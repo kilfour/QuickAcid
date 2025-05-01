@@ -24,7 +24,7 @@ public class CustomShrinkingTests
             from input in "input".Shrinkable(MGen.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
         Assert.NotNull(report);
         Assert.Contains(666, observe);
     }
@@ -38,7 +38,7 @@ public class CustomShrinkingTests
             from input in "input".Shrinkable(MGen.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
         Assert.NotNull(report);
         Assert.Contains(666, observe);
     }

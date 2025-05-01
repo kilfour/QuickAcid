@@ -39,8 +39,7 @@ public class DocumentingBehavior
             )
             select Acid.Test;
 
-        // new QState(run).Testify(3);
-        run.ReportIfFailed(1, 3);
+        new QState(run).Observe(3);
         Assert.False(alwaysReportedChanged);
     }
 
@@ -68,7 +67,7 @@ public class DocumentingBehavior
             from _2 in "second".Spec(() => { secondSpecFailed = true; return false; })
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
 
         Assert.Equal("second", report.GetSpecEntry().Key);
     }

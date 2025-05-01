@@ -32,7 +32,7 @@ public class AlwaysReportedInputOrderingTests
             from act in "we might need an act".Act(() => { })
             from boom in Boom(dependent)
             select Acid.Test;
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
         Assert.Null(report);
     }
 
@@ -52,7 +52,7 @@ public class AlwaysReportedInputOrderingTests
             from _ in "spec".Spec(() => dependent.DoubledValue == 42)
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
         Assert.Null(report);
     }
 }

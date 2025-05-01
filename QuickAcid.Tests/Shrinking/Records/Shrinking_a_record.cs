@@ -23,7 +23,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from foo in "act".Act(() => { if (input.Age == 42) throw new Exception(); })
                 select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 1);
+            var report = new QState(run).ObserveOnce();
 
             Assert.Single(report.OfType<ReportInputEntry>());
 
@@ -60,7 +60,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 })
                 select Acid.Test;
 
-            var report = run.ReportIfFailed(1, 1);
+            var report = new QState(run).ObserveOnce();
 
             var inputEntry = report.Single<ReportInputEntry>();
             Assert.NotNull(inputEntry);

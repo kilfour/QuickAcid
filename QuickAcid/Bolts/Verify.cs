@@ -17,8 +17,6 @@ public static partial class QAcid
 		return null!;
 	}
 
-
-
 	public static string ToCodeIfFailed(this QAcidRunner<Acid> runner, int scopes, int executionsPerScope)
 	{
 		for (int i = 0; i < scopes; i++)

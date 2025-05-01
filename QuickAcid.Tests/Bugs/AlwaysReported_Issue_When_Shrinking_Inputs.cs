@@ -20,7 +20,7 @@ public class AlwaysReported_Issue_When_Shrinking_Inputs
            from _ in "spec".Spec(() => container.Value != 42)
            select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();

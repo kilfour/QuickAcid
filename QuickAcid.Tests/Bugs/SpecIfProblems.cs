@@ -74,7 +74,7 @@ public class SpecIfProblems
 				() => true)
 			select Acid.Test;
 
-		var report = run.ReportIfFailed(1, 1);
+		var report = new QState(run).ObserveOnce();
 		Assert.NotNull(report);
 		Assert.False(predicateRan); // ✅ only true if your fix is in place
 	}

@@ -27,7 +27,7 @@ public class QAcidBeforeSafeTests
             from _s in "spec".Spec(() => true)
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
 
         Assert.Null(report);
         Assert.True(beforeCalledFirst); // the flag should be set before Act runs
@@ -44,7 +44,7 @@ public class QAcidBeforeSafeTests
             from _s in "spec".Spec(() => true)
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
 
         Assert.Null(report);
         Assert.Equal(2, count); // both befores should have run

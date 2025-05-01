@@ -46,7 +46,7 @@ namespace QuickAcid.Examples.Old.Linqy
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			var report = run.ReportIfFailed(1, 50);
+			var report = new QState(run).Observe(50);
 			if (report != null)
 				Assert.Fail(report.ToString());
 		}

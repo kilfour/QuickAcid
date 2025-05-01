@@ -17,7 +17,7 @@ public class ChooseFromDynamicCollection
             from spec in "spec".Spec(() => !list.Contains(2))
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 50);
+        var report = new QState(run).Observe(50);
         Assert.NotNull(report);
 
         var actEntries = report.OfType<ReportActEntry>();
@@ -34,7 +34,7 @@ public class ChooseFromDynamicCollection
             from spec in "spec".Spec(() => !list.Contains(2))
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 50);
+        var report = new QState(run).Observe(50);
         Assert.NotNull(report);
 
         var actEntries = report.OfType<ReportActEntry>();

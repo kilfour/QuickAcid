@@ -27,7 +27,7 @@ public class Shrinking_a_list_of_records : QAcidLoggingFixture
             })
             select Acid.Test;
 
-        var report = run.ReportIfFailed(1, 1);
+        var report = new QState(run).ObserveOnce();
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
