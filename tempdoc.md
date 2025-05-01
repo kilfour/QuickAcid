@@ -1,8 +1,8 @@
 ## QuickAcid Linq 101
 
-First of all you are going to need import some namespaces if you want to use the Linq interface.  
+First of all, you need to import some namespaces if you want to use the Linq interface.  
 This is by design. If you're using the Linq interface there is an underlying assumption you have some experience
-either with Linq combinators or property based testing.
+either with Linq combinators or property-based testing.
 ```csharp
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
@@ -139,7 +139,7 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
 
 Let's not call a spade a shovel: property-based testing (PBT) isn't the easiest thing in the world.
 I usually frown upon verbosity and an overdose of logging, but here, it's not just tolerable, it's necessary.
-Especially when the user starts to dig a little deeper and implements its own custom shrinkers f.i.  
+Especially when the user starts to dig a little deeper and implements its own custom shrinkers for instance.  
 
 There are two ways to get diagnostics out of QuickAcid's engine.
 
@@ -174,7 +174,7 @@ var run =
     select Acid.Test;
 new QState(run).Verbose().Testify(50);
 ```
-Ouputs something similar to:
+Outputs something similar to:
 ```
  ----------------------------------------
  -- FIRST FAILED RUN

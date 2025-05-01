@@ -8,9 +8,9 @@ namespace QuickAcid.TestsDeposition.Linqy.Linq101;
 public static class Chapter { public const string Order = "1-1"; }
 
 [Doc(Order = Chapter.Order, Caption = "QuickAcid Linq 101", Content =
-@"First of all you are going to need import some namespaces if you want to use the Linq interface.  
+@"First of all, you need to import some namespaces if you want to use the Linq interface.  
 This is by design. If you're using the Linq interface there is an underlying assumption you have some experience
-either with Linq combinators or property based testing.
+either with Linq combinators or property-based testing.
 ```csharp
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
