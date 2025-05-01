@@ -26,7 +26,7 @@ public class Wendy
     {
         for (int i = 0; i < scopes; i++)
         {
-            var state = new QState(runner) { Verbose = verbose };
+            var state = new QAcidState(runner) { Verbose = verbose };
             state.Observe(executionsPerScope);
             if (state.CurrentContext.Failed)
                 return state.GetReport();
@@ -38,7 +38,7 @@ public class Wendy
     {
         for (int i = 0; i < scopes; i++)
         {
-            var state = new QState(runner) { Verbose = verbose };
+            var state = new QAcidState(runner) { Verbose = verbose };
             state.Testify(executionsPerScope);
         }
     }
@@ -47,7 +47,7 @@ public class Wendy
     {
         for (int i = 0; i < scopes; i++)
         {
-            var state = new QState(runner) { Verbose = verbose };
+            var state = new QAcidState(runner) { Verbose = verbose };
             state.Testify(executionsPerScope);
             if (state.CurrentContext.Failed)
                 return Prospector.Pan(state); ;

@@ -12,7 +12,7 @@ namespace QuickAcid.CodeGen
             var tests = new List<string>();
             for (int i = 0; i < scopes; i++)
             {
-                var state = new QState(runner);
+                var state = new QAcidState(runner);
                 state.Testify(executionsPerScope);
                 if (state.CurrentContext.Failed)
                 {

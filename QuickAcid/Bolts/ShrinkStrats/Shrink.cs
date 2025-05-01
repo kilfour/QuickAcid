@@ -4,7 +4,7 @@ namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class Shrink
 {
-    public static ShrinkOutcome Input<T>(QState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public static ShrinkOutcome Input<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var actualType = typeof(T) == typeof(object) && value != null
             ? value.GetType()

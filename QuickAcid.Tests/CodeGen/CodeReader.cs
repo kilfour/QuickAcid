@@ -22,7 +22,7 @@ public class LinesReader
 
     public static LinesReader FromRun(QAcidRunner<Acid> runner)
     {
-        var state = new QState(runner);
+        var state = new QAcidState(runner);
         state.Testify(1);
         return new LinesReader(Prospector.Pan(state));
     }

@@ -23,7 +23,7 @@ public class Bob
         return new Bob(composed);
     }
 
-    internal Bob BindState<TNext>(Func<QState, QAcidRunner<TNext>> bind)
+    internal Bob BindState<TNext>(Func<QAcidState, QAcidRunner<TNext>> bind)
     {
         QAcidRunner<TNext> composed =
             state =>

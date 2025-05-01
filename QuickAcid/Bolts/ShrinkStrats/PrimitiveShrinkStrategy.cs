@@ -27,7 +27,7 @@ public class PrimitiveShrinkStrategy //: IShrinkStrategy
             { typeof(Uri),      new object[] { null, new Uri("http://localhost"), new Uri("https://example.com/resource?query=1") } }
         };
 
-    public ShrinkOutcome Shrink<T>(QState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var actualType = typeof(T) == typeof(object) && value != null
             ? value.GetType()

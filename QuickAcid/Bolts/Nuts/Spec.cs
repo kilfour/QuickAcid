@@ -29,7 +29,7 @@ public static partial class QAcid
 	public static QAcidRunner<Acid> SpecIf(this string key, Func<bool> predicate, Func<bool> condition)
 		=> state => predicate() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
 
-	private static bool ShouldSkipSpec(string key, QState state)
+	private static bool ShouldSkipSpec(string key, QAcidState state)
 		=> state.OriginalRun.FailingSpec is { } failedKey && failedKey != key;
 
 	public static QAcidRunner<Acid> Analyze(this string key, Func<bool> condition)
