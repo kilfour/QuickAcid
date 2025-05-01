@@ -1,5 +1,4 @@
 using QuickMGenerate;
-using QuickAcid.CodeGen;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
 
@@ -15,7 +14,7 @@ public class Spike
     }
 
     [Fact]
-    public void Without_code_decorators()
+    public void Example()
     {
         var run =
             from account in "Account".AlwaysReported(() => new Account(), a => a.Balance.ToString())

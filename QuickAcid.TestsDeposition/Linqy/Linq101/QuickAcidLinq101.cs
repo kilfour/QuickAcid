@@ -9,12 +9,13 @@ public static class Chapter { public const string Order = "1-1"; }
 
 [Doc(Order = Chapter.Order, Caption = "QuickAcid Linq 101", Content =
 @"First of all, you need to import some namespaces if you want to use the Linq interface.  
-This is by design. If you're using the Linq interface there is an underlying assumption you have some experience
-either with Linq combinators or property-based testing.
+This is intentional. The Linq interface assumes familiarity with either Linq combinators or property-based testing concepts.
+
 ```csharp
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 ```
+
 Yes, you need both the Nuts and the Bolts.
 ")]
 [Doc(Order = $"{Chapter.Order}-1", Caption = "What is a Runner?", Content =
@@ -157,7 +158,7 @@ var run =
 
 new QState(run).Testify(10);
 ```
-This example isn't meaningful on its own, but it's designed to illustrate the concepts of Run, Execution, and Scoping.
+While contrived, this example demonstrates how Stashed, Shrinkable, and Act work together across multiple executions.
 First a brief explanation of the newly introduced Runners :
 - `Stashed(...)` — defines a named value that will be accessible during the test.
 - `Shrinkable(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
