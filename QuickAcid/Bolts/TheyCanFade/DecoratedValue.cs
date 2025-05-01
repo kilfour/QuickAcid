@@ -1,3 +1,5 @@
+using QuickAcid.Bolts.ShrinkStrats;
+
 namespace QuickAcid.Bolts.TheyCanFade;
 
 public class DecoratedValue

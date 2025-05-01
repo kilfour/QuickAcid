@@ -1,5 +1,15 @@
 ## QuickAcid Linq 101
 
+First of all you are going to need import some namespaces if you want to use the Linq interface.  
+This is by design. If you're using the Linq interface there is an underlying assumption you have some experience
+either with Linq combinators or property based testing.
+```csharp
+using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts;
+```
+Yes, you need both the Nuts and the Bolts.
+
+
 ### What is a Runner?
 
 Runners are the core abstraction of QuickAcid's LINQ model. 
@@ -121,5 +131,98 @@ which is how QuickAcid handles mutable state and side effects.
 4. The invariant is checked again (2 != 0), and again will pass.
 
 If any execution fails, QuickAcid immediately halts the run and begins shrinking the input to a simpler failing case. A feature we will explore in detail later on. 
+
+
+---
+
+## QuickAcid Logging
+
+Let's not call a spade a shovel: property-based testing (PBT) isn't the easiest thing in the world.
+I usually frown upon verbosity and an overdose of logging, but here, it's not just tolerable, it's necessary.
+Especially when the user starts to dig a little deeper and implements its own custom shrinkers f.i.  
+
+There are two ways to get diagnostics out of QuickAcid's engine.
+
+
+### Verbose Mode
+
+By adding a call to `.Verbose()` when building your test, you instruct the engine to include detailed diagnostic output in the report.
+```csharp
+var run =
+    from spec in "spec".Spec(() => false)
+    select Acid.Test;
+new QState(run).Verbose().Testify(1);
+```
+This will produce a report that contains :
+
+
+ - Information about the first failed run.
+
+ - Information about the run after execution shrinking.
+
+
+ - Information about the run after input shrinking.
+
+
+Which for this example: 
+```csharp
+var run =
+    from container in "stashed".Stashed(() => new Container())
+    from input in "input".Shrinkable(MGen.Int(1, 6))
+    from act in "act".Act(() => container.Value = input)
+    from spec in "spec".Spec(() => container.Value != 5)
+    select Acid.Test;
+new QState(run).Verbose().Testify(50);
+```
+Ouputs something similar to:
+```
+ ----------------------------------------
+ -- FIRST FAILED RUN
+ ----------------------------------------
+ RUN START :
+ ---------------------------
+ EXECUTE : act
+   - Input : input = 2
+ ---------------------------
+ EXECUTE : act
+   - Input : input = 2
+ ---------------------------
+ EXECUTE : act
+   - Input : input = 3
+ ---------------------------
+ EXECUTE : act
+   - Input : input = 2
+ ---------------------------
+ EXECUTE : act
+   - Input : input = 5
+ *******************
+  Spec Failed : spec
+ *******************
+
+ ----------------------------------------
+ -- AFTER EXECUTION SHRINKING
+ ----------------------------------------
+ RUN START :
+ ---------------------------
+ EXECUTE : act
+   - Input : input = 5
+ *******************
+  Spec Failed : spec
+ *******************
+
+ ----------------------------------------
+ -- AFTER INPUT SHRINKING :
+ -- Property 'spec' was falsified
+ -- Original failing run: 5 execution(s)
+ -- Shrunk to minimal case:  1 execution(s) (6 shrinks)
+ ----------------------------------------
+ RUN START :
+ ---------------------------
+ EXECUTE : act
+   - Input : input = 5
+ *******************
+  Spec Failed : spec
+ *******************
+ ```
 
 

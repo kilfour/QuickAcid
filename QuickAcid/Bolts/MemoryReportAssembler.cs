@@ -1,3 +1,4 @@
+using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
 

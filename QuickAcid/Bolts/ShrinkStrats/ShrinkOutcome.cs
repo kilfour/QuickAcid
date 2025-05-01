@@ -1,4 +1,4 @@
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Bolts.ShrinkStrats;
 
 public abstract record ShrinkOutcome
 {

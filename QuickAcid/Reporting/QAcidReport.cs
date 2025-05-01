@@ -42,9 +42,21 @@ public class QAcidReport
         return entries.OfType<T>();
     }
 
+    public T First<T>()
+    {
+        return OfType<T>().First();
+    }
+
     public T? FirstOrDefault<T>()
     {
         return OfType<T>().FirstOrDefault();
+    }
+
+    public T Second<T>()
+    {
+        var result = SecondOrDefault<T>();
+        if (result == null) throw new NullReferenceException();
+        return result;
     }
 
     public T? SecondOrDefault<T>()
@@ -52,6 +64,20 @@ public class QAcidReport
         var arr = OfType<T>().ToArray();
         if (arr.Length < 2) return default;
         return arr[1];
+    }
+
+    public T Third<T>()
+    {
+        var result = ThirdOrDefault<T>();
+        if (result == null) throw new NullReferenceException();
+        return result;
+    }
+
+    public T? ThirdOrDefault<T>()
+    {
+        var arr = OfType<T>().ToArray();
+        if (arr.Length < 3) return default;
+        return arr[2];
     }
 
     public T Single<T>()

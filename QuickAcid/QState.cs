@@ -16,6 +16,12 @@ public class QState
         state = new QAcidState(runner);
     }
 
+    public QState Verbose()
+    {
+        state.Verbose = true;
+        return this;
+    }
+
     public void TestifyOnce()
     {
         Testify(1);

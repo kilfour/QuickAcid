@@ -3,9 +3,21 @@ using QuickAcid.Bolts.Nuts;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 
-namespace QuickAcid.TestsDeposition.Linqy.Basics
-{
-    [Doc(Order = "1-1-1", Caption = "What is a Runner?", Content =
+namespace QuickAcid.TestsDeposition.Linqy.Linq101;
+
+public static class Chapter { public const string Order = "1-1"; }
+
+[Doc(Order = Chapter.Order, Caption = "QuickAcid Linq 101", Content =
+@"First of all you are going to need import some namespaces if you want to use the Linq interface.  
+This is by design. If you're using the Linq interface there is an underlying assumption you have some experience
+either with Linq combinators or property based testing.
+```csharp
+using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts;
+```
+Yes, you need both the Nuts and the Bolts.
+")]
+[Doc(Order = $"{Chapter.Order}-1", Caption = "What is a Runner?", Content =
 @"Runners are the core abstraction of QuickAcid's LINQ model. 
 They carry both the logic of the test and the mechanisms to generate input, track state, and produce a result.
 
@@ -15,17 +27,17 @@ It encapsulates both what to do and how to do it, with full access to the curren
 public delegate QAcidResult<T> QAcidRunner<T>(QAcidState state);
 ```
 ")]
-    public class What_is_a_runner
+public class QuickAcidLinq101
+{
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-1-1", Content = "You can think of runners as the building blocks of a property-based test.")]
+    public void What_is_a_single_runner()
     {
-        [Fact]
-        [Doc(Order = "1-1-1-1", Content = "You can think of runners as the building blocks of a property-based test.")]
-        public void What_is_a_single_runner()
-        {
-            Assert.IsType<QAcidRunner<int>>("an int".Shrinkable(MGen.Int()));
-        }
+        Assert.IsType<QAcidRunner<int>>("an int".Shrinkable(MGen.Int()));
+    }
 
-        [Fact]
-        [Doc(Order = "1-1-1-2", Content =
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-1-2", Content =
 @"
 Each LINQ combinator constructs a new runner by composing existing ones. 
 The final test, the full LINQ query, is just a single, composed runner.
@@ -37,15 +49,15 @@ select Acid.Test;
 *Sidenote:* `.Spec(...)` makes an assertion. It checks whether a condition holds, and can pass or fail.
 Will be explained in detail later.
 ")]
-        public void What_is_a_composed_runner()
-        {
-            Assert.IsType<QAcidRunner<Acid>>(
-                from spec in "spec".Spec(() => true)
-                select Acid.Test);
-        }
+    public void What_is_a_composed_runner()
+    {
+        Assert.IsType<QAcidRunner<Acid>>(
+            from spec in "spec".Spec(() => true)
+            select Acid.Test);
+    }
 
-        [Fact]
-        [Doc(Order = "1-1-2", Caption = "Acid.Test Explained", Content =
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-2", Caption = "Acid.Test Explained", Content =
 @"
 In QuickAcid, every test definition ends with:
 ```csharp
@@ -54,14 +66,14 @@ select Acid.Test;
 `Acid.Test` is a unit value. It represents the fact that there is no meaningful return value to capture,
 and serves as a **terminator** for the test chain.
 *All well-formed tests should end with it.*")]
-        public void What_is_Acid_test()
-        {
-            Assert.IsType<Acid>(Acid.Test);
-            Assert.IsType<QAcidRunner<Acid>>(from input in "act".Act(() => { }) select Acid.Test);
-        }
+    public void What_is_Acid_test()
+    {
+        Assert.IsType<Acid>(Acid.Test);
+        Assert.IsType<QAcidRunner<Acid>>(from input in "act".Act(() => { }) select Acid.Test);
+    }
 
-        [Fact]
-        [Doc(Order = "1-1-3", Caption = "What is a Run?", Content =
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-3", Caption = "What is a Run?", Content =
 @"A **Run** in QuickAcid is a single attempt to validate a property.
 It consists of one or more executions of the test logic, usually with different fuzzed inputs.
 A run ends either when a failure is found or when the maximum number of executions is reached.
@@ -76,36 +88,36 @@ In the above example the variable 'run' is the definition, and the .Testify(1) c
 Seeing as the `Spec` (thoroughly explained later on) is hardcoded to pass,
 nothing is reported and using this in a unit testing framework just passes the encompassing test. 
 ")]
-        public void What_is_a_run()
-        {
-            var timesSpecChecked = 0;
-            var run =
-                from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
-                select Acid.Test;
-            var ex = Record.Exception(() => new QState(run).Testify(1));
-            Assert.Null(ex);
-            Assert.Equal(1, timesSpecChecked);
-        }
+    public void What_is_a_run()
+    {
+        var timesSpecChecked = 0;
+        var run =
+            from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
+            select Acid.Test;
+        var ex = Record.Exception(() => new QState(run).Testify(1));
+        Assert.Null(ex);
+        Assert.Equal(1, timesSpecChecked);
+    }
 
-        [Fact]
-        [Doc(Order = "1-1-3-2", Content =
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-3-2", Content =
 @"The int parameter passed in to the `Testify` method specifies number of executions per run.
 An execution is one walk through the test definition.
 Why we would want to do that multiple times will quickly become clear when we introduce other QAcidRunners.
 For now, calling `.Testify(10)` in above example checks the Spec ten times.")]
-        public void What_is_a_run_multiple_executions()
-        {
-            var timesSpecChecked = 0;
-            var run =
-                from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
-                select Acid.Test;
-            var ex = Record.Exception(() => new QState(run).Testify(10));
-            Assert.Null(ex);
-            Assert.Equal(10, timesSpecChecked);
-        }
+    public void What_is_a_run_multiple_executions()
+    {
+        var timesSpecChecked = 0;
+        var run =
+            from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
+            select Acid.Test;
+        var ex = Record.Exception(() => new QState(run).Testify(10));
+        Assert.Null(ex);
+        Assert.Equal(10, timesSpecChecked);
+    }
 
-        [Fact]
-        [Doc(Order = "1-1-3-3", Content =
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-3-3", Content =
 @"By changing the return value of the `Spec` to `false` we can force this test to fail and in that case
 a QuickAcid FalsifiableException is thrown containing a report.  
 In this case :
@@ -121,19 +133,19 @@ In this case :
  *******************
 ```
 ")]
-        public void What_is_a_run_failing_spec_throws()
-        {
-            var run =
-                from spec in "spec".Spec(() => false)
-                select Acid.Test;
+    public void What_is_a_run_failing_spec_throws()
+    {
+        var run =
+            from spec in "spec".Spec(() => false)
+            select Acid.Test;
 
-            var ex = Assert.Throws<FalsifiableException>(() => new QState(run).Testify(1));
-            Assert.NotNull(ex.QAcidReport);
-        }
+        var ex = Assert.Throws<FalsifiableException>(() => new QState(run).Testify(1));
+        Assert.NotNull(ex.QAcidReport);
+    }
 
 
-        [Fact]
-        [Doc(Order = "1-1-4", Caption = "What is an Execution?", Content =
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-4", Caption = "What is an Execution?", Content =
 @"In the previous section we briefly mentioned executions, let's elaborate and have a look at a simple test:
  ```csharp
 var run =
@@ -173,16 +185,14 @@ which is how QuickAcid handles mutable state and side effects.
 
 If any execution fails, QuickAcid immediately halts the run and begins shrinking the input to a simpler failing case. A feature we will explore in detail later on. 
 ")]
-        public void What_is_an_execution()
-        {
-            var run =
-                from container in "container".Stashed(() => new Container())
-                from input in "input".Shrinkable(MGen.Int(1, 5))
-                from act in "act".Act(() => container.Value = input)
-                from spec in "spec".Spec(() => container.Value != 0)
-                select Acid.Test;
-            new QState(run).Testify(10);
-        }
-        public class Container { public int Value { get; set; } }
+    public void What_is_an_execution()
+    {
+        var run =
+            from container in "container".Stashed(() => new Container())
+            from input in "input".Shrinkable(MGen.Int(1, 5))
+            from act in "act".Act(() => container.Value = input)
+            from spec in "spec".Spec(() => container.Value != 0)
+            select Acid.Test;
+        new QState(run).Testify(10);
     }
 }

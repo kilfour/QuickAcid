@@ -1,7 +1,7 @@
 ﻿namespace QuickAcid.TestsDeposition._Tools;
 
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
 public class DocAttribute : Attribute, IEquatable<DocAttribute>
 {
     public string Order { get; init; }
