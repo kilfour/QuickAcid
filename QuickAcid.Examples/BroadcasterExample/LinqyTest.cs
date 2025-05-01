@@ -2,6 +2,7 @@ using System.Reflection;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Examples.BroadcasterExample.SimpleModel;
+using QuickAcid.MonadiXEtAl;
 using QuickMGenerate;
 
 namespace QuickAcid.Examples.BroadcasterExample;
@@ -43,7 +44,7 @@ public partial class LinqyTest
             )
             select Acid.Test;
 
-        run.Verify(10, 50);
+        10.Times(() => new QState(run).Testify(50).ThrowIfFailed());
     }
 
     private static List<IClientProxy> GetBroadcastersClients(Broadcaster caster)

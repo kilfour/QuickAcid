@@ -24,7 +24,7 @@ namespace QuickAcid.Examples.Old.Linqy
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			run.Verify(100, 100);
+			100.Times(() => new QState(run).Testify(100).ThrowIfFailed());
 		}
 
 		public class BugHouse2
@@ -71,7 +71,7 @@ namespace QuickAcid.Examples.Old.Linqy
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			run.Verify(100, 100);
+			100.Times(() => new QState(run).Testify(100).ThrowIfFailed());
 		}
 	}
 }

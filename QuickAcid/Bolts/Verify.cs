@@ -5,27 +5,12 @@ namespace QuickAcid.Bolts;
 
 public static partial class QAcid
 {
-	public static void Verify(this QAcidRunner<Acid> runner, int scopes, int executionsPerScope)
-	{
-		for (int i = 0; i < scopes; i++)
-		{
-			var state = new QAcidState(runner);//{ Verbose = true };
-			state.Run(executionsPerScope);
-			state.ThrowFalsifiableExceptionIfFailed();
-		}
-	}
-
-	public static void Verify(this QAcidRunner<Acid> runner)
-	{
-		runner.Verify(1, 1);
-	}
-
 	public static QAcidReport ReportIfFailed(this QAcidRunner<Acid> runner, int scopes, int executionsPerScope)
 	{
 		for (int i = 0; i < scopes; i++)
 		{
-			var state = new QAcidState(runner);
-			state.Run(executionsPerScope);
+			var state = new QState(runner);
+			state.Testify(executionsPerScope);
 			if (state.CurrentContext.Failed)
 				return state.GetReport();
 		}
@@ -41,8 +26,8 @@ public static partial class QAcid
 	{
 		for (int i = 0; i < scopes; i++)
 		{
-			var state = new QAcidState(runner);
-			state.Run(executionsPerScope);
+			var state = new QState(runner);
+			state.Testify(executionsPerScope);
 			if (state.CurrentContext.Failed)
 				return Prospector.Pan(state);
 		}

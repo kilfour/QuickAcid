@@ -2,5 +2,5 @@
 
 namespace QuickAcid
 {
-	public delegate QAcidResult<TValue> QAcidRunner<TValue>(QAcidState state);
+	public delegate QAcidResult<TValue> QAcidRunner<TValue>(QState state);
 }

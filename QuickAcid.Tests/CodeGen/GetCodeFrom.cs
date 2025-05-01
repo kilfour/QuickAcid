@@ -7,8 +7,8 @@ public static class GetCodeFrom
 {
     public static string This(QAcidRunner<Acid> runner)
     {
-        var state = new QAcidState(runner);
-        state.Run(1);
+        var state = new QState(runner);
+        state.Testify(1);
         return Prospector.Pan(state);
     }
 }

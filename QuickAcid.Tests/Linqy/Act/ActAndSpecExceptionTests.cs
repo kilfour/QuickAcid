@@ -23,12 +23,11 @@ public class ActAndSpecExceptionTests
     [Fact]
     public void ExceptionThrownBySpecIsNotAQuickAcidException()
     {
-        var ex =
-            Assert.Throws<Exception>(() => (
-                from foo in "foo".Act(() => true)
-                from spec in "spec".Spec(Throw)
-                select Acid.Test
-            ).Verify(1, 1));
+        var run =
+            from foo in "foo".Act(() => true)
+            from spec in "spec".Spec(Throw)
+            select Acid.Test;
+        var ex = Assert.Throws<Exception>(() => new QState(run).TestifyOnce().ThrowIfFailed());
         Assert.IsNotType<FalsifiableException>(ex);
         Assert.Contains("QuickAcid.Tests.Linqy.Act.ActAndSpecExceptionTests.Throw()", ex.StackTrace);
     }

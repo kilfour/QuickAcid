@@ -6,7 +6,7 @@ namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class EnumerableShrinkStrategy //: IShrinkStrategy
 {
-    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public ShrinkOutcome Shrink<T>(QState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var theList = CloneAsOriginalTypeList(value);
         int index = 0;

@@ -9,7 +9,7 @@ public class CustomShrinkStrategy<T> //: IShrinkStrategy
     {
         this.shrinker = shrinker;
     }
-    public ShrinkOutcome Shrink(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public ShrinkOutcome Shrink(QState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var values = shrinker.Shrink(value);
         var originalFails = state.ShrinkRun(key, value);

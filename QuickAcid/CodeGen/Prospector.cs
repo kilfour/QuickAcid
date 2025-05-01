@@ -7,7 +7,7 @@ namespace QuickAcid.CodeGen
 {
     public static class Prospector
     {
-        private static string GetFunctionDeclaration(QAcidState state)
+        private static string GetFunctionDeclaration(QState state)
         {
             if (state.FailingSpec != null)
             {
@@ -34,7 +34,7 @@ namespace QuickAcid.CodeGen
             return "    " + FollowTheLead(clue, access);
         }
 
-        private static string? GetAlwaysReportedInputsCodes(QAcidState state)
+        private static string? GetAlwaysReportedInputsCodes(QState state)
         {
             var lines =
                 state.Memory.GetAllAlwaysReportedKeys()
@@ -68,7 +68,7 @@ namespace QuickAcid.CodeGen
                     .Select(a => GetActionCode(xMarksTheSpot, a, access)));
         }
 
-        private static string GetExecutionsCode(QAcidState state)
+        private static string GetExecutionsCode(QState state)
         {
             var sb = new StringBuilder();
             foreach (int actionNumber in state.ExecutionNumbers)
@@ -79,7 +79,7 @@ namespace QuickAcid.CodeGen
             return sb.ToString();
         }
 
-        private static string GetAssertionCode(QAcidState state)
+        private static string GetAssertionCode(QState state)
         {
             if (state.FailingSpec != null)
             {
@@ -110,7 +110,7 @@ namespace QuickAcid.CodeGen
             return "    Assert.Throws(" + "--------- NOT YET ---------" + ");";
         }
 
-        public static string Pan(QAcidState state)
+        public static string Pan(QState state)
         {
             var sb = new StringBuilder();
             sb.AppendLine("[Fact]");

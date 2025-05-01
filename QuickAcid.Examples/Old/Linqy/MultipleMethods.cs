@@ -43,7 +43,7 @@ namespace QuickAcid.Examples
 						select Acid.Test)
 				select Acid.Test;
 
-			run.Verify(100, 100);
+			100.Times(() => new QState(run).Testify(100).ThrowIfFailed());
 		}
 	}
 }

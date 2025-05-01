@@ -6,7 +6,7 @@ using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
 
-public class QAcidState : QAcidContext
+public class QState : QAcidContext
 {
     public QAcidRunner<Acid> Runner { get; private set; }
     public int CurrentExecutionNumber { get; private set; }
@@ -101,7 +101,7 @@ public class QAcidState : QAcidContext
     }
     // ----------------------------------------------------------------------------------
 
-    public QAcidState(QAcidRunner<Acid> runner)
+    public QState(QAcidRunner<Acid> runner)
     {
         Runner = runner;
         ExecutionNumbers = [];
@@ -118,7 +118,12 @@ public class QAcidState : QAcidContext
     public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
     // -----------------------------------------------------------------
 
-    public void Run(int executionsPerScope)
+    public QState TestifyOnce()
+    {
+        return Testify(1);
+    }
+
+    public QState Testify(int executionsPerScope)
     {
         ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
 
@@ -126,8 +131,9 @@ public class QAcidState : QAcidContext
         {
             ExecuteStep();
             if (CurrentContext.Failed)
-                return;
+                return this;
         }
+        return this;
     }
 
     private void ExecuteStep()
@@ -272,7 +278,7 @@ public class QAcidState : QAcidContext
         return report;
     }
 
-    public void ThrowFalsifiableExceptionIfFailed()
+    public void ThrowIfFailed()
     {
         if (CurrentContext.Failed)
         {

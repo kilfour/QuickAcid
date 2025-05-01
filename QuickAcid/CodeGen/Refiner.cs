@@ -12,8 +12,8 @@ namespace QuickAcid.CodeGen
             var tests = new List<string>();
             for (int i = 0; i < scopes; i++)
             {
-                var state = new QAcidState(runner);
-                state.Run(executionsPerScope);
+                var state = new QState(runner);
+                state.Testify(executionsPerScope);
                 if (state.CurrentContext.Failed)
                 {
                     if (state.CurrentContext.Exception != null)

@@ -9,10 +9,11 @@ namespace QuickAcid.Tests.Linqy.Spec
         public void ExceptionThrownBySpecIsNotAQuickAcidException()
         {
             var ex =
-                Assert.Throws<Exception>(() => (
-                    from spec in "spec".Spec(Throw)
-                    select Acid.Test
-                ).Verify(1, 1));
+                Assert.Throws<Exception>(() =>
+                    new QState(
+                        from spec in "spec".Spec(Throw) select Acid.Test
+                    ).Testify(1).ThrowIfFailed()
+                );
             Assert.IsNotType<FalsifiableException>(ex);
             Assert.Contains("QuickAcid.Tests.Linqy.Spec.SpecExceptionTests.Throw()", ex.StackTrace);
         }

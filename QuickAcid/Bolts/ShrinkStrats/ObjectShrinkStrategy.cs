@@ -7,7 +7,7 @@ namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class ObjectShrinkStrategy //: IShrinkStrategy
 {
-    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public ShrinkOutcome Shrink<T>(QState state, string key, T value, Func<object, bool> shrinkingGuard)
     {
         var shrunk = HandleProperties(state, key, value);
 
@@ -47,7 +47,7 @@ public class ObjectShrinkStrategy //: IShrinkStrategy
         return shrunk;
     }
 
-    private static ShrinkOutcome HandleProperties<T>(QAcidState state, object key, T value)
+    private static ShrinkOutcome HandleProperties<T>(QState state, object key, T value)
     {
         var messages = value.GetType()
             .GetProperties(MyBinding.Flags)
@@ -61,7 +61,7 @@ public class ObjectShrinkStrategy //: IShrinkStrategy
             : ShrinkOutcome.Irrelevant;
     }
 
-    private static ShrinkOutcome HandleProperty(QAcidState state, object key, object value, PropertyInfo propertyInfo)
+    private static ShrinkOutcome HandleProperty(QState state, object key, object value, PropertyInfo propertyInfo)
     {
         var propertyValue = propertyInfo.GetValue(value);
         var primitiveKey = PrimitiveShrinkStrategy.PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(propertyInfo.PropertyType));
