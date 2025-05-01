@@ -158,7 +158,7 @@ var run =
 
 new QState(run).Testify(10);
 ```
-While contrived, this example demonstrates how Stashed, Shrinkable, and Act work together across multiple executions.
+While contrived, this example demonstrates how `Stashed`, `Shrinkable`, and `Act` work together across multiple executions.
 First a brief explanation of the newly introduced Runners :
 - `Stashed(...)` — defines a named value that will be accessible during the test.
 - `Shrinkable(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
