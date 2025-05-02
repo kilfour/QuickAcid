@@ -136,6 +136,35 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
 
 ---
 
+## QuickAcid Combinators
+
+Here will be some info about what a combinator is. Only the one for now ...
+
+
+### TestifyProvenWhen
+
+**TestifyProvenWhen(...)**
+Ends the test run early once a specified condition is satisfied.
+This combinator is not a property specification itself,
+but a control structure that governs when a test run is considered 'proven' and can terminate before reaching the maximum number of executions. It's typically used in combination with `Stashed(...)` or other state-tracking steps that accumulate evidence across runs.
+
+
+**Usage example:**
+```csharp
+from seenTrue in "val is true".TestifyProvenWhen(() => container.Value)
+```
+
+
+
+This would end the test run early once `container.Value` becomes `true`.
+
+
+**Note:** This does not assert a property directly — use `Assay(...)` or `Analyze(...)` for that.
+`TestifyProvenWhen(...)` is about controlling *how long* a test runs based on dynamic conditions observed during execution.
+
+
+---
+
 ## QuickAcid Logging
 
 Let's not call a spade a shovel: property-based testing (PBT) isn't the easiest thing in the world.

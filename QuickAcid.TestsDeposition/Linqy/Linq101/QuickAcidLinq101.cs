@@ -189,7 +189,7 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
     public void What_is_an_execution()
     {
         var run =
-            from container in "container".Stashed(() => new Container())
+            from container in "container".Stashed(() => new Container<int>())
             from input in "input".Shrinkable(MGen.Int(1, 5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 0)

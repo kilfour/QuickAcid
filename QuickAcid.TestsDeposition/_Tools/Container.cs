@@ -1,3 +1,3 @@
 namespace QuickAcid.TestsDeposition._Tools;
 
-public class Container { public int Value { get; set; } }
+public class Container<T> { public T? Value { get; set; } }

@@ -16,3 +16,6 @@ With Jint ?
 - `Bob.Choose` key/label improvements  
 - Unicode, formatting, escaping in reports?
 --- slide ---
+## The Wordsmith
+QuickXmlWrite (json)
+--- slide ---

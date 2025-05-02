@@ -122,7 +122,9 @@ public sealed class QAcidState : QAcidContext
         {
             ExecuteStep();
             if (CurrentContext.Failed)
-                throw new FalsifiableException(report.ToString(), Exception!) { QAcidReport = report }; ;
+                throw new FalsifiableException(report.ToString(), Exception!) { QAcidReport = report };
+            if (CurrentContext.BreakRun)
+                break;
         }
     }
 

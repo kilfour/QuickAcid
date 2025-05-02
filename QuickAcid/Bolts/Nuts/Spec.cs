@@ -5,10 +5,8 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcid
 {
-	private static QAcidRunner<Acid> InnerSpec(this string key, Func<bool> condition, bool allowShrinking = true)
-	{
-		return
-			state =>
+	private static QAcidRunner<Acid> InnerSpec(this string key, Func<bool> condition, bool allowShrinking = true) =>
+		state =>
 			{
 				if (ShouldSkipSpec(key, state))
 					return QAcidResult.AcidOnly(state);
@@ -20,7 +18,7 @@ public static partial class QAcid
 				}
 				return QAcidResult.AcidOnly(state);
 			};
-	}
+
 
 	public static QAcidRunner<Acid> Spec(this string key, Func<bool> condition)
 		=> InnerSpec(key, condition);
@@ -36,4 +34,17 @@ public static partial class QAcid
 
 	public static QAcidRunner<Acid> Assay(this string key, Func<bool> condition)
 		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition, false)(state) : QAcidResult.AcidOnly(state);
+
+	public static QAcidRunner<Acid> TestifyProvenWhen(this string key, Func<bool> condition) =>
+		state =>
+			{
+				if (ShouldSkipSpec(key, state))
+					return QAcidResult.AcidOnly(state);
+				bool passed = condition();
+				if (passed)
+				{
+					state.CurrentContext.BreakRun = true;
+				}
+				return QAcidResult.AcidOnly(state);
+			};
 }

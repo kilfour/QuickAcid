@@ -6,7 +6,7 @@ using QuickMGenerate;
 
 namespace QuickAcid.TestsDeposition.Linqy.Logging;
 
-public static class Chapter { public const string Order = "1-2"; }
+public static class Chapter { public const string Order = "1-99"; }
 
 [Doc(Order = Chapter.Order, Caption = "QuickAcid Logging", Content =
 @"Let's not call a spade a shovel: property-based testing (PBT) isn't the easiest thing in the world.
@@ -143,7 +143,7 @@ Outputs something similar to:
     public void Verbose_full_output()
     {
         var run =
-            from container in "stashed".Stashed(() => new Container())
+            from container in "stashed".Stashed(() => new Container<int>())
             from input in "input".Shrinkable(MGen.Constant(5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 5)

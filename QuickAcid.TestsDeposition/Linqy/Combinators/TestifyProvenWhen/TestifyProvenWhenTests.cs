@@ -1,0 +1,76 @@
+using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts;
+using QuickAcid.Reporting;
+using QuickAcid.TestsDeposition._Tools;
+using QuickMGenerate;
+
+namespace QuickAcid.TestsDeposition.Linqy.Combinators.TestifyProvenWhen;
+
+public static class Chapter { public const string Order = "1-2"; }
+
+[Doc(Order = Chapter.Order, Caption = "QuickAcid Combinators", Content =
+@"Here will be some info about what a combinator is. Only the one for now ...
+")]
+[Doc(Order = $"{Chapter.Order}-50", Caption = "TestifyProvenWhen", Content =
+@"**TestifyProvenWhen(...)**
+Ends the test run early once a specified condition is satisfied.
+This combinator is not a property specification itself,
+but a control structure that governs when a test run is considered 'proven' and can terminate before reaching the maximum number of executions. It's typically used in combination with `Stashed(...)` or other state-tracking steps that accumulate evidence across runs.
+")]
+public class TestifyProvenWhenTests
+{
+    [Doc(Order = $"{Chapter.Order}-50-1", Content =
+@"**Usage example:**
+```csharp
+from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
+```
+")]
+    [Fact]
+    public void TestifyProvenWhen_usage()
+    {
+        var run =
+            from container in "container".Stashed(() => new Container<bool>())
+            from val in "bool".DynamicInput(MGen.Constant(true))
+            from act in "act".Act(() => container.Value = container.Value | val)
+            from spec in "val is true".TestifyProvenWhen(() => container.Value)
+            select Acid.Test;
+        new QState(run).Testify(1);
+    }
+
+    [Doc(Order = $"{Chapter.Order}-50-2", Content =
+@"
+This would end the test run early once `container.Value` becomes `true`.
+")]
+    [Fact]
+    public void TestifyProvenWhen_breaks_run_early()
+    {
+        var counter = 0;
+        var run =
+            from act in "act".Act(() => counter++)
+            from spec in "val is true".TestifyProvenWhen(() => counter == 3)
+            select Acid.Test;
+        new QState(run).Testify(100);
+        Assert.Equal(3, counter);
+    }
+
+    [Doc(Order = $"{Chapter.Order}-50-3", Content =
+@"**Note:** This does not assert a property directly — use `Assay(...)` or `Analyze(...)` for that.
+`TestifyProvenWhen(...)` is about controlling *how long* a test runs based on dynamic conditions observed during execution.
+")]
+    [Fact]
+    public void TestifyProvenWhen_scaffold()
+    {
+        var run =
+            from container in "container".Stashed(() => new Container<bool>())
+            from val in "bool".DynamicInput(MGen.Constant(false))
+            from act in "act".Act(() => container.Value = container.Value | val)
+            from spec in "early exit".TestifyProvenWhen(() => container.Value)
+            from finalspec in "val is true".Assay(() => container.Value)
+            select Acid.Test;
+        var report = new QState(run).Observe(100);
+        Assert.NotNull(report);
+        var entry = report.First<ReportTitleSectionEntry>();
+        Assert.Equal("The Assayer disagrees : val is true.", entry.Title[0]);
+    }
+}
+
