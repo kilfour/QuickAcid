@@ -92,12 +92,12 @@ public class Memory
 		}
 
 		return new DisposableAction(() =>
-		 {
-			 if (GetNestedValue != null)
-			 	memory.Set(key, SetNestedValue(oldValue), ReportingIntent.Shrinkable);
-			 else
-				 memory.Set(key, oldValue, ReportingIntent.Shrinkable);
-		 });
+			{
+				if (GetNestedValue != null)
+					memory.Set(key, SetNestedValue(oldValue), ReportingIntent.Shrinkable);
+				else
+					memory.Set(key, oldValue, ReportingIntent.Shrinkable);
+			});
 
 	}
 }
