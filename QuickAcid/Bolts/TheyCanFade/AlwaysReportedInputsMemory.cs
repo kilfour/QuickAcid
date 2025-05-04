@@ -15,17 +15,21 @@ public class AlwaysReportedInputMemory
         this.getCurrentActionId = getCurrentActionId;
     }
 
-    public T Store<T>(string key, Func<T> factory, Func<T, string> stringify, bool reportIt)
+    public T Store<T>(string key, Func<T> factory, Func<T, string> stringify)
+    {
+        var val = StoreWithoutReporting(key, factory);
+        ReportForCurrent()[key] = stringify(val);
+        return val;
+    }
+
+    public T StoreWithoutReporting<T>(string key, Func<T> factory)
     {
         if (!values.ContainsKey(key))
         {
             var value = factory();
             values[key] = value!;
         }
-
         var val = (T)values[key]!;
-        if (reportIt)
-            ReportForCurrent()[key] = stringify(val);
         return val;
     }
 

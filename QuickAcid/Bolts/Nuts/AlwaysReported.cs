@@ -14,7 +14,7 @@ public static partial class QAcid
 		return
 			state =>
 				{
-					return QAcidResult.Some(state, state.Memory.StoreAlwaysReported(key, func, stringify, true));
+					return QAcidResult.Some(state, state.Memory.StoreAlwaysReported(key, func, stringify));
 				};
 	}
 }
