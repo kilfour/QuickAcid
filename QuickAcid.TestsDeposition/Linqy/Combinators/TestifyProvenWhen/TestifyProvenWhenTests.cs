@@ -70,7 +70,7 @@ This would end the test run early once `container.Value` becomes `true`.
         var report = new QState(run).Observe(100);
         Assert.NotNull(report);
         var entry = report.First<ReportTitleSectionEntry>();
-        Assert.Equal("The Assayer disagrees : val is true.", entry.Title[0]);
+        Assert.Equal("The Assayer disagrees: val is true.", entry.Title[0]);
     }
 }
 

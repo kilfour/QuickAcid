@@ -35,6 +35,30 @@ public static partial class QAcid
 	public static QAcidRunner<Acid> Assay(this string key, Func<bool> condition)
 		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition, false)(state) : QAcidResult.AcidOnly(state);
 
+	public static QAcidRunner<Acid> Assay(this string key, params (string label, Func<bool> condition)[] specs) =>
+		state =>
+			{
+				if (!state.IsThisTheRunsLastExecution())
+					return QAcidResult.AcidOnly(state);
+
+				bool passed = true;
+				var strings = new List<string>();
+				foreach (var (label, condition) in specs)
+				{
+					if (!condition())
+					{
+						strings.Add(label);
+						passed = false;
+					}
+				}
+				if (!passed)
+				{
+					state.AllowShrinking = false;
+					state.CurrentContext.MarkFailure(string.Join(", ", strings));
+				}
+				return QAcidResult.AcidOnly(state);
+			};
+
 	public static QAcidRunner<Acid> TestifyProvenWhen(this string key, Func<bool> condition) =>
 		state =>
 			{

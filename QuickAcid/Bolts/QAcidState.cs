@@ -194,7 +194,7 @@ public sealed class QAcidState : QAcidContext
         }
         else
         {
-            report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees : {FailingSpec}."]));
+            report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees: {FailingSpec}."]));
         }
         if (Exception != null)
             report.Exception = Exception;

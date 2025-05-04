@@ -22,6 +22,24 @@ public class AssayTests : QAcidLoggingFixture
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
         Assert.NotNull(entry);
-        Assert.Contains("The Assayer disagrees : gens 3.", entry.ToString());
+        Assert.Contains("The Assayer disagrees: gens 3.", entry.ToString());
+    }
+
+    [Fact]
+    public void Assay_multiple_did_not_happen()
+    {
+        var run =
+            from observer in "observer".AlwaysReported(() => new HashSet<int>())
+            from roll in "roll".Act(() => MGen.Int(1, 3).Generate())
+            from _a1 in "record".Act(() => observer.Add(roll))
+            from as1 in "combined".Assay(("gens 3", () => observer.Contains(3)), ("gens 4", () => observer.Contains(4)))
+            select Acid.Test;
+
+        var report = new QState(run).Observe(20);
+
+        Assert.NotNull(report);
+        var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
+        Assert.NotNull(entry);
+        Assert.Contains("The Assayer disagrees: gens 3, gens 4.", entry.ToString());
     }
 }

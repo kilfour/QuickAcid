@@ -24,6 +24,6 @@ public class AssayTests
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
         Assert.NotNull(entry);
-        Assert.Contains("The Assayer disagrees : gens 3.", entry.ToString());
+        Assert.Contains("The Assayer disagrees: gens 3.", entry.ToString());
     }
 }

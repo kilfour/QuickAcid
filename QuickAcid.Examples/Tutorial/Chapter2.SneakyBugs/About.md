@@ -72,7 +72,7 @@ public class Test
 
 ```text
  ----------------------------------------
- -- The Assayer disagrees : Die rolls 6.
+ -- The Assayer disagrees: Die rolls 6.
  ----------------------------------------
 ```
 
