@@ -1,8 +1,6 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
-using QuickAcid.CodeGen;
-using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;
 
 namespace QuickAcid;
@@ -116,16 +114,7 @@ public sealed class QAcidState : QAcidContext
 
     public void Testify(int executionsPerScope)
     {
-        ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
-
-        for (int j = 0; j < executionsPerScope; j++)
-        {
-            ExecuteStep();
-            if (CurrentContext.Failed)
-                throw new FalsifiableException(report.ToString(), Exception!) { QAcidReport = report };
-            if (CurrentContext.BreakRun)
-                break;
-        }
+        Run(executionsPerScope, true);
     }
 
     public QAcidReport ObserveOnce()
@@ -135,13 +124,26 @@ public sealed class QAcidState : QAcidContext
 
     public QAcidReport Observe(int executionsPerScope)
     {
-        ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
+        return Run(executionsPerScope, false);
+    }
 
+    public QAcidReport Run(int executionsPerScope, bool throwOnFailure)
+    {
+        ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
         for (int j = 0; j < executionsPerScope; j++)
         {
             ExecuteStep();
             if (CurrentContext.Failed)
-                return report;
+            {
+                if (throwOnFailure)
+                    throw new FalsifiableException(report.ToString(), Exception!) { QAcidReport = report };
+                else
+                    return report;
+            }
+            if (CurrentContext.BreakRun)
+            {
+                break;
+            }
         }
         return null;
     }
