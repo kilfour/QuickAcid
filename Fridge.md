@@ -1,6 +1,12 @@
 ## AutoDoc  
 test stashed
 --- slide ---
+## JS Testing
+With Jint ? 
+--- slide ---
+## Code Gen  
+lots to do here
+--- slide ---
 ## check stringifies
 --- slide ---
 ## AutoDoc  
@@ -9,9 +15,6 @@ Don't forget `.Sequence()`
 --- slide ---
 ## Bugs  
 Multiple .Do's in Fluent => BOOOOM, check Bob
---- slide ---
-## JS Testing
-With Jint ? 
 --- slide ---
 ## Shrinking
  - MaxShrinkTime
