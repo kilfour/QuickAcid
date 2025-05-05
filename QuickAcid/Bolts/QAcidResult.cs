@@ -1,26 +1,19 @@
 ﻿namespace QuickAcid.Bolts;
 
-public class QAcidResult<TValue>(QAcidState state, TValue value)
+public record QAcidResult<TValue>(QAcidState State, TValue Value);
+
+public static class QAcidResult
 {
-	public QAcidState State { get; set; } = state;
-	public TValue Value { get; set; } = value;
+	public static QAcidResult<TValue> Some<TValue>(QAcidState state, TValue value) =>
+		new(state, value);
+
+	public static QAcidResult<TValue> None<TValue>(QAcidState state) =>
+		new(state, default!);
+
+	public static QAcidResult<Acid> AcidOnly(QAcidState state) =>
+		Some(state, Acid.Test);
+
+	public static bool IsSome<T>(QAcidResult<T> result) => result.Value is not null;
+
+	public static bool IsNone<T>(QAcidResult<T> result) => result.Value is null;
 }
-
-public class QAcidResult
-{
-	public static QAcidResult<TValue> Some<TValue>(QAcidState state, TValue value)
-	{
-		return new QAcidResult<TValue>(state, value);
-	}
-
-	public static QAcidResult<TValue> None<TValue>(QAcidState state)
-	{
-		return new QAcidResult<TValue>(state, default);
-	}
-
-	public static QAcidResult<Acid> AcidOnly(QAcidState state)
-	{
-		return Some(state, Acid.Test);
-	}
-}
-
