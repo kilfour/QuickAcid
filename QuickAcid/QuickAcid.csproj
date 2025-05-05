@@ -6,11 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-      <Reference Include="QuickMGenerate">
-          <HintPath>../Libs/QuickMGenerate/QuickMGenerate.dll</HintPath>
-      </Reference>
+    <ProjectReference Include="..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
+    <ProjectReference Include="..\..\QuickPulse\QuickPulse\QuickPulse.csproj" />
   </ItemGroup>
-  <PropertyGroup>
-    <NoWarn>CS0169;CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8625</NoWarn>
-  </PropertyGroup>
 </Project>

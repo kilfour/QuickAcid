@@ -1,3 +1,5 @@
+## Check Project Migration
+QuickAcid.Examples.SetTest
 ## AutoDoc  
 test stashed
 --- slide ---

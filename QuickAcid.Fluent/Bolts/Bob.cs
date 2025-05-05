@@ -2,7 +2,7 @@ using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid.Fluent;
+namespace QuickAcid.Fluent.Bolts;
 
 // The Architect of Causality
 public class Bob
@@ -108,7 +108,7 @@ public class Bob
     {
         var options = choicesBuilder(this).Select(opt => opt.runner).ToArray();
         var combined =
-            from _ in this.runner
+            from _ in runner
             from result in "__00__".Choose(options) // $"__choose__{Guid.NewGuid()}"
             select Acid.Test;
         return new Bob(combined);

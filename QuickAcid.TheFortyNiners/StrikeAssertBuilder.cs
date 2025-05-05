@@ -1,7 +1,7 @@
 
 using QuickMGenerate.UnderTheHood;
-using QuickAcid.Fluent;
 using QuickAcid.Bolts;
+using QuickAcid.Fluent.Bolts;
 
 namespace QuickAcid.TheFortyNiners;
 

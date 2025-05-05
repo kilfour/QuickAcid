@@ -46,13 +46,11 @@ public class DocumentingBehavior
     [Fact]
     public void ShrinkingInputs_phase_should_not_clear_failure()
     {
-        var report =
-            SystemSpecs
-                .Define()
-                .Do("fail", () => throw new Exception("boom"))
-                .DumpItInAcid()
-                .AndCheckForGold(1, 3);
+        var run =
+            from act in "fail".Act(() => throw new Exception("boom"))
+            select Acid.Test;
 
+        var report = new QState(run).ObserveOnce();
         Assert.NotNull(report);
         Assert.Contains("boom", report.ToString());
     }

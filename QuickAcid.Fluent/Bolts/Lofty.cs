@@ -1,4 +1,5 @@
 using QuickAcid.Bolts.Nuts;
+using QuickAcid.Fluent.Bolts;
 
 namespace QuickAcid.Fluent;
 
