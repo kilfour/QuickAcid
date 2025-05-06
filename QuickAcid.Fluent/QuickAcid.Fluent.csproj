@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QuickAcid\QuickAcid.csproj" />
+    <ProjectReference Include="..\QuickAcid\QuickAcid\QuickAcid.csproj" />
   </ItemGroup>
 
   <ItemGroup>

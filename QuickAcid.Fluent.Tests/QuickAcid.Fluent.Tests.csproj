@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QuickAcid\QuickAcid.csproj" />
+    <ProjectReference Include="..\QuickAcid\QuickAcid\QuickAcid.csproj" />
     <ProjectReference Include="..\QuickAcid.Fluent\QuickAcid.Fluent.csproj" />
   </ItemGroup>
 
