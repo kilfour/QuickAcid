@@ -1,4 +1,5 @@
-﻿using QuickAcid.Reporting;
+﻿using QuickAcid.Fluent;
+using QuickAcid.Reporting;
 using QuickMGenerate;
 
 namespace QuickAcid.Examples;

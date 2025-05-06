@@ -1,8 +1,7 @@
-using QuickAcid.Bolts;
 using QuickAcid.CodeGen;
 using QuickAcid.Reporting;
 
-namespace QuickAcid.Fluent;
+namespace QuickAcid.Fluent.Bolts;
 
 // Let’s wrap this up and get the Report!
 public class Wendy

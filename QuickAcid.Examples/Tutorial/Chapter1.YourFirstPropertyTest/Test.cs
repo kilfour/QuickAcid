@@ -1,3 +1,5 @@
+using QuickAcid.Fluent;
+
 namespace QuickAcid.Examples.Tutorial.Chapter1.YourFirstPropertyTest;
 
 public class Test

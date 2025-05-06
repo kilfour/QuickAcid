@@ -1,6 +1,8 @@
-namespace QuickAcid;
 using QuickAcid.Bolts;
 using QuickAcid.Fluent.Bolts;
+
+
+namespace QuickAcid.Fluent;
 
 public static class SystemSpecs
 {

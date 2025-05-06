@@ -1,7 +1,6 @@
 using QuickAcid.Bolts.Nuts;
-using QuickAcid.Fluent.Bolts;
 
-namespace QuickAcid.Fluent;
+namespace QuickAcid.Fluent.Bolts;
 
 public class BristlesBroomsOnTheRight
 {
@@ -9,7 +8,7 @@ public class BristlesBroomsOnTheRight
     private readonly string label;
     private readonly Func<QAcidContext, bool> iPass;
 
-    public BristlesBroomsOnTheRight(Bob bob, string label, Func<QAcidContext, bool> iPass = default)
+    public BristlesBroomsOnTheRight(Bob bob, string label, Func<QAcidContext, bool> iPass = default!)
     {
         this.bob = bob;
         this.label = label;

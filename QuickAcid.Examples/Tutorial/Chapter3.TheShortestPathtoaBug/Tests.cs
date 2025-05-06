@@ -1,3 +1,4 @@
+using QuickAcid.Fluent;
 using QuickMGenerate;
 
 namespace QuickAcid.Examples.Tutorial.Chapter3.TheShortestPathtoaBug;

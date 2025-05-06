@@ -1,3 +1,4 @@
+using QuickAcid.Fluent;
 using QuickAcid.MonadiXEtAl;
 
 namespace QuickAcid.Tests.Fluent.Perform;

@@ -1,3 +1,5 @@
+using QuickAcid.Fluent;
+
 namespace QuickAcid.Tests.Fluent.AlwaysReportedInput;
 
 public class CaptureTests

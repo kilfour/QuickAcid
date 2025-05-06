@@ -1,3 +1,4 @@
+using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 
 namespace QuickAcid.Tests.Fluent.Do;

@@ -1,7 +1,6 @@
 using QuickAcid.Bolts.Nuts;
-using QuickAcid.Fluent.Bolts;
 
-namespace QuickAcid.Fluent;
+namespace QuickAcid.Fluent.Bolts;
 
 // I can lift it. and Er, yeah, I think so!
 public class Lofty

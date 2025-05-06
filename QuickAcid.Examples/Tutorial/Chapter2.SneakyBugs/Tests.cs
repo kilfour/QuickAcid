@@ -1,3 +1,5 @@
+using QuickAcid.Fluent;
+
 namespace QuickAcid.Examples.Tutorial.Chapter2.SneakyBugs;
 
 public class Test

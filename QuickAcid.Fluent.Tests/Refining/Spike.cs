@@ -2,6 +2,7 @@ using QuickMGenerate;
 using QuickAcid.CodeGen;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
+using QuickAcid.Fluent;
 
 namespace QuickAcid.Tests.Refining;
 
