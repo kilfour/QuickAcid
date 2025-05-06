@@ -26,7 +26,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
             Assert.Equal("input1", inputEntry.Key);
             Assert.Equal("X", inputEntry.Value); // Could use .ToString(CultureInfo.InvariantCulture) if needed
 
-            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);

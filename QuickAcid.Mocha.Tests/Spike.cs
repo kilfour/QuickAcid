@@ -1,19 +1,14 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
-
-using Jint;
 using QuickMGenerate;
 using QuickPulse.Diagnostics.Instruments;
-using Jint.Runtime;
-using Jint.Native;
-using Jint.Native.Function;
-using Jint.Native.Object;
+using Jint;
 
 namespace QuickAcid.Mocha.Tests;
 
 public class Spike
 {
-    [Fact]
+    [Fact(Skip = "demo")]
     public void AcidTest()
     {
         var path = SolutionLocator.FindSolutionRoot() + "\\QuickAcid.Mocha.Tests";

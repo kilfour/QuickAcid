@@ -65,7 +65,7 @@ public class ContextTests
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
-        var entry = report.FirstOrDefault<ReportActEntry>();
+        var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.NotNull(entry.Exception);
         Assert.IsType<ThisNotesOnYou>(entry.Exception);

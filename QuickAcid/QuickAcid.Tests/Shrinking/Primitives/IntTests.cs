@@ -28,7 +28,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
             Assert.Equal("input1", inputEntry.Key);
             Assert.Equal("6", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
@@ -58,7 +58,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
             Assert.Equal("input2", inputEntry.Key);
             Assert.Equal("6", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
@@ -91,7 +91,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
             Assert.True(success);
             Assert.True(input2FromReport > 3);
 
-            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);

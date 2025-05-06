@@ -13,7 +13,7 @@ public static partial class QAcid
 				bool passed = condition();
 				if (!passed)
 				{
-					state.AllowShrinking = allowShrinking;
+					//state.AllowShrinking = allowShrinking;
 					state.CurrentContext.MarkFailure(key);
 				}
 				return QAcidResult.AcidOnly(state);
@@ -33,7 +33,18 @@ public static partial class QAcid
 		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
 
 	public static QAcidRunner<Acid> Assay(this string key, Func<bool> condition)
-		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition, false)(state) : QAcidResult.AcidOnly(state);
+		=> state =>
+			{
+				if (!state.IsThisTheRunsLastExecution())
+					return QAcidResult.AcidOnly(state);
+				bool passed = condition();
+				if (!passed)
+				{
+					state.AllowShrinking = false;
+					state.CurrentContext.MarkFailure(key);
+				}
+				return QAcidResult.AcidOnly(state);
+			};
 
 	public static QAcidRunner<Acid> Assay(this string key, params (string label, Func<bool> condition)[] specs) =>
 		state =>

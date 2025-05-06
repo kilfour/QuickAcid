@@ -2,13 +2,13 @@ using System.Text;
 
 namespace QuickAcid.Reporting;
 
-public class ReportActEntry : ReportEntry
+public class ReportExecutionEntry : ReportEntry
 {
     public Exception? Exception { get; set; }
 
-    public ReportActEntry(string key) : base(key) { }
+    public ReportExecutionEntry(string key) : base(key) { }
 
-    public ReportActEntry(string key, Exception exception) : this(key)
+    public ReportExecutionEntry(string key, Exception exception) : this(key)
     {
         Exception = exception;
     }

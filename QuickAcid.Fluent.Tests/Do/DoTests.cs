@@ -48,7 +48,7 @@ public class DoTests
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
 
-        var entry = report.FirstOrDefault<ReportActEntry>();
+        var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("throws", entry.Key);
         Assert.NotNull(entry.Exception);

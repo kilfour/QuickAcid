@@ -30,7 +30,12 @@ public sealed class QAcidState : QAcidContext
 
     public Memory Memory { get; private set; }
     public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
-
+    public void SetMemory(Memory memory, List<int> executionNumbers)
+    {
+        Memory = memory;
+        ExecutionNumbers = executionNumbers;
+        Memory.SetCurrentActionIdFunction(() => CurrentExecutionNumber);
+    }
     public RunExecutionContext GetExecutionContext()
     {
         return new RunExecutionContext(Memory.ForThisExecution(), ShrinkableInputsTracker.ForThisExecution());
@@ -145,7 +150,7 @@ public sealed class QAcidState : QAcidContext
                 break;
             }
         }
-        return null;
+        return null!;
     }
 
     private void ExecuteStep()
@@ -166,7 +171,7 @@ public sealed class QAcidState : QAcidContext
         CurrentExecutionNumber++;
     }
 
-    private void HandleFailure()
+    public void HandleFailure()
     {
         ExecutionNumbers = [.. ExecutionNumbers.Where(x => x != -1)];
         OriginalFailingRunExecutionCount = ExecutionNumbers.Count;
@@ -192,12 +197,12 @@ public sealed class QAcidState : QAcidContext
                 report.AddEntry(new ReportTitleSectionEntry([.. GetReportHeaderInfo()]));
                 report.AddEntry(new ReportRunStartEntry());
             }
-            AddMemoryToReport(report, true);
         }
         else
         {
             report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees: {FailingSpec}."]));
         }
+        AddMemoryToReport(report, true);
         if (Exception != null)
             report.Exception = Exception;
     }

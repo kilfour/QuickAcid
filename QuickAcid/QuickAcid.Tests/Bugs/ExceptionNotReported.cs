@@ -35,12 +35,12 @@ public class ExceptionNotReported
 		Assert.NotNull(entry1);
 		Assert.Equal("BugHouse", entry1.Key);
 
-		var entry2 = report.FirstOrDefault<ReportActEntry>();
+		var entry2 = report.FirstOrDefault<ReportExecutionEntry>();
 		Assert.NotNull(entry2);
 		Assert.Equal("BugHouse.Run", entry2.Key);
 		Assert.Null(entry2.Exception);
 
-		var entry3 = report.SecondOrDefault<ReportActEntry>();
+		var entry3 = report.SecondOrDefault<ReportExecutionEntry>();
 		Assert.NotNull(entry3);
 		Assert.Equal("BugHouse.Run", entry3.Key);
 		Assert.NotNull(entry3.Exception);

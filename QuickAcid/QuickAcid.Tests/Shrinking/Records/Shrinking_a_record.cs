@@ -32,7 +32,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.Equal("input", inputEntry.Key);
             Assert.Equal("{ Age : 42 }", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);

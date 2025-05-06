@@ -20,7 +20,7 @@ public class ChooseFromDynamicCollection
         var report = new QState(run).Observe(50);
         Assert.NotNull(report);
 
-        var actEntries = report.OfType<ReportActEntry>();
+        var actEntries = report.OfType<ReportExecutionEntry>();
         Assert.Equal(2, actEntries.Count());
     }
 
@@ -37,7 +37,7 @@ public class ChooseFromDynamicCollection
         var report = new QState(run).Observe(50);
         Assert.NotNull(report);
 
-        var actEntries = report.OfType<ReportActEntry>();
+        var actEntries = report.OfType<ReportExecutionEntry>();
         Assert.Equal(2, actEntries.Count());
     }
 }

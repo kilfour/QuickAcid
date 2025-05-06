@@ -55,7 +55,7 @@ public class AnalyzeTests
         // but because during shrinking the spec will not fail without an act
         // shrinking will leave one behind.
         // for test like the one above Assay is a better candidate
-        var actEntry = report.Single<ReportActEntry>();
+        var actEntry = report.Single<ReportExecutionEntry>();
         Assert.NotNull(actEntry);
     }
 }

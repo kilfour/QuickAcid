@@ -34,7 +34,7 @@ public class Shrinking_a_list_of_records : QAcidLoggingFixture
         Assert.Equal("input", inputEntry.Key);
         Assert.Equal("[ { Age : 42 } ]", inputEntry.Value);
 
-        var actEntry = report.FirstOrDefault<ReportActEntry>();
+        var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(actEntry);
         Assert.Equal("act", actEntry.Key);
         Assert.NotNull(actEntry.Exception);

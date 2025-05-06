@@ -69,7 +69,7 @@ public class SetTest
 				.AndCheckForGold(30, 50);
 		Assert.NotNull(report);
 
-		var actionEntries = report.Entries.OfType<ReportActEntry>();
+		var actionEntries = report.Entries.OfType<ReportExecutionEntry>();
 		var inputEntries = report.Entries.OfType<ReportInputEntry>();
 		Assert.Equal(3, actionEntries.Count());
 		Assert.Equal(3, inputEntries.Count());

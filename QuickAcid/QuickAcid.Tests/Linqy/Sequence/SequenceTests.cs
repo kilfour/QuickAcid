@@ -14,7 +14,7 @@ public class SequenceTests
                 "foo".Act(() => throw new Exception()),
                 "bar".Act(() => { })))
             .ObserveOnce();
-        var entry = report.FirstOrDefault<ReportActEntry>();
+        var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);
         Assert.NotNull(entry.Exception);
@@ -29,7 +29,7 @@ public class SequenceTests
             "foo".Act(() => { }),
             "bar".Act(() => throw new Exception()));
         var report = new QState(run).Observe(2); ;
-        var entry = report.FirstOrDefault<ReportActEntry>();
+        var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("bar", entry.Key);
         Assert.NotNull(entry.Exception);

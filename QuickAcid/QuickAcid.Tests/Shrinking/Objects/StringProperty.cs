@@ -30,7 +30,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.Equal("input", inputEntry.Key);
             Assert.Equal("{ MyFirstProperty : \"6\" }", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
@@ -59,7 +59,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.Equal("input", inputEntry.Key);
             Assert.Equal("{ MyFirstProperty : \"6\", MySecondProperty : \"6\" }", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.NotNull(actEntry.Exception);
@@ -101,7 +101,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 else
                     somethingElse = (string)inputEntry.Value;
 
-                var actEntry = report.FirstOrDefault<ReportActEntry>();
+                var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
                 Assert.NotNull(actEntry);
                 Assert.Equal("act", actEntry.Key);
                 Assert.NotNull(actEntry.Exception);
@@ -139,7 +139,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.Equal("input", inputEntry.Key);
             Assert.Equal("{ MySecondProperty : \"42\", MyThirdProperty : \"42\" }", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportActEntry>();
+            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
             Assert.Null(actEntry.Exception);

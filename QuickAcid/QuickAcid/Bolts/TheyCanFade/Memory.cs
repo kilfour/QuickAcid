@@ -5,7 +5,12 @@ namespace QuickAcid.Bolts.TheyCanFade;
 
 public class Memory
 {
-	private readonly Func<int> getCurrentActionId;
+	private Func<int> getCurrentActionId;
+
+	public void SetCurrentActionIdFunction(Func<int> getCurrentActionId)
+	{
+		this.getCurrentActionId = getCurrentActionId;
+	}
 	private readonly AlwaysReportedInputMemory alwaysReportedInputMemory;
 	private readonly Dictionary<int, Access> memoryPerExecution = [];
 
@@ -105,7 +110,7 @@ public class Memory
 
 	// ---------------------------------------------------------------------------------------
 	// -- DEEP COPY
-	public Memory DeepCopy(Func<int> getCurrentActionId)
+	public Memory DeepCopy()
 	{
 		var newAlwaysReported = alwaysReportedInputMemory.DeepCopy(getCurrentActionId);
 		var newMemoryPerExecution = new Dictionary<int, Access>();

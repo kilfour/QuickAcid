@@ -14,7 +14,7 @@ public class ActAndSpecExceptionTests
             from spec in "spec".Spec(() => true)
             select Acid.Test;
         var report = new QState(run).ObserveOnce();
-        var entry = report.FirstOrDefault<ReportActEntry>();
+        var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.NotNull(entry.Exception);
         Assert.Equal("foo", entry.Key);

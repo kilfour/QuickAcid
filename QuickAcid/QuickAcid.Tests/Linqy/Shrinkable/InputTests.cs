@@ -19,7 +19,7 @@ public class InputTests
             })
             select Acid.Test;
         var report = new QState(run).ObserveOnce();
-        var entry = report.FirstOrDefault<ReportActEntry>();
+        var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);
         Assert.NotNull(entry.Exception);

@@ -1,4 +1,14 @@
 ## Check Project Migration
+FeedBack Shrinking
+
+50: Deposit 20 => 
+70: Withdraw 20 =>
+50: Withdraw 20 =>
+30: Withdraw 20 =>
+10: Withdraw 20 => -10
+  
+
+## Check Project Migration
 QuickAcid.Examples.SetTest
 ## AutoDoc  
 test stashed

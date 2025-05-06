@@ -22,7 +22,7 @@ public class ActAndInputExceptionTests
         Assert.NotNull(inputEntry);
         Assert.Equal("input", inputEntry.Key);
 
-        var actEntry = report.FirstOrDefault<ReportActEntry>();
+        var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(actEntry);
         Assert.Equal("foo", actEntry.Key);
     }
