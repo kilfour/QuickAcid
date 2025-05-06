@@ -1,12 +1,14 @@
 ## Check Project Migration
-FeedBack Shrinking
+FeedBack Shrinking 
 
-50: Deposit 20 => 
-70: Withdraw 20 =>
-50: Withdraw 20 =>
+Current minimal report :
 30: Withdraw 20 =>
 10: Withdraw 20 => -10
-  
+Should be 
+30: Withdraw 40 => -10
+
+Has a POC test, actions shrink, value reported is still wrong (40, in above, is 20 now)
+Check always reported input on Start run  
 
 ## Check Project Migration
 QuickAcid.Examples.SetTest

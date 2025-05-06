@@ -26,10 +26,10 @@ public class Memory
 	public T StoreStashed<T>(string key, Func<T> factory)
 		=> alwaysReportedInputMemory.StoreWithoutReporting(key, factory);
 
-	public Maybe<T> RetrieveAlwaysReported<T>(string key)
-		=> alwaysReportedInputMemory.Retrieve<T>(key);
+	// public Maybe<T> RetrieveAlwaysReported<T>(string key)
+	// 	=> alwaysReportedInputMemory.Retrieve<T>(key);
 
-	public void ResetAllRunInputs()
+	public void ResetRunScopedInputs()
 		=> alwaysReportedInputMemory.Reset();
 
 	public Access For(int actionId)

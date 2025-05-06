@@ -5,5 +5,6 @@ public enum QAcidPhase
     NormalRun,
     ShrinkingExecutions,
     ShrinkingInputs,
-    ShrinkInputEval
+    ShrinkInputEval,
+    FeedbackShrinking
 }

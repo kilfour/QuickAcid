@@ -34,7 +34,8 @@ public static partial class QAcid
 					some: x => QAcidResult.Some(state, x),
 					none: () => QAcidResult.None<T>(state));
 
-			case QAcidPhase.ShrinkingInputs when !execution.AlreadyTried(key):
+			case QAcidPhase.FeedbackShrinking or QAcidPhase.ShrinkingInputs
+				when !execution.AlreadyTried(key):
 				{
 					var value = execution.Get<T>(key);
 					var shrunk = Shrink.Input(state, key, value, obj => guard((T)obj));

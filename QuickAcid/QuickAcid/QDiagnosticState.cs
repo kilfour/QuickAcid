@@ -51,7 +51,11 @@ public class QDiagnosticState
             , state.FailingSpec
             , state.Exception);
     }
-
+    public QDiagnosticState WithFeedback()
+    {
+        state.AllowFeedbackShrinking = true;
+        return this;
+    }
     public QDiagnosticState Shrink(RunInformation runInformation)
     {
         var (memory, executionNumbers, failingSpec, exception) = runInformation;

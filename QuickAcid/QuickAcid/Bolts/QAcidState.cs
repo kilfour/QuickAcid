@@ -66,9 +66,8 @@ public sealed class QAcidState : QAcidContext
     public QAcidPhase CurrentPhase { get; private set; } = QAcidPhase.NormalRun;
     public PhaseContext CurrentContext => phaseContexts[CurrentPhase];
     public PhaseContext Phase(QAcidPhase phase) => phaseContexts[phase];
-
     public bool IsShrinkingExecutions => CurrentPhase == QAcidPhase.ShrinkingExecutions;
-
+    public bool InFeedbackShrinkingPhase = false;
     public IDisposable EnterPhase(QAcidPhase phase)
     {
         var previousPhase = CurrentPhase;
@@ -97,6 +96,7 @@ public sealed class QAcidState : QAcidContext
     }
     // ---------------------------------------------------------------------------------------
     public bool AllowShrinking = true;
+    public bool AllowFeedbackShrinking = false;
     private int shrinkCount = 0;
     public string? FailingSpec { get { return CurrentContext.FailingSpec; } }
     public Exception? Exception { get { return CurrentContext.Exception; } }
@@ -197,6 +197,10 @@ public sealed class QAcidState : QAcidContext
                 report.AddEntry(new ReportTitleSectionEntry([.. GetReportHeaderInfo()]));
                 report.AddEntry(new ReportRunStartEntry());
             }
+            if (AllowFeedbackShrinking)
+            {
+                FeedbackShrinking();
+            }
         }
         else
         {
@@ -226,7 +230,7 @@ public sealed class QAcidState : QAcidContext
         {
             using (EnterPhase(QAcidPhase.ShrinkingExecutions))
             {
-                Memory.ResetAllRunInputs();
+                Memory.ResetRunScopedInputs();
                 foreach (var run in ExecutionNumbers.ToList())
                 {
                     CurrentExecutionNumber = run;
@@ -249,7 +253,7 @@ public sealed class QAcidState : QAcidContext
     {
         using (EnterPhase(QAcidPhase.ShrinkingInputs))
         {
-            Memory.ResetAllRunInputs();
+            Memory.ResetRunScopedInputs();
             foreach (var executionNumber in ExecutionNumbers.ToList())
             {
                 CurrentExecutionNumber = executionNumber;
@@ -259,11 +263,40 @@ public sealed class QAcidState : QAcidContext
         }
     }
 
-    public bool ShrinkRun(object key, object value) // Only Used by Shrink.cs
+    private void FeedbackShrinking()
+    {
+        ShrinkableInputsTracker = new ShrinkableInputsTracker(() => CurrentExecutionNumber);
+        InFeedbackShrinkingPhase = true;
+        var max = ExecutionNumbers.Max();
+        var current = 0;
+        while (current <= max)
+        {
+            using (EnterPhase(QAcidPhase.FeedbackShrinking))
+            {
+                Memory.ResetRunScopedInputs();
+                foreach (var run in ExecutionNumbers.ToList())
+                {
+                    CurrentExecutionNumber = run;
+                    if (run != current)
+                        Runner(this);
+                    if (CurrentContext.BreakRun)
+                        break;
+                }
+                if (CurrentContext.Failed && !CurrentContext.BreakRun)
+                {
+                    ExecutionNumbers.Remove(current);
+                }
+                current++;
+                shrinkCount++;
+            }
+        }
+    }
+
+    public bool ShrinkRun(string key, object value) // Only Used by Shrink.cs
     {
         using (EnterPhase(QAcidPhase.ShrinkInputEval))
         {
-            Memory.ResetAllRunInputs();
+            Memory.ResetRunScopedInputs();
             var runNumber = CurrentExecutionNumber;
             using (Memory.ScopedSwap(key, value))
             {

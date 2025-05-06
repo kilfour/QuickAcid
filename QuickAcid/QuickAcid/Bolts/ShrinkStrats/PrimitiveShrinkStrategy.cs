@@ -38,10 +38,27 @@ public class PrimitiveShrinkStrategy //: IShrinkStrategy
         if (!originalFails)
             return ShrinkOutcome.Irrelevant;
         var filtered = primitiveVals.Where(val => shrinkingGuard(val)).ToArray();
-        bool failureAlwaysOccurs =
-            filtered
-                .Where(x => !Equals(x, value))
-                .All(x => state.ShrinkRun(key, x));
-        return failureAlwaysOccurs ? ShrinkOutcome.Irrelevant : ShrinkOutcome.Report(QuickAcidStringify.Default()(value));
+
+        if (state.InFeedbackShrinkingPhase)
+        {
+            foreach (object val in filtered.Where(x => !Equals(x, value)))
+            {
+                if (!state.ShrinkRun(key, val))
+                {
+                    return ShrinkOutcome.Report(QuickAcidStringify.Default()(val));
+                }
+            }
+            return ShrinkOutcome.Irrelevant;
+        }
+        else
+        {
+            bool failureAlwaysOccurs =
+                filtered
+                    .Where(x => !Equals(x, value))
+                    .All(x => state.ShrinkRun(key, x));
+            return failureAlwaysOccurs ? ShrinkOutcome.Irrelevant : ShrinkOutcome.Report(QuickAcidStringify.Default()(value));
+        }
+
+
     }
 }

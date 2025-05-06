@@ -45,7 +45,16 @@ public static partial class QAcid
 
 	public static QAcidRunner<Acid> ActIf(this string key, Func<bool> predicate, Action func)
 		=> state => predicate() ? key.Act(func)(state) : QAcidResult.AcidOnly(state);
+	// public static QAcidRunner<Acid> ActOnce(this string key, Func<bool> predicate, Action func)
+	// 	=> state =>
+	// 		{
+	// 			var flag = state.Memory.StoreStashed(key, () => false);
+	// 			if (flag)
+	// 			{
 
+	// 			}
+	// 			return predicate() ? key.Act(func)(state) : QAcidResult.AcidOnly(state);
+	// 		};
 	public static QAcidRunner<QAcidDelayedResult> ActCarefully(this string key, Action action)
 		=> key.TryCapture(() => { action(); return new QAcidDelayedResult(); }, ex => new QAcidDelayedResult(ex));
 

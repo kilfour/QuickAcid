@@ -25,15 +25,15 @@ public class ExceptionNotReported
 			from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
 			select Acid.Test;
 
-		var report = new QState(run).Observe(3);
+		var report = new QState(run).Observe(2);
 
-		var entry1 = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
-		Assert.NotNull(entry1);
-		Assert.Equal("BugHouse", entry1.Key);
+		var entryAR1 = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
+		Assert.NotNull(entryAR1);
+		Assert.Equal("BugHouse", entryAR1.Key);
 
 		var entryAR2 = report.SecondOrDefault<ReportAlwaysReportedInputEntry>();
-		Assert.NotNull(entry1);
-		Assert.Equal("BugHouse", entry1.Key);
+		Assert.NotNull(entryAR2);
+		Assert.Equal("BugHouse", entryAR2.Key);
 
 		var entry2 = report.FirstOrDefault<ReportExecutionEntry>();
 		Assert.NotNull(entry2);
