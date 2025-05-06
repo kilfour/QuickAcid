@@ -141,6 +141,30 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
 Here will be some info about what a combinator is. Only the one for now ...
 
 
+### Stashed
+
+**Stashed(...)** lorum ipsum
+
+
+**Usage example:**
+```csharp
+from account in "account".Stashed(() => new Account())
+```
+
+
+##### StashedValue
+
+Stashes a primitive or scalar value without requiring a wrapper object.
+Intended for flags, counters, and other small mutable state used during generation.  
+
+**Example:**
+```csharp
+from flag in "flag".StashedValue(true)
+```
+
+
+---
+
 ### TestifyProvenWhen
 
 **TestifyProvenWhen(...)**
