@@ -1,0 +1,63 @@
+﻿using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts;
+
+using Jint;
+using QuickMGenerate;
+using QuickPulse.Diagnostics.Instruments;
+using Jint.Runtime;
+using Jint.Native;
+using Jint.Native.Function;
+using Jint.Native.Object;
+
+namespace QuickAcid.Mocha.Tests;
+
+public class Spike
+{
+    [Fact]
+    public void AcidTest()
+    {
+        var path = SolutionLocator.FindSolutionRoot() + "\\QuickAcid.Mocha.Tests";
+        var engine = new Engine(opts => { opts.EnableModules(path); });
+        var accountModule = engine.Modules.Import("./account.js");
+        var module = From.Path(path).AndFile("./account.js");
+        var run =
+            from account in "Account".AlwaysReported(
+                () => module.Construct("Account"),
+                a => a.Call("getBalance").AsNumber().ToString())
+            from _ in "ops".Choose(
+                from depositAmount in "deposit".Shrinkable(MGen.Int())
+                from act in "account.Deposit".Act(
+                    () => account.Call("deposit", depositAmount))
+                select Acid.Test,
+                from withdrawAmount in "withdraw".Shrinkable(MGen.Int())
+                from withdraw in "account.Withdraw:withdraw".Act(
+                    () => account.Call("withdraw", withdrawAmount))
+                select Acid.Test
+            )
+            from spec in "No_Overdraft: account.Balance >= 0".Spec(
+                () => account.Call("getBalance").AsNumber() >= 0)
+            select Acid.Test;
+        5.Times(() => new QState(run).Testify(20));
+    }
+
+    [Fact]
+    public void Account_DepositAndWithdraw_ProducesCorrectBalance()
+    {
+        var path = SolutionLocator.FindSolutionRoot() + "\\QuickAcid.Mocha.Tests";
+        var engine = new Engine(opts => { opts.EnableModules(path); });
+        var accountModule = engine.Modules.Import("./account.js");
+        var module = From.Path(path).AndFile("./account.js");
+        var account = module.Construct("Account");
+
+        var balance = account.Call("getBalance");
+        Assert.Equal(0, balance);
+
+        account.Call("deposit", 100);
+        balance = account.Call("getBalance");
+        Assert.Equal(100, balance);
+
+        account.Call("withdraw", 30);
+        balance = account.Call("getBalance");
+        Assert.Equal(70, balance);
+    }
+}
