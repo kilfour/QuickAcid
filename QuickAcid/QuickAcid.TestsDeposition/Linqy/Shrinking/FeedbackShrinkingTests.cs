@@ -5,8 +5,6 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using QuickPulse;
-using QuickPulse.Diagnostics;
-using QuickPulse.Diagnostics.Sinks.FileWriters;
 
 namespace QuickAcid.TestsDeposition.Linqy;
 
