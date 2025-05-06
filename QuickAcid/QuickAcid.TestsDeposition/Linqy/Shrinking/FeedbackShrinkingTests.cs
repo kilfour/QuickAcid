@@ -13,8 +13,29 @@ public static class Chapter { public const string Order = "1-50-50"; }
 public class FeedbackShrinkingTests
 {
     [Fact]
-    public void What_is_a_single_runner()
+    public void Spike()
     {
-        Assert.IsType<QAcidRunner<int>>("an int".Shrinkable(MGen.Int()));
+        var run =
+            from account in "Account".AlwaysReported(() => new Account(), a => a.Balance.ToString())
+            from _ in "ops".Choose(
+                from depositAmount in "deposit".Shrinkable(MGen.Int(0, 10))
+                from act in "account.Deposit".Act(() => account.Deposit(depositAmount))
+                select Acid.Test,
+                from withdrawAmount in "withdraw".Shrinkable(MGen.Int(42, 42))
+                from withdraw in "account.Withdraw:withdraw".Act(() => account.Withdraw(withdrawAmount))
+                select Acid.Test
+            )
+            from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
+            select Acid.Test;
+
+        var report = new QState(run).Observe(50);
+    }
+
+    public class Account
+    {
+        public int Balance = 0;
+        public void Deposit(int amount) { Balance += amount; }
+        public void Withdraw(int amount) { Balance -= amount; }
     }
 }
+

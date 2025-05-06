@@ -165,6 +165,13 @@ This would end the test run early once `container.Value` becomes `true`.
 
 ---
 
+### Feedback Shrinking
+
+A.k.a.: What if it fails but the run does not contain the minimal fail case ? 
+
+
+---
+
 ## QuickAcid Logging
 
 Let's not call a spade a shovel: property-based testing (PBT) isn't the easiest thing in the world.

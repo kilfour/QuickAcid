@@ -44,11 +44,6 @@ public class AlwaysReportedInputMemory
         reportPerExecution.Clear();
     }
 
-    public void ResetReportPerExecution() // NOT HAPPY ABOUT THIS, Strike needs this somehow
-    {
-        reportPerExecution.Clear();
-    }
-
     public void AddToReport(QAcidReport report, int executionId)
     {
         if (reportPerExecution.TryGetValue(executionId, out var dict))
@@ -86,4 +81,29 @@ public class AlwaysReportedInputMemory
     {
         return values.Keys;
     }
+
+    // ---------------------------------------------------------------------------------------
+    // -- DEEP COPY
+    public AlwaysReportedInputMemory DeepCopy(Func<int> getCurrentActionId)
+    {
+        var newValues = new Dictionary<string, object>(values); // shallow copy of values
+        var newReports = new Dictionary<int, Dictionary<string, string>>();
+        foreach (var kvp in reportPerExecution)
+        {
+            var copiedInner = new Dictionary<string, string>(kvp.Value);
+            newReports[kvp.Key] = copiedInner;
+        }
+        return new AlwaysReportedInputMemory(getCurrentActionId, newValues, newReports);
+    }
+
+    public AlwaysReportedInputMemory(
+        Func<int> getCurrentActionId,
+        Dictionary<string, object> values,
+        Dictionary<int, Dictionary<string, string>> reportPerExecution)
+    {
+        this.getCurrentActionId = getCurrentActionId;
+        this.values = values;
+        this.reportPerExecution = reportPerExecution;
+    }
+    // ---------------------------------------------------------------------------------------
 }

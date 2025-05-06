@@ -6,8 +6,19 @@ public class DecoratedValue
 {
     public object? Value { get; set; }
     public ShrinkOutcome? ShrinkOutcome { get; set; }
-
     public ReportingIntent ReportingIntent { get; set; } = ReportingIntent.Shrinkable;
+    // ---------------------------------------------------------------------------------------
+    // -- DEEP COPY
+    public DecoratedValue DeepCopy()
+    {
+        return new DecoratedValue
+        {
+            Value = this.Value, // shallow copy — replace if needed
+            ShrinkOutcome = this.ShrinkOutcome, // assuming immutable or value-type
+            ReportingIntent = this.ReportingIntent
+        };
+    }
+    // ---------------------------------------------------------------------------------------
 }
 
 public enum ReportingIntent

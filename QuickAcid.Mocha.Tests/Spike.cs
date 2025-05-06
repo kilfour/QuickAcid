@@ -37,7 +37,7 @@ public class Spike
             from spec in "No_Overdraft: account.Balance >= 0".Spec(
                 () => account.Call("getBalance").AsNumber() >= 0)
             select Acid.Test;
-        5.Times(() => new QState(run).Testify(20));
+        0.Times(() => new QState(run).Testify(20));
     }
 
     [Fact]

@@ -69,4 +69,26 @@ public class Access
             .Where(kvp => kvp.Key is string)
             .ToDictionary(kvp => (string)kvp.Key, kvp => kvp.Value);
     }
+
+    // ---------------------------------------------------------------------------------------
+    // -- DEEP COPY
+    public Access DeepCopy()
+    {
+        var newAccess = new Access
+        {
+            ActionKeys = [.. ActionKeys],
+            LastException = LastException // shallow copy
+        };
+        foreach (var kvp in dictionary)
+        {
+            newAccess.Add(kvp.Key, kvp.Value.DeepCopy());
+        }
+        return newAccess;
+    }
+
+    public void Add(object key, DecoratedValue value)
+    {
+        dictionary[key] = value;
+    }
+    // ---------------------------------------------------------------------------------------
 }

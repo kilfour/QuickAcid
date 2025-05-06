@@ -101,6 +101,30 @@ public class Memory
 				else
 					memory.Set(key, oldValue, ReportingIntent.Shrinkable);
 			});
-
 	}
+
+	// ---------------------------------------------------------------------------------------
+	// -- DEEP COPY
+	public Memory DeepCopy(Func<int> getCurrentActionId)
+	{
+		var newAlwaysReported = alwaysReportedInputMemory.DeepCopy(getCurrentActionId);
+		var newMemoryPerExecution = new Dictionary<int, Access>();
+		foreach (var kvp in memoryPerExecution)
+		{
+			newMemoryPerExecution[kvp.Key] = kvp.Value.DeepCopy();
+		}
+		var newMemory = new Memory(getCurrentActionId, newAlwaysReported, newMemoryPerExecution);
+		return newMemory;
+	}
+
+	public Memory(
+		Func<int> getCurrentActionId,
+		AlwaysReportedInputMemory alwaysReportedInputMemory,
+		Dictionary<int, Access> memoryPerExecution)
+	{
+		this.getCurrentActionId = getCurrentActionId;
+		this.alwaysReportedInputMemory = alwaysReportedInputMemory;
+		this.memoryPerExecution = memoryPerExecution;
+	}
+	// ---------------------------------------------------------------------------------------
 }
