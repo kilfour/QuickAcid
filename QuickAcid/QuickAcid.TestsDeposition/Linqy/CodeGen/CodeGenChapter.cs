@@ -21,13 +21,16 @@ public class Account
 TestExample:
 ```csharp
 var run =
-    from account in ""Account"".Tracked(() => new Account(), a => a.Balance.ToString())
+    from account in ""Account"".Tracked(
+        () => new Account(), a => a.Balance.ToString())
     from _ in ""ops"".Choose(
         from depositAmount in ""deposit"".Input(MGen.Int(0, 10))
-        from act in ""account.Deposit"".Act(() => account.Deposit(depositAmount))
+        from act in ""account.Deposit"".Act(
+            () => account.Deposit(depositAmount))
         select Acid.Test,
         from withdrawAmount in ""withdraw"".Input(MGen.Int(42, 42))
-        from withdraw in ""account.Withdraw:withdraw"".Act(() => account.Withdraw(withdrawAmount))
+        from withdraw in ""account.Withdraw:withdraw"".Act(
+            () => account.Withdraw(withdrawAmount))
         select Acid.Test
     )
     from spec in ""No_Overdraft: account.Balance >= 0"".Spec(() => account.Balance >= 0)
