@@ -16,7 +16,7 @@ public sealed class QAcidState : QAcidContext
         Runner = runner;
         ExecutionNumbers = [];
         Memory = new Memory(() => CurrentExecutionNumber);
-        ShrinkableInputsTracker = new ShrinkableInputsTracker(() => CurrentExecutionNumber);
+        InputTracker = new InputTracker(() => CurrentExecutionNumber);
         report = new QAcidReport();
     }
 
@@ -39,7 +39,7 @@ public sealed class QAcidState : QAcidContext
     public int OriginalFailingRunExecutionCount { get; private set; }
 
     public Memory Memory { get; private set; }
-    public ShrinkableInputsTracker ShrinkableInputsTracker { get; private set; }
+    public InputTracker InputTracker { get; private set; }
     public void SetMemory(Memory memory, List<int> executionNumbers)
     {
         Memory = memory;
@@ -48,7 +48,7 @@ public sealed class QAcidState : QAcidContext
     }
     public RunExecutionContext GetExecutionContext()
     {
-        return new RunExecutionContext(Memory.ForThisExecution(), ShrinkableInputsTracker.ForThisExecution());
+        return new RunExecutionContext(Memory.ForThisExecution(), InputTracker.ForThisExecution());
     }
 
     public T Remember<T>(string key, Func<T> factory, ReportingIntent reportingIntent = ReportingIntent.Shrinkable)
@@ -292,7 +292,7 @@ public sealed class QAcidState : QAcidContext
 
     private void FeedbackShrinking()
     {
-        ShrinkableInputsTracker = new ShrinkableInputsTracker(() => CurrentExecutionNumber);
+        InputTracker = new InputTracker(() => CurrentExecutionNumber);
         InFeedbackShrinkingPhase = true;
         var max = ExecutionNumbers.Max();
         var current = 0;

@@ -97,18 +97,18 @@ In this case :
 In the previous section we briefly mentioned executions, let's elaborate and have a look at a simple test:
  ```csharp
 var run =
-    from container in "container".Stashed(() => new Container())
-    from input in "input".Shrinkable(MGen.Int(1, 5))
+    from container in "container".Stashed(() => new Container(0))
+    from input in "input".Input(MGen.Int(1, 5))
     from act in "act".Act(() => container.Value = input)
     from spec in "spec".Spec(() => container.Value != 0)
     select Acid.Test;
 
 new QState(run).Testify(10);
 ```
-While contrived, this example demonstrates how `Stashed`, `Shrinkable`, and `Act` work together across multiple executions.
+While contrived, this example demonstrates how `Stashed`, `Input`, and `Act` work together across multiple executions.
 First a brief explanation of the newly introduced Runners :
 - `Stashed(...)` — defines a named value that will be accessible during the test.
-- `Shrinkable(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
+- `Input(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
 - `Act(...)` — performs an action. It's where you apply behavior, such as calling a method or mutating state.
 
 Suppose we execute this runner with `new QState(run).Testify(10);`. What happens?  
@@ -117,7 +117,7 @@ which is how QuickAcid handles mutable state and side effects.
 
 **Note on Scoping:**
 `Stashed(...)` values are shared across executions, they persist for the entire run.
-`Shrinkable(...)` values, on the other hand, are regenerated with each execution and shrink independently if a failure is detected.
+`Input(...)` values, on the other hand, are regenerated with each execution and shrink independently if a failure is detected.
 
 **First execution** :
 1. () => new Container() gets called and the result is stored in memory.
@@ -173,11 +173,24 @@ You can think of runners as the building blocks of a property-based test.
 
 ---
 
+### Input
+
+**Input(...)** ...
+
+
+**Usage example:**
+```csharp
+from input in "input".Input(() => MGen.Int())
+```
+
+
+---
+
 ### Stashed
 
 **Stashed(...)** creates a value once at the start of the test run and reuses it across all executions.  
 This is typically where you'd stash your **system under test (SUT)** — a service, container, or domain object whose behavior you're exploring.  
-Unlike `Shrinkable(...)`, stashed values are fixed for the entire run and never shrink, making them ideal for holding mutable state or orchestrating effects across inputs.
+Unlike `Input(...)`, stashed values are fixed for the entire run and never shrink, making them ideal for holding mutable state or orchestrating effects across inputs.
 
 
 **Usage example:**
@@ -251,6 +264,30 @@ This would end the test run early once `container.Value` becomes `true`.
 
 ---
 
+### Derived
+
+### Derived
+
+**Derived(...)** introduces a value that is dynamically generated during each execution, 
+but is **not** shrinkable or tracked in the final report.  
+Use this when you need to **react to mutable test state**, 
+for example, selecting an input based on a previously `Stashed(...)` value.  
+
+This is a niche combinator, 
+primarily intended for state-sensitive generation where traditional shrinking would be inappropriate or misleading.
+
+
+
+**Usage example:**
+```csharp
+from container in "container".Stashed(() => new Container<List<int>>([]))
+from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
+```
+
+
+
+---
+
 ### Feedback Shrinking
 
 A.k.a.: What if it fails but the run does not contain the minimal fail case ? 
@@ -290,8 +327,8 @@ This will produce a report that contains :
 Which for this example: 
 ```csharp
 var run =
-    from container in "stashed".Stashed(() => new Container())
-    from input in "input".Shrinkable(MGen.Int(1, 6))
+    from container in "stashed".Stashed(() => new Container(0))
+    from input in "input".Input(MGen.Int(1, 6))
     from act in "act".Act(() => container.Value = input)
     from spec in "spec".Spec(() => container.Value != 5)
     select Acid.Test;

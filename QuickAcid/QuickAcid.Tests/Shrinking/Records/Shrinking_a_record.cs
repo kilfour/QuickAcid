@@ -19,7 +19,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 select new Person(name, age);
 
             var run =
-                from input in "input".Shrinkable(generator)
+                from input in "input".Input(generator)
                 from foo in "act".Act(() => { if (input.Age == 42) throw new Exception(); })
                 select Acid.Test;
 
@@ -52,8 +52,8 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 select new Person(name, age);
 
             var run =
-                from input1 in "input1".Shrinkable(generator1)
-                from input2 in "input2".Shrinkable(generator2)
+                from input1 in "input1".Input(generator1)
+                from input2 in "input2".Input(generator2)
                 from foo in "act".Act(() =>
                 {
                     if (input1.Age <= 42 || input2.Age <= 42) throw new Exception();
@@ -81,7 +81,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 select new Person(name, age);
 
                 var run =
-                    from input in "input".Shrinkable(generator)
+                    from input in "input".Input(generator)
                     from foo in "act".Act(() =>
                     {
                         if (input.Age < 43) throw new Exception();

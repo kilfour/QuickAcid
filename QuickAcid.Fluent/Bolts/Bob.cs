@@ -61,25 +61,25 @@ public class Bob
     // register Fuzzed Input
     //
     public Bob Fuzzed<TNew>(string label, Generator<TNew> func)
-        => Bind(_ => label.Shrinkable(func));
+        => Bind(_ => label.Input(func));
     public Bob Fuzzed<TNew>(string label, Generator<TNew> func, Func<TNew, bool> guard)
-        => Bind(_ => label.Shrinkable(func, guard));
+        => Bind(_ => label.Input(func, guard));
 
     public Bob Fuzzed<TNew>(QKey<TNew> key, Generator<TNew> func)
-        => Bind(_ => key.Label.Shrinkable(func));
+        => Bind(_ => key.Label.Input(func));
     public Bob Fuzzed<TNew>(QKey<TNew> key, Generator<TNew> func, Func<TNew, bool> guard)
-        => Bind(_ => key.Label.Shrinkable(func, guard));
+        => Bind(_ => key.Label.Input(func, guard));
 
     // using Context
     public Bob Fuzzed<TNew>(string label, Func<QAcidContext, Generator<TNew>> generator)
-        => BindState(state => label.Shrinkable(s => generator(state)(s)));
+        => BindState(state => label.Input(s => generator(state)(s)));
     public Bob Fuzzed<TNew>(string label, Func<QAcidContext, Generator<TNew>> generator, Func<TNew, bool> guard)
-        => BindState(state => label.Shrinkable(s => generator(state)(s), guard));
+        => BindState(state => label.Input(s => generator(state)(s), guard));
 
     public Bob Fuzzed<TNew>(QKey<TNew> key, Func<QAcidContext, Generator<TNew>> generator)
-        => BindState(state => key.Label.Shrinkable(s => generator(state)(s)));
+        => BindState(state => key.Label.Input(s => generator(state)(s)));
     public Bob Fuzzed<TNew>(QKey<TNew> key, Func<QAcidContext, Generator<TNew>> generator, Func<TNew, bool> guard)
-        => BindState(state => key.Label.Shrinkable(s => generator(state)(s), guard));
+        => BindState(state => key.Label.Input(s => generator(state)(s), guard));
 
     // -------------------------------------------------------------------------
 

@@ -19,7 +19,7 @@ namespace QuickAcid.Examples.Old.Linqy
 		public void BugHouse1Error()
 		{
 			var run =
-				from a in "a".Shrinkable(MGen.Int(0, 10))
+				from a in "a".Input(MGen.Int(0, 10))
 				from bughouse in "bughouse".Tracked(() => new BugHouse1())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
@@ -41,7 +41,7 @@ namespace QuickAcid.Examples.Old.Linqy
 		public void BugHouse2Error()
 		{
 			var run =
-				from a in "a".Shrinkable(MGen.Int(0, 10))
+				from a in "a".Input(MGen.Int(0, 10))
 				from bughouse in "bughouse".Tracked(() => new BugHouse2())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
@@ -66,7 +66,7 @@ namespace QuickAcid.Examples.Old.Linqy
 		public void BugHouse3Error()
 		{
 			var run =
-				from a in "a".Shrinkable(MGen.Int(0, 10))
+				from a in "a".Input(MGen.Int(0, 10))
 				from bughouse in "bughouse".Tracked(() => new BugHouse3())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)

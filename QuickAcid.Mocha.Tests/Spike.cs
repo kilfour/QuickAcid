@@ -20,11 +20,11 @@ public class Spike
                 () => module.Construct("Account"),
                 a => a.Call("getBalance").AsNumber().ToString())
             from _ in "ops".Choose(
-                from depositAmount in "deposit".Shrinkable(MGen.Int())
+                from depositAmount in "deposit".Input(MGen.Int())
                 from act in "account.Deposit".Act(
                     () => account.Call("deposit", depositAmount))
                 select Acid.Test,
-                from withdrawAmount in "withdraw".Shrinkable(MGen.Int())
+                from withdrawAmount in "withdraw".Input(MGen.Int())
                 from withdraw in "account.Withdraw:withdraw".Act(
                     () => account.Call("withdraw", withdrawAmount))
                 select Acid.Test

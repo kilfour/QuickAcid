@@ -35,6 +35,6 @@ public class QStateTests
     [Doc(Order = $"{Chapter.Order}-1-1", Content = "You can think of runners as the building blocks of a property-based test.")]
     public void What_is_a_single_runner()
     {
-        Assert.IsType<QAcidRunner<int>>("an int".Shrinkable(MGen.Int()));
+        Assert.IsType<QAcidRunner<int>>("an int".Input(MGen.Int()));
     }
 }

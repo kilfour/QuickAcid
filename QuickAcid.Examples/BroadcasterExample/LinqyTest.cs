@@ -25,7 +25,7 @@ public partial class LinqyTest
                             () => GetBroadcastersClients(broadcaster).Contains(clientProxyFactory.CreatedClients.Last()))
                     select Acid.Test,
 
-                    from faultyClient in "Faulty Client".Dynamic(MGen.ChooseFromWithDefaultWhenEmpty(GetBroadcastersClients(broadcaster)))
+                    from faultyClient in "Faulty Client".Derived(MGen.ChooseFromWithDefaultWhenEmpty(GetBroadcastersClients(broadcaster)))
                     from _a2 in "Registered Client Faults".ActIf(() => faultyClient != null,
                         () => ((TestClientProxy)faultyClient).Fault())
                     from _s2 in "Client Is Removed From Collection".Spec(() => !GetBroadcastersClients(broadcaster).Contains(faultyClient))

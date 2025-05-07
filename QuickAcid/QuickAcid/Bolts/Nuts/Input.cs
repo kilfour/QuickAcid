@@ -8,22 +8,22 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcidCombinators
 {
-	public static QAcidRunner<T> Shrinkable<T>(this string key, Generator<T> generator)
+	public static QAcidRunner<T> Input<T>(this string key, Generator<T> generator)
 	{
 		if (generator is IKnowMyGuard<T> guarded)
-			return key.Shrinkable(generator, guarded.Guard);
-		return Shrinkable(key, generator, _ => true);
+			return key.Input(generator, guarded.Guard);
+		return Input(key, generator, _ => true);
 	}
 
-	public static QAcidRunner<T> Shrinkable<T>(this string key, Generator<T> generator, Func<T, bool> guard)
+	public static QAcidRunner<T> Input<T>(this string key, Generator<T> generator, Func<T, bool> guard)
 	{
 		return state =>
 			{
-				return state.HandleShrinkableInput(key, generator, guard);
+				return state.HandleInput(key, generator, guard);
 			};
 	}
 
-	private static QAcidResult<T> HandleShrinkableInput<T>(this QAcidState state, string key, Generator<T> generator, Func<T, bool> guard)
+	private static QAcidResult<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator, Func<T, bool> guard)
 	{
 		var execution = state.GetExecutionContext();
 		switch (state.CurrentPhase)

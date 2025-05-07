@@ -21,7 +21,7 @@ public class CustomShrinkingTests
         var observe = new HashSet<int>();
         var run =
             from _ in Shrink<int>.LikeThis(new Shrinky())
-            from input in "input".Shrinkable(MGen.Constant(42))
+            from input in "input".Input(MGen.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
         var report = new QState(run).ObserveOnce();
@@ -35,7 +35,7 @@ public class CustomShrinkingTests
         var observe = new HashSet<int>();
         var run =
             from _ in Shrink<int>.LikeThis(a => [666])
-            from input in "input".Shrinkable(MGen.Constant(42))
+            from input in "input".Input(MGen.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
         var report = new QState(run).ObserveOnce();

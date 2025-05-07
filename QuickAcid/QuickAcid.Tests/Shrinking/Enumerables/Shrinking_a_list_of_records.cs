@@ -20,7 +20,7 @@ public class Shrinking_a_list_of_records
             select new Person(name, age);
 
         var run =
-            from input in "input".Shrinkable(generator.Many(2))
+            from input in "input".Input(generator.Many(2))
             from foo in "act".Act(() =>
             {
                 if (input.Any(a => a.Age == 42)) { throw new Exception(); }

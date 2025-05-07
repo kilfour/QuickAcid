@@ -11,8 +11,8 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         public void OneRelevantChar()
         {
             var run =
-                from input1 in "input1".Shrinkable(MGen.ChooseFrom(['X', 'Y']))
-                from input2 in "input2".Shrinkable(MGen.Char())
+                from input1 in "input1".Input(MGen.ChooseFrom(['X', 'Y']))
+                from input2 in "input2".Input(MGen.Char())
                 from foo in "act".Act(() =>
                 {
                     if (input1 == 'X') throw new Exception("Boom");

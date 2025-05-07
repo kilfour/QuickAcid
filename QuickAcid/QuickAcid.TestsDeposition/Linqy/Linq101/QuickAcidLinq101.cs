@@ -34,7 +34,7 @@ public class QuickAcidLinq101
     [Doc(Order = $"{Chapter.Order}-1-1", Content = "You can think of runners as the building blocks of a property-based test.")]
     public void What_is_a_single_runner()
     {
-        Assert.IsType<QAcidRunner<int>>("an int".Shrinkable(MGen.Int()));
+        Assert.IsType<QAcidRunner<int>>("an int".Input(MGen.Int()));
     }
 
     [Fact]
@@ -150,18 +150,18 @@ In this case :
 @"In the previous section we briefly mentioned executions, let's elaborate and have a look at a simple test:
  ```csharp
 var run =
-    from container in ""container"".Stashed(() => new Container())
-    from input in ""input"".Shrinkable(MGen.Int(1, 5))
+    from container in ""container"".Stashed(() => new Container(0))
+    from input in ""input"".Input(MGen.Int(1, 5))
     from act in ""act"".Act(() => container.Value = input)
     from spec in ""spec"".Spec(() => container.Value != 0)
     select Acid.Test;
 
 new QState(run).Testify(10);
 ```
-While contrived, this example demonstrates how `Stashed`, `Shrinkable`, and `Act` work together across multiple executions.
+While contrived, this example demonstrates how `Stashed`, `Input`, and `Act` work together across multiple executions.
 First a brief explanation of the newly introduced Runners :
 - `Stashed(...)` — defines a named value that will be accessible during the test.
-- `Shrinkable(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
+- `Input(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
 - `Act(...)` — performs an action. It's where you apply behavior, such as calling a method or mutating state.
 
 Suppose we execute this runner with `new QState(run).Testify(10);`. What happens?  
@@ -170,7 +170,7 @@ which is how QuickAcid handles mutable state and side effects.
 
 **Note on Scoping:**
 `Stashed(...)` values are shared across executions, they persist for the entire run.
-`Shrinkable(...)` values, on the other hand, are regenerated with each execution and shrink independently if a failure is detected.
+`Input(...)` values, on the other hand, are regenerated with each execution and shrink independently if a failure is detected.
 
 **First execution** :
 1. () => new Container() gets called and the result is stored in memory.
@@ -189,8 +189,8 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
     public void What_is_an_execution()
     {
         var run =
-            from container in "container".Stashed(() => new Container<int>())
-            from input in "input".Shrinkable(MGen.Int(1, 5))
+            from container in "container".Stashed(() => new Container<int>(0))
+            from input in "input".Input(MGen.Int(1, 5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 0)
             select Acid.Test;

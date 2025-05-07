@@ -6,9 +6,9 @@ namespace QuickAcid.Bolts.TheyCanFade;
 public class RunExecutionContext
 {
     public Access memory;
-    private readonly ShrinkableInputsTrackerPerExecution shrinkTracker;
+    private readonly InputTrackerPerExecution shrinkTracker;
 
-    public RunExecutionContext(Access memory, ShrinkableInputsTrackerPerExecution shrinkTracker)
+    public RunExecutionContext(Access memory, InputTrackerPerExecution shrinkTracker)
     {
         this.memory = memory;
         this.shrinkTracker = shrinkTracker;

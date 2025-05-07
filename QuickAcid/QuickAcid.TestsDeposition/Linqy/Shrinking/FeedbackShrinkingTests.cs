@@ -88,11 +88,11 @@ public class FeedbackShrinkingTests
                 a => a.Balance.ToString())
             from box in "flag".StashedValue(false)
             from _ in "ops".Choose(
-                from depositAmount in "deposit".Shrinkable(intGenerator)
+                from depositAmount in "deposit".Input(intGenerator)
                 from act in "account.Deposit".ActIf(
                     () => !box.Value, () => { box.Value = true; account.Deposit(depositAmount); })
                 select Acid.Test,
-                from withdrawAmount in "withdraw".Shrinkable(intGenerator)
+                from withdrawAmount in "withdraw".Input(intGenerator)
                 from withdraw in "account.Withdraw:withdraw".Act(
                     () =>
                     {

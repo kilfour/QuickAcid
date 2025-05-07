@@ -29,8 +29,8 @@ from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
     public void TestifyProvenWhen_usage()
     {
         var run =
-            from container in "container".Stashed(() => new Container<bool>())
-            from val in "bool".Dynamic(MGen.Constant(true))
+            from container in "container".Stashed(() => new Container<bool>(false))
+            from val in "bool".Derived(MGen.Constant(true))
             from act in "act".Act(() => container.Value = container.Value | val)
             from spec in "val is true".TestifyProvenWhen(() => container.Value)
             select Acid.Test;
@@ -61,8 +61,8 @@ This would end the test run early once `container.Value` becomes `true`.
     public void TestifyProvenWhen_scaffold()
     {
         var run =
-            from container in "container".Stashed(() => new Container<bool>())
-            from val in "bool".Dynamic(MGen.Constant(false))
+            from container in "container".Stashed(() => new Container<bool>(false))
+            from val in "bool".Derived(MGen.Constant(false))
             from act in "act".Act(() => container.Value = container.Value | val)
             from spec in "early exit".TestifyProvenWhen(() => container.Value)
             from finalspec in "val is true".Assay(() => container.Value)

@@ -4,13 +4,13 @@ using QuickMGenerate;
 
 namespace QuickAcid.Tests.CodeGen.Act
 {
-    public class ActWithShrinkableTests
+    public class ActWithInputTests
     {
         [Fact]
         public void CodeGen_act_default()
         {
             var run =
-                from s in "input".Shrinkable(MGen.Constant(42))
+                from s in "input".Input(MGen.Constant(42))
                 from a in "DoingStuff:input".Act(() => { })
                 select Acid.Test;
 

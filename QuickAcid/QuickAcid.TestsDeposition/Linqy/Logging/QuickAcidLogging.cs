@@ -82,8 +82,8 @@ This will produce a report that contains :
 @"Which for this example: 
 ```csharp
 var run =
-    from container in ""stashed"".Stashed(() => new Container())
-    from input in ""input"".Shrinkable(MGen.Int(1, 6))
+    from container in ""stashed"".Stashed(() => new Container(0))
+    from input in ""input"".Input(MGen.Int(1, 6))
     from act in ""act"".Act(() => container.Value = input)
     from spec in ""spec"".Spec(() => container.Value != 5)
     select Acid.Test;
@@ -143,8 +143,8 @@ Outputs something similar to:
     public void Verbose_full_output()
     {
         var run =
-            from container in "stashed".Stashed(() => new Container<int>())
-            from input in "input".Shrinkable(MGen.Constant(5))
+            from container in "stashed".Stashed(() => new Container<int>(0))
+            from input in "input".Input(MGen.Constant(5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 5)
             select Acid.Test;

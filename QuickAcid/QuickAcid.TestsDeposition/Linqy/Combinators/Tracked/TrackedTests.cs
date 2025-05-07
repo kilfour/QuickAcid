@@ -40,8 +40,8 @@ The second argument is a formatter function for rendering the value into the tes
     public void Tracked_in_report_after_shrinking()
     {
         var run =
-           from container in "container".Tracked(() => new Container<int> { Value = 21 }, a => a.Value.ToString())
-           from input in "input".Shrinkable(MGen.Constant(42))
+           from container in "container".Tracked(() => new Container<int>(21), a => a.Value.ToString())
+           from input in "input".Input(MGen.Constant(42))
            from _do in "do".Act(() => { container.Value = input; })
            from _ in "spec".Spec(() => container.Value != 42)
            select Acid.Test;

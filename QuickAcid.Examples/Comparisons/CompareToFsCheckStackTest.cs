@@ -65,7 +65,7 @@ public class StackAcidSpec
             from pushed in "pushed".Tracked(() => new List<int>())
             from expectedPops in "expectedPops".Tracked(() => new List<int>())
             from popped in "popped".Tracked(() => new List<int>())
-            from val in "pushval".Shrinkable(MGen.Int(0, 100))
+            from val in "pushval".Input(MGen.Int(0, 100))
             from action in "step".Choose(
                 "push".Act(() => { stack.Push(val); pushed.Add(val); }),
                 "pop".ActIf(
