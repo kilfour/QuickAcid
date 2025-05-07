@@ -1,15 +1,12 @@
 ## FeedBack Shrinking 
 Check always reported input on Start run  
 (Only Missing On QDiagniosticState ?)
+--- slide ---
 ## QAcidState.GetPulse
 Move To QAcid.GetPulse 
+--- slide ---
 ## Check Project Migration
 QuickAcid.Examples.SetTest
-## AutoDoc  
-test stashed
---- slide ---
-## JS Testing
-With Jint ? 
 --- slide ---
 ## Code Gen  
 lots to do here

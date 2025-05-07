@@ -2,7 +2,6 @@ using System.Reflection;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Examples.BroadcasterExample.SimpleModel;
-using QuickAcid.MonadiXEtAl;
 using QuickMGenerate;
 
 namespace QuickAcid.Examples.BroadcasterExample;
