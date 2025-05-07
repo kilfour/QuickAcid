@@ -41,7 +41,7 @@ public class FeedbackShrinkingTests
     [Fact]
     public void Feedback_Shrinking()
     {
-        PulseContext.Current = new WriteDataToFile().ClearLog();
+        PulseContext.Current = new WriteDataToFile().ClearFile();
         QDiagnosticState.RunInformation? info = null;
         QAcidReport? report = null;
         var numberOfActionEntries = 0;
@@ -56,7 +56,7 @@ public class FeedbackShrinkingTests
         }
         var shrinkingRun = GetRun(MGen.Int());
 
-        var writer = new WriteDataToFile().ClearLog();
+        var writer = new WriteDataToFile().ClearFile();
         var pulser =
             from diagnosis in Pulse.From<DiagnosticInfo>()
             where diagnosis.Tags.Any(a =>
@@ -64,7 +64,7 @@ public class FeedbackShrinkingTests
                 a == "Phase")
             from firstTag in Pulse.Shape(() => $"{diagnosis.Tags.First()}:")
             from indent in Pulse.Shape(() => new string(' ', diagnosis.PhaseLevel * 4))
-            from log in Sink.To(() => writer.Log($"{indent}{firstTag}{diagnosis.Message}"))
+            from log in Sink.To(() => writer.Monitor($"{indent}{firstTag}{diagnosis.Message}"))
             select diagnosis;
         //PulseContext.Current = pulser.ToPulse();
         //new WriteDataToFile().ClearLog().Log(new QDiagnosticState(shrinkingRun).WithFeedback().ShrinkToCode(info!));

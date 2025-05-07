@@ -163,6 +163,10 @@ The sections below describe these core building blocks.
 
 
 
+---
+
+## QuickAcid CodeGen
+
 ### Stashed
 
 **Stashed(...)** creates a value once at the start of the test run and reuses it across all executions.  
