@@ -7,7 +7,7 @@ namespace QuickAcid.TestsDeposition.Linqy.CodeGen.Spec;
 public class SpecTests
 {
     [Fact]
-    public void CodeGen_spec_default()
+    public void CodeGen_spec()
     {
         var run = from _ in "TheSpec".Spec(() => false) select Acid.Test;
         var reader = Reader.FromRun(run);
@@ -23,7 +23,7 @@ public class SpecTests
     }
 
     [Fact]
-    public void CodeGen_spec_default_function_name()
+    public void CodeGen_spec_function_name()
     {
         var run = from _ in "TheSpec".Spec(() => false) select Acid.Test;
         var code = new QState(run).GenerateCode().ObserveOnce().Code;
@@ -33,7 +33,7 @@ public class SpecTests
     }
 
     [Fact]
-    public void CodeGen_spec_default_function_name_colon_seperator()
+    public void CodeGen_spec_function_name_colon_seperator()
     {
         var run = from _ in "TheSpec: ignore me".Spec(() => false) select Acid.Test;
         var code = new QState(run).GenerateCode().ObserveOnce().Code;

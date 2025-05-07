@@ -26,9 +26,9 @@ namespace QuickAcid.Examples.BroadcasterExample.SimpleModel
             lock (monitor)
             {
                 // The 'dead' code on the next line is the correct implementation
-                clients = new List<IClientProxy>(clients) { client };
+                // clients = new List<IClientProxy>(clients) { client };
 
-                //clients.Add(client);
+                clients.Add(client);
             }
         }
 

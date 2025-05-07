@@ -1,4 +1,3 @@
-using System.Text;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickMGenerate;
@@ -24,6 +23,14 @@ namespace QuickAcid.CodeGen
 
         private static void GetTrackedInputsCode(string key, IndentedPulser indentedPulser)
         {
+            if (key.Contains(':'))
+            {
+                var split = key.Split(':');
+                var name = split[0];
+                var arg = split[1];
+                indentedPulser.Monitor($"var {Lowered(name)} = new {name}({arg});");
+                return;
+            }
             indentedPulser.Monitor($"var {Lowered(key)} = new {key}();");
         }
 

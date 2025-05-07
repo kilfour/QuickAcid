@@ -6,7 +6,7 @@ namespace QuickAcid.TestsDeposition.Linqy.CodeGen.AlwaysReported;
 public class TrackedTests
 {
     [Fact]
-    public void CodeGen_always_reported_default()
+    public void CodeGen_always_reported()
     {
         var run =
             from _ in "MyObject".Tracked(() => new object())
@@ -16,7 +16,7 @@ public class TrackedTests
     }
 
     [Fact]
-    public void CodeGen_two_always_reported_default()
+    public void CodeGen_two_always_reported()
     {
         var run =
             from _ in "MyObject".Tracked(() => new object())

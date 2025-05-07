@@ -24,6 +24,8 @@ public class QAcidReport
         }
         if (Exception != null)
             stringBuilder.AppendLine(Exception.ToString());
+        if (Code != null)
+            stringBuilder.AppendLine(Code);
         return stringBuilder.ToString();
     }
 

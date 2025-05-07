@@ -6,7 +6,7 @@ namespace QuickAcid.TestsDeposition.Linqy.CodeGen.Act
     public class ActTests
     {
         [Fact]
-        public void CodeGen_act_default()
+        public void CodeGen_act()
         {
             var run = from _ in "The_Key_From_Test".Act(() => { }) select Acid.Test;
             var reader = Reader.FromRun(run);
@@ -14,7 +14,7 @@ namespace QuickAcid.TestsDeposition.Linqy.CodeGen.Act
         }
 
         [Fact]
-        public void CodeGen_two_acts_default()
+        public void CodeGen_two_acts()
         {
             var run =
                 from _1 in "The_Key_From_Test1".Act(() => { })
