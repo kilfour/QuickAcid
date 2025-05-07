@@ -18,7 +18,7 @@ public class Spike
     public void Example()
     {
         var run =
-            from account in "Account".AlwaysReported(() => new Account(), a => a.Balance.ToString())
+            from account in "Account".Tracked(() => new Account(), a => a.Balance.ToString())
             from _ in "ops".Choose(
                 from depositAmount in "deposit".Shrinkable(MGen.Int(0, 10))
                 from act in "account.Deposit".Act(() => account.Deposit(depositAmount))

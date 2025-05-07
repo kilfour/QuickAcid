@@ -27,7 +27,7 @@ namespace QuickAcid.CodeGen
         private static string? GetAlwaysReportedInputsCodes(QAcidState state)
         {
             var lines =
-                state.Memory.GetAllAlwaysReportedKeys()
+                state.Memory.GetAllTrackedKeys()
                 .Select(GetAlwaysReportedInputsCode);
 
             return string.Join(Environment.NewLine, lines);

@@ -83,7 +83,7 @@ public class FeedbackShrinkingTests
     private QAcidRunner<Acid> GetRun(Generator<int> intGenerator)
     {
         return
-            from account in "Account".AlwaysReported(
+            from account in "Account".Tracked(
                 () => new Account(),
                 a => a.Balance.ToString())
             from box in "flag".StashedValue(false)

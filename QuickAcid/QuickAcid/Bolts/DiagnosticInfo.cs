@@ -9,4 +9,3 @@ public static class Diagnose
     public static Action<string, int> This(string[] tags) =>
         (msg, phaseLevel) => PulseContext.Log(new DiagnosticInfo(tags, msg, phaseLevel));
 }
-

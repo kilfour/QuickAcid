@@ -9,7 +9,7 @@ namespace QuickAcid.Tests.CodeGen.AlwaysReported
         public void CodeGen_always_reported_default()
         {
             var run =
-                from _ in "MyObject".AlwaysReported(() => new object())
+                from _ in "MyObject".Tracked(() => new object())
                 select Acid.Test;
             var reader = LinesReader.FromRun(run);
             Assert.Equal("[Fact]", reader.NextLine());
@@ -26,8 +26,8 @@ namespace QuickAcid.Tests.CodeGen.AlwaysReported
         public void CodeGen_two_always_reported_default()
         {
             var run =
-                from _ in "MyObject".AlwaysReported(() => new object())
-                from __ in "MyOtherObject".AlwaysReported(() => new object())
+                from _ in "MyObject".Tracked(() => new object())
+                from __ in "MyOtherObject".Tracked(() => new object())
                 select Acid.Test;
             var reader = LinesReader.FromRun(run);
             reader.Skip(3);

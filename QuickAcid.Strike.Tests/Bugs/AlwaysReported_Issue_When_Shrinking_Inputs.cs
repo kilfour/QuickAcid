@@ -22,7 +22,7 @@ public class AlwaysReported_Issue_When_Shrinking_Inputs
         var report = ex.QAcidReport;
         Assert.NotNull(report);
 
-        var entry = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
+        var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
         Assert.Equal("21", entry.Value);
     }

@@ -1,10 +1,10 @@
 namespace QuickAcid.Reporting;
 
-public class ReportAlwaysReportedInputEntry : ReportEntry
+public class ReportTrackedEntry : ReportEntry
 {
     public object? Value { get; set; }
 
-    public ReportAlwaysReportedInputEntry(string key)
+    public ReportTrackedEntry(string key)
         : base(key) { }
 
     public override string ToString()

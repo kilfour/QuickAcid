@@ -42,18 +42,18 @@ public class Bob
     // register AlwaysReported Input
     //
     public Bob AlwaysReported<TNew>(string label, Func<TNew> func)
-        => Bind(_ => label.AlwaysReported(func));
+        => Bind(_ => label.Tracked(func));
     public Bob AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func)
-        => Bind(_ => key.Label.AlwaysReported(func));
+        => Bind(_ => key.Label.Tracked(func));
     public Bob AlwaysReported<TNew>(string label, Func<TNew> func, Func<TNew, string> stringify)
-        => Bind(_ => label.AlwaysReported(func, stringify));
+        => Bind(_ => label.Tracked(func, stringify));
     public Bob AlwaysReported<TNew>(QKey<TNew> key, Func<TNew> func, Func<TNew, string> stringify)
-        => Bind(_ => key.Label.AlwaysReported(func, stringify));
+        => Bind(_ => key.Label.Tracked(func, stringify));
     // using Context
     public Bob AlwaysReported<TNew>(string label, Func<QAcidContext, TNew> generator)
-        => BindState(state => label.AlwaysReported(() => generator(state)));
+        => BindState(state => label.Tracked(() => generator(state)));
     public Bob AlwaysReported<TNew>(QKey<TNew> key, Func<QAcidContext, TNew> generator)
-        => BindState(state => key.Label.AlwaysReported(() => generator(state)));
+        => BindState(state => key.Label.Tracked(() => generator(state)));
     // -------------------------------------------------------------------------
 
 

@@ -1,24 +1,23 @@
 using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;
-using QuickPulse.Diagnostics;
 
 namespace QuickAcid.Bolts.TheyCanFade;
 
-public class AlwaysReportedInputMemory
+public class TrackedInputMemory
 {
     private readonly Func<int> getCurrentActionId;
 
     private readonly Dictionary<string, object> values = [];
     private readonly Dictionary<int, Dictionary<string, string>> reportPerExecution = [];
 
-    public AlwaysReportedInputMemory(Func<int> getCurrentActionId)
+    public TrackedInputMemory(Func<int> getCurrentActionId)
     {
         this.getCurrentActionId = getCurrentActionId;
     }
 
     public T Store<T>(string key, Func<T> factory, Func<T, string> stringify)
     {
-        QAcidState.GetPulse(["AlwaysReportedInputMemory"])($"Store({key} ...)");
+        QAcidState.GetPulse(["TrackedInputMemory"])($"Store({key} ...)");
         var val = StoreWithoutReporting(key, factory);
         ReportForCurrent()[key] = stringify(val);
         return val;
@@ -42,7 +41,7 @@ public class AlwaysReportedInputMemory
 
     public void Reset()
     {
-        QAcidState.GetPulse(["AlwaysReportedInputMemory"])($"Reset()");
+        QAcidState.GetPulse(["TrackedInputMemory"])($"Reset()");
         values.Clear();
         reportPerExecution.Clear();
     }
@@ -53,7 +52,7 @@ public class AlwaysReportedInputMemory
         {
             foreach (var kv in dict)
             {
-                report.AddEntry(new ReportAlwaysReportedInputEntry(kv.Key)
+                report.AddEntry(new ReportTrackedEntry(kv.Key)
                 {
                     Value = kv.Value
                 });
@@ -80,14 +79,14 @@ public class AlwaysReportedInputMemory
         //     entry => new Dictionary<string, string>(entry.Value));
     }
 
-    public IEnumerable<string> GetAllAlwaysReportedKeys()
+    public IEnumerable<string> GetAllTrackedKeys()
     {
         return values.Keys;
     }
 
     // ---------------------------------------------------------------------------------------
     // -- DEEP COPY
-    public AlwaysReportedInputMemory DeepCopy(Func<int> getCurrentActionId)
+    public TrackedInputMemory DeepCopy(Func<int> getCurrentActionId)
     {
         var newValues = new Dictionary<string, object>(values); // shallow copy of values
         var newReports = new Dictionary<int, Dictionary<string, string>>();
@@ -96,10 +95,10 @@ public class AlwaysReportedInputMemory
             var copiedInner = new Dictionary<string, string>(kvp.Value);
             newReports[kvp.Key] = copiedInner;
         }
-        return new AlwaysReportedInputMemory(getCurrentActionId, newValues, newReports);
+        return new TrackedInputMemory(getCurrentActionId, newValues, newReports);
     }
 
-    public AlwaysReportedInputMemory(
+    public TrackedInputMemory(
         Func<int> getCurrentActionId,
         Dictionary<string, object> values,
         Dictionary<int, Dictionary<string, string>> reportPerExecution)

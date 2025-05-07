@@ -36,7 +36,7 @@ public class AlwaysReportedInputTests
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
-        var entry = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
+        var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
         Assert.Equal("container", entry.Key);
         Assert.Equal("   => container (tracked) : 1", entry.ToString());
@@ -67,7 +67,7 @@ public class AlwaysReportedInputTests
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.NotNull(report);
-        var entry = report.FirstOrDefault<ReportAlwaysReportedInputEntry>();
+        var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
         Assert.Equal("theAnswer", entry.Key);
         Assert.Equal("   => theAnswer (tracked) : it is 42", entry.ToString());

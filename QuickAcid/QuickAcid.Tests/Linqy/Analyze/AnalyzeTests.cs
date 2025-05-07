@@ -38,7 +38,7 @@ public class AnalyzeTests
     public void Analyze_as_assay()
     {
         var run =
-            from observer in "observer".AlwaysReported(() => new HashSet<int>())
+            from observer in "observer".Tracked(() => new HashSet<int>())
             from roll in "roll".Act(() => MGen.Int(1, 3).Generate())
             from _a1 in "record".Act(() => observer.Add(roll))
             from as1 in "gens 3".Analyze(() => observer.Contains(3))

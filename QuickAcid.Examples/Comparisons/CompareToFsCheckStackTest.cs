@@ -61,10 +61,10 @@ public class StackAcidSpec
     public void StackBehavesCorrectly()
     {
         var run =
-            from stack in "stack".AlwaysReported(() => new Stack<int>())
-            from pushed in "pushed".AlwaysReported(() => new List<int>())
-            from expectedPops in "expectedPops".AlwaysReported(() => new List<int>())
-            from popped in "popped".AlwaysReported(() => new List<int>())
+            from stack in "stack".Tracked(() => new Stack<int>())
+            from pushed in "pushed".Tracked(() => new List<int>())
+            from expectedPops in "expectedPops".Tracked(() => new List<int>())
+            from popped in "popped".Tracked(() => new List<int>())
             from val in "pushval".Shrinkable(MGen.Int(0, 100))
             from action in "step".Choose(
                 "push".Act(() => { stack.Push(val); pushed.Add(val); }),

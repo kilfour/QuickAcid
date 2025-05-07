@@ -20,7 +20,7 @@ namespace QuickAcid.Examples.Old.Linqy
 		{
 			var run =
 				from a in "a".Shrinkable(MGen.Int(0, 10))
-				from bughouse in "bughouse".AlwaysReported(() => new BugHouse1())
+				from bughouse in "bughouse".Tracked(() => new BugHouse1())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
@@ -42,7 +42,7 @@ namespace QuickAcid.Examples.Old.Linqy
 		{
 			var run =
 				from a in "a".Shrinkable(MGen.Int(0, 10))
-				from bughouse in "bughouse".AlwaysReported(() => new BugHouse2())
+				from bughouse in "bughouse".Tracked(() => new BugHouse2())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
@@ -67,7 +67,7 @@ namespace QuickAcid.Examples.Old.Linqy
 		{
 			var run =
 				from a in "a".Shrinkable(MGen.Int(0, 10))
-				from bughouse in "bughouse".AlwaysReported(() => new BugHouse3())
+				from bughouse in "bughouse".Tracked(() => new BugHouse3())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;

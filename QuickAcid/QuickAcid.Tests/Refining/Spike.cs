@@ -18,7 +18,7 @@ public class Spike
     public void Lets_see_where_this_vein_leads()
     {
         var run =
-            from account in "Account".AlwaysReported(() => new Account(), a => a.Balance.ToString())
+            from account in "Account".Tracked(() => new Account(), a => a.Balance.ToString())
             from _ in "ops".Choose(
                 from depositAmount in "deposit".Shrinkable(MGen.Int(0, 100))
                 from act in "account.Deposit:deposit".Act(() => account.Deposit(depositAmount))

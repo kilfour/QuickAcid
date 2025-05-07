@@ -67,7 +67,7 @@ public class CreateDoc
         }
 
 
-        using (var writer = new StreamWriter("../../../../tempdoc.md", false))
+        using (var writer = new StreamWriter("../../../../../tempdoc.md", false))
             writer.Write(sb.ToString());
     }
 

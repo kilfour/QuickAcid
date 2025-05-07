@@ -30,7 +30,7 @@ namespace QuickAcid.Examples
 		public void BugHouseError()
 		{
 			var run =
-				from bughouse in "bughouse".AlwaysReported(() => new BugHouse())
+				from bughouse in "bughouse".Tracked(() => new BugHouse())
 				from funcOne in
 					"Choose".Choose(
 						from i in "int".Shrinkable(MGen.Int(0, 10))

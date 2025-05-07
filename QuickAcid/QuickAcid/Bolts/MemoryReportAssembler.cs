@@ -14,10 +14,10 @@ public static class MemoryReportAssembler
         Exception exception, bool isFinalRun)
     {
         // Always-reported snapshot
-        if (memory.AlwaysReportedSnapshot().TryGetValue(executionId, out var snapshot))
+        if (memory.TrackedSnapshot().TryGetValue(executionId, out var snapshot))
         {
             foreach (var (key, val) in snapshot)
-                report.AddEntry(new ReportAlwaysReportedInputEntry(key) { Value = val });
+                report.AddEntry(new ReportTrackedEntry(key) { Value = val });
         }
 
         // Per-action memory

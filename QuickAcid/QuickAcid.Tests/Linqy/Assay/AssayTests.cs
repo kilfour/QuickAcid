@@ -11,7 +11,7 @@ public class AssayTests
     public void Assay_something_did_not_happen()
     {
         var run =
-            from observer in "observer".AlwaysReported(() => new HashSet<int>())
+            from observer in "observer".Tracked(() => new HashSet<int>())
             from roll in "roll".Act(() => MGen.Int(1, 3).Generate())
             from _a1 in "record".Act(() => observer.Add(roll))
             from as1 in "gens 3".Assay(() => observer.Contains(3))
@@ -29,7 +29,7 @@ public class AssayTests
     public void Assay_multiple_did_not_happen()
     {
         var run =
-            from observer in "observer".AlwaysReported(() => new HashSet<int>())
+            from observer in "observer".Tracked(() => new HashSet<int>())
             from roll in "roll".Act(() => MGen.Int(1, 3).Generate())
             from _a1 in "record".Act(() => observer.Add(roll))
             from as1 in "combined".Assay(("gens 3", () => observer.Contains(3)), ("gens 4", () => observer.Contains(4)))

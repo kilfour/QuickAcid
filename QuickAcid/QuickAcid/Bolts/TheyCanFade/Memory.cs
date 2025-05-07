@@ -12,26 +12,23 @@ public class Memory
 	{
 		this.getCurrentExecutionId = getCurrentActionId;
 	}
-	private readonly AlwaysReportedInputMemory alwaysReportedInputMemory;
+	private readonly TrackedInputMemory trackedInputMemory;
 	private readonly Dictionary<int, Access> memoryPerExecution = [];
 
-	public Memory(Func<int> getCurrentActionId)
+	public Memory(Func<int> getCurrentExecutionId)
 	{
-		this.getCurrentExecutionId = getCurrentActionId;
-		alwaysReportedInputMemory = new AlwaysReportedInputMemory(getCurrentActionId);
+		this.getCurrentExecutionId = getCurrentExecutionId;
+		trackedInputMemory = new TrackedInputMemory(getCurrentExecutionId);
 	}
 
-	public T StoreAlwaysReported<T>(string key, Func<T> factory, Func<T, string> stringify)
-		=> alwaysReportedInputMemory.Store(key, factory, stringify);
+	public T StoreTracked<T>(string key, Func<T> factory, Func<T, string> stringify)
+		=> trackedInputMemory.Store(key, factory, stringify);
 
 	public T StoreStashed<T>(string key, Func<T> factory)
-		=> alwaysReportedInputMemory.StoreWithoutReporting(key, factory);
-
-	// public Maybe<T> RetrieveAlwaysReported<T>(string key)
-	// 	=> alwaysReportedInputMemory.Retrieve<T>(key);
+		=> trackedInputMemory.StoreWithoutReporting(key, factory);
 
 	public void ResetRunScopedInputs()
-		=> alwaysReportedInputMemory.Reset();
+		=> trackedInputMemory.Reset();
 
 	public Access For(int actionId)
 	{
@@ -48,16 +45,16 @@ public class Memory
 	public IEnumerable<(int actionId, Access access)> AllAccesses()
 		=> memoryPerExecution.Select(kvp => (kvp.Key, kvp.Value));
 
-	public IReadOnlyDictionary<int, Dictionary<string, string>> AlwaysReportedSnapshot()
-		=> alwaysReportedInputMemory.ReportPerExecutionSnapshot(); // read-only exposure
+	public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedSnapshot()
+		=> trackedInputMemory.ReportPerExecutionSnapshot(); // read-only exposure
 
 	public T GetForFluentInterface<T>(string key)
-		=> alwaysReportedInputMemory.Retrieve<T>(key)
+		=> trackedInputMemory.Retrieve<T>(key)
 			.OrElse(For(getCurrentExecutionId()).GetMaybe<T>(key))
 			.Match(
 				some: x => x,
 				none: () => throw new ThisNotesOnYou(
-					$"You're singing in the wrong key. '{key}' wasn't found in AlwaysReported(...) or Fuzzed(...).")
+					$"You're singing in the wrong key. '{key}' wasn't found in Tracked(...) or Fuzzed(...).")
 			);
 
 	public Access ForThisExecution()
@@ -68,9 +65,9 @@ public class Memory
 		return memoryPerExecution[actionId];
 	}
 
-	public IEnumerable<string> GetAllAlwaysReportedKeys() // used by code gen
+	public IEnumerable<string> GetAllTrackedKeys() // used by code gen
 	{
-		return alwaysReportedInputMemory.GetAllAlwaysReportedKeys();
+		return trackedInputMemory.GetAllTrackedKeys();
 	}
 
 	public Access ForLastExecution() // used by codegen
@@ -114,23 +111,23 @@ public class Memory
 	// -- DEEP COPY
 	public Memory DeepCopy()
 	{
-		var newAlwaysReported = alwaysReportedInputMemory.DeepCopy(getCurrentExecutionId);
+		var newTracked = trackedInputMemory.DeepCopy(getCurrentExecutionId);
 		var newMemoryPerExecution = new Dictionary<int, Access>();
 		foreach (var kvp in memoryPerExecution)
 		{
 			newMemoryPerExecution[kvp.Key] = kvp.Value.DeepCopy();
 		}
-		var newMemory = new Memory(getCurrentExecutionId, newAlwaysReported, newMemoryPerExecution);
+		var newMemory = new Memory(getCurrentExecutionId, newTracked, newMemoryPerExecution);
 		return newMemory;
 	}
 
 	public Memory(
 		Func<int> getCurrentActionId,
-		AlwaysReportedInputMemory alwaysReportedInputMemory,
+		TrackedInputMemory alwaysReportedInputMemory,
 		Dictionary<int, Access> memoryPerExecution)
 	{
 		this.getCurrentExecutionId = getCurrentActionId;
-		this.alwaysReportedInputMemory = alwaysReportedInputMemory;
+		this.trackedInputMemory = alwaysReportedInputMemory;
 		this.memoryPerExecution = memoryPerExecution;
 	}
 	// ---------------------------------------------------------------------------------------

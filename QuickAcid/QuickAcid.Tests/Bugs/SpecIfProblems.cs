@@ -14,7 +14,7 @@ public class SpecIfProblems
 	public void SpecIfBeforeSpec()
 	{
 		var run =
-			from counter in "counter".AlwaysReported(() => new Counter())
+			from counter in "counter".Tracked(() => new Counter())
 			from act in "act".Act(() => counter.Val++)
 			from _s1 in "if".SpecIf(() => counter.Val == 0, () => true)
 			from _s2 in "s".Spec(() => counter.Val > 4)
@@ -30,7 +30,7 @@ public class SpecIfProblems
 		var predicateRan = false;
 
 		var run =
-			from counter in "counter".AlwaysReported(() => new Counter())
+			from counter in "counter".Tracked(() => new Counter())
 			from act in "act".Act(() => counter.Val++)
 
 				// Fail always, force failure before the SpecIf
@@ -60,7 +60,7 @@ public class SpecIfProblems
 		var predicateRan = false;
 
 		var run =
-			from system in "system".AlwaysReported(() => new object())
+			from system in "system".Tracked(() => new object())
 			from fail in "fail".Act(() =>
 			{
 				throw new InvalidOperationException("fail!");

@@ -9,7 +9,7 @@ public class WhenTheHeartIsA
     public void LonelyHunter()
     {
         var run =
-            from obj in "needs ref".AlwaysReported(() => new object())
+            from obj in "needs ref".Tracked(() => new object())
             from _ in "needs exception".Act(() => throw new Exception("boom"))
             from _s1 in "spec if".SpecIf(() => true, () => true)
             from _s2 in MinimalSpec(obj)

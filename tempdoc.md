@@ -136,10 +136,95 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
 
 ---
 
+## QState
+
+Pronounced as : Cue State.  
+Which is exactly what it is for. The Linq Run definition is a stateless function.  
+It defines the shape of computation and is fully self contained. But without state it is pretty much useless.
+In order to turn it into something real we can use QState.
+```csharp
+using QuickAcid.Bolts;
+using QuickAcid.Bolts.Nuts;
+```
+
+Yes, you need both the Nuts and the Bolts.
+
+
+---
+
 ## QuickAcid Combinators
 
 Here will be some info about what a combinator is. Only the one for now ...
 
+
+### What is a Runner?
+
+Runners are the core abstraction of QuickAcid's LINQ model. 
+They carry both the logic of the test and the mechanisms to generate input, track state, and produce a result.
+
+A runner is, more precisely, a function that takes a `QAcidState` and returns a `QAcidResult<T>`.
+It encapsulates both what to do and how to do it, with full access to the current test state.
+```csharp
+public delegate QAcidResult<T> QAcidRunner<T>(QAcidState state);
+```
+
+
+You can think of runners as the building blocks of a property-based test.
+
+---
+
+### Tracked
+
+**Tracked(...)** behaves exactly like `Stashed(...)`: it defines a named value that is created once at the start of the test run and shared across all executions.
+The key difference is that `Tracked(...) `also ensures this value is **always included in the final report**, 
+providing visibility into contextual or setup state even when it wasn't directly responsible for the failure.
+
+
+---
+
+### Stashed
+
+**Stashed(...)** lorum ipsum
+
+
+**Usage example:**
+```csharp
+from account in "account".Tracked(() => new Account(), a => a.Balance.ToString())
+```
+The second argument is a formatter function for rendering the value into the test report.
+
+
+**Usage example:**
+```csharp
+from account in "account".Stashed(() => new Account())
+```
+
+
+##### TrackedValue
+
+
+Intended for flags, counters, and other small mutable state used during generation.  
+
+**Example:**
+```csharp
+from flag in "flag".TrackedValue(true)
+```
+
+
+---
+
+##### StashedValue
+
+Stashes a primitive or scalar value without requiring a wrapper object.
+Intended for flags, counters, and other small mutable state used during generation.  
+
+**Example:**
+```csharp
+from flag in "flag".StashedValue(true)
+```
+
+
+---
 
 ### TestifyProvenWhen
 
@@ -161,6 +246,13 @@ This would end the test run early once `container.Value` becomes `true`.
 
 **Note:** This does not assert a property directly — use `Assay(...)` or `Analyze(...)` for that.
 `TestifyProvenWhen(...)` is about controlling *how long* a test runs based on dynamic conditions observed during execution.
+
+
+---
+
+### Feedback Shrinking
+
+A.k.a.: What if it fails but the run does not contain the minimal fail case ? 
 
 
 ---

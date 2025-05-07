@@ -16,6 +16,4 @@ public static partial class QAcidCombinators
 	{
 		return key.Stashed(() => new Box<T>(initial));
 	}
-
-	public class Box<T> { public T Value; public Box(T value) => Value = value; }
 }

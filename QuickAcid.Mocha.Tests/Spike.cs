@@ -16,7 +16,7 @@ public class Spike
         var accountModule = engine.Modules.Import("./account.js");
         var module = From.Path(path).AndFile("./account.js");
         var run =
-            from account in "Account".AlwaysReported(
+            from account in "Account".Tracked(
                 () => module.Construct("Account"),
                 a => a.Call("getBalance").AsNumber().ToString())
             from _ in "ops".Choose(
