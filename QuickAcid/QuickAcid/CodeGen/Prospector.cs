@@ -81,7 +81,7 @@ namespace QuickAcid.CodeGen
             return "    Assert.Throws(" + "--------- NOT YET ---------" + ");";
         }
 
-        public static string Pan(QAcidState state)
+        public static string Scoop(QAcidState state)
         {
             var sb = new StringBuilder();
             sb.AppendLine("[Fact]");
@@ -93,5 +93,19 @@ namespace QuickAcid.CodeGen
             sb.AppendLine("}");
             return sb.ToString();
         }
+
+        public static string Pan(QAcidState state)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("namespace Refined.By.QuickAcid;");
+            sb.AppendLine("");
+            sb.AppendLine("public class UnitTests");
+            sb.AppendLine("{");
+            sb.AppendLine(Scoop(state));
+            sb.AppendLine("}");
+            return sb.ToString();
+        }
+
+
     }
 }

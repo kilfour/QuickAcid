@@ -1,3 +1,5 @@
+
+
 using QuickAcid.TestsDeposition._Tools;
 
 namespace QuickAcid.TestsDeposition.Linqy;
@@ -8,4 +10,5 @@ namespace QuickAcid.TestsDeposition.Linqy;
 public class QuickAcidTopLevel
 {
     public const string Order = "1";
+
 }
