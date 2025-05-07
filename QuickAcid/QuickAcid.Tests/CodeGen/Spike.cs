@@ -29,7 +29,6 @@ public class Spike
             )
             from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
             select Acid.Test;
-        new WriteDataToFile("../../../../../Tests.cs").ClearLog().Log(run.ToCodeIfFailed(1, 50).ToString());
         // QAcidDebug.Write(report.ToString());
         // QAcidDebug.WriteLine("-- Ladies and Gentleman, ..., and now, ...");
         // QAcidDebug.WriteLine("");

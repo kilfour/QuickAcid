@@ -1,4 +1,3 @@
-using QuickAcid.Bolts;
 using QuickAcid.CodeGen;
 
 namespace QuickAcid.Tests.CodeGen;
@@ -22,19 +21,9 @@ public class LinesReader
 
     public static LinesReader FromRun(QAcidRunner<Acid> runner)
     {
-        var state = new QAcidState(runner);
-        state.Testify(1);
-        return new LinesReader(Prospector.Pan(state));
-    }
-
-    public static LinesReader FromFailingRun(QAcidRunner<Acid> runner)
-    {
-        return new LinesReader(runner.ToCodeIfFailed(1, 1));
-    }
-
-    public static LinesReader FromFailingRunTryFiftyTimes(QAcidRunner<Acid> runner)
-    {
-        return new LinesReader(runner.ToCodeIfFailed(1, 50));
+        var state = new QState(runner);
+        var report = state.GenerateCode().AlwaysReport().Observe(1);
+        return new LinesReader(report.Code);
     }
 
     public string NextLine()

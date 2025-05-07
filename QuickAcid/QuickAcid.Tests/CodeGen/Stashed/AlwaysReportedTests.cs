@@ -1,15 +1,15 @@
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 
-namespace QuickAcid.Tests.CodeGen.AlwaysReported
+namespace QuickAcid.Tests.CodeGen.Stashed
 {
-    public class AlwaysReportedTests
+    public class StashedTests
     {
         [Fact]
-        public void CodeGen_always_reported_default()
+        public void CodeGen_stashed_default()
         {
             var run =
-                from _ in "MyObject".AlwaysReported(() => new object())
+                from _ in "MyObject".Stashed(() => new object())
                 select Acid.Test;
             var reader = LinesReader.FromRun(run);
             Assert.Equal("[Fact]", reader.NextLine());
@@ -23,11 +23,11 @@ namespace QuickAcid.Tests.CodeGen.AlwaysReported
         }
 
         [Fact]
-        public void CodeGen_two_always_reported_default()
+        public void CodeGen_two_stashed_default()
         {
             var run =
-                from _ in "MyObject".AlwaysReported(() => new object())
-                from __ in "MyOtherObject".AlwaysReported(() => new object())
+                from _ in "MyObject".Stashed(() => new object())
+                from __ in "MyOtherObject".Stashed(() => new object())
                 select Acid.Test;
             var reader = LinesReader.FromRun(run);
             reader.Skip(3);

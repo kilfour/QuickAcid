@@ -11,9 +11,21 @@ public class QState
         state = new QAcidState(runner);
     }
 
+    public QState AlwaysReport()
+    {
+        state.AlwaysReport = true;
+        return this;
+    }
+
     public QState Verbose()
     {
         state.Verbose = true;
+        return this;
+    }
+
+    public QState GenerateCode()
+    {
+        state.GenerateCode = true;
         return this;
     }
 

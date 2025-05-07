@@ -1,7 +1,9 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.CodeGen;
 using QuickAcid.Reporting;
+using QuickMGenerate.UnderTheHood;
 using QuickPulse.Diagnostics;
 
 namespace QuickAcid;
@@ -121,6 +123,8 @@ public sealed class QAcidState : QAcidContext
 
     private readonly QAcidReport report;
     public bool Verbose { get; set; }
+    public bool GenerateCode { get; set; }
+    public bool AlwaysReport { get; set; }
 
     // -----------------------------------------------------------------
     // implementing context
@@ -165,6 +169,11 @@ public sealed class QAcidState : QAcidContext
             if (CurrentContext.BreakRun)
             {
                 break;
+            }
+            if (AlwaysReport)
+            {
+                AddMemoryToReport(report, true);
+                return report;
             }
         }
         return null!;
@@ -345,6 +354,10 @@ public sealed class QAcidState : QAcidContext
         }
         if (!string.IsNullOrEmpty(FailingSpec))
             report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(FailingSpec)));
+        if (GenerateCode)
+        {
+            report.Code = Prospector.Pan(this);
+        }
         return report;
     }
 

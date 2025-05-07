@@ -5,10 +5,10 @@ namespace QuickAcid.Reporting;
 public class QAcidReport
 {
     private readonly List<IAmAReportEntry> entries = [];
-
     public List<IAmAReportEntry> Entries { get { return entries; } }
-
     public Exception? Exception { get; set; }
+    public string Code { get; set; } = string.Empty;
+
     public virtual void AddEntry(IAmAReportEntry reportEntry)
     {
         entries.Add(reportEntry);

@@ -10,7 +10,7 @@ public class SpecTests
     {
         var run = from _ in "TheSpec".Spec(() => false) select Acid.Test;
 
-        var reader = LinesReader.FromFailingRun(run);
+        var reader = LinesReader.FromRun(run);
         Assert.Equal("[Fact]", reader.NextLine());
         Assert.Equal("public void TheSpec()", reader.NextLine());
         Assert.Equal("{", reader.NextLine());
@@ -25,7 +25,7 @@ public class SpecTests
     {
         var run = from _ in "TheSpec".Spec(() => false) select Acid.Test;
 
-        var reader = LinesReader.FromFailingRun(run);
+        var reader = LinesReader.FromRun(run);
         reader.Skip();
         Assert.Equal("public void TheSpec()", reader.NextLine());
     }
@@ -35,7 +35,7 @@ public class SpecTests
     {
         var run = from _ in "TheSpec: ignore me".Spec(() => false) select Acid.Test;
 
-        var reader = LinesReader.FromFailingRun(run);
+        var reader = LinesReader.FromRun(run);
         reader.Skip();
         Assert.Equal("public void TheSpec()", reader.NextLine());
     }
