@@ -1,4 +1,5 @@
 using QuickAcid.Bolts.ShrinkStrats;
+using QuickPulse.Diagnostics;
 
 namespace QuickAcid.Bolts;
 public class PrimitiveShrinkStrategy //: IShrinkStrategy
@@ -11,7 +12,7 @@ public class PrimitiveShrinkStrategy //: IShrinkStrategy
             { typeof(sbyte),    new object[] { sbyte.MinValue, -1, 0, 1, sbyte.MaxValue } },
             { typeof(short),    new object[] { short.MinValue, -1, 0, 1, short.MaxValue } },
             { typeof(ushort),   new object[] { (ushort)0, (ushort)1, ushort.MaxValue } },
-            { typeof(int),      new object[] { int.MinValue, -1000, -1, 0, 1, 1000, int.MaxValue } },
+            { typeof(int),      new object[] { -10000, -1000, -1, 0, 1, 1000, 10000 } },
             { typeof(uint),     new object[] { 0u, 1u, 1000u, uint.MaxValue } },
             { typeof(long),     new object[] { long.MinValue, -1000L, -1L, 0L, 1L, 1000L, long.MaxValue } },
             { typeof(ulong),    new object[] { 0UL, 1UL, 1000UL, ulong.MaxValue } },
@@ -34,31 +35,42 @@ public class PrimitiveShrinkStrategy //: IShrinkStrategy
             : typeof(T);
         var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(actualType));
         var primitiveVals = PrimitiveValues[primitiveKey!];
-        var originalFails = state.ShrinkRun(key, value!);
+        var originalFails = state.ShrinkRunReturnTrueIfFailed(key, value!);
         if (!originalFails)
             return ShrinkOutcome.Irrelevant;
         var filtered = primitiveVals.Where(val => shrinkingGuard(val)).ToArray();
-
+        var pulse = QAcidState.GetPulse(["PrimitiveShrinkStrategy"]);
+        pulse($"(key: {key}, value:{value})");
         if (state.InFeedbackShrinkingPhase)
         {
+            pulse($"Phase: {state.CurrentPhase}");
             foreach (object val in filtered.Where(x => !Equals(x, value)))
             {
-                if (!state.ShrinkRun(key, val))
+                pulse($"Replacing with: {val}");
+                if (state.ShrinkRunReturnTrueIfFailed(key, val))
                 {
+                    pulse($"ShrinkOutcome.Report({QuickAcidStringify.Default()(val)}) ");
+                    state.Memory.ForThisExecution().Override(key, val);
                     return ShrinkOutcome.Report(QuickAcidStringify.Default()(val));
                 }
             }
-            return ShrinkOutcome.Irrelevant;
+            pulse($"ShrinkOutcome.Irrelevant");
+            return ShrinkOutcome.Report(QuickAcidStringify.Default()(value!));
         }
         else
         {
-            bool failureAlwaysOccurs =
-                filtered
-                    .Where(x => !Equals(x, value))
-                    .All(x => state.ShrinkRun(key, x));
-            return failureAlwaysOccurs ? ShrinkOutcome.Irrelevant : ShrinkOutcome.Report(QuickAcidStringify.Default()(value!));
+            pulse($"Phase: {state.CurrentPhase}");
+            foreach (object val in filtered.Where(x => !Equals(x, value)))
+            {
+                pulse($"Replacing with: {val}");
+                if (!state.ShrinkRunReturnTrueIfFailed(key, val))
+                {
+                    pulse($"ShrinkOutcome.Report({QuickAcidStringify.Default()(value!)}) ");
+                    return ShrinkOutcome.Report(QuickAcidStringify.Default()(value!));
+                }
+            }
+            pulse($"ShrinkOutcome.Irrelevant");
+            return ShrinkOutcome.Irrelevant;
         }
-
-
     }
 }

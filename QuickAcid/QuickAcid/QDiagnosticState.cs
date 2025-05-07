@@ -1,4 +1,5 @@
 using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.CodeGen;
 using QuickAcid.Reporting;
 
 namespace QuickAcid;
@@ -64,7 +65,19 @@ public class QDiagnosticState
         state.CurrentContext.Exception = exception;
         state.HandleFailure();
         report = state.GetReport();
+        var code = Prospector.Pan(state);
         return this;
+    }
+
+    public string ShrinkToCode(RunInformation runInformation)
+    {
+        var (memory, executionNumbers, failingSpec, exception) = runInformation;
+        state.SetMemory(memory, executionNumbers);
+        state.CurrentContext.FailingSpec = failingSpec;
+        state.CurrentContext.Exception = exception;
+        state.HandleFailure();
+        report = state.GetReport();
+        return Prospector.Pan(state);
     }
 }
 

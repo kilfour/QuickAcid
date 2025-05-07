@@ -1,5 +1,4 @@
 ﻿using QuickAcid.CodeGen;
-using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
 
@@ -17,4 +16,3 @@ public static partial class QAcid
 		return null!;
 	}
 }
-

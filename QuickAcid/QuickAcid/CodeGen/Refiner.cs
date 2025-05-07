@@ -37,26 +37,26 @@ namespace QuickAcid.CodeGen
                     }
                 }
             }
-            using (QAcidDebug.Logging("reports.txt"))
-            {
-                QAcidDebug.WriteLine("===================================================");
-                foreach (var report in reports)
-                {
-                    QAcidDebug.WriteLine(report);
-                    QAcidDebug.WriteLine("===================================================");
-                }
-            }
+            // using (QAcidDebug.Logging("reports.txt"))
+            // {
+            //     QAcidDebug.WriteLine("===================================================");
+            //     foreach (var report in reports)
+            //     {
+            //         QAcidDebug.WriteLine(report);
+            //         QAcidDebug.WriteLine("===================================================");
+            //     }
+            // }
 
-            using (QAcidDebug.Logging("Tests.cs"))
-            {
-                QAcidDebug.WriteLine("namespace Refined.By.QuickAcid;");
-                QAcidDebug.WriteLine("");
-                QAcidDebug.WriteLine("public class UnitTests");
-                QAcidDebug.WriteLine("{");
-                tests.ForEach(QAcidDebug.WriteLine);
-                QAcidDebug.WriteLine("");
-                QAcidDebug.WriteLine("}");
-            }
+            // using (QAcidDebug.Logging("Tests.cs"))
+            // {
+            //     QAcidDebug.WriteLine("namespace Refined.By.QuickAcid;");
+            //     QAcidDebug.WriteLine("");
+            //     QAcidDebug.WriteLine("public class UnitTests");
+            //     QAcidDebug.WriteLine("{");
+            //     tests.ForEach(QAcidDebug.WriteLine);
+            //     QAcidDebug.WriteLine("");
+            //     QAcidDebug.WriteLine("}");
+            // }
         }
     }
 }

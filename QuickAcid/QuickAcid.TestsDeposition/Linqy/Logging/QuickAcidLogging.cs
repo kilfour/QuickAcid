@@ -177,7 +177,7 @@ Outputs something similar to:
         Assert.Equal(" -- AFTER INPUT SHRINKING :", reader.NextLine());
         Assert.Equal(" -- Property 'spec' was falsified", reader.NextLine());
         Assert.Equal(" -- Original failing run: 1 execution(s)", reader.NextLine());
-        Assert.Equal(" -- Shrunk to minimal case:  1 execution(s) (2 shrinks)", reader.NextLine());
+        Assert.Equal(" -- Shrunk to minimal case:  1 execution(s) (1 shrinks)", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());
         Assert.Equal(" RUN START :", reader.NextLine());
         Assert.Equal(" ---------------------------", reader.NextLine());

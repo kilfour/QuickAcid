@@ -2,6 +2,7 @@
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
+using QuickPulse.Diagnostics;
 
 namespace QuickAcid;
 
@@ -18,7 +19,14 @@ public sealed class QAcidState : QAcidContext
     }
 
     public QAcidRunner<Acid> Runner { get; private set; }
-    public int CurrentExecutionNumber { get; private set; }
+    public int CurrentExecutionNumber { get; set; }
+    public IDisposable SetCurrentExecutionNumber(int number)
+    {
+        var previousNumber = CurrentExecutionNumber;
+        CurrentExecutionNumber = number;
+        return new DisposableAction(() => { CurrentExecutionNumber = previousNumber; });
+    }
+
     public List<int> ExecutionNumbers { get; private set; }
     public bool IsThisTheRunsLastExecution()
     {
@@ -70,12 +78,21 @@ public sealed class QAcidState : QAcidContext
     public bool InFeedbackShrinkingPhase = false;
     public IDisposable EnterPhase(QAcidPhase phase)
     {
+        GetPulse(["QAcidState", "Phase"])($"Enter Phase: {phase}.");
+        PhaseLevel++;
         var previousPhase = CurrentPhase;
         CurrentPhase = phase;
         CurrentContext.Reset();
-        return new DisposableAction(() => { CurrentPhase = previousPhase; });
+        return new DisposableAction(() =>
+        {
+            CurrentPhase = previousPhase;
+            PhaseLevel--;
+            GetPulse(["QAcidState", "Phase"])("Dispose Phase: {(phase)}.");
+        });
     }
-
+    public static int PhaseLevel { get; set; } = 0;
+    public static Action<string> GetPulse(string[] tags) =>
+        (msg) => PulseContext.Log(new DiagnosticInfo(tags, msg, PhaseLevel));
     public PhaseContext OriginalRun => Phase(QAcidPhase.NormalRun);
     // ---------------------------------------------------------------------------------------
 
@@ -194,13 +211,14 @@ public sealed class QAcidState : QAcidContext
             }
             else
             {
+                if (AllowFeedbackShrinking)
+                {
+                    FeedbackShrinking();
+                }
                 report.AddEntry(new ReportTitleSectionEntry([.. GetReportHeaderInfo()]));
                 report.AddEntry(new ReportRunStartEntry());
             }
-            if (AllowFeedbackShrinking)
-            {
-                FeedbackShrinking();
-            }
+
         }
         else
         {
@@ -222,11 +240,11 @@ public sealed class QAcidState : QAcidContext
         yield break;
     }
 
-    private void ShrinkExecutions()
+    public void ShrinkExecutions()
     {
         var max = ExecutionNumbers.Max();
         var current = 0;
-        while (current <= max)
+        while (current <= max && ExecutionNumbers.Count() > 1)
         {
             using (EnterPhase(QAcidPhase.ShrinkingExecutions))
             {
@@ -269,7 +287,7 @@ public sealed class QAcidState : QAcidContext
         InFeedbackShrinkingPhase = true;
         var max = ExecutionNumbers.Max();
         var current = 0;
-        while (current <= max)
+        while (current <= max && ExecutionNumbers.Count > 1)
         {
             using (EnterPhase(QAcidPhase.FeedbackShrinking))
             {
@@ -292,8 +310,14 @@ public sealed class QAcidState : QAcidContext
         }
     }
 
-    public bool ShrinkRun(string key, object value) // Only Used by Shrink.cs
+    public bool ShrinkRunReturnTrueIfFailed(string key, object value) // Only Used by Shrink.cs
     {
+        var pulse = GetPulse(["ShrinkRunReturnTrueIfFailed"]);
+        pulse("Shrink Input Run:");
+        pulse($"Phase: {CurrentPhase}");
+        pulse($"(key: {key}, value:{value})");
+        pulse($"For Execution {CurrentExecutionNumber}");
+        pulse($"All Executions [{string.Join(", ", ExecutionNumbers)}]");
         using (EnterPhase(QAcidPhase.ShrinkInputEval))
         {
             Memory.ResetRunScopedInputs();
@@ -307,6 +331,7 @@ public sealed class QAcidState : QAcidContext
                 }
             }
             CurrentExecutionNumber = runNumber;
+            pulse($"Run Failed: {CurrentContext.Failed}");
             return CurrentContext.Failed;
         }
     }

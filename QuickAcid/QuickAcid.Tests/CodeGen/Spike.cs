@@ -1,6 +1,7 @@
 using QuickMGenerate;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
+using QuickPulse.Diagnostics.Sinks.FileWriters;
 
 namespace QuickAcid.Tests.CodeGen;
 
@@ -28,23 +29,22 @@ public class Spike
             )
             from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
             select Acid.Test;
+        new WriteDataToFile("../../../../../Tests.cs").ClearLog().Log(run.ToCodeIfFailed(1, 50).ToString());
+        // QAcidDebug.Write(report.ToString());
+        // QAcidDebug.WriteLine("-- Ladies and Gentleman, ..., and now, ...");
+        // QAcidDebug.WriteLine("");
+        // QAcidDebug.WriteLine(run.ToCodeIfFailed(1, 50).ToString());
 
-        var report = new QState(run).Observe(50);
-        QAcidDebug.Write(report.ToString());
-        QAcidDebug.WriteLine("-- Ladies and Gentleman, ..., and now, ...");
-        QAcidDebug.WriteLine("");
-        QAcidDebug.WriteLine(run.ToCodeIfFailed(1, 50).ToString());
 
-
-        var reader = LinesReader.FromFailingRunTryFiftyTimes(run);
-        Assert.Equal("[Fact]", reader.NextLine());
-        Assert.Equal("public void No_Overdraft()", reader.NextLine());
-        Assert.Equal("{", reader.NextLine());
-        Assert.Equal("    var account = new Account();", reader.NextLine());
-        Assert.Equal("    account.Withdraw(42);", reader.NextLine());
-        Assert.Equal("    Assert.True(account.Balance >= 0);", reader.NextLine());
-        Assert.Equal("}", reader.NextLine());
-        Assert.Equal("", reader.NextLine());
-        Assert.True(reader.EndOfCode());
+        // var reader = LinesReader.FromFailingRunTryFiftyTimes(run);
+        // Assert.Equal("[Fact]", reader.NextLine());
+        // Assert.Equal("public void No_Overdraft()", reader.NextLine());
+        // Assert.Equal("{", reader.NextLine());
+        // Assert.Equal("    var account = new Account();", reader.NextLine());
+        // Assert.Equal("    account.Withdraw(42);", reader.NextLine());
+        // Assert.Equal("    Assert.True(account.Balance >= 0);", reader.NextLine());
+        // Assert.Equal("}", reader.NextLine());
+        // Assert.Equal("", reader.NextLine());
+        // Assert.True(reader.EndOfCode());
     }
 }

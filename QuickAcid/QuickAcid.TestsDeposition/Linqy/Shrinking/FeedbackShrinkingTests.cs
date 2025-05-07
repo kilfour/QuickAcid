@@ -5,6 +5,8 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using QuickPulse;
+using QuickPulse.Diagnostics;
+using QuickPulse.Diagnostics.Sinks.FileWriters;
 
 namespace QuickAcid.TestsDeposition.Linqy;
 
@@ -39,6 +41,7 @@ public class FeedbackShrinkingTests
     [Fact]
     public void Feedback_Shrinking()
     {
+        PulseContext.Current = new WriteDataToFile().ClearLog();
         QDiagnosticState.RunInformation? info = null;
         QAcidReport? report = null;
         var numberOfActionEntries = 0;
@@ -52,30 +55,50 @@ public class FeedbackShrinkingTests
             numberOfActionEntries = report.OfType<ReportExecutionEntry>().Count();
         }
         var shrinkingRun = GetRun(MGen.Int());
+
+        var writer = new WriteDataToFile().ClearLog();
+        var pulser =
+            from diagnosis in Pulse.From<DiagnosticInfo>()
+            where diagnosis.Tags.Any(a =>
+                a == "AlwaysReportedInputMemory" ||
+                a == "Phase")
+            from firstTag in Pulse.Shape(() => $"{diagnosis.Tags.First()}:")
+            from indent in Pulse.Shape(() => new string(' ', diagnosis.PhaseLevel * 4))
+            from log in Sink.To(() => writer.Log($"{indent}{firstTag}{diagnosis.Message}"))
+            select diagnosis;
+        PulseContext.Current = pulser.ToPulse();
+        //new WriteDataToFile().ClearLog().Log(new QDiagnosticState(shrinkingRun).WithFeedback().ShrinkToCode(info!));
+
         report = new QDiagnosticState(shrinkingRun).WithFeedback().Shrink(info!).GetReport();
         Assert.NotNull(report);
+
+
         Assert.Single(report.OfType<ReportExecutionEntry>());
         Assert.Single(report.OfType<ReportInputEntry>());
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("withdraw", entry.Key);
-        // Assert.True(Convert.ToInt32(entry.Value!) > 30);
+        Assert.True(Convert.ToInt32(entry.Value!) > 30);
     }
-
-    public class FlagWrapper { public bool Flag = false; }
 
     private QAcidRunner<Acid> GetRun(Generator<int> intGenerator)
     {
         return
-            from account in "Account".AlwaysReported(() => new Account(), a => a.Balance.ToString())
-            from flagWrapper in "flag".Stashed(() => new FlagWrapper())
+            from account in "Account".AlwaysReported(
+                () => new Account(),
+                a => a.Balance.ToString())
+            from box in "flag".StashedValue(false)
             from _ in "ops".Choose(
                 from depositAmount in "deposit".Shrinkable(intGenerator)
                 from act in "account.Deposit".ActIf(
-                    () => !flagWrapper.Flag, () => { flagWrapper.Flag = true; account.Deposit(depositAmount); })
+                    () => !box.Value, () => { box.Value = true; account.Deposit(depositAmount); })
                 select Acid.Test,
                 from withdrawAmount in "withdraw".Shrinkable(intGenerator)
                 from withdraw in "account.Withdraw:withdraw".Act(
-                    () => account.Withdraw(withdrawAmount))
+                    () =>
+                    {
+                        account.Withdraw(withdrawAmount);
+                        //QAcidState.GetPulse(["test"])($"[account.Withdraw:withdraw], withdraw={withdrawAmount}");
+                    })
                 select Acid.Test
             )
             from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)

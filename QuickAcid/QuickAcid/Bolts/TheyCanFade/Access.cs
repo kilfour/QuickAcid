@@ -16,6 +16,11 @@ public class Access
         return (T)dictionary[key].Value!;
     }
 
+    public DecoratedValue GetDecorated(object key)
+    {
+        return dictionary[key];
+    }
+
     public string GetAsString(object key) // for codegen
     {
         return dictionary[key].Value!.ToString();
@@ -31,6 +36,11 @@ public class Access
     public void SetIfNotAlreadyThere<T>(object key, T value)
     {
         if (dictionary.ContainsKey(key)) return;
+        dictionary[key] = new DecoratedValue { Value = value! };
+    }
+
+    public void Override<T>(object key, T value)
+    {
         dictionary[key] = new DecoratedValue { Value = value! };
     }
 

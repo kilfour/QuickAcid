@@ -32,7 +32,7 @@ public class ObjectShrinkStrategy //: IShrinkStrategy
                         SetPropertyValue(propertyInfo, value, null);
                     }
 
-                    if (!state.ShrinkRun(key, value))
+                    if (!state.ShrinkRunReturnTrueIfFailed(key, value))
                     {
                         shrunk = ShrinkOutcome.Report("{ " + string.Join(", ", set.Select(x => $"{x.Name} : {QuickAcidStringify.Default()(oldValues[x.Name])}")) + " }");
                     }
@@ -70,7 +70,7 @@ public class ObjectShrinkStrategy //: IShrinkStrategy
             foreach (var primitiveValue in PrimitiveShrinkStrategy.PrimitiveValues[primitiveKey])
             {
                 SetPropertyValue(propertyInfo, value, primitiveValue);
-                if (!state.ShrinkRun(key, value))
+                if (!state.ShrinkRunReturnTrueIfFailed(key, value))
                 {
                     SetPropertyValue(propertyInfo, value, propertyValue);
                     return ShrinkOutcome.Report($"{propertyInfo.Name} : {QuickAcidStringify.Default()(propertyValue)}");

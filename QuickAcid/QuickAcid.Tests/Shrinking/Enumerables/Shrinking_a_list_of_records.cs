@@ -6,7 +6,7 @@ using QuickAcid.Bolts.ShrinkStrats;
 
 namespace QuickAcid.Tests.Shrinking.Enumerables;
 
-public class Shrinking_a_list_of_records : QAcidLoggingFixture
+public class Shrinking_a_list_of_records
 {
     public record Person(string Name, int Age);
 

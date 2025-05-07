@@ -1,22 +1,23 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.MonadiXEtAl;
+using QuickPulse.Diagnostics;
 
 namespace QuickAcid.Bolts.TheyCanFade;
 
 public class Memory
 {
-	private Func<int> getCurrentActionId;
+	private Func<int> getCurrentExecutionId;
 
 	public void SetCurrentActionIdFunction(Func<int> getCurrentActionId)
 	{
-		this.getCurrentActionId = getCurrentActionId;
+		this.getCurrentExecutionId = getCurrentActionId;
 	}
 	private readonly AlwaysReportedInputMemory alwaysReportedInputMemory;
 	private readonly Dictionary<int, Access> memoryPerExecution = [];
 
 	public Memory(Func<int> getCurrentActionId)
 	{
-		this.getCurrentActionId = getCurrentActionId;
+		this.getCurrentExecutionId = getCurrentActionId;
 		alwaysReportedInputMemory = new AlwaysReportedInputMemory(getCurrentActionId);
 	}
 
@@ -52,7 +53,7 @@ public class Memory
 
 	public T GetForFluentInterface<T>(string key)
 		=> alwaysReportedInputMemory.Retrieve<T>(key)
-			.OrElse(For(getCurrentActionId()).GetMaybe<T>(key))
+			.OrElse(For(getCurrentExecutionId()).GetMaybe<T>(key))
 			.Match(
 				some: x => x,
 				none: () => throw new ThisNotesOnYou(
@@ -61,7 +62,7 @@ public class Memory
 
 	public Access ForThisExecution()
 	{
-		var actionId = getCurrentActionId();
+		var actionId = getCurrentExecutionId();
 		if (!memoryPerExecution.ContainsKey(actionId))
 			memoryPerExecution[actionId] = new Access();
 		return memoryPerExecution[actionId];
@@ -83,20 +84,21 @@ public class Memory
 	public Func<object, object>? GetNestedValue = null;
 	public Func<object, object>? SetNestedValue = null;
 
-	public IDisposable ScopedSwap(object key, object newValue)
+	public IDisposable ScopedSwap(object key, object value)
 	{
+		QAcidState.GetPulse(["Memory", "ScopedSwap"])($"Executing for key={key}, value={value}, execution={getCurrentExecutionId()}");
 		var memory = ForThisExecution();
 
 		object oldValue = null;
 		if (GetNestedValue != null)
 		{
 			oldValue = GetNestedValue(memory.Get<object>(key));
-			memory.Set(key, SetNestedValue(newValue), ReportingIntent.Never);
+			memory.Set(key, SetNestedValue(value), ReportingIntent.Never);
 		}
 		else
 		{
 			oldValue = memory.Get<object>(key);
-			memory.Set(key, newValue, ReportingIntent.Never);
+			memory.Set(key, value, ReportingIntent.Never);
 		}
 
 		return new DisposableAction(() =>
@@ -112,13 +114,13 @@ public class Memory
 	// -- DEEP COPY
 	public Memory DeepCopy()
 	{
-		var newAlwaysReported = alwaysReportedInputMemory.DeepCopy(getCurrentActionId);
+		var newAlwaysReported = alwaysReportedInputMemory.DeepCopy(getCurrentExecutionId);
 		var newMemoryPerExecution = new Dictionary<int, Access>();
 		foreach (var kvp in memoryPerExecution)
 		{
 			newMemoryPerExecution[kvp.Key] = kvp.Value.DeepCopy();
 		}
-		var newMemory = new Memory(getCurrentActionId, newAlwaysReported, newMemoryPerExecution);
+		var newMemory = new Memory(getCurrentExecutionId, newAlwaysReported, newMemoryPerExecution);
 		return newMemory;
 	}
 
@@ -127,7 +129,7 @@ public class Memory
 		AlwaysReportedInputMemory alwaysReportedInputMemory,
 		Dictionary<int, Access> memoryPerExecution)
 	{
-		this.getCurrentActionId = getCurrentActionId;
+		this.getCurrentExecutionId = getCurrentActionId;
 		this.alwaysReportedInputMemory = alwaysReportedInputMemory;
 		this.memoryPerExecution = memoryPerExecution;
 	}

@@ -1,6 +1,4 @@
-﻿using QuickAcid.CodeGen;
-
-namespace QuickAcid.Bolts.Nuts;
+﻿namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcid
 {

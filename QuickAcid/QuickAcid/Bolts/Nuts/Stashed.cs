@@ -12,10 +12,10 @@ public static partial class QAcid
 				};
 	}
 
-	public static QAcidRunner<T> StashedValue<T>(this string key, T initial)
+	public static QAcidRunner<Box<T>> StashedValue<T>(this string key, T initial)
 	{
-		return key.Stashed(() => new Box<T>(initial)).Select(box => box.Value);
+		return key.Stashed(() => new Box<T>(initial));
 	}
 
-	private class Box<T> { public T Value; public Box(T value) => Value = value; }
+	public class Box<T> { public T Value; public Box(T value) => Value = value; }
 }

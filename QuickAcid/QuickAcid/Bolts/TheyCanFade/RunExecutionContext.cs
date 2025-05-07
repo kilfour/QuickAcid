@@ -26,6 +26,7 @@ public class RunExecutionContext
     }
 
     public T Get<T>(string key) => memory.Get<T>(key);
+    public DecoratedValue GetDecorated(string key) => memory.GetDecorated(key);
 
     public Maybe<T> GetMaybe<T>(string key) => memory.GetMaybe<T>(key);
 

@@ -5,7 +5,7 @@ using QuickMGenerate;
 
 namespace QuickAcid.Tests.Linqy.Assay;
 
-public class AssayTests : QAcidLoggingFixture
+public class AssayTests
 {
     [Fact]
     public void Assay_something_did_not_happen()

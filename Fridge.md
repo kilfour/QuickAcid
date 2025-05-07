@@ -1,15 +1,5 @@
-## Check Project Migration
-FeedBack Shrinking 
-
-Current minimal report :
-30: Withdraw 20 =>
-10: Withdraw 20 => -10
-Should be 
-30: Withdraw 40 => -10
-
-Has a POC test, actions shrink, value reported is still wrong (40, in above, is 20 now)
+## FeedBack Shrinking 
 Check always reported input on Start run  
-
 ## Check Project Migration
 QuickAcid.Examples.SetTest
 ## AutoDoc  
@@ -40,4 +30,18 @@ Multiple .Do's in Fluent => BOOOOM, check Bob
 --- slide ---
 ## The Wordsmith
 QuickXmlWrite (json)
+--- slide ---
+# Memory PBT
+1. Scoped override isolation
+Property: overrides only affect the current execution
+prop: For any key/value pair and two execution numbers,
+only the intended execution sees the override.
+2. Reset restores clean state
+Property: after ResetRunScopedInputs(), all keys revert or disappear
+3. Stashed values persist across runs
+Property: stashing a value makes it available after new executions (unless explicitly cleared)
+4. Reentrant swap is idempotent
+Property: doing ScopedSwap(k,v) twice returns to the original state
+5. Codegen reproducibility
+Property: replaying the same memory produces the same run and spec outcome
 --- slide ---

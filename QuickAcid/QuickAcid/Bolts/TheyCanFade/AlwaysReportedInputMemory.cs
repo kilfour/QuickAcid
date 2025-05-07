@@ -1,5 +1,6 @@
 using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;
+using QuickPulse.Diagnostics;
 
 namespace QuickAcid.Bolts.TheyCanFade;
 
@@ -17,6 +18,7 @@ public class AlwaysReportedInputMemory
 
     public T Store<T>(string key, Func<T> factory, Func<T, string> stringify)
     {
+        QAcidState.GetPulse(["AlwaysReportedInputMemory"])($"Store({key} ...)");
         var val = StoreWithoutReporting(key, factory);
         ReportForCurrent()[key] = stringify(val);
         return val;
@@ -40,6 +42,7 @@ public class AlwaysReportedInputMemory
 
     public void Reset()
     {
+        QAcidState.GetPulse(["AlwaysReportedInputMemory"])($"Reset()");
         values.Clear();
         reportPerExecution.Clear();
     }
