@@ -6,7 +6,7 @@ using QuickAcid.TestsDeposition._Tools.Models;
 
 namespace QuickAcid.TestsDeposition.Linqy.Combinators.Stashed;
 
-public static class Chapter { public const string Order = "1-2-10"; }
+public static class Chapter { public const string Order = CombinatorChapter.Order + "-10"; }
 
 [Doc(Order = $"{Chapter.Order}", Caption = "Stashed", Content =
 @"**Stashed(...)** creates a value once at the start of the test run and reuses it across all executions.  

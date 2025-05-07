@@ -8,7 +8,7 @@ using QuickMGenerate;
 
 namespace QuickAcid.TestsDeposition.Linqy.Combinators.Derived;
 
-public static class Chapter { public const string Order = "1-2-54"; }
+public static class Chapter { public const string Order = CombinatorChapter.Order + "-70"; }
 
 [Doc(Order = $"{Chapter.Order}", Caption = "Derived", Content =
 @"### Derived
@@ -22,7 +22,7 @@ This is a niche combinator,
 primarily intended for state-sensitive generation where traditional shrinking would be inappropriate or misleading.
 
 ")]
-public class DrivedTests
+public class DerivedTests
 {
     [Doc(Order = $"{Chapter.Order}-1", Content =
 @"**Usage example:**

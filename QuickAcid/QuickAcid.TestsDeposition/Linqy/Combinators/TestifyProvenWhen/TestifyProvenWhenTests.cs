@@ -6,12 +6,10 @@ using QuickMGenerate;
 
 namespace QuickAcid.TestsDeposition.Linqy.Combinators.TestifyProvenWhen;
 
-public static class Chapter { public const string Order = "1-2"; }
+public static class Chapter { public const string Order = CombinatorChapter.Order + "-100"; }
 
-[Doc(Order = Chapter.Order, Caption = "QuickAcid Combinators", Content =
-@"Here will be some info about what a combinator is. Only the one for now ...
-")]
-[Doc(Order = $"{Chapter.Order}-50", Caption = "TestifyProvenWhen", Content =
+
+[Doc(Order = $"{Chapter.Order}", Caption = "TestifyProvenWhen", Content =
 @"**TestifyProvenWhen(...)**
 Ends the test run early once a specified condition is satisfied.
 This combinator is not a property specification itself,
@@ -19,7 +17,7 @@ but a control structure that governs when a test run is considered 'proven' and 
 ")]
 public class TestifyProvenWhenTests
 {
-    [Doc(Order = $"{Chapter.Order}-50-1", Content =
+    [Doc(Order = $"{Chapter.Order}-1", Content =
 @"**Usage example:**
 ```csharp
 from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
@@ -37,7 +35,7 @@ from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
         new QState(run).Testify(1);
     }
 
-    [Doc(Order = $"{Chapter.Order}-50-2", Content =
+    [Doc(Order = $"{Chapter.Order}-2", Content =
 @"
 This would end the test run early once `container.Value` becomes `true`.
 ")]
@@ -53,7 +51,7 @@ This would end the test run early once `container.Value` becomes `true`.
         Assert.Equal(3, counter);
     }
 
-    [Doc(Order = $"{Chapter.Order}-50-3", Content =
+    [Doc(Order = $"{Chapter.Order}-3", Content =
 @"**Note:** This does not assert a property directly — use `Assay(...)` or `Analyze(...)` for that.
 `TestifyProvenWhen(...)` is about controlling *how long* a test runs based on dynamic conditions observed during execution.
 ")]

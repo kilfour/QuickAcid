@@ -8,7 +8,7 @@ using QuickMGenerate;
 
 namespace QuickAcid.TestsDeposition.Linqy.Combinators.Input;
 
-public static class Chapter { public const string Order = "1-2-5"; }
+public static class Chapter { public const string Order = CombinatorChapter.Order + "-50"; }
 
 [Doc(Order = $"{Chapter.Order}", Caption = "Input", Content =
 @"**Input(...)** ...

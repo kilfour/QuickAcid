@@ -142,49 +142,26 @@ Pronounced as : Cue State.
 Which is exactly what it is for. The Linq Run definition is a stateless function.  
 It defines the shape of computation and is fully self contained. But without state it is pretty much useless.
 In order to turn it into something real we can use QState.
-```csharp
-using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
-```
 
-Yes, you need both the Nuts and the Bolts.
 
+...
 
 ---
 
 ## QuickAcid Combinators
 
-Here will be some info about what a combinator is. Only the one for now ...
+Combinators are the heart of QuickAcid's LINQ-based property testing DSL.  
+Each one introduces a **step** in the test pipeline — a value, an action, a condition, or a check — and together they form the skeleton of your test logic.
+
+Most combinators follow a simple pattern: 
+they attach behavior to a named step (via `"name".Combinator(...)`) and compose naturally using LINQ syntax.
+
+While each combinator has its own lifecycle and semantics, they all share one goal:  
+to **express your intent declaratively** and let the QuickAcid engine take care of execution, shrinking, and reporting.
+
+The sections below describe these core building blocks.
 
 
-### What is a Runner?
-
-Runners are the core abstraction of QuickAcid's LINQ model. 
-They carry both the logic of the test and the mechanisms to generate input, track state, and produce a result.
-
-A runner is, more precisely, a function that takes a `QAcidState` and returns a `QAcidResult<T>`.
-It encapsulates both what to do and how to do it, with full access to the current test state.
-```csharp
-public delegate QAcidResult<T> QAcidRunner<T>(QAcidState state);
-```
-
-
-You can think of runners as the building blocks of a property-based test.
-
----
-
-### Input
-
-**Input(...)** ...
-
-
-**Usage example:**
-```csharp
-from input in "input".Input(() => MGen.Int())
-```
-
-
----
 
 ### Stashed
 
@@ -218,8 +195,6 @@ from flag in "flag".StashedValue(true)
 The key difference is that `Tracked(...) `also ensures this value is **always included in the final report**, providing visibility into contextual or setup state even when it wasn't directly responsible for the failure.
 
 
-#### WHERE
-
 **Usage example:**
 ```csharp
 from account in "account".Tracked(() => new Account(), a => a.Balance.ToString())
@@ -230,7 +205,7 @@ The second argument is a formatter function for rendering the value into the tes
 ##### TrackedValue
 
 
-Intended for flags, counters, and other small mutable state used during generation.  
+Similar to `StashedValue(...)`, but again, this one shows up in the report.
 
 **Example:**
 ```csharp
@@ -240,26 +215,15 @@ from flag in "flag".TrackedValue(true)
 
 ---
 
-### TestifyProvenWhen
+### Input
 
-**TestifyProvenWhen(...)**
-Ends the test run early once a specified condition is satisfied.
-This combinator is not a property specification itself,
-but a control structure that governs when a test run is considered 'proven' and can terminate before reaching the maximum number of executions. It's typically used in combination with `Stashed(...)` or other state-tracking steps that accumulate evidence across runs.
+**Input(...)** ...
 
 
 **Usage example:**
 ```csharp
-from seenTrue in "val is true".TestifyProvenWhen(() => container.Value)
+from input in "input".Input(() => MGen.Int())
 ```
-
-
-
-This would end the test run early once `container.Value` becomes `true`.
-
-
-**Note:** This does not assert a property directly — use `Assay(...)` or `Analyze(...)` for that.
-`TestifyProvenWhen(...)` is about controlling *how long* a test runs based on dynamic conditions observed during execution.
 
 
 ---
@@ -284,6 +248,30 @@ from container in "container".Stashed(() => new Container<List<int>>([]))
 from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
 ```
 
+
+
+---
+
+### TestifyProvenWhen
+
+**TestifyProvenWhen(...)**
+Ends the test run early once a specified condition is satisfied.
+This combinator is not a property specification itself,
+but a control structure that governs when a test run is considered 'proven' and can terminate before reaching the maximum number of executions. It's typically used in combination with `Stashed(...)` or other state-tracking steps that accumulate evidence across runs.
+
+
+**Usage example:**
+```csharp
+from seenTrue in "val is true".TestifyProvenWhen(() => container.Value)
+```
+
+
+
+This would end the test run early once `container.Value` becomes `true`.
+
+
+**Note:** This does not assert a property directly — use `Assay(...)` or `Analyze(...)` for that.
+`TestifyProvenWhen(...)` is about controlling *how long* a test runs based on dynamic conditions observed during execution.
 
 
 ---

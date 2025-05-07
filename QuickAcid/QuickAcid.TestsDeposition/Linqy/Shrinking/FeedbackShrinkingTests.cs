@@ -8,7 +8,7 @@ using QuickPulse;
 using QuickPulse.Diagnostics;
 using QuickPulse.Diagnostics.Sinks.FileWriters;
 
-namespace QuickAcid.TestsDeposition.Linqy;
+namespace QuickAcid.TestsDeposition.Linqy.Shrinking;
 
 public static class Chapter { public const string Order = "1-50-50"; }
 

@@ -9,7 +9,7 @@ using QuickPulse.Diagnostics.Sinks.FileWriters;
 
 namespace QuickAcid.TestsDeposition.Linqy.Combinators.Tracked;
 
-public static class Chapter { public const string Order = "1-2-11"; }
+public static class Chapter { public const string Order = CombinatorChapter.Order + "-20"; }
 
 [Doc(Order = $"{Chapter.Order}", Caption = "Tracked", Content =
 @"**Tracked(...)** behaves exactly like `Stashed(...)`: it defines a named value that is created once at the start of the test run and shared across all executions.
@@ -17,7 +17,7 @@ The key difference is that `Tracked(...) `also ensures this value is **always in
 ")]
 public class TrackedTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Caption = "WHERE", Content =
+    [Doc(Order = $"{Chapter.Order}-1", Content =
 @"**Usage example:**
 ```csharp
 from account in ""account"".Tracked(() => new Account(), a => a.Balance.ToString())
@@ -149,7 +149,7 @@ The second argument is a formatter function for rendering the value into the tes
 
     [Doc(Order = $"{Chapter.Order}-2-1", Caption = "TrackedValue", Content =
 @"
-Intended for flags, counters, and other small mutable state used during generation.  
+Similar to `StashedValue(...)`, but again, this one shows up in the report.
 
 **Example:**
 ```csharp
