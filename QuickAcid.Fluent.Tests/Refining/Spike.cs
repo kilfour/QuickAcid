@@ -19,7 +19,7 @@ public class Spike
     public void FluentRefining()
     {
         SystemSpecs.Define()
-            .AlwaysReported("Account", () => new Account(), a => a.Balance.ToString())
+            .Tracked("Account", () => new Account(), a => a.Balance.ToString())
             .Fuzzed("deposit", MGen.Int(0, 100))
             .Fuzzed("withdraw", MGen.Int(0, 100))
             .Options(opt =>

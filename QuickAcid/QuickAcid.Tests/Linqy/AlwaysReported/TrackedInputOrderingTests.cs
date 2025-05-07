@@ -2,9 +2,9 @@ using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickMGenerate;
 
-namespace QuickAcid.Tests.Linqy.AlwaysReported;
+namespace QuickAcid.Tests.Linqy.Tracked;
 
-public class AlwaysReportedInputOrderingTests
+public class TrackedInputOrderingTests
 {
     public class Container
     {
@@ -24,7 +24,7 @@ public class AlwaysReportedInputOrderingTests
     }
 
     [Fact]
-    public void AlwaysReportedInput_IndirectReferenceMethodForm_ShouldNotThrow()
+    public void TrackedInput_IndirectReferenceMethodForm_ShouldNotThrow()
     {
         var run =
             from container in "container".Tracked(() => new Container { Value = 21 })
@@ -44,7 +44,7 @@ public class AlwaysReportedInputOrderingTests
     }
 
     [Fact]
-    public void AlwaysReportedInput_IndirectReferenceInline_ShouldSucceed()
+    public void TrackedInput_IndirectReferenceInline_ShouldSucceed()
     {
         var run =
             from container in "container".Tracked(() => new Container { Value = 21 })

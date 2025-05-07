@@ -1,9 +1,9 @@
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 
-namespace QuickAcid.Tests.CodeGen.AlwaysReported
+namespace QuickAcid.Tests.CodeGen.Tracked
 {
-    public class AlwaysReportedTests
+    public class TrackedTests
     {
         [Fact]
         public void CodeGen_always_reported_default()

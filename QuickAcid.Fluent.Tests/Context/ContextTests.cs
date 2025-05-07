@@ -24,12 +24,12 @@ public class ContextTests
     }
 
     [Fact]
-    public void Context_allows_for_access_to_AlwaysReportedInput()
+    public void Context_allows_for_access_to_TrackedInput()
     {
         var theAnswer = 0;
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.Universe, () => new Container() { ItsOnlyAModel = 42 })
+                .Tracked(Keys.Universe, () => new Container() { ItsOnlyAModel = 42 })
                 .As("Answering the Question").UseThe(Keys.Universe)
                     .Now(universe => theAnswer = universe.ItsOnlyAModel)
                 .DumpItInAcid()

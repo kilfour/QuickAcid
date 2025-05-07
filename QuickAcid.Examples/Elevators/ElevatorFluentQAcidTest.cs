@@ -25,7 +25,7 @@ public class ElevatorFluentQAcidTest
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.Elevator, () => new Elevator())
+                .Tracked(Keys.Elevator, () => new Elevator())
                 .Capture(Keys.PreviousFloor, ctx => ctx.Elevator().CurrentFloor)
                 .Options(opt => [
                     opt.As("MoveUp").UseThe(Keys.Elevator).Now(e => e.MoveUp())

@@ -2,9 +2,9 @@ using QuickAcid.Fluent;
 using QuickAcid.Reporting;
 
 
-namespace QuickAcid.Tests.Fluent.AlwaysReportedInput;
+namespace QuickAcid.Tests.Fluent.TrackedInput;
 
-public class AlwaysReportedInputTests
+public class TrackedInputTests
 {
     public static class Keys
     {
@@ -26,12 +26,12 @@ public class AlwaysReportedInputTests
     }
 
     [Fact]
-    public void AlwaysReportedInput_should_exist_in_per_action_report()
+    public void TrackedInput_should_exist_in_per_action_report()
     {
         var report =
             SystemSpecs
                 .Define()
-                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Tracked(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .Do("throw", _ => throw new Exception())
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
@@ -43,13 +43,13 @@ public class AlwaysReportedInputTests
     }
 
     [Fact]
-    public void AlwaysReportedInput_can_use_context_when_registering()
+    public void TrackedInput_can_use_context_when_registering()
     {
         var container = new Container();
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheAnswer, () => 42)
-                .AlwaysReported(Keys.Universe, ctx => { container.ItsOnlyAModel = ctx.Get(Keys.TheAnswer); return container; })
+                .Tracked(Keys.TheAnswer, () => 42)
+                .Tracked(Keys.Universe, ctx => { container.ItsOnlyAModel = ctx.Get(Keys.TheAnswer); return container; })
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);
         Assert.Null(report);
@@ -57,12 +57,12 @@ public class AlwaysReportedInputTests
     }
 
     [Fact]
-    public void AlwaysReportedInput_can_be_stringified()
+    public void TrackedInput_can_be_stringified()
     {
         var container = new Container();
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheAnswer, () => 42, a => "it is " + a)
+                .Tracked(Keys.TheAnswer, () => 42, a => "it is " + a)
                 .Do("throw", _ => throw new Exception())
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

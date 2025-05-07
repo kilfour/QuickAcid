@@ -19,16 +19,16 @@ namespace QuickAcid.CodeGen
 
         private static string Lowered(string a) => char.ToLowerInvariant(a[0]) + a[1..];
 
-        private static string GetAlwaysReportedInputsCode(string key)
+        private static string GetTrackedInputsCode(string key)
         {
             return $"    var {Lowered(key)} = new {key}();";
         }
 
-        private static string? GetAlwaysReportedInputsCodes(QAcidState state)
+        private static string? GetTrackedInputsCodes(QAcidState state)
         {
             var lines =
                 state.Memory.GetAllTrackedKeys()
-                .Select(GetAlwaysReportedInputsCode);
+                .Select(GetTrackedInputsCode);
 
             return string.Join(Environment.NewLine, lines);
         }
@@ -87,7 +87,7 @@ namespace QuickAcid.CodeGen
             sb.AppendLine("[Fact]");
             sb.AppendLine(GetFunctionDeclaration(state));
             sb.AppendLine("{");
-            sb.AppendLine(GetAlwaysReportedInputsCodes(state));
+            sb.AppendLine(GetTrackedInputsCodes(state));
             sb.Append(GetExecutionsCode(state));
             sb.AppendLine(GetAssertionCode(state));
             sb.AppendLine("}");

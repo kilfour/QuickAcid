@@ -12,8 +12,8 @@ public class AssayTests
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported("die", () => MGen.Int(1, 3))
-                .AlwaysReported("observer", () => new HashSet<int>())
+                .Tracked("die", () => MGen.Int(1, 3))
+                .Tracked("observer", () => new HashSet<int>())
                 .Do("roll",
                     c =>
                         c.GetItAtYourOwnRisk<HashSet<int>>("observer")

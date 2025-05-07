@@ -71,7 +71,7 @@ public class ExpectTests
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheAnswer, _ => 42)
+                .Tracked(Keys.TheAnswer, _ => 42)
                 .Expect("should be true")
                     .Ensure(ctx => ctx.Get(Keys.TheAnswer) == 42)
                 .DumpItInAcid()
@@ -84,7 +84,7 @@ public class ExpectTests
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheAnswer, _ => 42)
+                .Tracked(Keys.TheAnswer, _ => 42)
                 .Expect("should be true")
                     .UseThe(Keys.TheAnswer)
                     .Ensure(a => a == 42)
@@ -98,7 +98,7 @@ public class ExpectTests
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheAnswer, _ => 42)
+                .Tracked(Keys.TheAnswer, _ => 42)
                 .Do("stuff", () => { })
                 .Expect("should be true")
                     .UseThe(Keys.TheAnswer)
@@ -117,7 +117,7 @@ public class ExpectTests
     // {
     //     var report =
     //         SystemSpecs.Define()
-    //             .AlwaysReportedInput(Keys.TheAnswer, _ => 42)
+    //             .TrackedInput(Keys.TheAnswer, _ => 42)
     //             .Expect("should be true")
     //                 .Ensure(a => a == 42)
     //             .DumpItInAcid()

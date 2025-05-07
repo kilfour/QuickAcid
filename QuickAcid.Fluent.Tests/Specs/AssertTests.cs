@@ -70,7 +70,7 @@ public class AssertTests
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(K.TheAnswer, _ => 42)
+                .Tracked(K.TheAnswer, _ => 42)
                 .Assert("should be true", ctx => ctx.Get(K.TheAnswer) == 42)
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

@@ -49,8 +49,8 @@ public class Test
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(K.TheDie, () => new LoadedDie())
-                .AlwaysReported(K.TheObserver, () => new HashSet<int>())
+                .Tracked(K.TheDie, () => new LoadedDie())
+                .Tracked(K.TheObserver, () => new HashSet<int>())
                 .Do("Roll", c => c.Get(K.TheObserver).Add(c.Get(K.TheDie).Roll()))
                 .Assay("Die rolls 1", c => c.Get(K.TheObserver).Contains(1))
                 .Assay("Die rolls 2", c => c.Get(K.TheObserver).Contains(2))

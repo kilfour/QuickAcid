@@ -26,7 +26,7 @@ public class SetTest
 	{
 		var report =
 			SystemSpecs.Define()
-				.AlwaysReported(K.Set, () => new List<int>())
+				.Tracked(K.Set, () => new List<int>())
 				.Fuzzed(K.IntToAdd, MGen.Int(1, 10))
 				.Fuzzed(K.IntToRemove, MGen.Int(1, 10))
 				.Options(opt => [
@@ -50,7 +50,7 @@ public class SetTest
 	{
 		var report =
 			SystemSpecs.Define()
-				.AlwaysReported(K.Set, () => new List<int>())
+				.Tracked(K.Set, () => new List<int>())
 				.Fuzzed(K.IntToAdd, MGen.Int(0, 10))
 				.Fuzzed(K.IntToRemove, MGen.Int(0, 10))
 				.Options(opt => [

@@ -50,7 +50,7 @@ public class Test
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported("Counter(a.k.a. the Model)", () => new Counter())
+                .Tracked("Counter(a.k.a. the Model)", () => new Counter())
                 .Options(opt => [
                     opt.Do("Increment", c => c.Get(K.Counter).Increment()),
                     opt.Do("Decrement", c => c.Get(K.Counter).Decrement())

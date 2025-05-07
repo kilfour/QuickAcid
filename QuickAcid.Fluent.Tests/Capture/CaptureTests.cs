@@ -1,6 +1,6 @@
 using QuickAcid.Fluent;
 
-namespace QuickAcid.Tests.Fluent.AlwaysReportedInput;
+namespace QuickAcid.Tests.Fluent.TrackedInput;
 
 public class CaptureTests
 {
@@ -29,7 +29,7 @@ public class CaptureTests
         var report =
             SystemSpecs
                 .Define()
-                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Tracked(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .Capture(Keys.Property, ctx => ctx.Get(Keys.Container).ItsOnlyAModel)
                 .Do("increment", ctx => { ctx.Get(Keys.Container).ItsOnlyAModel++; })
                 .Do("report", ctx =>
@@ -52,7 +52,7 @@ public class CaptureTests
         var report =
             SystemSpecs
                 .Define()
-                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Tracked(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .Capture("before", ctx => ctx.Get(Keys.Container).ItsOnlyAModel)
                 .Do("increment", ctx => { ctx.Get(Keys.Container).ItsOnlyAModel++; })
                 .Capture("after", ctx => ctx.Get(Keys.Container).ItsOnlyAModel)
@@ -74,7 +74,7 @@ public class CaptureTests
         var report =
             SystemSpecs
                 .Define()
-                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Tracked(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .Capture(Keys.Property, ctx => ctx.Get(Keys.Container).ItsOnlyAModel)
                 .Do("increment", ctx => { throw new Exception(); })
                 .DumpItInAcid()
@@ -89,7 +89,7 @@ public class CaptureTests
         var report =
             SystemSpecs
                 .Define()
-                .AlwaysReported(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+                .Tracked(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
                 .Capture(Keys.Property, ctx => ctx.Get(Keys.Container).ItsOnlyAModel)
                 .Do("increment", ctx => { throw new Exception(); })
                 .DumpItInAcid()

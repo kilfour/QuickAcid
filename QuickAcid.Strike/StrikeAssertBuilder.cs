@@ -40,13 +40,13 @@ public class StrikeAssertBuilder<TModel>
     private Bob CallBob()
     {
         if (stringify == null)
-            return SystemSpecs.Define().AlwaysReported("Model", modelFactory);
-        return SystemSpecs.Define().AlwaysReported("Model", modelFactory, stringify);
+            return SystemSpecs.Define().Tracked("Model", modelFactory);
+        return SystemSpecs.Define().Tracked("Model", modelFactory, stringify);
     }
 
     public void Run(int scopes, int executionsPerScope)
     {
-        var systemSpecs = CallBob(); // --> defines AlwaysReported once
+        var systemSpecs = CallBob(); // --> defines Tracked once
 
         systemSpecs = systemSpecs.Options(opt =>
             operations.Select(op =>

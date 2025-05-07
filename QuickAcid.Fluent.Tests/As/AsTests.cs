@@ -61,7 +61,7 @@ public class AsTests
         var flag = false;
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheBool, () => true)
+                .Tracked(Keys.TheBool, () => true)
                 .As("flag it").Now(ctx => flag = ctx.Get(Keys.TheBool))
                 .DumpItInAcid()
                 .AndCheckForGold(1, 1);

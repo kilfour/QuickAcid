@@ -44,7 +44,7 @@ public class ExpectOnlyWhenTests
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheAnswer, _ => 42)
+                .Tracked(Keys.TheAnswer, _ => 42)
                     .Expect("should be true")
                     .OnlyWhen(ctx => ctx.Get(Keys.TheAnswer) == 42)
                     .Ensure(a => false)
@@ -58,7 +58,7 @@ public class ExpectOnlyWhenTests
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheAnswer, _ => 42)
+                .Tracked(Keys.TheAnswer, _ => 42)
                     .Expect("should be true", Keys.TheAnswer)
                     .OnlyWhen(a => a == 42)
                     .Ensure(a => false)
@@ -72,7 +72,7 @@ public class ExpectOnlyWhenTests
     {
         var report =
             SystemSpecs.Define()
-                .AlwaysReported(Keys.TheAnswer, _ => 42)
+                .Tracked(Keys.TheAnswer, _ => 42)
                 .Expect("should be true")
                     .UseThe(Keys.TheAnswer)
                     .OnlyWhen(a => a == 42)

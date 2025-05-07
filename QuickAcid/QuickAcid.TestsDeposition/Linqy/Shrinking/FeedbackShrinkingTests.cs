@@ -60,7 +60,7 @@ public class FeedbackShrinkingTests
         var pulser =
             from diagnosis in Pulse.From<DiagnosticInfo>()
             where diagnosis.Tags.Any(a =>
-                a == "AlwaysReportedInputMemory" ||
+                a == "TrackedInputMemory" ||
                 a == "Phase")
             from firstTag in Pulse.Shape(() => $"{diagnosis.Tags.First()}:")
             from indent in Pulse.Shape(() => new string(' ', diagnosis.PhaseLevel * 4))

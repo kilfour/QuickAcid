@@ -5,12 +5,12 @@ using QuickMGenerate;
 namespace QuickAcid.TheFortyNiners.Tests.Bugs;
 
 
-public class AlwaysReported_Issue_When_Shrinking_Inputs
+public class Tracked_Issue_When_Shrinking_Inputs
 {
     public class Container { public int Value; }
 
     [Fact]
-    public void AlwaysReported_input_should_not_get_polluted_by_shrinking_STRIKE()
+    public void Tracked_input_should_not_get_polluted_by_shrinking_STRIKE()
     {
         var ex = Assert.Throws<FalsifiableException>(() =>
             Test.This(() => new Container { Value = 21 }, a => a.Value.ToString())
