@@ -173,31 +173,45 @@ You can think of runners as the building blocks of a property-based test.
 
 ---
 
-### Tracked
-
-**Tracked(...)** behaves exactly like `Stashed(...)`: it defines a named value that is created once at the start of the test run and shared across all executions.
-The key difference is that `Tracked(...) `also ensures this value is **always included in the final report**, 
-providing visibility into contextual or setup state even when it wasn't directly responsible for the failure.
-
-
----
-
 ### Stashed
 
-**Stashed(...)** lorum ipsum
-
-
-**Usage example:**
-```csharp
-from account in "account".Tracked(() => new Account(), a => a.Balance.ToString())
-```
-The second argument is a formatter function for rendering the value into the test report.
+**Stashed(...)** creates a value once at the start of the test run and reuses it across all executions.  
+This is typically where you'd stash your **system under test (SUT)** — a service, container, or domain object whose behavior you're exploring.  
+Unlike `Shrinkable(...)`, stashed values are fixed for the entire run and never shrink, making them ideal for holding mutable state or orchestrating effects across inputs.
 
 
 **Usage example:**
 ```csharp
 from account in "account".Stashed(() => new Account())
 ```
+
+
+##### StashedValue
+
+Stashes a primitive or scalar value without requiring a wrapper object.
+Intended for flags, counters, and other small mutable state used during generation.  
+
+**Example:**
+```csharp
+from flag in "flag".StashedValue(true)
+```
+
+
+---
+
+### Tracked
+
+**Tracked(...)** behaves exactly like `Stashed(...)`: it defines a named value that is created once at the start of the test run and shared across all executions.
+The key difference is that `Tracked(...) `also ensures this value is **always included in the final report**, providing visibility into contextual or setup state even when it wasn't directly responsible for the failure.
+
+
+#### WHERE
+
+**Usage example:**
+```csharp
+from account in "account".Tracked(() => new Account(), a => a.Balance.ToString())
+```
+The second argument is a formatter function for rendering the value into the test report.
 
 
 ##### TrackedValue
@@ -208,19 +222,6 @@ Intended for flags, counters, and other small mutable state used during generati
 **Example:**
 ```csharp
 from flag in "flag".TrackedValue(true)
-```
-
-
----
-
-##### StashedValue
-
-Stashes a primitive or scalar value without requiring a wrapper object.
-Intended for flags, counters, and other small mutable state used during generation.  
-
-**Example:**
-```csharp
-from flag in "flag".StashedValue(true)
 ```
 
 

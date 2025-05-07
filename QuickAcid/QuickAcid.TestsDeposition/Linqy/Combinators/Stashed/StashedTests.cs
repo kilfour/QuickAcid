@@ -9,7 +9,9 @@ namespace QuickAcid.TestsDeposition.Linqy.Combinators.Stashed;
 public static class Chapter { public const string Order = "1-2-10"; }
 
 [Doc(Order = $"{Chapter.Order}", Caption = "Stashed", Content =
-@"**Stashed(...)** lorum ipsum
+@"**Stashed(...)** creates a value once at the start of the test run and reuses it across all executions.  
+This is typically where you'd stash your **system under test (SUT)** — a service, container, or domain object whose behavior you're exploring.  
+Unlike `Shrinkable(...)`, stashed values are fixed for the entire run and never shrink, making them ideal for holding mutable state or orchestrating effects across inputs.
 ")]
 public class StashedTests
 {

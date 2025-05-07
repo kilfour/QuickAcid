@@ -5,7 +5,7 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcidCombinators
 {
-	private static QAcidRunner<Acid> InnerSpec(this string key, Func<bool> condition, bool allowShrinking = true) =>
+	private static QAcidRunner<Acid> InnerSpec(this string key, Func<bool> condition) =>
 		state =>
 			{
 				if (ShouldSkipSpec(key, state))
@@ -13,7 +13,6 @@ public static partial class QAcidCombinators
 				bool passed = condition();
 				if (!passed)
 				{
-					//state.AllowShrinking = allowShrinking;
 					state.CurrentContext.MarkFailure(key);
 				}
 				return QAcidResult.AcidOnly(state);
