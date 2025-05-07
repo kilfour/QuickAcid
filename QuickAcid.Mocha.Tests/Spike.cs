@@ -12,8 +12,6 @@ public class Spike
     public void AcidTest()
     {
         var path = SolutionLocator.FindSolutionRoot() + "\\QuickAcid.Mocha.Tests";
-        var engine = new Engine(opts => { opts.EnableModules(path); });
-        var accountModule = engine.Modules.Import("./account.js");
         var module = From.Path(path).AndFile("./account.js");
         var run =
             from account in "Account".Tracked(
@@ -32,7 +30,7 @@ public class Spike
             from spec in "No_Overdraft: account.Balance >= 0".Spec(
                 () => account.Call("getBalance").AsNumber() >= 0)
             select Acid.Test;
-        0.Times(() => new QState(run).Testify(20));
+        10.Times(() => new QState(run).Testify(20));
     }
 
     [Fact]

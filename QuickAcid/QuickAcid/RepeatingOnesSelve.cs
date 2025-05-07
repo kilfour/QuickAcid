@@ -12,11 +12,11 @@ public static class RepeatingOnesSelve
 
     public static T Times<T>(this int numberOfTimes, Func<T> func)
     {
-        T lastValue = default(T);
+        T lastValue = default!;
         if (numberOfTimes < 0)
-            return lastValue;
+            return lastValue!;
         for (int i = 0; i < numberOfTimes; i++)
             lastValue = func();
-        return lastValue;
+        return lastValue!;
     }
 }
