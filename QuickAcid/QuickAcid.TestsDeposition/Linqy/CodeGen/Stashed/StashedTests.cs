@@ -1,26 +1,27 @@
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
+using QuickAcid.TestsDeposition._Tools;
 
-namespace QuickAcid.TestsDeposition.Linqy.CodeGen.AlwaysReported;
+namespace QuickAcid.TestsDeposition.Linqy.CodeGen.Stashed;
 
-public class TrackedTests
+public class StashedTests
 {
     [Fact]
-    public void CodeGen_always_reported_default()
+    public void CodeGen_stashed_default()
     {
         var run =
-            from _ in "MyObject".Tracked(() => new object())
+            from _ in "MyObject".Stashed(() => new object())
             select Acid.Test;
         var reader = Reader.FromRun(run);
         Assert.Equal("var myObject = new MyObject();", reader.NextLine());
     }
 
     [Fact]
-    public void CodeGen_two_always_reported_default()
+    public void CodeGen_two_stashed_default()
     {
         var run =
-            from _ in "MyObject".Tracked(() => new object())
-            from __ in "MyOtherObject".Tracked(() => new object())
+            from _ in "MyObject".Stashed(() => new object())
+            from __ in "MyOtherObject".Stashed(() => new object())
             select Acid.Test;
         var reader = Reader.FromRun(run);
         Assert.Equal("var myObject = new MyObject();", reader.NextLine());

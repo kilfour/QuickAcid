@@ -5,6 +5,7 @@ public class LinesReader
 {
     private string[] lines;
     private int currentIndex = -1;
+    private bool trimLines = false;
 
     private LinesReader(string text) : this(text.Split(Environment.NewLine)) { }
 
@@ -31,7 +32,15 @@ public class LinesReader
         if (currentIndex > lines.Count() - 1) return "-- READ BEYOND THE TEXT --";
         var result = lines[currentIndex];
         currentIndex++;
+        if (trimLines)
+            return result.Trim();
         return result;
+    }
+
+    public LinesReader TrimLines()
+    {
+        trimLines = true;
+        return this;
     }
 
     public LinesReader Skip()

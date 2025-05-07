@@ -77,14 +77,18 @@ public class CodeGenChapter
         var code = new QState(run).GenerateCode().Observe(50).Code;
 
         var reader = LinesReader.FromText(code);
-        Assert.Equal("[Fact]", reader.NextLine());
-        Assert.Equal("public void No_Overdraft()", reader.NextLine());
-        Assert.Equal("{", reader.NextLine());
-        Assert.Equal("    var account = new Account();", reader.NextLine());
-        Assert.Equal("    account.Withdraw(42);", reader.NextLine());
-        Assert.Equal("    Assert.True(account.Balance >= 0);", reader.NextLine());
-        Assert.Equal("}", reader.NextLine());
+        Assert.Equal("namespace Refined.By.QuickAcid;", reader.NextLine());
         Assert.Equal("", reader.NextLine());
+        Assert.Equal("public class UnitTests", reader.NextLine());
+        Assert.Equal("{", reader.NextLine());
+        Assert.Equal("    [Fact]", reader.NextLine());
+        Assert.Equal("    public void No_Overdraft()", reader.NextLine());
+        Assert.Equal("    {", reader.NextLine());
+        Assert.Equal("        var account = new Account();", reader.NextLine());
+        Assert.Equal("        account.Withdraw(42);", reader.NextLine());
+        Assert.Equal("        Assert.True(account.Balance >= 0);", reader.NextLine());
+        Assert.Equal("    }", reader.NextLine());
+        Assert.Equal("}", reader.NextLine());
         Assert.True(reader.EndOfCode());
     }
 }
