@@ -217,7 +217,13 @@ from flag in "flag".TrackedValue(true)
 
 ### Input
 
-**Input(...)** ...
+**Input(...)** introduces a fuzzed value that will be regenerated for every execution and shrunk when a failure occurs.  
+It represents the core mechanism for exploring input space in property-based tests.  
+Use it when you want a variable value that's subject to shrinking and included in the final report upon failure.
+
+This is the most common kind of test input — think of it as the default for fuzzable values.
+
+**Note:** If an input is not involved in a failing execution, it will not appear in the report.
 
 
 **Usage example:**

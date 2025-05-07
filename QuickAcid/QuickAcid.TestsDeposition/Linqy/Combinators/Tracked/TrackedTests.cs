@@ -48,7 +48,6 @@ The second argument is a formatter function for rendering the value into the tes
 
         var report = new QState(run).ObserveOnce();
         Assert.NotNull(report);
-        new WriteDataToFile().ClearLog().Log(report.ToString());
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
         Assert.Equal("21", entry.Value);
