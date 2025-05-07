@@ -1,3 +1,8 @@
+# QuickAcid
+
+Introductionary bla di bla goes here.
+
+
 ## QuickAcid Linq 101
 
 First of all, you need to import some namespaces if you want to use the Linq interface.  
@@ -166,6 +171,9 @@ The sections below describe these core building blocks.
 ---
 
 ## QuickAcid CodeGen
+
+Show how to activate and retrieve the code and write it to file.
+
 
 ### Stashed
 
@@ -382,5 +390,6 @@ Outputs something similar to:
   Spec Failed : spec
  *******************
  ```
+
 
 

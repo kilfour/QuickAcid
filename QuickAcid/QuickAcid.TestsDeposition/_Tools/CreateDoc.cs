@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using QuickPulse.Diagnostics.Sinks.FileWriters;
 
 namespace QuickAcid.TestsDeposition._Tools;
 
@@ -65,10 +66,7 @@ public class CreateDoc
                 sb.AppendLine();
             }
         }
-
-
-        using (var writer = new StreamWriter("../../../../../tempdoc.md", false))
-            writer.Write(sb.ToString());
+        new WriteDataToFile("/QuickAcid/README.md").ClearFile().Monitor(sb.ToString());
     }
 
     public class LexicalFloatArrayComparer : IComparer<float[]>
