@@ -9,7 +9,7 @@ Move To QAcid.GetPulse
 QuickAcid.Examples.SetTest
 --- slide ---
 ## Code Gen  
-lots to do here
+lots to do here, getting somewhere
 --- slide ---
 ## check stringifies
 --- slide ---
