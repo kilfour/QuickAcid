@@ -1,8 +1,6 @@
-using System.Reflection;
 using QuickAcid.Examples.BroadcasterExample.SimpleModel;
 
 namespace QuickAcid.Examples.BroadcasterExample;
-
 
 public class UnitTests
 {

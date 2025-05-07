@@ -1,64 +1,62 @@
-namespace QuickAcid.Examples.BroadcasterExample.SimpleModel
+
+namespace QuickAcid.Examples.BroadcasterExample.SimpleModel;
+
+public class Broadcaster
 {
-    public class Broadcaster
+    private readonly Lock theDoor = new();
+    private List<IClientProxy> clients;
+    private readonly IClientProxyFactory clientProxyFactory;
+
+    public Broadcaster(IClientProxyFactory clientProxyFactory)
     {
-        private readonly object monitor = new object();
+        this.clientProxyFactory = clientProxyFactory;
+        clients = new List<IClientProxy>();
+    }
 
-        private List<IClientProxy> clients;
+    public virtual void Register()
+    {
+        var client = clientProxyFactory.CreateClientProxyForCurrentContext("anUrl");
+        client.Faulted += Client_Faulted!;
+        AddClientToRegisteredClients(client);
+    }
 
-        private readonly IClientProxyFactory clientProxyFactory;
-
-        public Broadcaster(IClientProxyFactory clientProxyFactory)
+    private void AddClientToRegisteredClients(IClientProxy client)
+    {
+        lock (theDoor)
         {
-            this.clientProxyFactory = clientProxyFactory;
-            clients = new List<IClientProxy>();
+            // The 'dead' code on the next line is the correct implementation
+            clients = new List<IClientProxy>(clients) { client };
+
+            //clients.Add(client);
         }
+    }
 
-        public virtual void Register()
+    public virtual void Broadcast(Notification notification)
+    {
+        foreach (var client in clients)
         {
-            var client = clientProxyFactory.CreateClientProxyForCurrentContext("anUrl");
-            client.Faulted += Client_Faulted!;
-            AddClientToRegisteredClients(client);
+            client.SendNotificationAsynchronously(notification);
         }
+    }
 
-        private void AddClientToRegisteredClients(IClientProxy client)
+    private void Client_Faulted(object sender, EventArgs e)
+    {
+        var client = (IClientProxy)sender;
+        client.Faulted -= Client_Faulted!;
+        RemoveClientFromRegisteredClients(client);
+    }
+
+    private void RemoveClientFromRegisteredClients(IClientProxy client)
+    {
+        lock (theDoor)
         {
-            lock (monitor)
-            {
-                // The 'dead' code on the next line is the correct implementation
-                // clients = new List<IClientProxy>(clients) { client };
+            var clientList = new List<IClientProxy>(clients);
+            clientList.Remove(client);
+            clients = clientList;
 
-                clients.Add(client);
-            }
-        }
-
-        public virtual void Broadcast(Notification notification)
-        {
-            foreach (var client in clients)
-            {
-                client.SendNotificationAsynchronously(notification);
-            }
-        }
-
-        private void Client_Faulted(object sender, EventArgs e)
-        {
-            var client = (IClientProxy)sender;
-            client.Faulted -= Client_Faulted!;
-            RemoveClientFromRegisteredClients(client);
-        }
-
-        private void RemoveClientFromRegisteredClients(IClientProxy client)
-        {
-            lock (monitor)
-            {
-                var clientList = new List<IClientProxy>(clients);
-                clientList.Remove(client);
-                clients = clientList;
-
-                // using the code below :
-                //clients.Remove(client);
-                // instead of the implementation above will result in a bug
-            }
+            // using the code below :
+            //clients.Remove(client);
+            // instead of the implementation above will result in a bug
         }
     }
 }
