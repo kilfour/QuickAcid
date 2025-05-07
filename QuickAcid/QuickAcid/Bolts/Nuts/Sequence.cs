@@ -1,6 +1,6 @@
 ﻿namespace QuickAcid.Bolts.Nuts;
 
-public static partial class QAcid
+public static partial class QAcidCombinators
 {
     public static QAcidRunner<T> Sequence<T>(this string key, params QAcidRunner<T>[] runners)
     {

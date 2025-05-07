@@ -66,7 +66,7 @@ public class FeedbackShrinkingTests
             from indent in Pulse.Shape(() => new string(' ', diagnosis.PhaseLevel * 4))
             from log in Sink.To(() => writer.Log($"{indent}{firstTag}{diagnosis.Message}"))
             select diagnosis;
-        PulseContext.Current = pulser.ToPulse();
+        //PulseContext.Current = pulser.ToPulse();
         //new WriteDataToFile().ClearLog().Log(new QDiagnosticState(shrinkingRun).WithFeedback().ShrinkToCode(info!));
 
         report = new QDiagnosticState(shrinkingRun).WithFeedback().Shrink(info!).GetReport();

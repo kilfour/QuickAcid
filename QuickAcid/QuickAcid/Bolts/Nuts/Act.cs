@@ -1,6 +1,6 @@
 ﻿namespace QuickAcid.Bolts.Nuts;
 
-public static partial class QAcid
+public static partial class QAcidCombinators
 {
 	private static QAcidRunner<TOutput> TryCatch<TOutput>(string key, Func<TOutput> func)
 	=> state =>

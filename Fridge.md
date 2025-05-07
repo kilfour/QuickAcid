@@ -1,5 +1,9 @@
 ## FeedBack Shrinking 
 Check always reported input on Start run  
+(Only Missing On QDiagniosticState ?)
+## QAcidState.GetPulse
+Move To QAcid.GetPulse 
+(Maybe old QAcid => QAcidCombinators)
 ## Check Project Migration
 QuickAcid.Examples.SetTest
 ## AutoDoc  
