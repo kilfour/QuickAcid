@@ -1,4 +1,5 @@
-﻿using QuickAcid.Reporting;
+﻿using QuickAcid.Bolts;
+using QuickAcid.Reporting;
 
 namespace QuickAcid;
 
@@ -20,12 +21,6 @@ public class QState
     public QState Verbose()
     {
         state.Verbose = true;
-        return this;
-    }
-
-    public QState GenerateCode()
-    {
-        state.GenerateCode = true;
         return this;
     }
 

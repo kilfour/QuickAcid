@@ -1,4 +1,4 @@
-using QuickAcid.CodeGen;
+using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 
 namespace QuickAcid.Fluent.Bolts;
@@ -40,22 +40,5 @@ public class Wendy
             var state = new QAcidState(runner) { Verbose = verbose };
             state.Testify(executionsPerScope);
         }
-    }
-
-    public string ToCodeIfFailed(int scopes, int executionsPerScope)
-    {
-        for (int i = 0; i < scopes; i++)
-        {
-            var state = new QAcidState(runner) { Verbose = verbose };
-            state.Testify(executionsPerScope);
-            if (state.CurrentContext.Failed)
-                return Prospector.Pan(state); ;
-        }
-        return null!;
-    }
-
-    public void AndRunTheWohlwillProcess(int scopes, int executionsPerScope)
-    {
-        runner.TheWohlwillProcess(scopes, executionsPerScope);
     }
 }

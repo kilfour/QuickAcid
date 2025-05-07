@@ -1,7 +1,4 @@
-﻿using QuickAcid.CodeGen;
-using QuickMGenerate.UnderTheHood;
-
-namespace QuickAcid.Bolts.Nuts;
+﻿namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcidCombinators
 {

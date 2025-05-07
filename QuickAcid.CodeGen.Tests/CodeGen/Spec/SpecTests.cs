@@ -26,7 +26,7 @@ public class SpecTests
     public void CodeGen_spec_function_name()
     {
         var run = from _ in "TheSpec".Spec(() => false) select Acid.Test;
-        var code = new QState(run).GenerateCode().ObserveOnce().Code;
+        var code = new QCodeState(run).GenerateCode();
         var reader = LinesReader.FromText(code);
         reader.Skip(5);
         Assert.Equal("public void TheSpec()", reader.NextLine().Trim());
@@ -36,7 +36,7 @@ public class SpecTests
     public void CodeGen_spec_function_name_colon_seperator()
     {
         var run = from _ in "TheSpec: ignore me".Spec(() => false) select Acid.Test;
-        var code = new QState(run).GenerateCode().ObserveOnce().Code;
+        var code = new QCodeState(run).GenerateCode();
         var reader = LinesReader.FromText(code);
         reader.Skip(5);
         Assert.Equal("public void TheSpec()", reader.NextLine().Trim());

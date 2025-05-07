@@ -1,5 +1,4 @@
 using QuickMGenerate;
-using QuickAcid.CodeGen;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
 
@@ -31,6 +30,6 @@ public class Spike
             from _s2 in "Balance Has Maximum: account.Balance <= 100".Spec(() => account.Balance <= 100)
             select Acid.Test;
 
-        run.TheWohlwillProcess(20, 20);
+        //run.TheWohlwillProcess(20, 20);
     }
 }

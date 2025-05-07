@@ -74,7 +74,7 @@ public class CodeGenChapter
             from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
             select Acid.Test;
 
-        var code = new QState(run).GenerateCode().Observe(50).Code;
+        var code = new QCodeState(run).GenerateCode(50);
 
         var reader = LinesReader.FromText(code);
         Assert.Equal("namespace Refined.By.QuickAcid;", reader.NextLine());

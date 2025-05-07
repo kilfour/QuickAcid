@@ -1,7 +1,4 @@
 using QuickMGenerate;
-using QuickAcid.CodeGen;
-using QuickAcid.Bolts.Nuts;
-using QuickAcid.Bolts;
 using QuickAcid.Fluent;
 
 namespace QuickAcid.Tests.Refining;
@@ -28,8 +25,8 @@ public class Spike
                 ])
             .Assert("No Overdraft: account.Balance >= 0", c => c.Account().Balance >= 0)
             .Assert("Balance Has Maximum: account.Balance <= 100", c => c.Account().Balance <= 100)
-            .DumpItInAcid()
-            .AndRunTheWohlwillProcess(50, 20);
+            .DumpItInAcid();
+        //.AndRunTheWohlwillProcess(50, 20);
     }
 }
 

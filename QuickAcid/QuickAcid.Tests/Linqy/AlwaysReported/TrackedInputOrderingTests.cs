@@ -39,7 +39,7 @@ public class TrackedInputOrderingTests
     private static QAcidRunner<Acid> Boom(Dependent dependent)
     {
         return
-            from _ in "spec".Spec(() => dependent.NullList.Count == 0)
+            from _ in "spec".Spec(() => dependent?.NullList?.Count == 0)
             select Acid.Test;
     }
 
