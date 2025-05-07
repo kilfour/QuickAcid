@@ -168,13 +168,6 @@ The sections below describe these core building blocks.
 
 
 
----
-
-## QuickAcid CodeGen
-
-Show how to activate and retrieve the code and write it to file.
-
-
 ### Stashed
 
 **Stashed(...)** creates a value once at the start of the test run and reuses it across all executions.  
@@ -297,6 +290,13 @@ This would end the test run early once `container.Value` becomes `true`.
 ### Feedback Shrinking
 
 A.k.a.: What if it fails but the run does not contain the minimal fail case ? 
+
+
+---
+
+## QuickAcid CodeGen
+
+Show how to activate and retrieve the code and write it to file.
 
 
 ---

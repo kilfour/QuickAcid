@@ -7,5 +7,5 @@ namespace QuickAcid.TestsDeposition.Linqy.CodeGen;
 ")]
 public class CodeGenChapter
 {
-    public const string Order = "1-30";
+    public const string Order = "1-90";
 }
