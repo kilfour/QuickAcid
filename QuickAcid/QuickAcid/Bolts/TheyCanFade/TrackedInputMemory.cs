@@ -46,7 +46,7 @@ public class TrackedInputMemory
         reportPerExecution.Clear();
     }
 
-    public void AddToReport(QAcidReport report, int executionId)
+    public void AddToReport(Report report, int executionId)
     {
         if (reportPerExecution.TryGetValue(executionId, out var dict))
         {

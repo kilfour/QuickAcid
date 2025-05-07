@@ -21,7 +21,7 @@ public class Wendy
         return this;
     }
 
-    public QAcidReport AndCheckForGold(int scopes, int executionsPerScope)
+    public Report AndCheckForGold(int scopes, int executionsPerScope)
     {
         for (int i = 0; i < scopes; i++)
         {

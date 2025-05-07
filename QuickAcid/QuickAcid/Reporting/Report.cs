@@ -2,7 +2,7 @@
 
 namespace QuickAcid.Reporting;
 
-public class QAcidReport
+public class Report
 {
     private readonly List<IAmAReportEntry> entries = [];
     public List<IAmAReportEntry> Entries { get { return entries; } }

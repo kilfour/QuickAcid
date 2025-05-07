@@ -34,12 +34,12 @@ public class QState
         state.Testify(numberOfExecutions);
     }
 
-    public QAcidReport ObserveOnce()
+    public Report ObserveOnce()
     {
         return Observe(1);
     }
 
-    public QAcidReport Observe(int executionsPerScope)
+    public Report Observe(int executionsPerScope)
     {
         return state.Observe(executionsPerScope);
     }

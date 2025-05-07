@@ -7,7 +7,7 @@ namespace QuickAcid;
 public class QDiagnosticState
 {
     private readonly QAcidState state;
-    private QAcidReport? report;
+    private Report? report;
 
     public QDiagnosticState(QAcidRunner<Acid> runner)
     {
@@ -32,7 +32,7 @@ public class QDiagnosticState
         return this;
     }
 
-    public QAcidReport? GetReport()
+    public Report? GetReport()
     {
         return report;
     }

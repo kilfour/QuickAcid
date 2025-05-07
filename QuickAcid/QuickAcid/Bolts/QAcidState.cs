@@ -14,7 +14,7 @@ public sealed class QAcidState : QAcidContext
         ExecutionNumbers = [];
         Memory = new Memory(() => CurrentExecutionNumber);
         InputTracker = new InputTracker(() => CurrentExecutionNumber);
-        report = new QAcidReport();
+        report = new Report();
     }
 
     public QAcidRunner<Acid> Runner { get; private set; }
@@ -118,7 +118,7 @@ public sealed class QAcidState : QAcidContext
     public Exception? Exception { get { return CurrentContext.Exception; } }
 
 
-    private readonly QAcidReport report;
+    private readonly Report report;
     public bool Verbose { get; set; }
     public bool AlwaysReport { get; set; }
 
@@ -139,17 +139,17 @@ public sealed class QAcidState : QAcidContext
         Run(executionsPerScope, true);
     }
 
-    public QAcidReport ObserveOnce()
+    public Report ObserveOnce()
     {
         return Observe(1);
     }
 
-    public QAcidReport Observe(int executionsPerScope)
+    public Report Observe(int executionsPerScope)
     {
         return Run(executionsPerScope, false);
     }
 
-    public QAcidReport Run(int executionsPerScope, bool throwOnFailure)
+    public Report Run(int executionsPerScope, bool throwOnFailure)
     {
         ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
         for (int j = 0; j < executionsPerScope; j++)
@@ -341,7 +341,7 @@ public sealed class QAcidState : QAcidContext
         }
     }
 
-    private QAcidReport AddMemoryToReport(QAcidReport report, bool isFinalRun)
+    private Report AddMemoryToReport(Report report, bool isFinalRun)
     {
         foreach (var executionNumber in ExecutionNumbers.ToList())
         {
@@ -353,7 +353,7 @@ public sealed class QAcidState : QAcidContext
         return report;
     }
 
-    public QAcidReport GetReport()
+    public Report GetReport()
     {
         return report;
     }

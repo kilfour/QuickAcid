@@ -8,7 +8,7 @@ namespace QuickAcid.Bolts;
 public static class MemoryReportAssembler
 {
     public static void AddAllMemoryToReport(
-        QAcidReport report,
+        Report report,
         Memory memory,
         int executionId,
         Exception exception, bool isFinalRun)

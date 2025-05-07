@@ -21,7 +21,7 @@ public class FeedbackShrinkingTests
     public void Normal_Shrinking()
     {
         QDiagnosticState.RunInformation? info = null;
-        QAcidReport? report = null;
+        Report? report = null;
         var numberOfActionEntries = 0;
         while (numberOfActionEntries < 5)
         {
@@ -43,7 +43,7 @@ public class FeedbackShrinkingTests
     {
         PulseContext.Current = new WriteDataToFile().ClearFile();
         QDiagnosticState.RunInformation? info = null;
-        QAcidReport? report = null;
+        Report? report = null;
         var numberOfActionEntries = 0;
         while (numberOfActionEntries < 5)
         {
