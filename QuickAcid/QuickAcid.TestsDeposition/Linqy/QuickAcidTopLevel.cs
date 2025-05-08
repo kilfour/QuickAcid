@@ -10,7 +10,7 @@ namespace QuickAcid.TestsDeposition.Linqy;
 
 [Doc(Order = Order, Caption = "QuickAcid", Content =
 @"Before we get in the technical details and/or sales pitch, 
-I feel it might help clear up what this thing actually does and why it's useful, if I start with an example.  
+I feel it might help clear up what this thing actually does, and why it's useful, if I start with an example.  
 
 So here goes :  
 
@@ -68,11 +68,11 @@ public void Unit_test()
 ```
 Much simpler. Which is very true, and inadvertently, illustrates the point that property based testing is not meant 
 to replace unit testing, but rather complement it.  
-You see, if you look closer at the report you see that the QuickAcid test tried three operations and furthermore 
+You see, if you look closer at the report you will notice that the QuickAcid test tried three operations and furthermore 
 the number 42 you see in the output is not visible in the test. 
-Yet it still managed to pinpoint the minimal failing case in order to fail the constraint we put on our model.
-So yes, if faced with this exact problem, write a unit test, but most problems aren't this obvious.
-And in order to track down those you might think about calling in QuickAcid.
+Yet it still managed to pinpoint the minimal failing case in order to fail the constraint we put on our model.  
+So yes, if faced with this exact problem, write a unit test, but most problems aren't this obvious.  
+And in order to track those down you might think about calling in QuickAcid.
 
 *Would you like to know more ?*
 ")]
