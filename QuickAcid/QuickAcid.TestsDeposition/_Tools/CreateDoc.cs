@@ -42,7 +42,6 @@ public class CreateDoc
             if (!string.IsNullOrWhiteSpace(attr.Caption))
             {
                 var headingLevel = attr.Order.Split('-').Length;
-
                 if (firstHeader)
                 {
                     firstHeader = false;
@@ -52,9 +51,7 @@ public class CreateDoc
                     sb.AppendLine("---");
                     sb.AppendLine();
                 }
-
                 previousHeadingLevel = headingLevel;
-
                 var headingMarker = new string('#', headingLevel);
                 sb.AppendLine($"{headingMarker} {attr.Caption}");
                 sb.AppendLine();
@@ -66,6 +63,7 @@ public class CreateDoc
                 sb.AppendLine();
             }
         }
+
         new WriteDataToFile("/QuickAcid/README.md").ClearFile().Monitor(sb.ToString());
     }
 

@@ -1,3 +1,4 @@
+using System.Drawing;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
@@ -5,6 +6,7 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using QuickPulse;
+using QuickPulse.Bolts;
 using QuickPulse.Diagnostics;
 using QuickPulse.Diagnostics.Sinks.FileWriters;
 
@@ -55,19 +57,16 @@ public class FeedbackShrinkingTests
             numberOfActionEntries = report.OfType<ReportExecutionEntry>().Count();
         }
         var shrinkingRun = GetRun(MGen.Int());
-
         var writer = new WriteDataToFile().ClearFile();
-        var pulser =
-            from diagnosis in Pulse.From<DiagnosticInfo>()
-            where diagnosis.Tags.Any(a =>
-                a == "TrackedInputMemory" ||
-                a == "Phase")
-            from firstTag in Pulse.Shape(() => $"{diagnosis.Tags.First()}:")
-            from indent in Pulse.Shape(() => new string(' ', diagnosis.PhaseLevel * 4))
-            from log in Sink.To(() => writer.Monitor($"{indent}{firstTag}{diagnosis.Message}"))
-            select diagnosis;
-        //PulseContext.Current = pulser.ToPulse();
-        //new WriteDataToFile().ClearLog().Log(new QDiagnosticState(shrinkingRun).WithFeedback().ShrinkToCode(info!));
+        var flow =
+            from _ in Pulse.Using(writer)
+            from diagnosis in Pulse.Start<DiagnosticInfo>()
+            let needsLogging = diagnosis.Tags.Any(a => a == "TrackedInputMemory" || a == "Phase")
+            let indent = new string(' ', diagnosis.PhaseLevel * 4)
+            from log in Pulse.Trace($"{indent}{diagnosis.Tags.First()}:{diagnosis.Message}")
+            select Pulse.Stop;
+
+        //PulseContext.Current = flow.ToPulse();
 
         report = new QDiagnosticState(shrinkingRun).WithFeedback().Shrink(info!).GetReport();
         Assert.NotNull(report);
