@@ -19,7 +19,7 @@ public class QStateTests
 ```csharp
 new QState(""act"".Act(() => { /* nothing happening at all */ })).Testify(10);
 ```
-What this does is, it takes a runner (in this case: `.Act(...)`) and a state in order to create a run and then performs said run consisting of 10 executions. 
+What this does is, it takes a runner (in this case: `.Act(...)`) and a state, in order to create a run and then performs said run consisting of 10 executions. 
 ")]
     public void QState_usage()
     {

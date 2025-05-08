@@ -10,9 +10,7 @@ namespace QuickAcid.TestsDeposition.Linqy.Combinators.Derived;
 public static class Chapter { public const string Order = CombinatorChapter.Order + "-70"; }
 
 [Doc(Order = $"{Chapter.Order}", Caption = "Derived", Content =
-@"### Derived
-
-**Derived(...)** introduces a value that is dynamically generated during each execution, 
+@"**Derived(...)** introduces a value that is dynamically generated during each execution, 
 but is **not** shrinkable or tracked in the final report.  
 Use this when you need to **react to mutable test state**, 
 for example, selecting an input based on a previously `Stashed(...)` value.  
