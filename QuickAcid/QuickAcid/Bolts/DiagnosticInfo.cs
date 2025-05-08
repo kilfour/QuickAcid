@@ -1,4 +1,6 @@
-using QuickPulse.Diagnostics;
+
+
+using QuickPulse;
 
 namespace QuickAcid.Bolts;
 

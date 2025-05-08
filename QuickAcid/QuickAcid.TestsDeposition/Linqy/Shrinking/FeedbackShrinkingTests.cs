@@ -1,4 +1,3 @@
-using System.Drawing;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
@@ -6,9 +5,8 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using QuickPulse;
+using QuickPulse.Arteries;
 using QuickPulse.Bolts;
-using QuickPulse.Diagnostics;
-using QuickPulse.Diagnostics.Sinks.FileWriters;
 
 namespace QuickAcid.TestsDeposition.Linqy.Shrinking;
 
@@ -57,16 +55,20 @@ public class FeedbackShrinkingTests
             numberOfActionEntries = report.OfType<ReportExecutionEntry>().Count();
         }
         var shrinkingRun = GetRun(MGen.Int());
-        var writer = new WriteDataToFile().ClearFile();
-        var flow =
-            from _ in Pulse.Using(writer)
-            from diagnosis in Pulse.Start<DiagnosticInfo>()
-            let needsLogging = diagnosis.Tags.Any(a => a == "TrackedInputMemory" || a == "Phase")
-            let indent = new string(' ', diagnosis.PhaseLevel * 4)
-            from log in Pulse.Trace($"{indent}{diagnosis.Tags.First()}:{diagnosis.Message}")
-            select Pulse.Stop;
+        // var writer = new WriteDataToFile().ClearFile();
+        // var flow =
+        //     from _ in Pulse.Using(writer)
+        //     from diagnosis in Pulse.Start<DiagnosticInfo>()
 
-        //PulseContext.Current = flow.ToPulse();
+        //         // where diagnosis.Tags.Any(a => a == "TrackedInputMemory" || a == "Phase")
+        //         // from log in Pulse.Trace($"{new string(' ', Math.Max(0, diagnosis.PhaseLevel) * 4)}{diagnosis.Tags.First()}:{diagnosis.Message}")
+
+        //     let needsLogging = diagnosis.Tags.Any(a => a == "TrackedInputMemory" || a == "Phase")
+        //     //let indent = new string(' ', (diagnosis.PhaseLevel) * 4)
+        //     from log in Pulse.TraceIf(needsLogging, $"{(diagnosis.PhaseLevel)}{diagnosis.Tags.First()}:{diagnosis.Message}")
+        //     select Pulse.Stop;
+        // var signal = Signal.From<DiagnosticInfo>(flow);
+        //PulseContext.Current = signal.AsArtery();
 
         report = new QDiagnosticState(shrinkingRun).WithFeedback().Shrink(info!).GetReport();
         Assert.NotNull(report);

@@ -1,10 +1,8 @@
-using QuickPulse.Diagnostics.Sinks.FileWriters;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickMGenerate;
 using QuickPulse;
-using QuickPulse.Bolts;
-using QuickPulse.Diagnostics;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.CodeGen
 {
@@ -103,7 +101,7 @@ namespace QuickAcid.CodeGen
 
         public static string Pan(QAcidState state)
         {
-            var collector = new Collector<string>();
+            var collector = new TheCollector<string>();
             var flow =
                 from line in Pulse.Start<string>()
                 from _ in Pulse.Using(collector)

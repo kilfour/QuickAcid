@@ -1,7 +1,8 @@
 ﻿using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
+using QuickPulse;
 using QuickAcid.Reporting;
-using QuickPulse.Diagnostics;
+using QuickPulse.Instruments;
 
 namespace QuickAcid.Bolts;
 
@@ -86,7 +87,7 @@ public sealed class QAcidState : QAcidContext
         {
             CurrentPhase = previousPhase;
             PhaseLevel--;
-            GetPulse(["QAcidState", "Phase"])("Dispose Phase: {(phase)}.");
+            GetPulse(["QAcidState", "Phase"])($"Dispose Phase: {phase}.");
         });
     }
     public static int PhaseLevel { get; set; } = 0;

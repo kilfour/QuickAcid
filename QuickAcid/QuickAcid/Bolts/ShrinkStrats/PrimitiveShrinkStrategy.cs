@@ -1,5 +1,4 @@
 using QuickAcid.Bolts.ShrinkStrats;
-using QuickPulse.Diagnostics;
 
 namespace QuickAcid.Bolts;
 public class PrimitiveShrinkStrategy //: IShrinkStrategy

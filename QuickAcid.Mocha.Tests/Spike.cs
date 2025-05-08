@@ -1,8 +1,8 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickMGenerate;
-using QuickPulse.Diagnostics.Instruments;
 using Jint;
+using QuickPulse.Instruments;
 
 namespace QuickAcid.Mocha.Tests;
 

@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text;
-using QuickPulse.Diagnostics.Sinks.FileWriters;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.TestsDeposition._Tools;
 
@@ -64,7 +64,7 @@ public class CreateDoc
             }
         }
 
-        new WriteDataToFile("/QuickAcid/README.md").ClearFile().Monitor(sb.ToString());
+        new WriteDataToFile("/QuickAcid/README.md").ClearFile().Flow(sb.ToString());
     }
 
     public class LexicalFloatArrayComparer : IComparer<float[]>

@@ -5,7 +5,7 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
 using QuickMGenerate;
 using QuickPulse;
-using QuickPulse.Diagnostics.Sinks.FileWriters;
+using QuickPulse.Instruments;
 
 
 namespace QuickAcid.TestsDeposition.Linqy.Combinators.Tracked;
