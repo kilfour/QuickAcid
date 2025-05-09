@@ -1,8 +1,7 @@
 ﻿using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
-using QuickPulse;
 using QuickAcid.Reporting;
-using QuickPulse.Instruments;
+
 
 namespace QuickAcid.Bolts;
 
@@ -92,7 +91,7 @@ public sealed class QAcidState : QAcidContext
     }
     public static int PhaseLevel { get; set; } = 0;
     public static Action<string> GetPulse(string[] tags) =>
-        (msg) => PulseContext.Log(new DiagnosticInfo(tags, msg, PhaseLevel));
+        (msg) => DiagnosticContext.Log(new DiagnosticInfo(tags, msg, PhaseLevel));
     public PhaseContext OriginalRun => Phase(QAcidPhase.NormalRun);
     // ---------------------------------------------------------------------------------------
 

@@ -1,6 +1,5 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.MonadiXEtAl;
-using QuickPulse.Instruments;
 
 
 namespace QuickAcid.Bolts.TheyCanFade;

@@ -7,6 +7,5 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
-    <ProjectReference Include="..\..\..\QuickPulse\QuickPulse\QuickPulse.csproj" />
   </ItemGroup>
 </Project>

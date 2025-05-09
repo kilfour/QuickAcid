@@ -41,7 +41,6 @@ public class FeedbackShrinkingTests
     [Fact]
     public void Feedback_Shrinking()
     {
-        PulseContext.Current = new WriteDataToFile().ClearFile();
         QDiagnosticState.RunInformation? info = null;
         Report? report = null;
         var numberOfActionEntries = 0;
@@ -54,26 +53,13 @@ public class FeedbackShrinkingTests
             Assert.NotNull(report);
             numberOfActionEntries = report.OfType<ReportExecutionEntry>().Count();
         }
+
+        var writer = new WriteDataToFile().ClearFile();
+        DiagnosticContext.Current = Signals.FilterOnTags(writer, "Phase").Pulse;
+
         var shrinkingRun = GetRun(MGen.Int());
-        // var writer = new WriteDataToFile().ClearFile();
-        // var flow =
-        //     from _ in Pulse.Using(writer)
-        //     from diagnosis in Pulse.Start<DiagnosticInfo>()
-
-        //         // where diagnosis.Tags.Any(a => a == "TrackedInputMemory" || a == "Phase")
-        //         // from log in Pulse.Trace($"{new string(' ', Math.Max(0, diagnosis.PhaseLevel) * 4)}{diagnosis.Tags.First()}:{diagnosis.Message}")
-
-        //     let needsLogging = diagnosis.Tags.Any(a => a == "TrackedInputMemory" || a == "Phase")
-        //     //let indent = new string(' ', (diagnosis.PhaseLevel) * 4)
-        //     from log in Pulse.TraceIf(needsLogging, $"{(diagnosis.PhaseLevel)}{diagnosis.Tags.First()}:{diagnosis.Message}")
-        //     select Pulse.Stop;
-        // var signal = Signal.From<DiagnosticInfo>(flow);
-        //PulseContext.Current = signal.AsArtery();
-
         report = new QDiagnosticState(shrinkingRun).WithFeedback().Shrink(info!).GetReport();
         Assert.NotNull(report);
-
-
         Assert.Single(report.OfType<ReportExecutionEntry>());
         Assert.Single(report.OfType<ReportInputEntry>());
         var entry = report.Single<ReportInputEntry>();
