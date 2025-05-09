@@ -4,7 +4,6 @@ using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
 using QuickMGenerate;
-using QuickPulse;
 using QuickPulse.Instruments;
 
 

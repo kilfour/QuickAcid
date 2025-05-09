@@ -101,16 +101,15 @@ namespace QuickAcid.CodeGen
 
         public static string Pan(QAcidState state)
         {
-            var collector = new TheCollector<string>();
             var flow =
                 from line in Pulse.Start<string>()
-                from _ in Pulse.Using(collector)
                 from indent in Pulse.Gather(0)
                 let str = $"{new string(' ', indent.Value * 4)}{line}"
                 from trace in Pulse.Trace(str)
-                select Pulse.Stop;
+                select line;
 
-            var signal = Signal.From<string>(flow);
+            var collector = new TheCollector<string>();
+            var signal = Signal.From(flow).SetArtery(collector);
             signal.Pulse("namespace Refined.By.QuickAcid;");
             signal.Pulse("");
             signal.Pulse("public class UnitTests");
@@ -118,7 +117,7 @@ namespace QuickAcid.CodeGen
             using (signal.Scoped<int>(a => ++a, a => --a))
                 Scoop(state, signal);
             signal.Pulse("}");
-            return string.Join(Environment.NewLine, collector.Exhibit);
+            return string.Join(Environment.NewLine, collector.TheExhibit);
         }
     }
 }

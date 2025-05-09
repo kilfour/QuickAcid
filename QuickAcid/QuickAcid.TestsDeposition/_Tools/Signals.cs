@@ -15,7 +15,7 @@ public static class Signals
             let needsLogging = diagnosis.Tags.Any(a => filter.Contains(a))
             let indent = new string(' ', Math.Max(0, diagnosis.PhaseLevel) * 4)
             from log in Pulse.TraceIf(needsLogging, $"{indent}{diagnosis.Tags.First()}:{diagnosis.Message}")
-            select Pulse.Stop;
-        return Signal.From<DiagnosticInfo>(flow); ;
+            select diagnosis;
+        return Signal.From(flow); ;
     }
 }

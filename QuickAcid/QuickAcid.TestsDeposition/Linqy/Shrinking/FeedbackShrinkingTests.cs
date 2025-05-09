@@ -4,9 +4,7 @@ using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
-using QuickPulse;
 using QuickPulse.Arteries;
-using QuickPulse.Bolts;
 
 namespace QuickAcid.TestsDeposition.Linqy.Shrinking;
 
@@ -55,7 +53,7 @@ public class FeedbackShrinkingTests
         }
 
         var writer = new WriteDataToFile().ClearFile();
-        DiagnosticContext.Current = Signals.FilterOnTags(writer, "Phase").Pulse;
+        DiagnosticContext.Current = a => Signals.FilterOnTags(writer, "Phase").Pulse(a);
 
         var shrinkingRun = GetRun(MGen.Int());
         report = new QDiagnosticState(shrinkingRun).WithFeedback().Shrink(info!).GetReport();
