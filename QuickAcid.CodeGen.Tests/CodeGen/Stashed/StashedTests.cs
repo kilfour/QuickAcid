@@ -1,6 +1,5 @@
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
-using QuickAcid.TestsDeposition._Tools;
 
 namespace QuickAcid.TestsDeposition.Linqy.CodeGen.Stashed;
 

@@ -1,6 +1,5 @@
 ﻿using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
-using QuickAcid.Bolts;
 
 namespace QuickAcid.Tests.Linqy.Sequence;
 

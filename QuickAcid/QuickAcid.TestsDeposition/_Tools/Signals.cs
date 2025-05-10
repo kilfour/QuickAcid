@@ -1,6 +1,5 @@
 using QuickAcid.Bolts;
 using QuickPulse;
-using QuickPulse.Bolts;
 
 namespace QuickAcid.TestsDeposition._Tools;
 
