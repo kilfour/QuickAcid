@@ -6,7 +6,7 @@ using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 using QuickPulse.Arteries;
 
-namespace QuickAcid.TestsDeposition.Linqy.Shrinking;
+namespace QuickAcid.TestsDeposition.Docs.Shrinking;
 
 public static class Chapter { public const string Order = "1-50-50"; }
 

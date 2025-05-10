@@ -3,11 +3,12 @@ using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
+using QuickAcid.TestsDeposition.Docs.Combinators;
 using QuickMGenerate;
 using QuickPulse.Instruments;
 
 
-namespace QuickAcid.TestsDeposition.Linqy.Combinators.Tracked;
+namespace QuickAcid.TestsDeposition.Docs.Combinators.Tracked;
 
 public static class Chapter { public const string Order = CombinatorChapter.Order + "-20"; }
 

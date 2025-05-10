@@ -4,7 +4,7 @@ using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 
-namespace QuickAcid.TestsDeposition.Linqy.Logging;
+namespace QuickAcid.TestsDeposition.Docs.Logging;
 
 public static class Chapter { public const string Order = "1-99"; }
 

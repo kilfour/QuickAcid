@@ -2,9 +2,10 @@ using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
+using QuickAcid.TestsDeposition.Docs.Combinators;
 
 
-namespace QuickAcid.TestsDeposition.Linqy.Combinators.Stashed;
+namespace QuickAcid.TestsDeposition.Docs.Combinators.Stashed;
 
 public static class Chapter { public const string Order = CombinatorChapter.Order + "-10"; }
 

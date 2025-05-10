@@ -1,12 +1,10 @@
-
-
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
 using QuickMGenerate;
 
-namespace QuickAcid.TestsDeposition.Linqy;
+namespace QuickAcid.TestsDeposition.Docs;
 
 [Doc(Order = Order, Caption = "QuickAcid", Content =
 @"Before we get in the technical details and/or sales pitch, 

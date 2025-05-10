@@ -3,7 +3,7 @@ using QuickAcid.Bolts.Nuts;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 
-namespace QuickAcid.TestsDeposition.Linqy.Linq101;
+namespace QuickAcid.TestsDeposition.Docs.Linq101;
 
 public static class Chapter { public const string Order = "1-1"; }
 

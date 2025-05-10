@@ -1,6 +1,6 @@
 using QuickAcid.TestsDeposition._Tools;
 
-namespace QuickAcid.TestsDeposition.Linqy.Combinators;
+namespace QuickAcid.TestsDeposition.Docs.Combinators;
 
 [Doc(Order = Order, Caption = "QuickAcid Combinators", Content =
 @"Combinators are the heart of QuickAcid's LINQ-based property testing DSL.  

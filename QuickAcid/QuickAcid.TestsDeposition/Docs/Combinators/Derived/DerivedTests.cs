@@ -5,7 +5,7 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 
 
-namespace QuickAcid.TestsDeposition.Linqy.Combinators.Derived;
+namespace QuickAcid.TestsDeposition.Docs.Combinators.Derived;
 
 public static class Chapter { public const string Order = CombinatorChapter.Order + "-70"; }
 

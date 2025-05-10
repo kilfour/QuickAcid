@@ -1,7 +1,7 @@
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.TestsDeposition._Tools;
 
-namespace QuickAcid.TestsDeposition.Linqy.CueState;
+namespace QuickAcid.TestsDeposition.Docs.CueState;
 
 public static class Chapter { public const string Order = "1-20"; }
 
