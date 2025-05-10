@@ -64,8 +64,7 @@ public void Unit_test()
     Assert.True(account.Balance >= 0);
 }
 ```
-Much simpler. Which is very true, and inadvertently, illustrates the point that property based testing is not meant 
-to replace unit testing, but rather complement it.  
+Much simpler. Which is very true, and inadvertently, illustrates the point that property based testing is not meant to replace unit testing, but rather complement it.  
 You see, if you look closer at the report you will notice that the QuickAcid test tried three operations and furthermore 
 the number 42 you see in the output is not visible in the test. 
 Yet it still managed to pinpoint the minimal failing case in order to fail the constraint we put on our model.  
