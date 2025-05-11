@@ -4,7 +4,7 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcidCombinators
 {
-	public static QAcidRunner<T> Capture<T>(this string key, Func<T> func, Func<T, string> stringify = null!)
+	public static QAcidScript<T> Capture<T>(this string key, Func<T> func, Func<T, string> stringify = null!)
 	{
 		return state =>
 		{

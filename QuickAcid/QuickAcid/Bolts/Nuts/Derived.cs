@@ -5,7 +5,7 @@ namespace QuickAcid.Bolts.Nuts
 {
     public static partial class QAcidCombinators
     {
-        public static QAcidRunner<T> Derived<T>(this string key, Generator<T> generator)
+        public static QAcidScript<T> Derived<T>(this string key, Generator<T> generator)
         {
             return state =>
             {

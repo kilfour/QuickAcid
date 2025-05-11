@@ -2,8 +2,8 @@
 
 public static class ToLinq
 {
-	public static QAcidRunner<TValueTwo> Select<TValueOne, TValueTwo>(
-		this QAcidRunner<TValueOne> runner,
+	public static QAcidScript<TValueTwo> Select<TValueOne, TValueTwo>(
+		this QAcidScript<TValueOne> runner,
 		Func<TValueOne, TValueTwo> selector) =>
 			state =>
 				{
@@ -13,9 +13,9 @@ public static class ToLinq
 				};
 
 	// This is the Bind function
-	public static QAcidRunner<TResult> SelectMany<TSource, TResult>(
-		this QAcidRunner<TSource> source,
-		Func<TSource, QAcidRunner<TResult>> selector) =>
+	public static QAcidScript<TResult> SelectMany<TSource, TResult>(
+		this QAcidScript<TSource> source,
+		Func<TSource, QAcidScript<TResult>> selector) =>
 			state =>
 				{
 					if (state.CurrentContext.Failed)
@@ -26,9 +26,9 @@ public static class ToLinq
 					return selector(result.Value)(state);
 				};
 
-	public static QAcidRunner<TValueThree> SelectMany<TValueOne, TValueTwo, TValueThree>(
-		this QAcidRunner<TValueOne> runner,
-		Func<TValueOne, QAcidRunner<TValueTwo>> selector,
+	public static QAcidScript<TValueThree> SelectMany<TValueOne, TValueTwo, TValueThree>(
+		this QAcidScript<TValueOne> runner,
+		Func<TValueOne, QAcidScript<TValueTwo>> selector,
 		Func<TValueOne, TValueTwo, TValueThree> projector)
 			=> runner.SelectMany(x => selector(x).Select(y => projector(x, y)));
 }

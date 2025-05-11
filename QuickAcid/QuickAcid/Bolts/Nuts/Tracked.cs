@@ -2,12 +2,12 @@
 
 public static partial class QAcidCombinators
 {
-	public static QAcidRunner<T> Tracked<T>(this string key, Func<T> func)
+	public static QAcidScript<T> Tracked<T>(this string key, Func<T> func)
 	{
 		return Tracked(key, func, QuickAcidStringify.Default<T>());
 	}
 
-	public static QAcidRunner<T> Tracked<T>(this string key, Func<T> func, Func<T, string> stringify)
+	public static QAcidScript<T> Tracked<T>(this string key, Func<T> func, Func<T, string> stringify)
 	{
 		return
 			state =>
@@ -16,7 +16,7 @@ public static partial class QAcidCombinators
 				};
 	}
 
-	public static QAcidRunner<Box<T>> Tracked<T>(this string key, T initial)
+	public static QAcidScript<Box<T>> Tracked<T>(this string key, T initial)
 	{
 		return key.Tracked(() => new Box<T>(initial));
 	}

@@ -8,9 +8,9 @@ public class Wendy
 {
     private bool verbose = false;
 
-    private readonly QAcidRunner<Acid> runner;
+    private readonly QAcidScript<Acid> runner;
 
-    public Wendy(QAcidRunner<Acid> runner)
+    public Wendy(QAcidScript<Acid> runner)
     {
         this.runner = runner;
     }

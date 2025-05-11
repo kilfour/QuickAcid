@@ -8,14 +8,14 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcidCombinators
 {
-	public static QAcidRunner<T> Input<T>(this string key, Generator<T> generator)
+	public static QAcidScript<T> Input<T>(this string key, Generator<T> generator)
 	{
 		if (generator is IKnowMyGuard<T> guarded)
 			return key.Input(generator, guarded.Guard);
 		return Input(key, generator, _ => true);
 	}
 
-	public static QAcidRunner<T> Input<T>(this string key, Generator<T> generator, Func<T, bool> guard)
+	public static QAcidScript<T> Input<T>(this string key, Generator<T> generator, Func<T, bool> guard)
 	{
 		return state =>
 			{

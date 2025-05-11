@@ -2,7 +2,7 @@
 
 public static partial class QAcidCombinators
 {
-	private static QAcidRunner<Acid> InnerSpec(this string key, Func<bool> condition) =>
+	private static QAcidScript<Acid> InnerSpec(this string key, Func<bool> condition) =>
 		state =>
 			{
 				if (ShouldSkipSpec(key, state))
@@ -16,19 +16,19 @@ public static partial class QAcidCombinators
 			};
 
 
-	public static QAcidRunner<Acid> Spec(this string key, Func<bool> condition)
+	public static QAcidScript<Acid> Spec(this string key, Func<bool> condition)
 		=> InnerSpec(key, condition);
 
-	public static QAcidRunner<Acid> SpecIf(this string key, Func<bool> predicate, Func<bool> condition)
+	public static QAcidScript<Acid> SpecIf(this string key, Func<bool> predicate, Func<bool> condition)
 		=> state => predicate() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
 
 	private static bool ShouldSkipSpec(string key, QAcidState state)
 		=> state.OriginalRun.FailingSpec is { } failedKey && failedKey != key;
 
-	public static QAcidRunner<Acid> Analyze(this string key, Func<bool> condition)
+	public static QAcidScript<Acid> Analyze(this string key, Func<bool> condition)
 		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
 
-	public static QAcidRunner<Acid> Assay(this string key, Func<bool> condition)
+	public static QAcidScript<Acid> Assay(this string key, Func<bool> condition)
 		=> state =>
 			{
 				if (!state.IsThisTheRunsLastExecution())
@@ -42,7 +42,7 @@ public static partial class QAcidCombinators
 				return QAcidResult.AcidOnly(state);
 			};
 
-	public static QAcidRunner<Acid> Assay(this string key, params (string label, Func<bool> condition)[] specs) =>
+	public static QAcidScript<Acid> Assay(this string key, params (string label, Func<bool> condition)[] specs) =>
 		state =>
 			{
 				if (!state.IsThisTheRunsLastExecution())
@@ -66,7 +66,7 @@ public static partial class QAcidCombinators
 				return QAcidResult.AcidOnly(state);
 			};
 
-	public static QAcidRunner<Acid> TestifyProvenWhen(this string key, Func<bool> condition) =>
+	public static QAcidScript<Acid> TestifyProvenWhen(this string key, Func<bool> condition) =>
 		state =>
 			{
 				if (ShouldSkipSpec(key, state))

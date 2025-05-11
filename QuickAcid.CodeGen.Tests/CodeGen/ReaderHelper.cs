@@ -4,7 +4,7 @@ namespace QuickAcid.TestsDeposition.Linqy.CodeGen;
 
 public static class Reader
 {
-    public static LinesReader FromRun(QAcidRunner<Acid> run)
+    public static LinesReader FromRun(QAcidScript<Acid> run)
     {
         var code = new QCodeState(run).GenerateCode();
         var reader = LinesReader.FromText(code).TrimLines();

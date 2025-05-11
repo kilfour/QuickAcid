@@ -18,7 +18,7 @@ public class WhenTheHeartIsA
         Assert.NotNull(report);
     }
 
-    private static QAcidRunner<Acid> MinimalSpec(object obj)
+    private static QAcidScript<Acid> MinimalSpec(object obj)
     {
         return from _ in "always true".Spec(() => true) select Acid.Test;
     }

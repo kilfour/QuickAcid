@@ -5,7 +5,7 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcidCombinators
 {
-	public static QAcidRunner<T> Choose<T>(this string key, params QAcidRunner<T>[] runners)
+	public static QAcidScript<T> Choose<T>(this string key, params QAcidScript<T>[] runners)
 	{
 
 		return state =>

@@ -9,7 +9,7 @@ public class QDiagnosticState
     private readonly QAcidState state;
     private Report? report;
 
-    public QDiagnosticState(QAcidRunner<Acid> runner)
+    public QDiagnosticState(QAcidScript<Acid> runner)
     {
         state = new QAcidState(runner);
     }

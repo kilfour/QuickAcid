@@ -7,14 +7,14 @@ namespace QuickAcid.Fluent.Bolts;
 // The Architect of Causality
 public class Bob
 {
-    public readonly QAcidRunner<Acid> runner;
+    public readonly QAcidScript<Acid> runner;
 
-    public Bob(QAcidRunner<Acid> runner)
+    public Bob(QAcidScript<Acid> runner)
     {
         this.runner = runner;
     }
 
-    internal Bob Bind<TNext>(Func<Acid, QAcidRunner<TNext>> bind)
+    internal Bob Bind<TNext>(Func<Acid, QAcidScript<TNext>> bind)
     {
         var composed =
             from a in runner
@@ -23,9 +23,9 @@ public class Bob
         return new Bob(composed);
     }
 
-    internal Bob BindState<TNext>(Func<QAcidState, QAcidRunner<TNext>> bind)
+    internal Bob BindState<TNext>(Func<QAcidState, QAcidScript<TNext>> bind)
     {
-        QAcidRunner<TNext> composed =
+        QAcidScript<TNext> composed =
             state =>
             {
                 var result = runner(state);

@@ -65,7 +65,7 @@ public class FeedbackShrinkingTests
         Assert.True(Convert.ToInt32(entry.Value!) > 30);
     }
 
-    private QAcidRunner<Acid> GetRun(Generator<int> intGenerator)
+    private QAcidScript<Acid> GetRun(Generator<int> intGenerator)
     {
         return
             from account in "Account".Tracked(

@@ -4,7 +4,7 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static class Shrink<T>
 {
-    public static QAcidRunner<Acid> LikeThis(IShrinker<T> shrinker)
+    public static QAcidScript<Acid> LikeThis(IShrinker<T> shrinker)
     {
         return
             state =>
@@ -14,7 +14,7 @@ public static class Shrink<T>
                 };
     }
 
-    public static QAcidRunner<Acid> LikeThis(Func<T, IEnumerable<T>> shrinker)
+    public static QAcidScript<Acid> LikeThis(Func<T, IEnumerable<T>> shrinker)
     {
         return LikeThis(new LambdaShrinker<T>(shrinker));
     }

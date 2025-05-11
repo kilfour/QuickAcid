@@ -2,7 +2,7 @@
 
 public static partial class QAcidCombinators
 {
-    public static QAcidRunner<T> Sequence<T>(this string key, params QAcidRunner<T>[] runners)
+    public static QAcidScript<T> Sequence<T>(this string key, params QAcidScript<T>[] runners)
     {
         var counter = 0;
         return state =>

@@ -8,7 +8,7 @@ namespace QuickAcid.Bolts;
 public sealed class QAcidState : QAcidContext
 {
     // TODO MAKE INTERNAL
-    public QAcidState(QAcidRunner<Acid> runner)
+    public QAcidState(QAcidScript<Acid> runner)
     {
         Runner = runner;
         ExecutionNumbers = [];
@@ -17,7 +17,7 @@ public sealed class QAcidState : QAcidContext
         report = new Report();
     }
 
-    public QAcidRunner<Acid> Runner { get; private set; }
+    public QAcidScript<Acid> Runner { get; private set; }
     public int CurrentExecutionNumber { get; set; }
     public IDisposable SetCurrentExecutionNumber(int number)
     {

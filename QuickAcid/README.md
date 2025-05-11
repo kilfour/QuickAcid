@@ -88,7 +88,7 @@ They carry both the logic of the test and the mechanisms to generate input, trac
 A runner is, more precisely, a function that takes a `QAcidState` and returns a `QAcidResult<T>`.
 It encapsulates both what to do and how to do it, with full access to the current test state.
 ```csharp
-public delegate QAcidResult<T> QAcidRunner<T>(QAcidState state);
+public delegate QAcidResult<T> QAcidScript<T>(QAcidState state);
 ```
 
 
@@ -140,7 +140,7 @@ nothing is reported and using this in a unit testing framework just passes the e
 
 The int parameter passed in to the `Testify` method specifies number of executions per run.
 An execution is one walk through the test definition.
-Why we would want to do that multiple times will quickly become clear when we introduce other QAcidRunners.
+Why we would want to do that multiple times will quickly become clear when we introduce other QAcidScripts.
 For now, calling `.Testify(10)` in above example checks the Spec ten times.
 
 By changing the return value of the `Spec` to `false` we can force this test to fail and in that case
@@ -352,6 +352,23 @@ from act2 in "and act again".Act(() => account.Withdraw(200))
 
 ---
 
+### Choose
+
+**Choose(...)** is one of two ways one can select different operations per execution.
+In the case of choose, you supply a number of `.Act(...)`'s and QuickAcid will randomly choose one for every execution. 
+
+
+**Usage example:**
+```csharp
+from _ in "ops".Choose(
+    "deposit".Act(() => account.Deposit(500)),
+    "withdraw".Act(() => account.Withdraw(500))
+    )
+```
+
+
+---
+
 ### Derived
 
 **Derived(...)** introduces a value that is dynamically generated during each execution, 
@@ -364,29 +381,12 @@ primarily intended for state-sensitive generation where traditional shrinking wo
 
 
 
----
-
-### Choose
-
-**Choose(...)** is one of two ways one can select different operations per execution.
-In the case of choose, you supply a number of `.Act(...)`'s and QuickAcid will randomly choose one for every execution. 
-
-
 **Usage example:**
 ```csharp
 from container in "container".Stashed(() => new Container<List<int>>([]))
 from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
 ```
 
-
-
-**Usage example:**
-```csharp
-from _ in "ops".Choose(
-    "deposit".Act(() => account.Deposit(500)),
-    "withdraw".Act(() => account.Withdraw(500))
-    )
-```
 
 
 ---

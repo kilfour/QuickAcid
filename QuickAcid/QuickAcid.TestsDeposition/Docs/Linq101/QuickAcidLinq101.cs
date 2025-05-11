@@ -25,7 +25,7 @@ They carry both the logic of the test and the mechanisms to generate input, trac
 A runner is, more precisely, a function that takes a `QAcidState` and returns a `QAcidResult<T>`.
 It encapsulates both what to do and how to do it, with full access to the current test state.
 ```csharp
-public delegate QAcidResult<T> QAcidRunner<T>(QAcidState state);
+public delegate QAcidResult<T> QAcidScript<T>(QAcidState state);
 ```
 ")]
 public class QuickAcidLinq101
@@ -34,7 +34,7 @@ public class QuickAcidLinq101
     [Doc(Order = $"{Chapter.Order}-1-1", Content = "You can think of runners as the building blocks of a property-based test.")]
     public void What_is_a_single_runner()
     {
-        Assert.IsType<QAcidRunner<int>>("an int".Input(MGen.Int()));
+        Assert.IsType<QAcidScript<int>>("an int".Input(MGen.Int()));
     }
 
     [Fact]
@@ -52,7 +52,7 @@ Will be explained in detail later.
 ")]
     public void What_is_a_composed_runner()
     {
-        Assert.IsType<QAcidRunner<Acid>>(
+        Assert.IsType<QAcidScript<Acid>>(
             from spec in "spec".Spec(() => true)
             select Acid.Test);
     }
@@ -70,7 +70,7 @@ and serves as a **terminator** for the test chain.
     public void What_is_Acid_test()
     {
         Assert.IsType<Acid>(Acid.Test);
-        Assert.IsType<QAcidRunner<Acid>>(from input in "act".Act(() => { }) select Acid.Test);
+        Assert.IsType<QAcidScript<Acid>>(from input in "act".Act(() => { }) select Acid.Test);
     }
 
     [Fact]
@@ -104,7 +104,7 @@ nothing is reported and using this in a unit testing framework just passes the e
     [Doc(Order = $"{Chapter.Order}-3-2", Content =
 @"The int parameter passed in to the `Testify` method specifies number of executions per run.
 An execution is one walk through the test definition.
-Why we would want to do that multiple times will quickly become clear when we introduce other QAcidRunners.
+Why we would want to do that multiple times will quickly become clear when we introduce other QAcidScripts.
 For now, calling `.Testify(10)` in above example checks the Spec ten times.")]
     public void What_is_a_run_multiple_executions()
     {

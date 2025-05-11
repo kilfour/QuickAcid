@@ -7,7 +7,7 @@ public class QState
 {
     private readonly QAcidState state;
 
-    public QState(QAcidRunner<Acid> runner)
+    public QState(QAcidScript<Acid> runner)
     {
         state = new QAcidState(runner);
     }

@@ -3,7 +3,7 @@
 public static partial class QAcidCombinators
 {
 
-	public static QAcidRunner<T> Stashed<T>(this string key, Func<T> func)
+	public static QAcidScript<T> Stashed<T>(this string key, Func<T> func)
 	{
 		return
 			state =>
@@ -12,7 +12,7 @@ public static partial class QAcidCombinators
 				};
 	}
 
-	public static QAcidRunner<Box<T>> StashedValue<T>(this string key, T initial)
+	public static QAcidScript<Box<T>> StashedValue<T>(this string key, T initial)
 	{
 		return key.Stashed(() => new Box<T>(initial));
 	}

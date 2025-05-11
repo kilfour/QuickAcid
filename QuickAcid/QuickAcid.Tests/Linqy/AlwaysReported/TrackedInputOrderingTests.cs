@@ -36,7 +36,7 @@ public class TrackedInputOrderingTests
         Assert.Null(report);
     }
 
-    private static QAcidRunner<Acid> Boom(Dependent dependent)
+    private static QAcidScript<Acid> Boom(Dependent dependent)
     {
         return
             from _ in "spec".Spec(() => dependent?.NullList?.Count == 0)

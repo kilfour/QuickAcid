@@ -4,7 +4,7 @@ namespace QuickAcid.CodeGen
 {
     public static class Refiner
     {
-        public static void TheWohlwillProcess(this QAcidRunner<Acid> runner, int scopes, int executionsPerScope)
+        public static void TheWohlwillProcess(this QAcidScript<Acid> runner, int scopes, int executionsPerScope)
         {
             var failedExceptions = new List<Type>();
             var failedSpecs = new List<string>();
