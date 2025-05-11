@@ -152,7 +152,7 @@ public sealed class QAcidState : QAcidContext
             if (CurrentContext.Failed)
             {
                 if (throwOnFailure)
-                    throw new FalsifiableException(report.ToString(), CurrentContext.Exception!) { QAcidReport = report };
+                    throw new FalsifiableException(report, CurrentContext.Exception!);
                 else
                     return report;
             }

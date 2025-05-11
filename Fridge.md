@@ -6,7 +6,6 @@ public abstract record ExecutionOutcome
     public sealed record SpecFailedOutcome(string specName) : ExecutionOutcome;
     public static ExecutionOutcome ExceptionThrown(Exception exception) => new ExceptionThrownOutcome(exception);
     public sealed record ExceptionThrownOutcome(Exception exception) : ExecutionOutcome;
-
 }
 ```
 --- slide ---
