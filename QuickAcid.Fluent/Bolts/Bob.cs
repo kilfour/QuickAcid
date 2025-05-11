@@ -7,17 +7,17 @@ namespace QuickAcid.Fluent.Bolts;
 // The Architect of Causality
 public class Bob
 {
-    public readonly QAcidScript<Acid> runner;
+    public readonly QAcidScript<Acid> script;
 
-    public Bob(QAcidScript<Acid> runner)
+    public Bob(QAcidScript<Acid> script)
     {
-        this.runner = runner;
+        this.script = script;
     }
 
     internal Bob Bind<TNext>(Func<Acid, QAcidScript<TNext>> bind)
     {
         var composed =
-            from a in runner
+            from a in script
             from b in bind(a)
             select Acid.Test;
         return new Bob(composed);
@@ -28,7 +28,7 @@ public class Bob
         QAcidScript<TNext> composed =
             state =>
             {
-                var result = runner(state);
+                var result = script(state);
                 if (result.State.CurrentContext.Failed)
                     return QAcidResult.None<TNext>(state);
 
@@ -106,9 +106,9 @@ public class Bob
 
     public Bob Options(Func<Bob, IEnumerable<Bob>> choicesBuilder)
     {
-        var options = choicesBuilder(this).Select(opt => opt.runner).ToArray();
+        var options = choicesBuilder(this).Select(opt => opt.script).ToArray();
         var combined =
-            from _ in runner
+            from _ in script
             from result in "__00__".Choose(options) // $"__choose__{Guid.NewGuid()}"
             select Acid.Test;
         return new Bob(combined);
@@ -131,6 +131,6 @@ public class Bob
 
     public Wendy DumpItInAcid()
     {
-        return new Wendy(runner);
+        return new Wendy(script);
     }
 }

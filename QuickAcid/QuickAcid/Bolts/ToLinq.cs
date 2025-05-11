@@ -3,13 +3,13 @@
 public static class ToLinq
 {
 	public static QAcidScript<TValueTwo> Select<TValueOne, TValueTwo>(
-		this QAcidScript<TValueOne> runner,
+		this QAcidScript<TValueOne> script,
 		Func<TValueOne, TValueTwo> selector) =>
 			state =>
 				{
 					if (state.CurrentContext.Failed)
 						return QAcidResult.None<TValueTwo>(state);
-					return QAcidResult.Some(state, selector(runner(state).Value));
+					return QAcidResult.Some(state, selector(script(state).Value));
 				};
 
 	// This is the Bind function
@@ -27,8 +27,8 @@ public static class ToLinq
 				};
 
 	public static QAcidScript<TValueThree> SelectMany<TValueOne, TValueTwo, TValueThree>(
-		this QAcidScript<TValueOne> runner,
+		this QAcidScript<TValueOne> script,
 		Func<TValueOne, QAcidScript<TValueTwo>> selector,
 		Func<TValueOne, TValueTwo, TValueThree> projector)
-			=> runner.SelectMany(x => selector(x).Select(y => projector(x, y)));
+			=> script.SelectMany(x => selector(x).Select(y => projector(x, y)));
 }

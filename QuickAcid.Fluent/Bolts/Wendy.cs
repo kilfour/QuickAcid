@@ -8,11 +8,11 @@ public class Wendy
 {
     private bool verbose = false;
 
-    private readonly QAcidScript<Acid> runner;
+    private readonly QAcidScript<Acid> script;
 
-    public Wendy(QAcidScript<Acid> runner)
+    public Wendy(QAcidScript<Acid> script)
     {
-        this.runner = runner;
+        this.script = script;
     }
 
     public Wendy KeepOneEyeOnTheTouchStone()
@@ -25,7 +25,7 @@ public class Wendy
     {
         for (int i = 0; i < scopes; i++)
         {
-            var state = new QAcidState(runner) { Verbose = verbose };
+            var state = new QAcidState(script) { Verbose = verbose };
             state.Observe(executionsPerScope);
             if (state.CurrentContext.Failed)
                 return state.GetReport();
@@ -37,7 +37,7 @@ public class Wendy
     {
         for (int i = 0; i < scopes; i++)
         {
-            var state = new QAcidState(runner) { Verbose = verbose };
+            var state = new QAcidState(script) { Verbose = verbose };
             state.Testify(executionsPerScope);
         }
     }

@@ -8,16 +8,16 @@ namespace QuickAcid.Bolts;
 public sealed class QAcidState : QAcidContext
 {
     // TODO MAKE INTERNAL
-    public QAcidState(QAcidScript<Acid> runner)
+    public QAcidState(QAcidScript<Acid> script)
     {
-        Runner = runner;
+        Script = script;
         ExecutionNumbers = [];
         Memory = new Memory(() => CurrentExecutionNumber);
         InputTracker = new InputTracker(() => CurrentExecutionNumber);
         report = new Report();
     }
 
-    public QAcidScript<Acid> Runner { get; private set; }
+    public QAcidScript<Acid> Script { get; private set; }
     public int CurrentExecutionNumber { get; set; }
     public IDisposable SetCurrentExecutionNumber(int number)
     {
@@ -178,7 +178,7 @@ public sealed class QAcidState : QAcidContext
     private void ExecuteStep()
     {
         ExecutionNumbers[CurrentExecutionNumber] = CurrentExecutionNumber;
-        Runner(this);
+        Script(this);
         if (CurrentContext.Failed)
         {
             if (Verbose)
@@ -258,7 +258,7 @@ public sealed class QAcidState : QAcidContext
                 {
                     CurrentExecutionNumber = run;
                     if (run != current)
-                        Runner(this);
+                        Script(this);
                     if (CurrentContext.BreakRun)
                         break;
                 }
@@ -280,7 +280,7 @@ public sealed class QAcidState : QAcidContext
             foreach (var executionNumber in ExecutionNumbers.ToList())
             {
                 CurrentExecutionNumber = executionNumber;
-                Runner(this);
+                Script(this);
                 shrinkCount++;
             }
         }
@@ -301,7 +301,7 @@ public sealed class QAcidState : QAcidContext
                 {
                     CurrentExecutionNumber = run;
                     if (run != current)
-                        Runner(this);
+                        Script(this);
                     if (CurrentContext.BreakRun)
                         break;
                 }
@@ -332,7 +332,7 @@ public sealed class QAcidState : QAcidContext
                 foreach (var actionNumber in ExecutionNumbers)
                 {
                     CurrentExecutionNumber = actionNumber;
-                    Runner(this);
+                    Script(this);
                 }
             }
             CurrentExecutionNumber = runNumber;

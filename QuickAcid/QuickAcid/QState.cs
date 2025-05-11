@@ -7,9 +7,9 @@ public class QState
 {
     private readonly QAcidState state;
 
-    public QState(QAcidScript<Acid> runner)
+    public QState(QAcidScript<Acid> script)
     {
-        state = new QAcidState(runner);
+        state = new QAcidState(script);
     }
 
     public QState AlwaysReport()

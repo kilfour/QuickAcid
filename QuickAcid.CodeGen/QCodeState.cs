@@ -7,9 +7,9 @@ public class QCodeState
 {
     private readonly QAcidState state;
 
-    public QCodeState(QAcidScript<Acid> runner)
+    public QCodeState(QAcidScript<Acid> script)
     {
-        state = new QAcidState(runner);
+        state = new QAcidState(script);
     }
 
     public string GenerateCode()

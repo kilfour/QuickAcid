@@ -9,9 +9,9 @@ public class QDiagnosticState
     private readonly QAcidState state;
     private Report? report;
 
-    public QDiagnosticState(QAcidScript<Acid> runner)
+    public QDiagnosticState(QAcidScript<Acid> script)
     {
-        state = new QAcidState(runner);
+        state = new QAcidState(script);
     }
 
     public QDiagnosticState AllowShrinking(bool allowShrinking)

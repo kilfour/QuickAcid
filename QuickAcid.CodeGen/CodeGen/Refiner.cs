@@ -4,7 +4,7 @@ namespace QuickAcid.CodeGen
 {
     public static class Refiner
     {
-        public static void TheWohlwillProcess(this QAcidScript<Acid> runner, int scopes, int executionsPerScope)
+        public static void TheWohlwillProcess(this QAcidScript<Acid> script, int scopes, int executionsPerScope)
         {
             var failedExceptions = new List<Type>();
             var failedSpecs = new List<string>();
@@ -12,7 +12,7 @@ namespace QuickAcid.CodeGen
             var tests = new List<string>();
             for (int i = 0; i < scopes; i++)
             {
-                var state = new QAcidState(runner);
+                var state = new QAcidState(script);
                 state.Testify(executionsPerScope);
                 if (state.CurrentContext.Failed)
                 {

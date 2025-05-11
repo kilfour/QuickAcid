@@ -5,13 +5,13 @@ namespace QuickAcid.Bolts.Nuts;
 
 public static partial class QAcidCombinators
 {
-	public static QAcidScript<T> Choose<T>(this string key, params QAcidScript<T>[] runners)
+	public static QAcidScript<T> Choose<T>(this string key, params QAcidScript<T>[] scripts)
 	{
 
 		return state =>
 			{
-				var index = state.Remember(key, () => MGen.Int(0, runners.Length).Generate(), ReportingIntent.Never);
-				return runners[index](state);
+				var index = state.Remember(key, () => MGen.Int(0, scripts.Length).Generate(), ReportingIntent.Never);
+				return scripts[index](state);
 			};
 	}
 }

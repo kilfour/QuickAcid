@@ -80,23 +80,23 @@ using QuickAcid.Bolts.Nuts;
 Yes, you need both the Nuts and the Bolts.
 
 
-### What is a Runner?
+### What is a Script?
 
-Runners are the core abstraction of QuickAcid's LINQ model. 
+Scripts are the core abstraction of QuickAcid's LINQ model. 
 They carry both the logic of the test and the mechanisms to generate input, track state, and produce a result.
 
-A runner is, more precisely, a function that takes a `QAcidState` and returns a `QAcidResult<T>`.
+A script is, more precisely, a function that takes a `QAcidState` and returns a `QAcidResult<T>`.
 It encapsulates both what to do and how to do it, with full access to the current test state.
 ```csharp
 public delegate QAcidResult<T> QAcidScript<T>(QAcidState state);
 ```
 
 
-You can think of runners as the building blocks of a property-based test.
+You can think of scripts as the building blocks of a property-based test.
 
 
-Each LINQ combinator constructs a new runner by composing existing ones. 
-The final test, the full LINQ query, is just a single, composed runner.
+Each LINQ combinator constructs a new script by composing existing ones. 
+The final test, the full LINQ query, is just a single, composed script.
 The following is a (meaningless) example, demonstrating syntax:
 ```csharp
 from spec in "spec".Spec(() => true)
@@ -175,13 +175,13 @@ var run =
 new QState(run).Testify(10);
 ```
 While contrived, this example demonstrates how `Stashed`, `Input`, and `Act` work together across multiple executions.
-First a brief explanation of the newly introduced Runners :
+First a brief explanation of the newly introduced Scripts :
 - `Stashed(...)` — defines a named value that will be accessible during the test.
 - `Input(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
 - `Act(...)` — performs an action. It's where you apply behavior, such as calling a method or mutating state.
 
-Suppose we execute this runner with `new QState(run).Testify(10);`. What happens?  
-As stated before, it will run 10 executions, but the individual runners can have different scopes,
+Suppose we execute this script with `new QState(run).Testify(10);`. What happens?  
+As stated before, it will run 10 executions, but the individual scripts can have different scopes,
 which is how QuickAcid handles mutable state and side effects.  
 
 **Note on Scoping:**
@@ -217,7 +217,7 @@ In order to turn it into something real we need to use QState, ... like so :
 ```csharp
 new QState("act".Act(() => { /* nothing happening at all */ })).Testify(10);
 ```
-What this does is, it takes a runner (in this case: `.Act(...)`) and a state, in order to create a run and then performs said run consisting of 10 executions. 
+What this does is, it takes a script (in this case: `.Act(...)`) and a state, in order to create a run and then performs said run consisting of 10 executions. 
 
 
 In many examples here, you will see the following pattern :

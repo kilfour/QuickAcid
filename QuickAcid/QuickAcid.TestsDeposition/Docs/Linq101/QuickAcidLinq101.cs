@@ -18,11 +18,11 @@ using QuickAcid.Bolts.Nuts;
 
 Yes, you need both the Nuts and the Bolts.
 ")]
-[Doc(Order = $"{Chapter.Order}-1", Caption = "What is a Runner?", Content =
-@"Runners are the core abstraction of QuickAcid's LINQ model. 
+[Doc(Order = $"{Chapter.Order}-1", Caption = "What is a Script?", Content =
+@"Scripts are the core abstraction of QuickAcid's LINQ model. 
 They carry both the logic of the test and the mechanisms to generate input, track state, and produce a result.
 
-A runner is, more precisely, a function that takes a `QAcidState` and returns a `QAcidResult<T>`.
+A script is, more precisely, a function that takes a `QAcidState` and returns a `QAcidResult<T>`.
 It encapsulates both what to do and how to do it, with full access to the current test state.
 ```csharp
 public delegate QAcidResult<T> QAcidScript<T>(QAcidState state);
@@ -31,8 +31,8 @@ public delegate QAcidResult<T> QAcidScript<T>(QAcidState state);
 public class QuickAcidLinq101
 {
     [Fact]
-    [Doc(Order = $"{Chapter.Order}-1-1", Content = "You can think of runners as the building blocks of a property-based test.")]
-    public void What_is_a_single_runner()
+    [Doc(Order = $"{Chapter.Order}-1-1", Content = "You can think of scripts as the building blocks of a property-based test.")]
+    public void What_is_a_single_script()
     {
         Assert.IsType<QAcidScript<int>>("an int".Input(MGen.Int()));
     }
@@ -40,8 +40,8 @@ public class QuickAcidLinq101
     [Fact]
     [Doc(Order = $"{Chapter.Order}-1-2", Content =
 @"
-Each LINQ combinator constructs a new runner by composing existing ones. 
-The final test, the full LINQ query, is just a single, composed runner.
+Each LINQ combinator constructs a new script by composing existing ones. 
+The final test, the full LINQ query, is just a single, composed script.
 The following is a (meaningless) example, demonstrating syntax:
 ```csharp
 from spec in ""spec"".Spec(() => true)
@@ -50,7 +50,7 @@ select Acid.Test;
 *Sidenote:* `.Spec(...)` makes an assertion. It checks whether a condition holds, and can pass or fail.
 Will be explained in detail later.
 ")]
-    public void What_is_a_composed_runner()
+    public void What_is_a_composed_script()
     {
         Assert.IsType<QAcidScript<Acid>>(
             from spec in "spec".Spec(() => true)
@@ -159,13 +159,13 @@ var run =
 new QState(run).Testify(10);
 ```
 While contrived, this example demonstrates how `Stashed`, `Input`, and `Act` work together across multiple executions.
-First a brief explanation of the newly introduced Runners :
+First a brief explanation of the newly introduced Scripts :
 - `Stashed(...)` — defines a named value that will be accessible during the test.
 - `Input(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
 - `Act(...)` — performs an action. It's where you apply behavior, such as calling a method or mutating state.
 
-Suppose we execute this runner with `new QState(run).Testify(10);`. What happens?  
-As stated before, it will run 10 executions, but the individual runners can have different scopes,
+Suppose we execute this script with `new QState(run).Testify(10);`. What happens?  
+As stated before, it will run 10 executions, but the individual scripts can have different scopes,
 which is how QuickAcid handles mutable state and side effects.  
 
 **Note on Scoping:**
