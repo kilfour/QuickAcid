@@ -18,6 +18,8 @@ public class PhaseContext
         Exception = null;
     }
 
+    public bool NeedsToStop() => BreakRun || Failed;
+
     public void MarkFailure(string failingSpec)
     {
         Failed = true;
@@ -34,7 +36,7 @@ public class PhaseContext
                 Failed = true;
                 return;
             }
-
+            //access.LastException?.ToString() == exception?.ToString();
             if (originalPhase.Exception.GetType() != exception.GetType())
             {
                 BreakRun = true;

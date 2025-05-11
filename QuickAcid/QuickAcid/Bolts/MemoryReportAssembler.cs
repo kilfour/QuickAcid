@@ -24,11 +24,9 @@ public static class MemoryReportAssembler
         memory.TryGet(executionId).Match(
             some: access =>
             {
-                bool same = access.LastException?.ToString() == exception?.ToString();
-                report.AddEntry(new ReportExecutionEntry(string.Join(", ", access.ActionKeys.Select(LabelPrettifier.Prettify)))
-                {
-                    Exception = same ? access.LastException : null
-                });
+                report.AddEntry(
+                    new ReportExecutionEntry(string.Join(", ",
+                    access.ActionKeys.Select(LabelPrettifier.Prettify))));
 
 
                 foreach (var (key, val) in access.GetAll())
@@ -40,7 +38,10 @@ public static class MemoryReportAssembler
                     else if (!isFinalRun)
                     {
                         if (val.ReportingIntent != ReportingIntent.Never)
-                            report.AddEntry(new ReportInputEntry(LabelPrettifier.Prettify(key)) { Value = QuickAcidStringify.Default()(val.Value) });
+                            report.AddEntry(new ReportInputEntry(LabelPrettifier.Prettify(key))
+                            {
+                                Value = QuickAcidStringify.Default()(val.Value!)
+                            });
                     }
                 }
                 return Acid.Test;

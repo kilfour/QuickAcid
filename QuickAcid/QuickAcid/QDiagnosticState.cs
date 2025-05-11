@@ -49,8 +49,8 @@ public class QDiagnosticState
         return new(
             state.Memory.DeepCopy()
             , state.ExecutionNumbers
-            , state.FailingSpec
-            , state.Exception);
+            , state.CurrentContext.FailingSpec
+            , state.CurrentContext.Exception);
     }
     public QDiagnosticState WithFeedback()
     {

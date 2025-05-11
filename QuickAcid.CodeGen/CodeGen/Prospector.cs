@@ -10,9 +10,9 @@ namespace QuickAcid.CodeGen
     {
         private static void GetFunctionDeclaration(QAcidState state, Signal<string> signal)
         {
-            if (state.FailingSpec != null)
+            if (state.CurrentContext.FailingSpec != null)
             {
-                var name = state.FailingSpec.Split(":")[0].Replace(" ", "_");
+                var name = state.CurrentContext.FailingSpec.Split(":")[0].Replace(" ", "_");
                 signal.Pulse($"public void {name}()");
                 return;
             }
@@ -67,14 +67,14 @@ namespace QuickAcid.CodeGen
 
         private static void GetAssertionCode(QAcidState state, Signal<string> signal)
         {
-            if (state.FailingSpec != null)
+            if (state.CurrentContext.FailingSpec != null)
             {
-                if (state.FailingSpec.Contains(':'))
+                if (state.CurrentContext.FailingSpec.Contains(':'))
                 {
-                    signal.Pulse($"Assert.True({state.FailingSpec.Split(":")[1].Trim()});");
+                    signal.Pulse($"Assert.True({state.CurrentContext.FailingSpec.Split(":")[1].Trim()});");
                     return;
                 }
-                signal.Pulse($"Assert.True({state.FailingSpec});");
+                signal.Pulse($"Assert.True({state.CurrentContext.FailingSpec});");
                 return;
             }
             GetAssertThrowsCode(signal);

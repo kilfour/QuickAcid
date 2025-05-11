@@ -16,7 +16,7 @@ public class SequenceTests
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);
-        Assert.NotNull(entry.Exception);
+        Assert.NotNull(report.Exception);
     }
 
     [Fact]
@@ -31,6 +31,6 @@ public class SequenceTests
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("bar", entry.Key);
-        Assert.NotNull(entry.Exception);
+        Assert.NotNull(report.Exception);
     }
 }

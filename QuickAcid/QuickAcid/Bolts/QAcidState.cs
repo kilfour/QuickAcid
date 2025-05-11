@@ -62,7 +62,6 @@ public sealed class QAcidState : QAcidContext
 
     public void RecordFailure(Exception ex)
     {
-        GetExecutionContext().AddException(ex);
         CurrentContext.MarkFailure(ex, OriginalRun);
     }
 
@@ -103,7 +102,6 @@ public sealed class QAcidState : QAcidContext
     {
         shrinkers[typeof(T)] = shrinker;
     }
-
     public IShrinker<T>? TryGetShrinker<T>()
     {
         return shrinkers.TryGetValue(typeof(T), out var shrinker)
@@ -114,14 +112,10 @@ public sealed class QAcidState : QAcidContext
     public bool AllowShrinking = true;
     public bool AllowFeedbackShrinking = false;
     private int shrinkCount = 0;
-    public string? FailingSpec { get { return CurrentContext.FailingSpec; } }
-    public Exception? Exception { get { return CurrentContext.Exception; } }
-
-
+    // ---------------------------------------------------------------------------------------
     private readonly Report report;
     public bool Verbose { get; set; }
     public bool AlwaysReport { get; set; }
-
     // -----------------------------------------------------------------
     // implementing context
     // --
@@ -158,7 +152,7 @@ public sealed class QAcidState : QAcidContext
             if (CurrentContext.Failed)
             {
                 if (throwOnFailure)
-                    throw new FalsifiableException(report.ToString(), Exception!) { QAcidReport = report };
+                    throw new FalsifiableException(report.ToString(), CurrentContext.Exception!) { QAcidReport = report };
                 else
                     return report;
             }
@@ -227,18 +221,18 @@ public sealed class QAcidState : QAcidContext
         }
         else
         {
-            report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees: {FailingSpec}."]));
+            report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees: {CurrentContext.FailingSpec}."]));
         }
         AddMemoryToReport(report, true);
-        if (Exception != null)
-            report.Exception = Exception;
+        if (CurrentContext.Exception != null)
+            report.Exception = CurrentContext.Exception;
     }
 
     private IEnumerable<string> GetReportHeaderInfo()
     {
-        if (!string.IsNullOrEmpty(FailingSpec))
-            yield return $"Property '{LabelPrettifier.Prettify(FailingSpec)}' was falsified";
-        if (Exception != null)
+        if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
+            yield return $"Property '{LabelPrettifier.Prettify(CurrentContext.FailingSpec)}' was falsified";
+        if (CurrentContext.Exception != null)
             yield return "Exception thrown";
         yield return $"Original failing run: {OriginalFailingRunExecutionCount} execution(s)";
         yield return $"Shrunk to minimal case:  {ExecutionNumbers.Count} execution(s) ({shrinkCount} shrinks)";
@@ -346,10 +340,10 @@ public sealed class QAcidState : QAcidContext
         foreach (var executionNumber in ExecutionNumbers.ToList())
         {
             MemoryReportAssembler
-                .AddAllMemoryToReport(report, Memory, executionNumber, Exception!, isFinalRun);
+                .AddAllMemoryToReport(report, Memory, executionNumber, CurrentContext.Exception!, isFinalRun);
         }
-        if (!string.IsNullOrEmpty(FailingSpec))
-            report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(FailingSpec)));
+        if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
+            report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(CurrentContext.FailingSpec)));
         return report;
     }
 

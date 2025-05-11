@@ -29,7 +29,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
             var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
-            Assert.NotNull(actEntry.Exception);
+            Assert.NotNull(report.Exception);
         }
     }
 }

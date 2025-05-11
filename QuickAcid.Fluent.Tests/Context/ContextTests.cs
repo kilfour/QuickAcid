@@ -67,9 +67,9 @@ public class ContextTests
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
-        Assert.NotNull(entry.Exception);
-        Assert.IsType<ThisNotesOnYou>(entry.Exception);
-        Assert.Equal("You're singing in the wrong key. 'not there' wasn't found in Tracked(...) or Fuzzed(...).", entry.Exception.Message);
+        Assert.NotNull(report.Exception);
+        Assert.IsType<ThisNotesOnYou>(report.Exception);
+        Assert.Equal("You're singing in the wrong key. 'not there' wasn't found in Tracked(...) or Fuzzed(...).", report.Exception.Message);
     }
 }
 

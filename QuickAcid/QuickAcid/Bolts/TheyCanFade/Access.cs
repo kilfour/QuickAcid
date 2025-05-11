@@ -7,8 +7,6 @@ public class Access
 {
     public HashSet<string> ActionKeys { get; set; } = [];
 
-    public Exception? LastException { get; set; }
-
     private Dictionary<object, DecoratedValue> dictionary = [];
 
     public T Get<T>(object key)
@@ -23,7 +21,7 @@ public class Access
 
     public string GetAsString(object key) // for codegen
     {
-        return dictionary[key].Value!.ToString();
+        return dictionary[key]?.Value?.ToString()!;
     }
 
     public Maybe<T> GetMaybe<T>(object key)
@@ -86,8 +84,7 @@ public class Access
     {
         var newAccess = new Access
         {
-            ActionKeys = [.. ActionKeys],
-            LastException = LastException // shallow copy
+            ActionKeys = [.. ActionKeys]
         };
         foreach (var kvp in dictionary)
         {

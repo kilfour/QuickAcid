@@ -26,6 +26,7 @@ public class ExceptionNotReported
 			select Acid.Test;
 
 		var report = new QState(run).Observe(2);
+		Assert.NotNull(report.Exception);
 
 		var entryAR1 = report.FirstOrDefault<ReportTrackedEntry>();
 		Assert.NotNull(entryAR1);
@@ -38,12 +39,11 @@ public class ExceptionNotReported
 		var entry2 = report.FirstOrDefault<ReportExecutionEntry>();
 		Assert.NotNull(entry2);
 		Assert.Equal("BugHouse.Run", entry2.Key);
-		Assert.Null(entry2.Exception);
 
 		var entry3 = report.SecondOrDefault<ReportExecutionEntry>();
 		Assert.NotNull(entry3);
 		Assert.Equal("BugHouse.Run", entry3.Key);
-		Assert.NotNull(entry3.Exception);
+
 
 	}
 }

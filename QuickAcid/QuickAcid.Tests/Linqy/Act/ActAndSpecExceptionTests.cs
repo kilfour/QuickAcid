@@ -16,7 +16,7 @@ public class ActAndSpecExceptionTests
         var report = new QState(run).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
-        Assert.NotNull(entry.Exception);
+        Assert.NotNull(report.Exception);
         Assert.Equal("foo", entry.Key);
     }
 

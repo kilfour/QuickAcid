@@ -33,7 +33,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
-            Assert.NotNull(actEntry.Exception);
+            Assert.NotNull(report.Exception);
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
-            Assert.NotNull(actEntry.Exception);
+            Assert.NotNull(report.Exception);
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
                 Assert.NotNull(actEntry);
                 Assert.Equal("act", actEntry.Key);
-                Assert.NotNull(actEntry.Exception);
+                Assert.NotNull(report.Exception);
             }
             Assert.Equal("", somethingElse);
             Assert.True(sometimesPropOne);
@@ -142,7 +142,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
             Assert.NotNull(actEntry);
             Assert.Equal("act", actEntry.Key);
-            Assert.Null(actEntry.Exception);
+            Assert.Null(report.Exception);
 
             var specEntry = report.GetSpecEntry();
             Assert.Equal("equal", specEntry.Key);

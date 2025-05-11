@@ -51,8 +51,8 @@ public class DoTests
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("throws", entry.Key);
-        Assert.NotNull(entry.Exception);
-        Assert.Equal("Boom", entry.Exception.Message);
+        Assert.NotNull(report.Exception);
+        Assert.Equal("Boom", report.Exception.Message);
     }
 
     [Fact]

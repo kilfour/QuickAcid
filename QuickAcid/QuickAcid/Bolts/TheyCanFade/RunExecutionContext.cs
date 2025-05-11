@@ -32,8 +32,4 @@ public class RunExecutionContext
 
     public void SetIfNotAlreadyThere<T>(string key, T value) => memory.SetIfNotAlreadyThere(key, value);
 
-    public void AddException(Exception ex)
-    {
-        memory.LastException = ex;
-    }
 }

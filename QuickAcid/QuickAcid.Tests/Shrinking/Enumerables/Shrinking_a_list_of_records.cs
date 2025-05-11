@@ -37,7 +37,7 @@ public class Shrinking_a_list_of_records
         var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(actEntry);
         Assert.Equal("act", actEntry.Key);
-        Assert.NotNull(actEntry.Exception);
+        Assert.NotNull(report.Exception);
     }
 
 
