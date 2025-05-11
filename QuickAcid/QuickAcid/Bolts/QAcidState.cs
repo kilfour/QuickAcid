@@ -250,7 +250,7 @@ public sealed class QAcidState : QAcidContext
                     if (run != current)
                         Script(this);
                 }
-                if (CurrentContext.Failed && !CurrentContext.BreakRun)
+                if (CurrentContext.Failed)
                 {
                     ExecutionNumbers.Remove(current);
                 }
@@ -291,7 +291,7 @@ public sealed class QAcidState : QAcidContext
                     if (run != current)
                         Script(this);
                 }
-                if (CurrentContext.Failed && !CurrentContext.BreakRun)
+                if (CurrentContext.Failed)
                 {
                     ExecutionNumbers.Remove(current);
                 }

@@ -74,7 +74,7 @@ public static partial class QAcidCombinators
 				bool passed = condition();
 				if (passed)
 				{
-					state.CurrentContext.BreakRun = true;
+					state.CurrentContext.StopRun();
 				}
 				return QAcidResult.AcidOnly(state);
 			};

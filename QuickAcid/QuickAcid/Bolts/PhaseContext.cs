@@ -3,7 +3,7 @@ namespace QuickAcid.Bolts;
 public class PhaseContext
 {
     public bool Failed { get; set; }
-    public bool BreakRun { get; set; }
+    private bool BreakRun;
     public string? FailingSpec { get; set; }
     public Exception? Exception { get; set; }
     private readonly QAcidPhase phase;
@@ -20,6 +20,8 @@ public class PhaseContext
 
     public bool NeedsToStop() => BreakRun || Failed;
 
+    internal void StopRun() => BreakRun = true;
+
     public void MarkFailure(string failingSpec)
     {
         Failed = true;
@@ -28,23 +30,21 @@ public class PhaseContext
 
     public void MarkFailure(Exception exception, PhaseContext originalPhase)
     {
-        if (phase == QAcidPhase.ShrinkingExecutions)
+        if (phase != QAcidPhase.NormalRun)
         {
-            if (originalPhase.Exception == null)
+            if (IsExceptionMismatch(exception, originalPhase))
             {
+                // Not marking as Failed: shrink result is invalid (mismatch), but run can't continue
                 BreakRun = true;
-                Failed = true;
-                return;
-            }
-            //access.LastException?.ToString() == exception?.ToString();
-            if (originalPhase.Exception.GetType() != exception.GetType())
-            {
-                BreakRun = true;
-                Failed = true;
                 return;
             }
         }
         Failed = true;
         Exception = exception;
+    }
+
+    private static bool IsExceptionMismatch(Exception exception, PhaseContext originalPhase)
+    {
+        return originalPhase.Exception == null || originalPhase.Exception.GetType() != exception.GetType();
     }
 }
