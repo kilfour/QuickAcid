@@ -156,10 +156,6 @@ public sealed class QAcidState : QAcidContext
                 else
                     return report;
             }
-            if (CurrentContext.BreakRun)
-            {
-                break;
-            }
             if (AlwaysReport)
             {
                 AddMemoryToReport(report, true);
@@ -253,8 +249,6 @@ public sealed class QAcidState : QAcidContext
                     CurrentExecutionNumber = run;
                     if (run != current)
                         Script(this);
-                    if (CurrentContext.BreakRun)
-                        break;
                 }
                 if (CurrentContext.Failed && !CurrentContext.BreakRun)
                 {
@@ -296,8 +290,6 @@ public sealed class QAcidState : QAcidContext
                     CurrentExecutionNumber = run;
                     if (run != current)
                         Script(this);
-                    if (CurrentContext.BreakRun)
-                        break;
                 }
                 if (CurrentContext.Failed && !CurrentContext.BreakRun)
                 {
