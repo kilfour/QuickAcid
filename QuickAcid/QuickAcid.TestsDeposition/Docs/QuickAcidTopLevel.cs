@@ -24,7 +24,7 @@ public class Account
 And assuming that there exists a specification that an account holder should not be able to withdraw 
 funds that will cause the account balance to go below zero, we can write the following QuickAcid test.
 ```csharp
-var run =
+var script =
     from account in ""Account"".Tracked(() => new Account(), a => a.Balance.ToString())
     from _ in ""ops"".Choose(
         from depositAmount in ""deposit"".Input(MGen.Int(0, 10))
@@ -81,7 +81,7 @@ public class QuickAcidTopLevel
     [Fact]
     public void Example()
     {
-        var run =
+        var script =
             from account in "Account".Tracked(() => new Account(), a => a.Balance.ToString())
             from _ in "ops".Choose(
                 from depositAmount in "deposit".Input(MGen.Int())
@@ -94,7 +94,7 @@ public class QuickAcidTopLevel
             from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
             select Acid.Test;
 
-        new QState(run).Observe(50);
+        new QState(script).Observe(50);
     }
 
     [Fact(Skip = "Only for reference")]

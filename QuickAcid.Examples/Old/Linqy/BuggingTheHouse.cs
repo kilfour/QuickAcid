@@ -18,13 +18,13 @@ namespace QuickAcid.Examples.Old.Linqy
 		[Fact(Skip = "Explicit")]
 		public void BugHouse1Error()
 		{
-			var run =
+			var script =
 				from a in "a".Input(MGen.Int(0, 10))
 				from bughouse in "bughouse".Tracked(() => new BugHouse1())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			100.Times(() => new QState(run).Testify(100));
+			100.Times(() => new QState(script).Testify(100));
 		}
 
 		public class BugHouse2
@@ -40,13 +40,13 @@ namespace QuickAcid.Examples.Old.Linqy
 		[Fact(Skip = "explicit")]
 		public void BugHouse2Error()
 		{
-			var run =
+			var script =
 				from a in "a".Input(MGen.Int(0, 10))
 				from bughouse in "bughouse".Tracked(() => new BugHouse2())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			var report = new QState(run).Observe(50);
+			var report = new QState(script).Observe(50);
 			if (report != null)
 				Assert.Fail(report.ToString());
 		}
@@ -65,13 +65,13 @@ namespace QuickAcid.Examples.Old.Linqy
 		[Fact(Skip = "Explicit")]
 		public void BugHouse3Error()
 		{
-			var run =
+			var script =
 				from a in "a".Input(MGen.Int(0, 10))
 				from bughouse in "bughouse".Tracked(() => new BugHouse3())
 				from output in "bughouse.Run".Act(() => bughouse.Run(a))
 				from spec in "returns true".Spec(() => output)
 				select Acid.Test;
-			100.Times(() => new QState(run).Testify(100));
+			100.Times(() => new QState(script).Testify(100));
 		}
 	}
 }

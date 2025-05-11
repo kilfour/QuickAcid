@@ -19,7 +19,7 @@ public class Shrinking_a_list_of_records
             from age in MGen.Constant(counter++)
             select new Person(name, age);
 
-        var run =
+        var script =
             from input in "input".Input(generator.Many(2))
             from foo in "act".Act(() =>
             {
@@ -27,7 +27,7 @@ public class Shrinking_a_list_of_records
             })
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);

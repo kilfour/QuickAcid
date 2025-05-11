@@ -13,7 +13,7 @@ public partial class LinqyTest
     //[Fact]
     public void AllInOne()
     {
-        var run =
+        var script =
             from clientProxyFactory in "ClientProxyFactory".Stashed(() => new TestClientProxyFactory())
             from broadcaster in "Broadcaster".Stashed(() => new Broadcaster(clientProxyFactory))
             from needler in "Needler".Stashed(() => new Needler())
@@ -34,7 +34,7 @@ public partial class LinqyTest
             )
             select Acid.Test;
 
-        10.Times(() => new QState(run).Testify(50));
+        10.Times(() => new QState(script).Testify(50));
     }
 
     private static List<IClientProxy> GetBroadcastersClients(Broadcaster caster)

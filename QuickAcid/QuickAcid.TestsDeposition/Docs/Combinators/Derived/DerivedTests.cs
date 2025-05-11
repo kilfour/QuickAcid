@@ -32,13 +32,13 @@ from input in ""input"".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Va
     [Fact]
     public void Derived_usage()
     {
-        var run =
+        var script =
             from container in "container".Stashed(() => new Container<List<int>>([]))
             from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
             from act in "act".Act(() => container.Value.Add(42))
             from spec in "fail".Spec(() => input != 42)
             select Acid.Test;
-        var report = new QState(run).Observe(5);
+        var report = new QState(script).Observe(5);
         var entry = report.FirstOrDefault<ReportInputEntry>();
         Assert.Null(entry);
     }
@@ -46,11 +46,11 @@ from input in ""input"".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Va
     [Fact]
     public void Derived_alternative_usage()
     {
-        var run =
+        var script =
             from container in "container".Stashed(() => new Container<List<int>>(new List<int>()))
             from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
             select Acid.Test;
-        new QState(run).Testify(1);
+        new QState(script).Testify(1);
     }
 
     [Fact(Skip = "**not** shrinkable")]

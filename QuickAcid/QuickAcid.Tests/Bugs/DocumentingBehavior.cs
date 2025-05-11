@@ -17,11 +17,11 @@ public class DocumentingBehavior
     [Fact]
     public void ShrinkingInputs_phase_should_not_clear_failure()
     {
-        var run =
+        var script =
             from act in "fail".Act(() => throw new Exception("boom"))
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
         Assert.Contains("boom", report.ToString());
     }
@@ -31,12 +31,12 @@ public class DocumentingBehavior
     {
         var secondSpecFailed = false;
 
-        var run =
+        var script =
             from _ in "first".Spec(() => { if (secondSpecFailed) throw new Exception("BOOM"); return true; })
             from _2 in "second".Spec(() => { secondSpecFailed = true; return false; })
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
 
         Assert.Equal("second", report.GetSpecEntry().Key);
     }

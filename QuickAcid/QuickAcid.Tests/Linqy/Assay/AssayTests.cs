@@ -10,14 +10,14 @@ public class AssayTests
     [Fact]
     public void Assay_something_did_not_happen()
     {
-        var run =
+        var script =
             from observer in "observer".Tracked(() => new HashSet<int>())
             from roll in "roll".Act(() => MGen.Int(1, 3).Generate())
             from _a1 in "record".Act(() => observer.Add(roll))
             from as1 in "gens 3".Assay(() => observer.Contains(3))
             select Acid.Test;
 
-        var report = new QState(run).Observe(20);
+        var report = new QState(script).Observe(20);
 
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
@@ -28,14 +28,14 @@ public class AssayTests
     [Fact]
     public void Assay_multiple_did_not_happen()
     {
-        var run =
+        var script =
             from observer in "observer".Tracked(() => new HashSet<int>())
             from roll in "roll".Act(() => MGen.Int(1, 3).Generate())
             from _a1 in "record".Act(() => observer.Add(roll))
             from as1 in "combined".Assay(("gens 3", () => observer.Contains(3)), ("gens 4", () => observer.Contains(4)))
             select Acid.Test;
 
-        var report = new QState(run).Observe(20);
+        var report = new QState(script).Observe(20);
 
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();

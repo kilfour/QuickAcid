@@ -8,13 +8,13 @@ public class WhenTheHeartIsA
     [Fact]
     public void LonelyHunter()
     {
-        var run =
+        var script =
             from obj in "needs ref".Tracked(() => new object())
             from _ in "needs exception".Act(() => throw new Exception("boom"))
             from _s1 in "spec if".SpecIf(() => true, () => true)
             from _s2 in MinimalSpec(obj)
             select Acid.Test;
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
     }
 

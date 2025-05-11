@@ -28,13 +28,13 @@ namespace QuickAcid.Examples
 
 			var listDeleter = new ListDeleter();
 
-			var run =
+			var script =
 				from list in "input list".Input(ints)
 				from toRemove in "to remove".Input(intBetweenZeroAndTen)
 				from output in "listDeleter.DoingMyThing".Act(() => listDeleter.DoingMyThing(list, toRemove))
 				from spec in "int removed".Spec(() => !output.Contains(toRemove))
 				select Acid.Test;
-			10.Times(() => new QState(run).Testify(10));
+			10.Times(() => new QState(script).Testify(10));
 		}
 	}
 }

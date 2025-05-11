@@ -10,13 +10,13 @@ public class ActAndInputExceptionTests
     [Fact]
     public void ExceptionThrownByAct()
     {
-        var run =
+        var script =
             from input in "input".Input(MGen.Int(1, 1))
             from foo in "foo".Act(() => { if (input == 1) throw new Exception(); })
             from spec in "spec".Spec(() => true)
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);

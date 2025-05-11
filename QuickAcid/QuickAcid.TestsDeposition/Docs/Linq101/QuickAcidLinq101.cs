@@ -80,10 +80,10 @@ It consists of one or more executions of the test logic, usually with different 
 A run ends either when a failure is found or when the maximum number of executions is reached.
 In order to turn a previously defined test into a run use the following pattern:
 ```csharp
-var run =
+var script =
     from spec in ""spec"".Spec(() => true)
     select Acid.Test;
-new QState(run).Testify(1);
+new QState(script).Testify(1);
 ```
 In the above example the variable 'run' is the definition, and the .Testify(1) call performs an instance of it once.
 Seeing as the `Spec` (thoroughly explained later on) is hardcoded to pass,
@@ -92,10 +92,10 @@ nothing is reported and using this in a unit testing framework just passes the e
     public void What_is_a_run()
     {
         var timesSpecChecked = 0;
-        var run =
+        var script =
             from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
             select Acid.Test;
-        var ex = Record.Exception(() => new QState(run).Testify(1));
+        var ex = Record.Exception(() => new QState(script).Testify(1));
         Assert.Null(ex);
         Assert.Equal(1, timesSpecChecked);
     }
@@ -109,10 +109,10 @@ For now, calling `.Testify(10)` in above example checks the Spec ten times.")]
     public void What_is_a_run_multiple_executions()
     {
         var timesSpecChecked = 0;
-        var run =
+        var script =
             from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
             select Acid.Test;
-        var ex = Record.Exception(() => new QState(run).Testify(10));
+        var ex = Record.Exception(() => new QState(script).Testify(10));
         Assert.Null(ex);
         Assert.Equal(10, timesSpecChecked);
     }
@@ -136,11 +136,11 @@ In this case :
 ")]
     public void What_is_a_run_failing_spec_throws()
     {
-        var run =
+        var script =
             from spec in "spec".Spec(() => false)
             select Acid.Test;
 
-        var ex = Assert.Throws<FalsifiableException>(() => new QState(run).Testify(1));
+        var ex = Assert.Throws<FalsifiableException>(() => new QState(script).Testify(1));
         Assert.NotNull(ex.QAcidReport);
     }
 
@@ -149,14 +149,14 @@ In this case :
     [Doc(Order = $"{Chapter.Order}-4", Caption = "What is an Execution?", Content =
 @"In the previous section we briefly mentioned executions, let's elaborate and have a look at a simple test:
  ```csharp
-var run =
+var script =
     from container in ""container"".Stashed(() => new Container(0))
     from input in ""input"".Input(MGen.Int(1, 5))
     from act in ""act"".Act(() => container.Value = input)
     from spec in ""spec"".Spec(() => container.Value != 0)
     select Acid.Test;
 
-new QState(run).Testify(10);
+new QState(script).Testify(10);
 ```
 While contrived, this example demonstrates how `Stashed`, `Input`, and `Act` work together across multiple executions.
 First a brief explanation of the newly introduced Scripts :
@@ -164,7 +164,7 @@ First a brief explanation of the newly introduced Scripts :
 - `Input(...)` — introduces a fuzzed input that will be tracked and shrunk in case of failure.
 - `Act(...)` — performs an action. It's where you apply behavior, such as calling a method or mutating state.
 
-Suppose we execute this script with `new QState(run).Testify(10);`. What happens?  
+Suppose we execute this script with `new QState(script).Testify(10);`. What happens?  
 As stated before, it will run 10 executions, but the individual scripts can have different scopes,
 which is how QuickAcid handles mutable state and side effects.  
 
@@ -188,12 +188,12 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
 ")]
     public void What_is_an_execution()
     {
-        var run =
+        var script =
             from container in "container".Stashed(() => new Container<int>(0))
             from input in "input".Input(MGen.Int(1, 5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 0)
             select Acid.Test;
-        new QState(run).Testify(10);
+        new QState(script).Testify(10);
     }
 }

@@ -11,12 +11,12 @@ public class AnalyzeTests
     public void Analyze_excutes_only_at_end_of_run()
     {
         var counter = 0;
-        var run =
+        var script =
             from _a1 in "record".Act(() => counter++)
             from as1 in "spec".Analyze(() => false)
             select Acid.Test;
 
-        var report = new QState(run).Observe(2);
+        var report = new QState(script).Observe(2);
 
         var timesActShouldHaveRunOriginally = 2;
         var timesActShouldHaveRunDuringExcutionShrinking = 1;
@@ -37,14 +37,14 @@ public class AnalyzeTests
     [Fact]
     public void Analyze_as_assay()
     {
-        var run =
+        var script =
             from observer in "observer".Tracked(() => new HashSet<int>())
             from roll in "roll".Act(() => MGen.Int(1, 3).Generate())
             from _a1 in "record".Act(() => observer.Add(roll))
             from as1 in "gens 3".Analyze(() => observer.Contains(3))
             select Acid.Test;
 
-        var report = new QState(run).Observe(20);
+        var report = new QState(script).Observe(20);
         Assert.NotNull(report);
 
         var entry = report.GetSpecEntry();

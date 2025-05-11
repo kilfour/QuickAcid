@@ -30,7 +30,7 @@ from _ in ""ops"".Choose(
     public void Choose_usage()
     {
         // var hashset = new HashSet<string>();
-        // var run =
+        // var script =
         //     from account in "Account".Stashed(() => new Account())
         //     from _ in "ops".Choose(
         //         "deposit".Act(() => signal.pulse),
@@ -39,7 +39,7 @@ from _ in ""ops"".Choose(
         //     from testify in "".TestifyProvenWhen()
         //     from spec in "fail".Spec(() => false)
         //     select Acid.Test;
-        // var report = new QState(run).Observe(2);
+        // var report = new QState(script).Observe(2);
         // var entry = report.First<ReportExecutionEntry>();
         // Assert.NotNull(entry);
         // Assert.Equal("act", entry.Key);

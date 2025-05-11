@@ -20,7 +20,7 @@ public class Account
 ```
 TestExample:
 ```csharp
-var run =
+var script =
     from account in ""Account"".Tracked(
         () => new Account(), a => a.Balance.ToString())
     from _ in ""ops"".Choose(
@@ -36,7 +36,7 @@ var run =
     from spec in ""No_Overdraft: account.Balance >= 0"".Spec(() => account.Balance >= 0)
     select Acid.Test;
 
-var code = new QState(run).GenerateCode().Observe(50).Code;
+var code = new QState(script).GenerateCode().Observe(50).Code;
 ```
 Result:
 ```csharp
@@ -61,7 +61,7 @@ public class CodeGenChapter
     [Fact]
     public void Example()
     {
-        var run =
+        var script =
             from account in "Account".Tracked(() => new Account(), a => a.Balance.ToString())
             from _ in "ops".Choose(
                 from depositAmount in "deposit".Input(MGen.Int(0, 10))
@@ -74,7 +74,7 @@ public class CodeGenChapter
             from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
             select Acid.Test;
 
-        var code = new QCodeState(run).GenerateCode(50);
+        var code = new QCodeState(script).GenerateCode(50);
 
         var reader = LinesReader.FromText(code);
         Assert.Equal("namespace Refined.By.QuickAcid;", reader.NextLine());

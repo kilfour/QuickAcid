@@ -26,12 +26,12 @@ from act in ""act"".Act(() => account.Withdraw(500))
     [Fact]
     public void Act_usage()
     {
-        var run =
+        var script =
             from account in "Account".Stashed(() => new Account())
             from act in "act".Act(() => account.Withdraw(500))
             from spec in "fail".Spec(() => false)
             select Acid.Test;
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("act", entry.Key);
@@ -46,11 +46,11 @@ from act in ""act"".Act(() => account.GetBalance())
     [Fact]
     public void Act_can_return_value()
     {
-        var run =
+        var script =
             from act in "act".Act(() => false)
             from spec in "fail".Spec(() => act)
             select Acid.Test;
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
@@ -66,13 +66,13 @@ from act2 in ""and act again"".Act(() => account.Withdraw(200))
     [Fact]
     public void Act_multiple_one_execution()
     {
-        var run =
+        var script =
             from account in "Account".Stashed(() => new Account())
             from act1 in "act once".Act(() => account.Withdraw(500))
             from act2 in "and act again".Act(() => account.Withdraw(500))
             from spec in "fail".Spec(() => false)
             select Acid.Test;
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("act once, and act again", entry.Key);

@@ -27,10 +27,10 @@ The second argument is a formatter function for rendering the value into the tes
     [Fact]
     public void Tracked_usage_and_stringify()
     {
-        var run =
+        var script =
             from account in "account".Tracked(() => new Account(), a => a.Balance.ToString())
             select Acid.Test;
-        var report = new QState(run).AlwaysReport().ObserveOnce();
+        var report = new QState(script).AlwaysReport().ObserveOnce();
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
         Assert.Equal("   => account (tracked) : 0", entry.ToString());
@@ -39,14 +39,14 @@ The second argument is a formatter function for rendering the value into the tes
     [Fact]
     public void Tracked_in_report_after_shrinking()
     {
-        var run =
+        var script =
            from container in "container".Tracked(() => new Container<int>(21), a => a.Value.ToString())
            from input in "input".Input(MGen.Constant(42))
            from _do in "do".Act(() => { container.Value = input; })
            from _ in "spec".Spec(() => container.Value != 42)
            select Acid.Test;
 
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
@@ -57,7 +57,7 @@ The second argument is a formatter function for rendering the value into the tes
     public void Tracked_only_initialized_at_start_of_run()
     {
         var executionCount = 0;
-        var run =
+        var script =
             from token in "container".Tracked(() =>
             {
                 if (executionCount != 0)
@@ -66,7 +66,7 @@ The second argument is a formatter function for rendering the value into the tes
             })
             from act in "act".Act(() => { executionCount++; })
             select Acid.Test;
-        new QState(run).Observe(3);
+        new QState(script).Observe(3);
     }
 
     //[Fact]
@@ -75,7 +75,7 @@ The second argument is a formatter function for rendering the value into the tes
     //     var executionCount = 0;
     //     var specHolds = true;
     //     var alwaysReportedChanged = false;
-    //     var run =
+    //     var script =
     //         from token in "token".Tracked(() =>
     //         {
     //             if (specHolds && executionCount == 1)
@@ -93,7 +93,7 @@ The second argument is a formatter function for rendering the value into the tes
     //         )
     //         select Acid.Test;
 
-    //     new QState(run).AlwaysReport().Observe(3);
+    //     new QState(script).AlwaysReport().Observe(3);
     //     Assert.False(alwaysReportedChanged);
     // }
     // [Fact]
@@ -158,10 +158,10 @@ from flag in ""flag"".TrackedValue(true)
     [Fact]
     public void StashedValue_usage()
     {
-        var run =
+        var script =
             from flag in "flag".Tracked(true)
             select Acid.Test;
-        new QState(run).Testify(1);
+        new QState(script).Testify(1);
     }
 }
 

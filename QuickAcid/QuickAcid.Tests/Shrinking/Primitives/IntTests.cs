@@ -10,7 +10,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         [Fact]
         public void OneRelevantInt()
         {
-            var run =
+            var script =
                 from input1 in "input1".Input(MGen.Int(5, 7))
                 from input2 in "input2".Input(MGen.Int(5, 7))
                 from foo in "act".Act(() =>
@@ -19,7 +19,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
                 })
                 select Acid.Test;
 
-            var report = new QState(run).Observe(50);
+            var report = new QState(script).Observe(50);
 
             Assert.Single(report.OfType<ReportInputEntry>());
 
@@ -37,7 +37,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         [Fact]
         public void TwoRelevantInts()
         {
-            var run =
+            var script =
                 from input1 in "input1".Input(MGen.Int(5, 7))
                 from input2 in "input2".Input(MGen.Int(5, 7))
                 from foo in "act".Act(() =>
@@ -46,7 +46,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
                 })
                 select Acid.Test;
 
-            var report = new QState(run).Observe(50);
+            var report = new QState(script).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
@@ -67,7 +67,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
         [Fact(Skip = "explicit")]
         public void TwoRelevantIntsTricky()
         {
-            var run =
+            var script =
                 from input1 in "input1".Input(MGen.Int(0, 100))
                 from input2 in "input2".Input(MGen.Int(0, 100))
                 from foo in "act".Act(() =>
@@ -76,7 +76,7 @@ namespace QuickAcid.Tests.Shrinking.Primitives
                 })
                 select Acid.Test;
 
-            var report = new QState(run).Observe(100);
+            var report = new QState(script).Observe(100);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);

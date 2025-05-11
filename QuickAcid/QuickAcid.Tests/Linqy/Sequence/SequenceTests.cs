@@ -23,11 +23,11 @@ public class SequenceTests
     public void TwoActionsExceptionThrownOnSecond()
     {
 
-        var run =
+        var script =
             "foobar".Sequence(
             "foo".Act(() => { }),
             "bar".Act(() => throw new Exception()));
-        var report = new QState(run).Observe(2); ;
+        var report = new QState(script).Observe(2); ;
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("bar", entry.Key);

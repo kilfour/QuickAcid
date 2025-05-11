@@ -17,12 +17,12 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from age in MGen.Constant(42)
                 select new Person(name, age);
 
-            var run =
+            var script =
                 from input in "input".Input(generator)
                 from foo in "act".Act(() => { if (input.Age == 42) throw new Exception(); })
                 select Acid.Test;
 
-            var report = new QState(run).ObserveOnce();
+            var report = new QState(script).ObserveOnce();
 
             Assert.Single(report.OfType<ReportInputEntry>());
 
@@ -50,7 +50,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from age in MGen.Constant(40)
                 select new Person(name, age);
 
-            var run =
+            var script =
                 from input1 in "input1".Input(generator1)
                 from input2 in "input2".Input(generator2)
                 from foo in "act".Act(() =>
@@ -59,7 +59,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 })
                 select Acid.Test;
 
-            var report = new QState(run).ObserveOnce();
+            var report = new QState(script).ObserveOnce();
 
             var inputEntry = report.Single<ReportInputEntry>();
             Assert.NotNull(inputEntry);
@@ -79,7 +79,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from age in MGen.ChooseFromThese(40, 41, 42, 1000)
                 select new Person(name, age);
 
-                var run =
+                var script =
                     from input in "input".Input(generator)
                     from foo in "act".Act(() =>
                     {
@@ -87,7 +87,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-                var report = new QState(run).Observe(30);
+                var report = new QState(script).Observe(30);
 
                 var inputEntry = report.Single<ReportInputEntry>();
                 Assert.NotNull(inputEntry);

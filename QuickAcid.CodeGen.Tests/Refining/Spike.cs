@@ -16,7 +16,7 @@ public class Spike
     [Fact(Skip = "demo")]
     public void Lets_see_where_this_vein_leads()
     {
-        var run =
+        var script =
             from account in "Account".Tracked(() => new Account(), a => a.Balance.ToString())
             from _ in "ops".Choose(
                 from depositAmount in "deposit".Input(MGen.Int(0, 100))

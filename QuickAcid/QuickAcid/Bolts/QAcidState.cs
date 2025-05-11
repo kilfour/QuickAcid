@@ -117,7 +117,7 @@ public sealed class QAcidState : QAcidContext
     public bool Verbose { get; set; }
     public bool AlwaysReport { get; set; }
     // -----------------------------------------------------------------
-    // implementing context
+    // implementing context for fluent
     // --
     public T GetItAtYourOwnRisk<T>(string key) => Memory.GetForFluentInterface<T>(key);
     public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
@@ -244,10 +244,10 @@ public sealed class QAcidState : QAcidContext
             using (EnterPhase(QAcidPhase.ShrinkingExecutions))
             {
                 Memory.ResetRunScopedInputs();
-                foreach (var run in ExecutionNumbers.ToList())
+                foreach (var executionNumber in ExecutionNumbers.ToList())
                 {
-                    CurrentExecutionNumber = run;
-                    if (run != current)
+                    CurrentExecutionNumber = executionNumber;
+                    if (executionNumber != current)
                         Script(this);
                 }
                 if (CurrentContext.Failed)
@@ -285,10 +285,10 @@ public sealed class QAcidState : QAcidContext
             using (EnterPhase(QAcidPhase.FeedbackShrinking))
             {
                 Memory.ResetRunScopedInputs();
-                foreach (var run in ExecutionNumbers.ToList())
+                foreach (var executionNumber in ExecutionNumbers.ToList())
                 {
-                    CurrentExecutionNumber = run;
-                    if (run != current)
+                    CurrentExecutionNumber = executionNumber;
+                    if (executionNumber != current)
                         Script(this);
                 }
                 if (CurrentContext.Failed)

@@ -24,11 +24,11 @@ public class InputTests
     [Fact]
     public void UnusedInputIsNotReported()
     {
-        var run =
+        var script =
             from input in "input".Input(MGen.Int())
             from foo in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         var entry = report.FirstOrDefault<ReportInputEntry>();
         Assert.Null(entry);
     }
@@ -42,21 +42,21 @@ from input in ""input"".Input(() => MGen.Int())
     [Fact]
     public void Input_usage()
     {
-        var run =
+        var script =
             from input in "input".Input(MGen.Int())
             select Acid.Test;
-        new QState(run).Testify(1);
+        new QState(script).Testify(1);
     }
 
     [Fact]
     public void Null_shows_up_in_report_as_null()
     {
-        var run =
+        var script =
             from input in "input".Input(MGen.Constant<string?>(null))
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
@@ -68,12 +68,12 @@ from input in ""input"".Input(() => MGen.Int())
     [Fact]
     public void Empty_String_shows_up_in_report_as_empty()
     {
-        var run =
+        var script =
             from input in "input".Input(MGen.Constant(""))
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce(); ;
+        var report = new QState(script).ObserveOnce(); ;
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
@@ -85,12 +85,12 @@ from input in ""input"".Input(() => MGen.Int())
     [Fact]
     public void String_shows_up_in_report_with_quotes()
     {
-        var run =
+        var script =
             from input in "input".Input(MGen.Constant(" "))
             from foo in "spec".Spec(() => !string.IsNullOrWhiteSpace(input))
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce(); ;
+        var report = new QState(script).ObserveOnce(); ;
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();

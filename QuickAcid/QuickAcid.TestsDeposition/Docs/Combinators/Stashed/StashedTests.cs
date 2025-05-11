@@ -24,10 +24,10 @@ from account in ""account"".Stashed(() => new Account())
     [Fact]
     public void Stashed_usage()
     {
-        var run =
+        var script =
             from account in "account".Stashed(() => new Account())
             select Acid.Test;
-        new QState(run).Testify(1);
+        new QState(script).Testify(1);
     }
     [Doc(Order = $"{Chapter.Order}-2-1", Caption = "StashedValue", Content =
 @"Stashes a primitive or scalar value without requiring a wrapper object.
@@ -41,10 +41,10 @@ from flag in ""flag"".StashedValue(true)
     [Fact]
     public void StashedValue_usage()
     {
-        var run =
+        var script =
             from flag in "flag".StashedValue(true)
             select Acid.Test;
-        new QState(run).Testify(1);
+        new QState(script).Testify(1);
     }
 }
 

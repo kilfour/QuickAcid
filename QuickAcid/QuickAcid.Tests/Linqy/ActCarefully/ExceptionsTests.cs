@@ -10,40 +10,40 @@ public class ExceptionsTests
     [Fact]
     public void How_to_catch_one()
     {
-        var run =
+        var script =
             from result in "act".ActCarefully(() => { throw new Exception(); })
             from throws in "throws".Spec(result.Throws<Exception>)
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce(); ;
+        var report = new QState(script).ObserveOnce(); ;
         Assert.Null(report);
     }
 
     [Fact]
     public void How_to_catch_multiple()
     {
-        var run =
+        var script =
             from flag in "flag".Input(MGen.Bool())
             from result1 in "act1".ActCarefully(() => { if (flag) throw new Exception(); })
             from result2 in "act2".ActCarefully(() => { if (!flag) throw new Exception(); })
             from throws in "throws".Spec(() => result1.Throws<Exception>() || result2.Throws<Exception>())
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce(); ;
+        var report = new QState(script).ObserveOnce(); ;
         Assert.Null(report);
     }
 
     [Fact]
     public void How_to_catch_one_out_of_two()
     {
-        var run =
+        var script =
             from flag in "flag".Input(MGen.Bool())
             from result1 in "act1".ActCarefully(() => { })
             from result2 in "act2".ActCarefully(() => { if (flag) throw new Exception(); })
             from throws in "throws".Spec(() => !flag || result2.Throws<Exception>())
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce(); ;
+        var report = new QState(script).ObserveOnce(); ;
         Assert.Null(report);
     }
 

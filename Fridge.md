@@ -1,13 +1,6 @@
 ## Refactor
-```csharp
-public abstract record ExecutionOutcome
-{
-    public static ExecutionOutcome SpecFailed(string specName) => new SpecFailedOutcome(specName);
-    public sealed record SpecFailedOutcome(string specName) : ExecutionOutcome;
-    public static ExecutionOutcome ExceptionThrown(Exception exception) => new ExceptionThrownOutcome(exception);
-    public sealed record ExceptionThrownOutcome(Exception exception) : ExecutionOutcome;
-}
-```
+PhaseContext => Copy
+
 --- slide ---
 ## FeedBack Shrinking 
 Check always reported input on Start run  

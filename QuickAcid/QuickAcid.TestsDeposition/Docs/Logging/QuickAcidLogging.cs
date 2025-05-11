@@ -21,29 +21,29 @@ public class QuickAcidLogging
     [Doc(Order = $"{Chapter.Order}-1", Caption = "Verbose Mode", Content =
 @"By adding a call to `.Verbose()` when building your test, you instruct the engine to include detailed diagnostic output in the report.
 ```csharp
-var run =
+var script =
     from spec in ""spec"".Spec(() => false)
     select Acid.Test;
-new QState(run).Verbose().Testify(1);
+new QState(script).Verbose().Testify(1);
 ```
 This will produce a report that contains :
 ")]
     public void Verbose_enabling()
     {
-        var run =
+        var script =
             from spec in "spec".Spec(() => true)
             select Acid.Test;
-        new QState(run).Verbose().Testify(1);
+        new QState(script).Verbose().Testify(1);
     }
 
     [Fact]
     [Doc(Order = $"{Chapter.Order}-2", Content = " - Information about the first failed run.")]
     public void Verbose_contains_first_failed_run()
     {
-        var run =
+        var script =
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(run).Verbose().ObserveOnce();
+        var report = new QState(script).Verbose().ObserveOnce();
         Assert.NotNull(report);
         Assert.Equal("FIRST FAILED RUN", report.First<ReportTitleSectionEntry>().Title[0]);
     }
@@ -54,10 +54,10 @@ This will produce a report that contains :
 ")]
     public void Verbose_contains_after_execution_shrinking()
     {
-        var run =
+        var script =
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(run).Verbose().ObserveOnce();
+        var report = new QState(script).Verbose().ObserveOnce();
         Assert.NotNull(report);
         Assert.Equal("AFTER EXECUTION SHRINKING", report.Second<ReportTitleSectionEntry>().Title[0]);
     }
@@ -69,10 +69,10 @@ This will produce a report that contains :
 ")]
     public void Verbose_contains_after_input_shrinking()
     {
-        var run =
+        var script =
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(run).Verbose().ObserveOnce();
+        var report = new QState(script).Verbose().ObserveOnce();
         Assert.NotNull(report);
         Assert.Equal("AFTER INPUT SHRINKING :", report.Third<ReportTitleSectionEntry>().Title[0]);
     }
@@ -81,13 +81,13 @@ This will produce a report that contains :
     [Doc(Order = $"{Chapter.Order}-5", Content =
 @"Which for this example: 
 ```csharp
-var run =
+var script =
     from container in ""stashed"".Stashed(() => new Container(0))
     from input in ""input"".Input(MGen.Int(1, 6))
     from act in ""act"".Act(() => container.Value = input)
     from spec in ""spec"".Spec(() => container.Value != 5)
     select Acid.Test;
-new QState(run).Verbose().Testify(50);
+new QState(script).Verbose().Testify(50);
 ```
 Outputs something similar to:
 ```
@@ -142,13 +142,13 @@ Outputs something similar to:
 ")]
     public void Verbose_full_output()
     {
-        var run =
+        var script =
             from container in "stashed".Stashed(() => new Container<int>(0))
             from input in "input".Input(MGen.Constant(5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 5)
             select Acid.Test;
-        var report = new QState(run).Verbose().Observe(20);
+        var report = new QState(script).Verbose().Observe(20);
         var reader = LinesReader.FromText(report.ToString());
         Assert.Equal("QuickAcid Report:", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());

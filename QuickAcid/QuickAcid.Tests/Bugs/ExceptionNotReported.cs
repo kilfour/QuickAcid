@@ -20,12 +20,12 @@ public class ExceptionNotReported
 	[Fact]
 	public void Example()
 	{
-		var run =
+		var script =
 			from bugHouse in "BugHouse".Tracked(() => new BugHouse())
 			from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
 			select Acid.Test;
 
-		var report = new QState(run).Observe(2);
+		var report = new QState(script).Observe(2);
 		Assert.NotNull(report.Exception);
 
 		var entryAR1 = report.FirstOrDefault<ReportTrackedEntry>();

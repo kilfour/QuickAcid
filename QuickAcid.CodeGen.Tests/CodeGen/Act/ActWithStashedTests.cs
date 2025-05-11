@@ -10,12 +10,12 @@ namespace QuickAcid.TestsDeposition.Linqy.CodeGen.Act
         [Fact(Skip = "wip")]
         public void CodeGen_act_()
         {
-            var run =
+            var script =
                 from account in "Account".Stashed(() => new Account())
                 from withdrawAmount in "withdraw".Input(MGen.Int(42, 42))
                 from withdraw in "account.Withdraw:withdraw".Act(() => account.Withdraw(withdrawAmount))
                 select Acid.Test;
-            var reader = Reader.FromRun(run);
+            var reader = Reader.FromRun(script);
             Assert.Equal("DoingStuff(42);", reader.NextLine());
         }
     }

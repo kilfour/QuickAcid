@@ -29,7 +29,7 @@ namespace QuickAcid.Examples
 		[Fact(Skip = "Explicit")]
 		public void BugHouseError()
 		{
-			var run =
+			var script =
 				from bughouse in "bughouse".Tracked(() => new BugHouse())
 				from funcOne in
 					"Choose".Choose(
@@ -43,7 +43,7 @@ namespace QuickAcid.Examples
 						select Acid.Test)
 				select Acid.Test;
 
-			100.Times(() => new QState(run).Testify(100));
+			100.Times(() => new QState(script).Testify(100));
 		}
 	}
 }

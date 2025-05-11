@@ -14,7 +14,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from _ in MGen.Int(5, 7).AsString().Replace()
                 from thing in MGen.One<Something>()
                 select thing;
-            var run =
+            var script =
 
                     from input in "input".Input(generator)
                     from foo in "act".Act(() =>
@@ -23,7 +23,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-            var report = new QState(run).Observe(50);
+            var report = new QState(script).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);
@@ -43,7 +43,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from _ in MGen.Int(5, 7).AsString().Replace()
                 from thing in MGen.One<Something>()
                 select thing;
-            var run =
+            var script =
 
                     from input in "input".Input(generator)
                     from foo in "act".Act(() =>
@@ -52,7 +52,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-            var report = new QState(run).Observe(50);
+            var report = new QState(script).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);
@@ -79,7 +79,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             var somethingElse = "";
             for (int i = 0; i < 100; i++)
             {
-                var run =
+                var script =
 
                         from input in "input".Input(generator)
                         from foo in "act".Act(() =>
@@ -88,7 +88,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                         })
                         select Acid.Test;
 
-                var report = new QState(run).Observe(50);
+                var report = new QState(script).Observe(50);
 
                 var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
                 Assert.Equal("input", inputEntry.Key);
@@ -122,7 +122,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from thing in MGen.One<Something>()
                 select thing;
 
-            var run =
+            var script =
 
                     from input in "input".Input(generator)
                     from result in "act".Act(() => new Something { MyFirstProperty = input.MyFirstProperty })
@@ -132,7 +132,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                         && input.MyThirdProperty == result.MyThirdProperty)
                     select Acid.Test;
 
-            var report = new QState(run).Observe(50);
+            var report = new QState(script).Observe(50);
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);

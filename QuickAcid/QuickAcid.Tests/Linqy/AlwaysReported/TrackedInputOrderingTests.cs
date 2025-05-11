@@ -26,13 +26,13 @@ public class TrackedInputOrderingTests
     [Fact]
     public void TrackedInput_IndirectReferenceMethodForm_ShouldNotThrow()
     {
-        var run =
+        var script =
             from container in "container".Tracked(() => new Container { Value = 21 })
             from dependent in "dependent".Tracked(() => new Dependent(container))
             from act in "we might need an act".Act(() => { })
             from boom in Boom(dependent)
             select Acid.Test;
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.Null(report);
     }
 
@@ -46,13 +46,13 @@ public class TrackedInputOrderingTests
     [Fact]
     public void TrackedInput_IndirectReferenceInline_ShouldSucceed()
     {
-        var run =
+        var script =
             from container in "container".Tracked(() => new Container { Value = 21 })
             from dependent in "dependent".Tracked(() => new Dependent(container)) // now container is in scope
             from _ in "spec".Spec(() => dependent.DoubledValue == 42)
             select Acid.Test;
 
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.Null(report);
     }
 }

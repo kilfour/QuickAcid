@@ -60,7 +60,7 @@ public class StackAcidSpec
     [Fact]
     public void StackBehavesCorrectly()
     {
-        var run =
+        var script =
             from stack in "stack".Tracked(() => new Stack<int>())
             from pushed in "pushed".Tracked(() => new List<int>())
             from expectedPops in "expectedPops".Tracked(() => new List<int>())
@@ -76,6 +76,6 @@ public class StackAcidSpec
             from popsInReverse in "PopsInReverse".Spec(
                 () => popped.SequenceEqual(expectedPops))
             select Acid.Test;
-        10.Times(() => new QState(run).Testify(20));
+        10.Times(() => new QState(script).Testify(20));
     }
 }

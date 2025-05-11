@@ -35,7 +35,7 @@
 //         Generator<T> generator,
 //         params (string, Func<T, bool>)[] labeledChecks)
 //     {
-//         var run =
+//         var script =
 //             from inspector in "inspector".Stashed(
 //                 () =>
 //                 {
@@ -49,7 +49,7 @@
 //             from _s in "Assayer".Assay(
 //                 [.. labeledChecks.Select(a => (a.Item1, (Func<bool>)(() => inspector.HasValueThatSatisfies(a.Item2))))])
 //             select Acid.Test;
-//         new QState(run).Testify(numberOfExecutions);
+//         new QState(script).Testify(numberOfExecutions);
 //     }
 
 //     public static void GeneratedValuesShouldAllSatisfy<T>(
@@ -64,11 +64,11 @@
 //         Generator<T> generator,
 //         params (string, Func<T, bool>)[] labeledChecks)
 //     {
-//         var run =
+//         var script =
 //             from input in "Generator".Input(generator.Inspect())
 //             from _ in CombineSpecs(input, labeledChecks) // Move this to QuickAcid
 //             select Acid.Test;
-//         new QState(run).Testify(numberOfExecutions);
+//         new QState(script).Testify(numberOfExecutions);
 //     }
 
 //     private static QAcidScript<Acid> CombineSpecs<T>(T input, IEnumerable<(string, Func<T, bool>)> checks)

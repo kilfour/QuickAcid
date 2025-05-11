@@ -13,14 +13,14 @@ public class SpecIfProblems
 	[Fact]
 	public void SpecIfBeforeSpec()
 	{
-		var run =
+		var script =
 			from counter in "counter".Tracked(() => new Counter())
 			from act in "act".Act(() => counter.Val++)
 			from _s1 in "if".SpecIf(() => counter.Val == 0, () => true)
 			from _s2 in "s".Spec(() => counter.Val > 4)
 			select Acid.Test;
 
-		var report = new QState(run).Observe(5);
+		var report = new QState(script).Observe(5);
 		Assert.NotNull(report);
 	}
 
@@ -29,7 +29,7 @@ public class SpecIfProblems
 	{
 		var predicateRan = false;
 
-		var run =
+		var script =
 			from counter in "counter".Tracked(() => new Counter())
 			from act in "act".Act(() => counter.Val++)
 
@@ -48,7 +48,7 @@ public class SpecIfProblems
 				() => true)
 			select Acid.Test;
 
-		var report = new QState(run).Observe(3);
+		var report = new QState(script).Observe(3);
 
 		Assert.NotNull(report); // still failed as expected
 		Assert.False(predicateRan); // ✅ predicate must not run
@@ -59,7 +59,7 @@ public class SpecIfProblems
 	{
 		var predicateRan = false;
 
-		var run =
+		var script =
 			from system in "system".Tracked(() => new object())
 			from fail in "fail".Act(() =>
 			{
@@ -74,7 +74,7 @@ public class SpecIfProblems
 				() => true)
 			select Acid.Test;
 
-		var report = new QState(run).ObserveOnce();
+		var report = new QState(script).ObserveOnce();
 		Assert.NotNull(report);
 		Assert.False(predicateRan); // ✅ only true if your fix is in place
 	}

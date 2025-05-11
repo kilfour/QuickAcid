@@ -9,11 +9,11 @@ namespace QuickAcid.TestsDeposition.Linqy.CodeGen.Act
         [Fact]
         public void CodeGen_act_one_arg()
         {
-            var run =
+            var script =
                 from s in "input".Input(MGen.Constant(42))
                 from a in "DoingStuff:input".Act(() => { })
                 select Acid.Test;
-            var reader = Reader.FromRun(run);
+            var reader = Reader.FromRun(script);
             Assert.Equal("DoingStuff(42);", reader.NextLine());
         }
     }

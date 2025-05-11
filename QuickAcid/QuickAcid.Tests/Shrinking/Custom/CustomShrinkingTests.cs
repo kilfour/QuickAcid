@@ -19,12 +19,12 @@ public class CustomShrinkingTests
     public void Custom_using_class()
     {
         var observe = new HashSet<int>();
-        var run =
+        var script =
             from _ in Shrink<int>.LikeThis(new Shrinky())
             from input in "input".Input(MGen.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
         Assert.Contains(666, observe);
     }
@@ -33,12 +33,12 @@ public class CustomShrinkingTests
     public void Custom_using_lambda()
     {
         var observe = new HashSet<int>();
-        var run =
+        var script =
             from _ in Shrink<int>.LikeThis(a => [666])
             from input in "input".Input(MGen.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = new QState(run).ObserveOnce();
+        var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
         Assert.Contains(666, observe);
     }

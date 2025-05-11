@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Bolts;
+﻿using QuickAcid.Bolts;
+
+namespace QuickAcid;
 
 public static class ToLinq
 {
