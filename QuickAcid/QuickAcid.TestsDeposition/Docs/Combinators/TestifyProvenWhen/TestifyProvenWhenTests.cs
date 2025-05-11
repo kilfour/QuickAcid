@@ -6,7 +6,7 @@ using QuickMGenerate;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.TestifyProvenWhen;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-100"; }
+public static class Chapter { public const string Order = CombinatorChapter.Order + "-200"; }
 
 
 [Doc(Order = $"{Chapter.Order}", Caption = "TestifyProvenWhen", Content =

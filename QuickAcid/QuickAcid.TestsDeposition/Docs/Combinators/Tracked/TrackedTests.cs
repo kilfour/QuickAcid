@@ -30,7 +30,7 @@ The second argument is a formatter function for rendering the value into the tes
         var run =
             from account in "account".Tracked(() => new Account(), a => a.Balance.ToString())
             select Acid.Test;
-        var report = new QState(run).AlwaysReport().Observe(1);
+        var report = new QState(run).AlwaysReport().ObserveOnce();
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
         Assert.Equal("   => account (tracked) : 0", entry.ToString());

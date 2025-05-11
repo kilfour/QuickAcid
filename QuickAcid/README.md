@@ -337,6 +337,19 @@ from act in "act".Act(() => account.Withdraw(500))
 
 
 
+An overload of this combinator exists which can return a value, and therefor pass it down the LINQ chain.
+```csharp
+from act in "act".Act(() => account.GetBalance())
+```
+
+
+**Mutiple acts in one execution => can't shrink ! not the way to model things**
+```csharp
+from act1 in "act once".Act(() => account.Withdraw(500))
+from act2 in "and act again".Act(() => account.Withdraw(200))
+```
+
+
 ---
 
 ### Derived
@@ -351,12 +364,29 @@ primarily intended for state-sensitive generation where traditional shrinking wo
 
 
 
+---
+
+### Choose
+
+**Choose(...)** is one of two ways one can select different operations per execution.
+In the case of choose, you supply a number of `.Act(...)`'s and QuickAcid will randomly choose one for every execution. 
+
+
 **Usage example:**
 ```csharp
 from container in "container".Stashed(() => new Container<List<int>>([]))
 from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
 ```
 
+
+
+**Usage example:**
+```csharp
+from _ in "ops".Choose(
+    "deposit".Act(() => account.Deposit(500)),
+    "withdraw".Act(() => account.Withdraw(500))
+    )
+```
 
 
 ---

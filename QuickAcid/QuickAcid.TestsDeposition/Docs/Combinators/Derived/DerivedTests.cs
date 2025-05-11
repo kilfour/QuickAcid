@@ -7,7 +7,7 @@ using QuickMGenerate;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Derived;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-70"; }
+public static class Chapter { public const string Order = CombinatorChapter.Order + "-100"; }
 
 [Doc(Order = $"{Chapter.Order}", Caption = "Derived", Content =
 @"**Derived(...)** introduces a value that is dynamically generated during each execution, 

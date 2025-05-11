@@ -31,10 +31,51 @@ from act in ""act"".Act(() => account.Withdraw(500))
             from act in "act".Act(() => account.Withdraw(500))
             from spec in "fail".Spec(() => false)
             select Acid.Test;
-        var report = new QState(run).Observe(1);
+        var report = new QState(run).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("act", entry.Key);
+    }
+
+    [Doc(Order = $"{Chapter.Order}-5", Content =
+@"An overload of this combinator exists which can return a value, and therefor pass it down the LINQ chain.
+```csharp
+from act in ""act"".Act(() => account.GetBalance())
+```
+")]
+    [Fact]
+    public void Act_can_return_value()
+    {
+        var run =
+            from act in "act".Act(() => false)
+            from spec in "fail".Spec(() => act)
+            select Acid.Test;
+        var report = new QState(run).ObserveOnce();
+        Assert.NotNull(report);
+        var entry = report.FirstOrDefault<ReportExecutionEntry>();
+        Assert.NotNull(entry);
+        Assert.Equal("act", entry.Key);
+    }
+    [Doc(Order = $"{Chapter.Order}-10", Content =
+@"**Mutiple acts in one execution => can't shrink ! not the way to model things**
+```csharp
+from act1 in ""act once"".Act(() => account.Withdraw(500))
+from act2 in ""and act again"".Act(() => account.Withdraw(200))
+```
+")]
+    [Fact]
+    public void Act_multiple_one_execution()
+    {
+        var run =
+            from account in "Account".Stashed(() => new Account())
+            from act1 in "act once".Act(() => account.Withdraw(500))
+            from act2 in "and act again".Act(() => account.Withdraw(500))
+            from spec in "fail".Spec(() => false)
+            select Acid.Test;
+        var report = new QState(run).ObserveOnce();
+        var entry = report.FirstOrDefault<ReportExecutionEntry>();
+        Assert.NotNull(entry);
+        Assert.Equal("act once, and act again", entry.Key);
     }
 }
 

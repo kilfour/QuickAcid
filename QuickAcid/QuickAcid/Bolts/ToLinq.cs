@@ -1,6 +1,6 @@
 ﻿namespace QuickAcid.Bolts;
 
-public static class QAcidRunnerToLinq
+public static class ToLinq
 {
 	public static QAcidRunner<TValueTwo> Select<TValueOne, TValueTwo>(
 		this QAcidRunner<TValueOne> runner,
