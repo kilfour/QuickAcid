@@ -4,7 +4,6 @@ using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
 
-
 public static class MemoryReportAssembler
 {
     public static void AddAllMemoryToReport(
