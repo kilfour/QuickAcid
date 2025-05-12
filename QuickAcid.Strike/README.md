@@ -1,13 +1,13 @@
-# QuickAcid.TheFortyNiners
+# QuickAcid.Strike
 
 
-`QuickAcid.TheFortyNiners` is a lightweight starting point for property-based testing (PBT) in C#, powered by [QuickAcid](https://github.com/kilfour/QuickAcid) under the hood.
+`QuickAcid.Strike` is a lightweight starting point for property-based testing (PBT) in C#, powered by [QuickAcid](https://github.com/kilfour/QuickAcid) under the hood.
 
 - **Simple, clean syntax** — familiar to unit testing fans
 - **Full property-based power** under the surface
 - **No need to learn everything up front**
 
-While the FortyNiners name comes from the 1849 gold rush theme ("digging for bugs"), a metaphor which is more prevalent in the underlying QuickAcid, the FortyNiners API itself is kept intentionally minimal and professional.
+
 
 ---
 
@@ -34,7 +34,7 @@ public void Account_starts_positive()
 ## Quick Example: Your First PBT
 
 ```csharp
-using QuickAcid.TheFortyNiners;
+using QuickAcid.Strike;
 
 [Fact]
 public void Account_balance_stays_in_range()
@@ -58,7 +58,7 @@ public void Account_balance_stays_in_range()
 
 ---
 
-## Why use TheFortyNiners?
+## Why use Strike?
 
 - **Familiar structure** — Arrange, Act, Assert, just like unit tests.
 - **Quick start** — Focus on writing meaningful tests, not wiring.
@@ -69,7 +69,7 @@ public void Account_balance_stays_in_range()
 
 ## A Note About Namespaces
 
-If you `using QuickAcid.TheFortyNiners;`, you're in light-mode:  
+If you `using QuickAcid.Strike;`, you're in light-mode:  
 - Simple `Test.This(...).Arrange(...).Act(...).Assert(...)` flows.
 - Great for everyday unit tests *and* lightweight property-based tests.
 
