@@ -52,8 +52,8 @@ public class FeedbackShrinkingTests
             numberOfActionEntries = report.OfType<ReportExecutionEntry>().Count();
         }
 
-        var writer = new WriteDataToFile().ClearFile();
-        DiagnosticContext.Current = a => Signals.FilterOnTags(writer, "Phase").Pulse(a);
+        // var writer = new WriteDataToFile().ClearFile();
+        // DiagnosticContext.Current = a => Signals.FilterOnTags(writer, "Phase").Pulse(a);
 
         var shrinkingRun = GetRun(MGen.Int());
         report = new QDiagnosticState(shrinkingRun).WithFeedback().Shrink(info!).GetReport();
