@@ -53,4 +53,30 @@ public class Spike
         balance = account.Call("getBalance");
         Assert.Equal(70, balance);
     }
+
+    [Fact]
+    public void Call_a_simple_function()
+    {
+        var path = SolutionLocator.FindSolutionRoot() + "\\QuickAcid.Mocha.Tests";
+        var engine = new Engine(opts => { opts.EnableModules(path); });
+        var accountModule = engine.Modules.Import("./account.js");
+        var module = From.Path(path).AndFile("./account.js");
+
+        var result = module.Call("theAnswer");
+        Assert.Equal(42, result);
+
+    }
+
+    [Fact]
+    public void Call_a_simple_function_with_args()
+    {
+        var path = SolutionLocator.FindSolutionRoot() + "\\QuickAcid.Mocha.Tests";
+        var engine = new Engine(opts => { opts.EnableModules(path); });
+        var accountModule = engine.Modules.Import("./account.js");
+        var module = From.Path(path).AndFile("./account.js");
+
+        var result = module.Call("identity", 666);
+        Assert.Equal(666, result);
+
+    }
 }

@@ -15,3 +15,6 @@ export class Account {
         return this.balance;
     }
 }
+
+export function theAnswer() { return 42; }
+export function identity(id) { return id; }
