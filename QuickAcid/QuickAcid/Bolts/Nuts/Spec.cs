@@ -1,5 +1,9 @@
 ﻿namespace QuickAcid.Bolts.Nuts;
 
+public class SpecResult
+{
+
+}
 public static partial class QAcidCombinators
 {
 	private static QAcidScript<Acid> InnerSpec(this string key, Func<bool> condition) =>

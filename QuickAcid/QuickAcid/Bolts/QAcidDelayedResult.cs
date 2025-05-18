@@ -17,8 +17,23 @@ public class QAcidDelayedResult
         Exception = exception;
     }
 
-    public bool Throws<TException>() where TException : Exception
+    public bool ThrewAs<TException>() where TException : Exception
         => Threw && Exception is TException;
+
+    public bool ThrewExactly<T>() where T : Exception
+    => Exception?.GetType() == typeof(T);
+
+    public bool ThrewAs<T>(out T ex) where T : Exception
+    {
+        if (Threw && Exception is T matched)
+        {
+            ex = matched;
+            return true;
+        }
+
+        ex = default!;
+        return false;
+    }
 }
 
 public sealed class QAcidDelayedResult<T> : QAcidDelayedResult

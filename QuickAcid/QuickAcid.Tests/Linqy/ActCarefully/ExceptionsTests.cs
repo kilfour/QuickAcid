@@ -12,7 +12,7 @@ public class ExceptionsTests
     {
         var script =
             from result in "act".ActCarefully(() => { throw new Exception(); })
-            from throws in "throws".Spec(result.Throws<Exception>)
+            from throws in "throws".Spec(result.ThrewAs<Exception>)
             select Acid.Test;
 
         var report = new QState(script).ObserveOnce(); ;
@@ -26,7 +26,7 @@ public class ExceptionsTests
             from flag in "flag".Input(MGen.Bool())
             from result1 in "act1".ActCarefully(() => { if (flag) throw new Exception(); })
             from result2 in "act2".ActCarefully(() => { if (!flag) throw new Exception(); })
-            from throws in "throws".Spec(() => result1.Throws<Exception>() || result2.Throws<Exception>())
+            from throws in "throws".Spec(() => result1.ThrewAs<Exception>() || result2.ThrewAs<Exception>())
             select Acid.Test;
 
         var report = new QState(script).ObserveOnce(); ;
@@ -40,7 +40,7 @@ public class ExceptionsTests
             from flag in "flag".Input(MGen.Bool())
             from result1 in "act1".ActCarefully(() => { })
             from result2 in "act2".ActCarefully(() => { if (flag) throw new Exception(); })
-            from throws in "throws".Spec(() => !flag || result2.Throws<Exception>())
+            from throws in "throws".Spec(() => !flag || result2.ThrewAs<Exception>())
             select Acid.Test;
 
         var report = new QState(script).ObserveOnce(); ;
