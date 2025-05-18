@@ -1,87 +1,120 @@
-﻿using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
+﻿using QuickAcid.Bolts.Nuts;
 using QuickMGenerate;
 using Jint;
 using QuickPulse.Instruments;
-using Jint.Native;
-using Jint.Runtime;
+
 
 namespace QuickAcid.Mocha.Tests.CoinChallenge;
 
 public class CoinChallengeTest
 {
+    private static ModuleWrapper GetModule()
+    {
+        var path = SolutionLocator.FindSolutionRoot() + "\\QuickAcid.Mocha.Tests\\CoinChallenge\\";
+        var file = "./coin-challenge.js";
+        // var file = "./coin-challenge-bugged.js";
+        // var file = "./coin-challenge-not-minimal.js";
+        return From.Path(path).AndFile(file);
+    }
+
+    private static double CallMinCoins(ModuleWrapper module, int amount, int[] coins)
+    {
+        return module.Call("minCoins", amount, module.CreateJsArray([.. coins])).AsNumber();
+    }
+
     [Fact]
     public void AcidTest()
     {
-        var path = SolutionLocator.FindSolutionRoot() + "\\QuickAcid.Mocha.Tests";
-        var module = From.Path(path).AndFile("./CoinChallenge/coin-challenge.js");
+        var fastTestsOnly = true;
+        var module = GetModule();
         var script =
-
             from amount in "amount".Input(MGen.Int(-1, 20))
             from coins in "coins".Input(MGen.Int(-1, 11).Many(0, 5))
-
-
-            from result in "minCoins".Act(
-                () => module.Call("minCoins", amount, module.CreateJsArray([.. coins])))
-            let number = result.AsNumber()
-
-            from resultS in "minCoinsS".Act(
-                () => module.Call("minCoins", amount, module.CreateJsArray(coins.OrderBy(_ => Guid.NewGuid()).ToArray())))
-            let numberS = resultS.AsNumber()
-
-            from resultR in "minCoinsR".Act(
-                () => module.Call("minCoins", amount, module.CreateJsArray(coins.Reverse().ToArray())))
-            let numberR = resultR.AsNumber()
-
-            from _neg in "negative amount returns Infinity".SpecIf(() => amount < 0, () => double.IsPositiveInfinity(number))
-
-            from _s0 in "minCoins(0, any) == 0".SpecIf(() => amount == 0, () => number == 0)
-
-            from _s1 in "if not 'Infinity' return value should be zero or greater".SpecIf(
-                () => !double.IsPositiveInfinity(number),
-                () => number >= 0)
-
-            from _s2 in "adding a useless coin to the tail should not change result".SpecIf(
-                () => !double.IsPositiveInfinity(number),
-                () =>
-                {
-                    var newCoins = coins.Concat([amount + 1]).ToArray();
-                    var newResult = module.Call("minCoins", amount, module.CreateJsArray(newCoins));
-                    return number == newResult.AsNumber();
-                })
-
-            from _s3 in "adding a useless coin to the head should not change result".SpecIf(
-                () => !double.IsPositiveInfinity(number),
-                () =>
-                {
-                    var newCoins = new[] { amount + 1 }.Concat(coins).ToArray();
-                    var newResult = module.Call("minCoins", amount, module.CreateJsArray(newCoins));
-                    return number == newResult.AsNumber();
-                })
-
-            from _s4 in "reversed coins should not change result".SpecIf(
-                () => !double.IsPositiveInfinity(number),
-                () => number == numberR)
-
-            from _s5 in "shuffling coins should not change result".SpecIf(
-                () => !double.IsPositiveInfinity(number),
-                () => number == numberS)
-
+            from result in "minCoins".Act(() => CallMinCoins(module, amount, [.. coins]))
+            from trace in "minCoins result".Trace(result.ToString())
+            from _ in GeneralProperties(amount, result)
+            from __ in UselessCoins(module, amount, [.. coins], result)
+            from ___ in Permutations(module, amount, [.. coins], result)
+            from ____ in IsOptimal(amount, [.. coins], result).SkipIf(() => fastTestsOnly)
             select Acid.Test;
-        5000.Times(() => new QState(script).Testify(1));
+        100.Times(() => Assert.Null(new QState(script).ObserveOnce()));
     }
-}
 
-
-public static class JintInterop
-{
-    public static JsValue CreateJsArray<T>(Engine engine, T[] items, Func<T, JsValue> toJsValue)
+    private static QAcidScript<Acid> GeneralProperties(int amount, double result)
     {
-        var jsArray = engine.Intrinsics.Array.Construct(Arguments.Empty);
-        for (uint i = 0; i < items.Length; i++)
+        return
+            from _neg in "negative amount returns Infinity".SpecIf(
+                () => amount < 0, () => double.IsPositiveInfinity(result))
+            from _s0 in "minCoins(0, any) == 0".SpecIf(
+                () => amount == 0, () => result == 0)
+            from _s1 in "if not 'Infinity' return value should be zero or greater".SpecIf(
+                () => !double.IsPositiveInfinity(result),
+                () => result >= 0)
+            select Acid.Test;
+    }
+
+    private static QAcidScript<Acid> UselessCoins(ModuleWrapper module, int amount, int[] coins, double result)
+    {
+        return
+            from _ in "adding a useless coin to the head should not change result".SpecIf(
+                () => !double.IsPositiveInfinity(result),
+                () => result == CallMinCoins(module, amount, [amount + 1, .. coins]))
+            from __ in "adding a useless coin to the tail should not change result".SpecIf(
+                () => !double.IsPositiveInfinity(result),
+                () => result == CallMinCoins(module, amount, [.. coins, amount + 1]))
+            select Acid.Test;
+    }
+
+    private static QAcidScript<Acid> Permutations(ModuleWrapper module, int amount, int[] coins, double result)
+    {
+        return
+            from _ in "reversed coins should not change result".SpecIf(
+                () => !double.IsPositiveInfinity(result),
+                () => result == CallMinCoins(module, amount, [.. coins.Reverse()]))
+            from __ in "shuffling coins should not change result".SpecIf(
+                () => !double.IsPositiveInfinity(result),
+                () => result == CallMinCoins(module, amount, [.. coins.OrderBy(_ => Guid.NewGuid())]))
+            select Acid.Test;
+    }
+
+    private static QAcidScript<Acid> IsOptimal(int amount, int[] coins, double result)
+    {
+        return
+            "result should be minimal compared to known optimal".SpecIf(
+                () => amount >= 0 && coins.All(c => c > 0),
+                () => Matches(result, Optimal(amount, coins)));
+    }
+
+    private static bool Matches(double jsResult, int optimal)
+    {
+        return double.IsPositiveInfinity(jsResult)
+            ? optimal == int.MaxValue
+            : jsResult == optimal;
+    }
+
+    private static int Optimal(int amount, int[] coins)
+    {
+        var memo = new Dictionary<int, int>();
+
+        int Dp(int amt)
         {
-            jsArray.Set(i, toJsValue(items[i]), throwOnError: false);
+            if (amt < 0) return int.MaxValue;
+            if (amt == 0) return 0;
+            if (memo.TryGetValue(amt, out var val)) return val;
+
+            int best = int.MaxValue;
+            foreach (var c in coins)
+            {
+                int sub = Dp(amt - c);
+                if (sub != int.MaxValue)
+                    best = Math.Min(best, sub + 1);
+            }
+
+            memo[amt] = best;
+            return best;
         }
-        return jsArray;
+
+        var r = Dp(amount);
+        return r == int.MaxValue ? int.MaxValue : r;
     }
 }

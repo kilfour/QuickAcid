@@ -13,7 +13,7 @@ export function minCoins(amount, coins) {
     for (let i = 1; i <= amount; i++) {
         for (let coin of coins) {
             if (i - coin >= 0) {
-                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+                dp[i] = dp[i - coin] + 1;
             }
         }
     }

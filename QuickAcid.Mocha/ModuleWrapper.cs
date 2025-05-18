@@ -37,4 +37,15 @@ public class ModuleWrapper
         }
         return jsArray;
     }
+
+    // public static JsValue CreateJsArray<T>(Engine engine, T[] items, Func<T, JsValue> toJsValue)
+    // {
+    //     var jsArray = engine.Intrinsics.Array.Construct(Arguments.Empty);
+    //     for (uint i = 0; i < items.Length; i++)
+    //     {
+    //         jsArray.Set(i, toJsValue(items[i]), throwOnError: false);
+    //     }
+    //     return jsArray;
+    // }
 }
+

@@ -415,6 +415,48 @@ This would end the test run early once `container.Value` becomes `true`.
 
 ---
 
+### Trace
+
+**Trace(...)** Used to add information from the script to the QuickAcid report.
+
+
+**Usage example:**
+```csharp
+from _ in "Info Key".Trace("Extra words")
+```
+
+
+**TraceIf(...)** is the same as `Trace(...)` but only injects information in the report conditionally.  
+
+**Usage example:**
+```csharp
+from _ in "Info Key".TraceIf(() => number == 42,"Extra words")
+```
+
+
+---
+
+### Skip
+
+**Skip(...)** extension method for `QAcidScript<T>`. Useful for temporary disabling `Spec`'s.
+
+
+**Usage example:**
+```csharp
+from __ in "spec".Spec(() => false).Skip()
+```
+
+
+**SkipIf(...)** is the same as `Skip(...)` but only skips conditionally.  
+
+**Usage example:**
+```csharp
+from __ in "spec".Spec(() => false).SkipIf(() => true)
+```
+
+
+---
+
 ### Feedback Shrinking
 
 A.k.a.: What if it fails but the run does not contain the minimal fail case ? 
