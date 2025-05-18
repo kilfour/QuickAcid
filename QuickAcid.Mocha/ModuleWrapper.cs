@@ -27,4 +27,14 @@ public class ModuleWrapper
     {
         return module.Get(methodName).Call(args);
     }
+
+    public JsValue CreateJsArray(int[] values)
+    {
+        var jsArray = engine.Intrinsics.Array.Construct(Arguments.Empty);
+        for (uint i = 0; i < values.Length; i++)
+        {
+            jsArray.Set(i, JsNumber.Create(values[i]), throwOnError: false);
+        }
+        return jsArray;
+    }
 }

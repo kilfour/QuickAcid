@@ -97,3 +97,20 @@ Human-readable failure reports that shrink failures to their core
 
 You don’t write lots of test cases.
 You write invariants — and QuickAcid finds the test cases for you.
+
+---
+| Feature                             | Description                                            | Effort  |
+| ----------------------------------- | ------------------------------------------------------ | ------- |
+| 💬 Per-permutation result logging   | Show all result variants side by side                  | Low     |
+| 🧠 Spec name interpolation          | Include key values in spec names/messages              | Low     |
+| 📄 Structured reporting             | JSON or markdown export of results                     | Medium  |
+| 📊 Aggregated results               | Track fail frequency per property/spec                 | Medium  |
+| 🧬 Pre/post shrink comparison       | Store and show both pre- and post-shrink values        | Medium  |
+| 🧑‍🏫 Teaching mode / verbose trace | Adds explanation-style output for educational purposes | Medium+ |
+
+
+Focused Shrinking Feedback
+Shrink Summary:
+- 7 inputs removed
+- Minimal case: amount = 3, coins = [2,3]
+- Triggered spec: "reversed coins should not change result"

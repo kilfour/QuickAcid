@@ -1,6 +1,5 @@
 ﻿using QuickAcid.Reporting;
 using QuickAcid.Bolts.Nuts;
-using QuickAcid.Bolts;
 
 namespace QuickAcid.Tests.Linqy.Act;
 
@@ -12,6 +11,7 @@ public class ActExceptionTests
         var script = "foo".Act(() => { if (true) throw new Exception(); });
         var report = new QState(script).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
+        Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);
         Assert.NotNull(report.Exception);
     }
