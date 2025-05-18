@@ -90,16 +90,17 @@ namespace QuickAcid.Tests.Shrinking.Objects
 
                 var report = new QState(script).Observe(50);
 
-                var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
+                var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+                Assert.NotNull(inputEntry);
                 Assert.Equal("input", inputEntry.Key);
-                if ((string)inputEntry.Value == "{ MyFirstProperty : \"6\" }")
+                if ((string)inputEntry.Value! == "{ MyFirstProperty : \"6\" }")
                     sometimesPropOne = true;
-                else if ((string)inputEntry.Value == "{ MySecondProperty : \"6\" }")
+                else if ((string)inputEntry.Value! == "{ MySecondProperty : \"6\" }")
                     sometimesPropTwo = true;
-                else if ((string)inputEntry.Value == "{ MyFirstProperty : \"6\", MySecondProperty : \"6\" }")
+                else if ((string)inputEntry.Value! == "{ MyFirstProperty : \"6\", MySecondProperty : \"6\" }")
                     sometimesBothProps = true;
                 else
-                    somethingElse = (string)inputEntry.Value;
+                    somethingElse = (string)inputEntry.Value!;
 
                 var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
                 Assert.NotNull(actEntry);
@@ -151,10 +152,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
 
         public class Something
         {
-            public string MyFirstProperty { get; set; }
-            public string MySecondProperty { get; set; }
-            public string MyThirdProperty { get; set; }
-            public string MyFourthProperty { get; set; }
+            public string? MyFirstProperty { get; set; }
+            public string? MySecondProperty { get; set; }
+            public string? MyThirdProperty { get; set; }
+            public string? MyFourthProperty { get; set; }
         }
     }
 }
