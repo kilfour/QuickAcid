@@ -30,10 +30,6 @@ public static class MemoryReportAssembler
 
                 foreach (var (key, val) in access.GetAll())
                 {
-                    if (val.ReportingIntent == ReportingIntent.Always) // used for .Trace, bit hacky
-                    {
-                        report.AddEntry(new ReportTraceEntry(key) { Value = val.Value });
-                    }
                     if (val.ShrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
                     {
                         report.AddEntry(new ReportInputEntry(LabelPrettifier.Prettify(key)) { Value = msg });
@@ -50,6 +46,12 @@ public static class MemoryReportAssembler
                 return Acid.Test;
             },
             none: () => Acid.Test);
+
+        // traces
+        foreach (var (key, val) in memory.TracesFor(executionId))
+        {
+            report.AddEntry(new ReportTraceEntry(key) { Value = val });
+        }
     }
 }
 

@@ -8,10 +8,13 @@ public class RunExecutionContext
     public Access memory;
     private readonly InputTrackerPerExecution shrinkTracker;
 
-    public RunExecutionContext(Access memory, InputTrackerPerExecution shrinkTracker)
+    private readonly Dictionary<string, string> traces;
+
+    public RunExecutionContext(Access memory, InputTrackerPerExecution shrinkTracker, Dictionary<string, string> traces)
     {
         this.memory = memory;
         this.shrinkTracker = shrinkTracker;
+        this.traces = traces;
     }
 
     public bool AlreadyTried(string key) => shrinkTracker.AlreadyTried(key);
@@ -32,4 +35,9 @@ public class RunExecutionContext
 
     public void SetIfNotAlreadyThere<T>(string key, T value) => memory.SetIfNotAlreadyThere(key, value);
 
+    public string Trace(string key, string trace)
+    {
+        traces[key] = trace;
+        return trace;
+    }
 }

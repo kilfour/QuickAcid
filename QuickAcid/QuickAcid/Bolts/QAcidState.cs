@@ -45,7 +45,10 @@ public sealed class QAcidState : QAcidContext
     }
     public RunExecutionContext GetExecutionContext()
     {
-        return new RunExecutionContext(Memory.ForThisExecution(), InputTracker.ForThisExecution());
+        return new RunExecutionContext(
+            Memory.ForThisExecution(),
+            InputTracker.ForThisExecution(),
+            Memory.TracesForThisExecution());
     }
 
     public T Remember<T>(string key, Func<T> factory, ReportingIntent reportingIntent = ReportingIntent.Shrinkable)
@@ -58,6 +61,12 @@ public sealed class QAcidState : QAcidContext
             return value;
         }
         return execution.Get<T>(key);
+    }
+
+    public void Trace<T>(string key, string trace)
+    {
+        var execution = GetExecutionContext();
+        execution.Trace(key, trace);
     }
 
     public void RecordFailure(Exception ex)

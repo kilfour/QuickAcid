@@ -13,7 +13,7 @@ public class Memory
 	private readonly TrackedInputMemory trackedInputMemory;
 	private readonly Dictionary<int, Access> memoryPerExecution = [];
 
-	private readonly Dictionary<int, string> tracesPerExecution = [];
+	private readonly Dictionary<int, Dictionary<string, string>> tracesPerExecution = [];
 
 	public Memory(Func<int> getCurrentExecutionId)
 	{
@@ -30,19 +30,19 @@ public class Memory
 	public void ResetRunScopedInputs()
 		=> trackedInputMemory.Reset();
 
-	public Access For(int actionId)
+	public Access For(int executionId)
 	{
-		if (!memoryPerExecution.ContainsKey(actionId))
-			memoryPerExecution[actionId] = new Access();
-		return memoryPerExecution[actionId];
+		if (!memoryPerExecution.ContainsKey(executionId))
+			memoryPerExecution[executionId] = new Access();
+		return memoryPerExecution[executionId];
 	}
 
-	public Maybe<Access> TryGet(int actionId)
-		=> memoryPerExecution.TryGetValue(actionId, out var access)
+	public Maybe<Access> TryGet(int executionId)
+		=> memoryPerExecution.TryGetValue(executionId, out var access)
 			? Maybe<Access>.Some(access)
 			: Maybe<Access>.None;
 
-	public IEnumerable<(int actionId, Access access)> AllAccesses()
+	public IEnumerable<(int executionId, Access access)> AllAccesses()
 		=> memoryPerExecution.Select(kvp => (kvp.Key, kvp.Value));
 
 	public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedSnapshot()
@@ -59,10 +59,22 @@ public class Memory
 
 	public Access ForThisExecution()
 	{
-		var actionId = getCurrentExecutionId();
-		if (!memoryPerExecution.ContainsKey(actionId))
-			memoryPerExecution[actionId] = new Access();
-		return memoryPerExecution[actionId];
+		var executionId = getCurrentExecutionId();
+		if (!memoryPerExecution.ContainsKey(executionId))
+			memoryPerExecution[executionId] = new Access();
+		return memoryPerExecution[executionId];
+	}
+
+	public Dictionary<string, string> TracesFor(int executionId)
+	{
+		if (!tracesPerExecution.ContainsKey(executionId))
+			tracesPerExecution[executionId] = [];
+		return tracesPerExecution[executionId];
+	}
+
+	public Dictionary<string, string> TracesForThisExecution()
+	{
+		return TracesFor(getCurrentExecutionId());
 	}
 
 	public IEnumerable<string> GetAllTrackedKeys() // used by code gen
@@ -75,8 +87,8 @@ public class Memory
 		return memoryPerExecution.Last().Value;
 	}
 
-	public bool Has(int actionId) // used by codegen
-		=> memoryPerExecution.ContainsKey(actionId);
+	public bool Has(int executionId) // used by codegen
+		=> memoryPerExecution.ContainsKey(executionId);
 
 	public Func<object, object>? GetNestedValue = null;
 	public Func<object, object>? SetNestedValue = null;
