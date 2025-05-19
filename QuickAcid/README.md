@@ -365,6 +365,21 @@ from specResult in "spec".Spec(() => false)
 
 ---
 
+### DelayedSpec
+
+**DelayedSpec(...)** ... TODO ...
+
+
+**Usage example:**
+```csharp
+from spec in "spec".DelayedSpec(() => false)
+from trace in "trace".TraceIf(() => spec.Failed, spec.Label)
+let apply = spec.Apply()
+```
+
+
+---
+
 ### Choose
 
 **Choose(...)** is one of two ways one can select different operations per execution.
