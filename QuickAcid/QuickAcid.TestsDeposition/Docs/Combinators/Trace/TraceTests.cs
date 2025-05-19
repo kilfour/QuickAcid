@@ -2,6 +2,8 @@ using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
+using QuickMGenerate.UnderTheHood;
+using QuickPulse.Arteries;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Trace;
@@ -46,6 +48,30 @@ from _ in ""Info Key"".Trace(""Extra words"")
         var entry = report.Single<ReportTraceEntry>();
         Assert.NotNull(entry);
         Assert.Equal("[ 42, 42 ]", entry.Value);
+    }
+
+    public Generator<int> Counter()
+    {
+        var counter = 0;
+        return state => new Result<int>(counter++, state);
+    }
+
+    [Fact]
+    public void Trace_with_other_shrinking()
+    {
+        var script =
+            from input in "input".Input(Counter())
+            from list in "list".Stashed(() => new List<int>())
+            from _ in "act".Act(() => { })
+            from delayedSpec in "spec".DelayedSpec(() => input != 3)
+            from __ in "Info Key".TraceIf(() => delayedSpec.Failed, $"{input}")
+            let ___ = delayedSpec.Apply()
+            select Acid.Test;
+        var report = new QState(script).Observe(5);
+        new WriteDataToFile().ClearFile().Flow(report.ToString());
+        var entry = report.Single<ReportTraceEntry>();
+        Assert.NotNull(entry);
+        Assert.Equal("3", entry.Value);
     }
 
     [Doc(Order = $"{Chapter.Order}-2", Content =

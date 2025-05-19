@@ -21,7 +21,7 @@ namespace QuickAcid.CodeGen
                         var exceptionType = state.CurrentContext.Exception.GetType();
                         if (failedExceptions.All(a => a != exceptionType))
                         {
-                            reports.Add(reports.ToString());
+                            //reports.Add(reports.ToString());
                             tests.Add(Prospector.Pan(state));
                             failedExceptions.Add(exceptionType);
                         }
