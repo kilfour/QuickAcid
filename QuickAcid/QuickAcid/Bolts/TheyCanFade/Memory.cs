@@ -13,6 +13,8 @@ public class Memory
 	private readonly TrackedInputMemory trackedInputMemory;
 	private readonly Dictionary<int, Access> memoryPerExecution = [];
 
+	private readonly Dictionary<int, string> tracesPerExecution = [];
+
 	public Memory(Func<int> getCurrentExecutionId)
 	{
 		this.getCurrentExecutionId = getCurrentExecutionId;
@@ -84,11 +86,11 @@ public class Memory
 		QAcidState.GetPulse(["Memory", "ScopedSwap"])($"Executing for key={key}, value={value}, execution={getCurrentExecutionId()}");
 		var memory = ForThisExecution();
 
-		object oldValue = null;
+		object oldValue = null!;
 		if (GetNestedValue != null)
 		{
 			oldValue = GetNestedValue(memory.Get<object>(key));
-			memory.Set(key, SetNestedValue(value), ReportingIntent.Never);
+			memory.Set(key, SetNestedValue!(value), ReportingIntent.Never);
 		}
 		else
 		{
@@ -99,7 +101,7 @@ public class Memory
 		return new DisposableAction(() =>
 			{
 				if (GetNestedValue != null)
-					memory.Set(key, SetNestedValue(oldValue), ReportingIntent.Shrinkable);
+					memory.Set(key, SetNestedValue!(oldValue), ReportingIntent.Shrinkable);
 				else
 					memory.Set(key, oldValue, ReportingIntent.Shrinkable);
 			});
