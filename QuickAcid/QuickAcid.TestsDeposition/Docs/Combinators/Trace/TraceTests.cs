@@ -32,6 +32,22 @@ from _ in ""Info Key"".Trace(""Extra words"")
         Assert.Equal("Extra words", entry.Value);
     }
 
+    [Fact]
+    public void Trace_with_shrinking()
+    {
+        var counter = 0;
+        var script =
+            from ints in "ints".Input(MGen.Constant(42).Many(2))
+            from _ in "act".Act(() => { counter++; })
+            from __ in "Info Key".Trace($"[ {string.Join(", ", ints)} ]")
+            from ___ in "spec".Spec(() => counter < 3)
+            select Acid.Test;
+        var report = new QState(script).AlwaysReport().ObserveOnce();
+        var entry = report.Single<ReportTraceEntry>();
+        Assert.NotNull(entry);
+        Assert.Equal("[ 42, 42 ]", entry.Value);
+    }
+
     [Doc(Order = $"{Chapter.Order}-2", Content =
 @"**TraceIf(...)** is the same as `Trace(...)` but only injects information in the report conditionally.  
 

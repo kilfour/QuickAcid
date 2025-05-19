@@ -352,6 +352,19 @@ from act2 in "and act again".Act(() => account.Withdraw(200))
 
 ---
 
+### Spec
+
+**Spec(...)** ... TODO ...
+
+
+**Usage example:**
+```csharp
+from specResult in "spec".Spec(() => false)
+```
+
+
+---
+
 ### Choose
 
 **Choose(...)** is one of two ways one can select different operations per execution.

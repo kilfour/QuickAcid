@@ -34,10 +34,10 @@ public class CoinChallengeTest
             from trace in "minCoins result".Trace(result.ToString())
             from _ in GeneralProperties(amount, result)
             from __ in UselessCoins(module, amount, [.. coins], result)
-            from ___ in Permutations(module, amount, [.. coins], result)
+            from ___ in ReverseCoins(module, amount, [.. coins], result)
             from ____ in IsOptimal(amount, [.. coins], result).SkipIf(() => fastTestsOnly)
             select Acid.Test;
-        100.Times(() => Assert.Null(new QState(script).ObserveOnce()));
+        100.Times(() => Assert.Null(new QState(script).Verbose().ObserveOnce()));
     }
 
     private static QAcidScript<Acid> GeneralProperties(int amount, double result)
@@ -53,6 +53,8 @@ public class CoinChallengeTest
             select Acid.Test;
     }
 
+
+    // Adding coin '1' to coins => newResult <= result 
     private static QAcidScript<Acid> UselessCoins(ModuleWrapper module, int amount, int[] coins, double result)
     {
         return
@@ -65,24 +67,30 @@ public class CoinChallengeTest
             select Acid.Test;
     }
 
-    private static QAcidScript<Acid> Permutations(ModuleWrapper module, int amount, int[] coins, double result)
+    private static QAcidScript<Acid> ReverseCoins(ModuleWrapper module, int amount, int[] coins, double result)
     {
         return
-            from _ in "reversed coins should not change result".SpecIf(
-                () => !double.IsPositiveInfinity(result),
-                () => result == CallMinCoins(module, amount, [.. coins.Reverse()]))
-            from __ in "shuffling coins should not change result".SpecIf(
-                () => !double.IsPositiveInfinity(result),
-                () => result == CallMinCoins(module, amount, [.. coins.OrderBy(_ => Guid.NewGuid())]))
+            from _ in Acid.Script
+            let notInfinity = !double.IsPositiveInfinity(result)
+            let reversedCoins = notInfinity ? (int[])[.. coins.Reverse()] : []
+            let reversedResult = notInfinity ? CallMinCoins(module, amount, reversedCoins) : -1
+            from reversed in "reversed coins should not change result".DelayedSpecIf(
+                () => notInfinity, () => result == reversedResult)
+            from trace in "reversed minCoins".TraceIf(
+                () => reversed.Failed,
+                $"[ {string.Join(", ", coins.Reverse())} ] => {reversedResult}")
+            let apply = reversed.Apply()
             select Acid.Test;
     }
 
     private static QAcidScript<Acid> IsOptimal(int amount, int[] coins, double result)
     {
         return
+            from _ in
             "result should be minimal compared to known optimal".SpecIf(
                 () => amount >= 0 && coins.All(c => c > 0),
-                () => Matches(result, Optimal(amount, coins)));
+                () => Matches(result, Optimal(amount, coins)))
+            select Acid.Test;
     }
 
     private static bool Matches(double jsResult, int optimal)

@@ -1,6 +1,4 @@
-﻿using QuickAcid.Bolts;
-using QuickAcid.MonadiXEtAl;
-
+﻿using QuickAcid.MonadiXEtAl;
 
 namespace QuickAcid.Bolts.TheyCanFade;
 

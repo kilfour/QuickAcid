@@ -1,4 +1,6 @@
-﻿namespace QuickAcid;
+﻿using QuickAcid.Bolts;
+
+namespace QuickAcid;
 
 public readonly struct Acid : IComparable<Acid>, IEquatable<Acid>
 {
@@ -9,4 +11,6 @@ public readonly struct Acid : IComparable<Acid>, IEquatable<Acid>
     public bool Equals(Acid other) => true;
     public int CompareTo(Acid other) => 0;
     public override int GetHashCode() => 0;
+
+    public static QAcidScript<Acid> Script = QAcidResult.AcidOnly;
 }

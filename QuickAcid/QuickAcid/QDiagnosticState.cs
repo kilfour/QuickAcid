@@ -52,11 +52,13 @@ public class QDiagnosticState
             , state.CurrentContext.FailingSpec
             , state.CurrentContext.Exception);
     }
+
     public QDiagnosticState WithFeedback()
     {
         state.AllowFeedbackShrinking = true;
         return this;
     }
+
     public QDiagnosticState Shrink(RunInformation runInformation)
     {
         var (memory, executionNumbers, failingSpec, exception) = runInformation;
