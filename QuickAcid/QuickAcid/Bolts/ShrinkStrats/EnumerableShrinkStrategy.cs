@@ -45,7 +45,7 @@ public class EnumerableShrinkStrategy
                 }
                 return theList;
             };
-            var shrinkOutcome = ShrinkStrats.Shrink.Input(state, key, before);
+            var shrinkOutcome = ShrinkStrats.ShrinkStrategyPicker.Input(state, key, before);
 
             if (shrinkOutcome == ShrinkOutcome.Irrelevant)
             {

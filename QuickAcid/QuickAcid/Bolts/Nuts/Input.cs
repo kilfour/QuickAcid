@@ -30,7 +30,7 @@ public static partial class QAcidCombinators
 				when !execution.AlreadyTried(key):
 				{
 					var decoratedValue = execution.GetDecorated(key);
-					var shrunk = Shrink.Input(state, key, decoratedValue.Value);
+					var shrunk = ShrinkStrategyPicker.Input(state, key, decoratedValue.Value);
 					if (shrunk != decoratedValue.ShrinkOutcome)
 					{
 						var number = state.CurrentExecutionNumber;
@@ -45,7 +45,7 @@ public static partial class QAcidCombinators
 				when !execution.AlreadyTried(key):
 				{
 					var value = execution.Get<T>(key);
-					var shrunk = Shrink.Input(state, key, value);
+					var shrunk = ShrinkStrategyPicker.Input(state, key, value);
 					execution.SetShrinkOutcome(key, shrunk);
 					return QAcidResult.Some(state, value);
 				}

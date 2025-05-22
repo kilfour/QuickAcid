@@ -2,7 +2,7 @@
 
 namespace QuickAcid.Bolts.ShrinkStrats;
 
-public class Shrink
+public class ShrinkStrategyPicker
 {
     public static ShrinkOutcome Input<T>(QAcidState state, string key, T value)
     {
