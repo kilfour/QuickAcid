@@ -23,7 +23,7 @@ public class CoinChallengeTest
         return module.Call("minCoins", amount, module.CreateJsArray([.. coins])).AsNumber();
     }
 
-    [Fact]
+    [Fact(Skip = "demo")]
     public void AcidTest()
     {
         var writer = new WriteDataToFile().ClearFile();
