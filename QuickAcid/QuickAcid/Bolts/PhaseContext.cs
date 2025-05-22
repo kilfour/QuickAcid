@@ -43,8 +43,19 @@ public class PhaseContext
         Exception = exception;
     }
 
-    private static bool IsExceptionMismatch(Exception exception, PhaseContext originalPhase)
+    private static bool IsExceptionMismatch(Exception actual, PhaseContext expected)
     {
-        return originalPhase.Exception == null || originalPhase.Exception.GetType() != exception.GetType();
+        if (expected.Exception == null) return true;
+
+        var e = expected.Exception;
+        return actual.GetType() != e.GetType()
+            || actual.Message != e.Message
+            || (actual.InnerException?.GetType() != e.InnerException?.GetType());
     }
+
+
+    // private static bool IsExceptionMismatch(Exception exception, PhaseContext originalPhase)
+    // {
+    //     return originalPhase.Exception == null || originalPhase.Exception.GetType() != exception.GetType();
+    // }
 }
