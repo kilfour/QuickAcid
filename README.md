@@ -22,7 +22,7 @@ A guided walkthrough in bite-sized chapters:
 | 1       | [Your First Property Test](https://github.com/kilfour/QuickAcid/blob/master/QuickAcid.Examples/Tutorial/Chapter1.YourFirstPropertyTest/About.md) | ✅ Test + Markdown |
 | 2       | [The Assayer Disagrees](https://github.com/kilfour/QuickAcid/blob/master/QuickAcid.Examples/Tutorial/Chapter2.SneakyBugs/About.md)       | ✅ Test + Markdown |
 | 3       | [The Shortest Path to a Bug](https://github.com/kilfour/QuickAcid/blob/master/QuickAcid.Examples/Tutorial/Chapter3.TheShortestPathtoaBug/About.md) | ✅ Test + Markdown |
-| 4       | [Controlling the Chaos](https://github.com/kilfour/QuickAcid/blob/master/QuickAcid.Examples/Tutorial/Chapter4.ControllingTheChaos/About.md)        | 📄 Markdown only   |
+
 
 
 Or in order to get started **super fast** have a look at [Strike](https://github.com/kilfour/QuickAcid/blob/master/QuickAcid.Strike/README.md)

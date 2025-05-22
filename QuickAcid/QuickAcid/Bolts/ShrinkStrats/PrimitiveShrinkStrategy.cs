@@ -1,6 +1,7 @@
 using QuickAcid.Bolts.ShrinkStrats;
 
 namespace QuickAcid.Bolts;
+
 public class PrimitiveShrinkStrategy //: IShrinkStrategy
 {
     public static readonly Dictionary<Type, object[]> PrimitiveValues =
@@ -27,7 +28,7 @@ public class PrimitiveShrinkStrategy //: IShrinkStrategy
             { typeof(Uri),      new object[] { null!, new Uri("http://localhost"), new Uri("https://example.com/resource?query=1") } }
         };
 
-    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value)
     {
         var actualType = typeof(T) == typeof(object) && value != null
             ? value.GetType()
@@ -37,13 +38,12 @@ public class PrimitiveShrinkStrategy //: IShrinkStrategy
         var originalFails = state.ShrinkRunReturnTrueIfFailed(key, value!);
         if (!originalFails)
             return ShrinkOutcome.Irrelevant;
-        var filtered = primitiveVals.Where(val => shrinkingGuard(val)).ToArray();
         var pulse = QAcidState.GetPulse(["PrimitiveShrinkStrategy"]);
         pulse($"(key: {key}, value:{value})");
         if (state.InFeedbackShrinkingPhase)
         {
             pulse($"Phase: {state.CurrentPhase}");
-            foreach (object val in filtered.Where(x => !Equals(x, value)))
+            foreach (object val in primitiveVals.Where(x => !Equals(x, value)))
             {
                 pulse($"Replacing with: {val}");
                 if (state.ShrinkRunReturnTrueIfFailed(key, val))
@@ -59,7 +59,7 @@ public class PrimitiveShrinkStrategy //: IShrinkStrategy
         else
         {
             pulse($"Phase: {state.CurrentPhase}");
-            foreach (object val in filtered.Where(x => !Equals(x, value)))
+            foreach (object val in primitiveVals.Where(x => !Equals(x, value)))
             {
                 pulse($"Replacing with: {val}");
                 if (!state.ShrinkRunReturnTrueIfFailed(key, val))

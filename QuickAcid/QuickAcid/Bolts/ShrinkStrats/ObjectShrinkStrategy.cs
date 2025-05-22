@@ -7,7 +7,7 @@ namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class ObjectShrinkStrategy //: IShrinkStrategy
 {
-    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value)
     {
         var shrunk = HandleProperties(state, key, value);
 

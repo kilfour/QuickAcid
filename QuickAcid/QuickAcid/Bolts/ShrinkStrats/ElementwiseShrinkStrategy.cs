@@ -1,26 +1,23 @@
-
 using System.Collections;
 
 namespace QuickAcid.Bolts.ShrinkStrats;
 
-public class EnumerableShrinkStrategy
+public class ElementwiseShrinkStrategy
 {
     public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value)
     {
-        var theList = CloneAsOriginalTypeList(value);
-        int index = 0;
+        var theList = CloneAsOriginalTypeList(value!);
         var shrinkValues = new List<string>();
-        while (index < theList.Count)
+
+        for (int ix = 0; ix < theList.Count; ix++)
         {
-            var ix = index;
-            var before = theList[ix];
-            var valueType = before.GetType();
+            var original = theList[ix];
+            var valueType = original?.GetType() ?? typeof(object);
             var elementType = valueType.IsGenericType
                 ? valueType.GetGenericArguments().First()
-                : typeof(object);
-            //-------------------------------------------------------
-            var removed = false;
-            state.Memory.GetNestedValue = list => ((IList)list)[ix];
+                : valueType;
+
+            state.Memory.GetNestedValue = list => ((IList)list)[ix]!;
             state.Memory.SetNestedValue = element =>
             {
                 if (element == null || elementType.IsAssignableFrom(element.GetType()))
@@ -29,30 +26,29 @@ public class EnumerableShrinkStrategy
                 }
                 else
                 {
-                    throw new Exception("Ouch, QuickAcid Went BOOM !");
+                    throw new Exception("QuickAcid Elementwise shrink blew up");
                 }
                 return theList;
             };
-            var shrinkOutcome = ShrinkStrats.Shrink.Input(state, key, before);
 
-            if (shrinkOutcome == ShrinkOutcome.Irrelevant)
+            var shrinkOutcome = ShrinkStrats.Shrink.Input(state, key, original);
+
+            if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
             {
-                theList.RemoveAt(index);
-                removed = true;
+                shrinkValues.Add($"[{ix}]={msg}");
             }
-            else if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
+
+            if (shrinkOutcome is ShrinkOutcome.IrrelevantOutcome)
             {
-                shrinkValues.Add($"{msg}");
+                shrinkValues.Add($"[{ix}]= _");
             }
-            if (!removed)
-            {
-                theList[ix] = before;
-                index++;
-            }
+
+            theList[ix] = original; // reset to original
             state.Memory.GetNestedValue = null;
             state.Memory.SetNestedValue = null;
         }
-        return ShrinkOutcome.Report($"[ {string.Join(", ", shrinkValues)} ]");
+
+        return ShrinkOutcome.Report(string.Join(", ", shrinkValues));
     }
 
     public static IList CloneAsOriginalTypeList(object value)
@@ -65,7 +61,7 @@ public class EnumerableShrinkStrategy
 
         if (valueType.IsArray)
         {
-            elementType = valueType.GetElementType(); // ✅ Correct for arrays
+            elementType = valueType.GetElementType()!;
         }
         else if (valueType.IsGenericType)
         {

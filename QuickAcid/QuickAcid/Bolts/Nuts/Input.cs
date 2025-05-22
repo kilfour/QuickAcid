@@ -1,5 +1,4 @@
-﻿using QuickAcid.Bolts.Nuts.QuickMGenerateExtensions;
-using QuickAcid.Bolts.ShrinkStrats;
+﻿using QuickAcid.Bolts.ShrinkStrats;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
@@ -10,20 +9,13 @@ public static partial class QAcidCombinators
 {
 	public static QAcidScript<T> Input<T>(this string key, Generator<T> generator)
 	{
-		if (generator is IKnowMyGuard<T> guarded)
-			return key.Input(generator, guarded.Guard);
-		return Input(key, generator, _ => true);
-	}
-
-	public static QAcidScript<T> Input<T>(this string key, Generator<T> generator, Func<T, bool> guard)
-	{
 		return state =>
 			{
-				return state.HandleInput(key, generator, guard);
+				return state.HandleInput(key, generator);
 			};
 	}
 
-	private static QAcidResult<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator, Func<T, bool> guard)
+	private static QAcidResult<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator)
 	{
 		var execution = state.GetExecutionContext();
 		switch (state.CurrentPhase)
@@ -38,7 +30,7 @@ public static partial class QAcidCombinators
 				when !execution.AlreadyTried(key):
 				{
 					var decoratedValue = execution.GetDecorated(key);
-					var shrunk = Shrink.Input(state, key, decoratedValue.Value, obj => guard((T)obj));
+					var shrunk = Shrink.Input(state, key, decoratedValue.Value);
 					if (shrunk != decoratedValue.ShrinkOutcome)
 					{
 						var number = state.CurrentExecutionNumber;
@@ -53,7 +45,7 @@ public static partial class QAcidCombinators
 				when !execution.AlreadyTried(key):
 				{
 					var value = execution.Get<T>(key);
-					var shrunk = Shrink.Input(state, key, value, obj => guard((T)obj));
+					var shrunk = Shrink.Input(state, key, value);
 					execution.SetShrinkOutcome(key, shrunk);
 					return QAcidResult.Some(state, value);
 				}

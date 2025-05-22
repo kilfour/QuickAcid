@@ -1,6 +1,7 @@
 using QuickAcid.Bolts.ShrinkStrats;
 
 namespace QuickAcid.Bolts;
+
 public class CustomShrinkStrategy<T> //: IShrinkStrategy
 {
     private readonly IShrinker<T> shrinker;
@@ -9,13 +10,13 @@ public class CustomShrinkStrategy<T> //: IShrinkStrategy
     {
         this.shrinker = shrinker;
     }
-    public ShrinkOutcome Shrink(QAcidState state, string key, T value, Func<object, bool> shrinkingGuard)
+    public ShrinkOutcome Shrink(QAcidState state, string key, T value)
     {
         var values = shrinker.Shrink(value);
         var originalFails = state.ShrinkRunReturnTrueIfFailed(key, value!);
         if (!originalFails)
             return ShrinkOutcome.Irrelevant;
-        var filtered = values.Where(val => shrinkingGuard(val!)).ToArray();
+        var filtered = values;
         bool failureAlwaysOccurs =
             filtered
                 .Where(x => !Equals(x, value))

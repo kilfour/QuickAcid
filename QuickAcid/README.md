@@ -485,6 +485,15 @@ from __ in "spec".Spec(() => false).SkipIf(() => true)
 
 ---
 
+### Collection Shrinking
+
+...
+
+
+Usage
+
+---
+
 ### Custom Shrinking
 
 ...

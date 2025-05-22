@@ -100,3 +100,14 @@ Shrink Summary:
 - 7 inputs removed
 - Minimal case: amount = 3, coins = [2,3]
 - Triggered spec: "reversed coins should not change result"
+
+
+# Shrinking Strats
+
+Flow-Based Shrinking (QuickPulse Style)
+var flow =
+    from value in Pulse.Start<int>()
+    from box in Pulse.Gather(value)
+    from _ in Pulse.Effect(() => box.Value--)
+    from _ in Pulse.Trace(box.Value)
+    select box.Value;
