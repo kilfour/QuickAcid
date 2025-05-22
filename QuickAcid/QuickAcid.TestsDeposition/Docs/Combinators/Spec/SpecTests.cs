@@ -47,7 +47,7 @@ from specResult in ""spec"".Spec(() => false)
         var script =
             from _ in "act1".Act(() => { counter++; })
             from spec in "spec".DelayedSpec(() => counter < 3)
-            from trace in "trace".TraceIf(() => spec.Failed, spec.Label)
+            from trace in "trace".TraceIf(() => spec.Failed, () => spec.Label)
             let apply = spec.Apply()
             select Acid.Test;
         var report = new QState(script).Observe(5);

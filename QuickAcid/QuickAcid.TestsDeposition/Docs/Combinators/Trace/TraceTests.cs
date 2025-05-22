@@ -18,7 +18,7 @@ public class TraceTests
     [Doc(Order = $"{Chapter.Order}-1", Content =
 @"**Usage example:**
 ```csharp
-from _ in ""Info Key"".Trace(""Extra words"")
+from _ in ""Info Key"".Trace(() => ""Extra words"")
 ```
 ")]
     [Fact]
@@ -26,7 +26,7 @@ from _ in ""Info Key"".Trace(""Extra words"")
     {
         var script =
             from _ in "act".Act(() => { })
-            from __ in "Info Key".Trace("Extra words")
+            from __ in "Info Key".Trace(() => "Extra words")
             select Acid.Test;
         var report = new QState(script).AlwaysReport().ObserveOnce();
         var entry = report.Single<ReportTraceEntry>();
@@ -41,7 +41,7 @@ from _ in ""Info Key"".Trace(""Extra words"")
         var script =
             from ints in "ints".Input(MGen.Constant(42).Many(2))
             from _ in "act".Act(() => { counter++; })
-            from __ in "Info Key".Trace($"[ {string.Join(", ", ints)} ]")
+            from __ in "Info Key".Trace(() => $"[ {string.Join(", ", ints)} ]")
             from ___ in "spec".Spec(() => counter < 3)
             select Acid.Test;
         var report = new QState(script).AlwaysReport().ObserveOnce();
@@ -64,7 +64,7 @@ from _ in ""Info Key"".Trace(""Extra words"")
             from list in "list".Stashed(() => new List<int>())
             from _ in "act".Act(() => { })
             from delayedSpec in "spec".DelayedSpec(() => input != 3)
-            from __ in "Info Key".TraceIf(() => delayedSpec.Failed, $"{input}")
+            from __ in "Info Key".TraceIf(() => delayedSpec.Failed, () => $"{input}")
             let ___ = delayedSpec.Apply()
             select Acid.Test;
         var report = new QState(script).Observe(5);
@@ -79,7 +79,7 @@ from _ in ""Info Key"".Trace(""Extra words"")
 
 **Usage example:**
 ```csharp
-from _ in ""Info Key"".TraceIf(() => number == 42,""Extra words"")
+from _ in ""Info Key"".TraceIf(() => number == 42, () => ""Extra words"")
 ```
 ")]
     [Fact]
@@ -88,8 +88,8 @@ from _ in ""Info Key"".TraceIf(() => number == 42,""Extra words"")
         var script =
             from input in "input".Input(MGen.Constant(42))
             from _ in "act".Act(() => { })
-            from __ in "Trace 42".TraceIf(() => input == 42, "YEP 1")
-            from ___ in "Trace not 42".TraceIf(() => input != 42, "YEP 2")
+            from __ in "Trace 42".TraceIf(() => input == 42, () => "YEP 1")
+            from ___ in "Trace not 42".TraceIf(() => input != 42, () => "YEP 2")
             select Acid.Test;
         var report = new QState(script).AlwaysReport().ObserveOnce();
         var entry = report.Single<ReportTraceEntry>();

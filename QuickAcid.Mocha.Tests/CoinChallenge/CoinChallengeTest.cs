@@ -33,7 +33,7 @@ public class CoinChallengeTest
             from amount in "amount".Input(MGen.Int(-1, 20))
             from coins in "coins".Input(MGen.Int(-1, 11).Many(0, 5))
             from result in "minCoins".Act(() => CallMinCoins(module, amount, [.. coins]))
-            from trace in "minCoins result".Trace($"{result}")
+            from trace in "minCoins result".Trace(() => $"{result}")
 
             from _ in GeneralProperties(amount, result)
             from __ in UselessCoins(module, amount, [.. coins], result)
@@ -82,10 +82,10 @@ public class CoinChallengeTest
                 () => notInfinity, () => result == reversedResult)
             from trace1 in "original coins".TraceIf(
                 () => reversed.Failed,
-                $"[ {string.Join(", ", coins)} ] => {result}")
+                () => $"[ {string.Join(", ", coins)} ] => {result}")
             from trace2 in "reversed coins".TraceIf(
                 () => reversed.Failed,
-                $"[ {string.Join(", ", reversedCoins)} ] => {reversedResult}")
+                () => $"[ {string.Join(", ", reversedCoins)} ] => {reversedResult}")
             let apply = reversed.Apply()
             select Acid.Test;
     }
@@ -100,8 +100,8 @@ public class CoinChallengeTest
             "result should be minimal compared to known optimal".DelayedSpecIf(
                 () => amount >= 0 && coins.All(c => c > 0),
                 () => Matches(result, optimal))
-            from o in "original coins".TraceIf(() => ds.Failed, $"[ {string.Join(", ", coins)} ]")
-            from t in "trace optimal".TraceIf(() => ds.Failed, $"{result} : {optimal}")
+            from o in "original coins".TraceIf(() => ds.Failed, () => $"[ {string.Join(", ", coins)} ]")
+            from t in "trace optimal".TraceIf(() => ds.Failed, () => $"{result} : {optimal}")
             let apply = ds.Apply()
             select Acid.Test;
     }

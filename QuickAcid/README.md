@@ -450,7 +450,7 @@ This would end the test run early once `container.Value` becomes `true`.
 
 **Usage example:**
 ```csharp
-from _ in "Info Key".Trace("Extra words")
+from _ in "Info Key".Trace(() => "Extra words")
 ```
 
 
@@ -458,7 +458,7 @@ from _ in "Info Key".Trace("Extra words")
 
 **Usage example:**
 ```csharp
-from _ in "Info Key".TraceIf(() => number == 42,"Extra words")
+from _ in "Info Key".TraceIf(() => number == 42, () => "Extra words")
 ```
 
 
@@ -482,6 +482,19 @@ from __ in "spec".Spec(() => false).Skip()
 from __ in "spec".Spec(() => false).SkipIf(() => true)
 ```
 
+
+---
+
+### Custom Shrinking
+
+...
+
+
+Usage with class
+
+Usage with lambda
+
+custom list strat
 
 ---
 
