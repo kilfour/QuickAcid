@@ -1,10 +1,8 @@
-using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
-using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
-using QuickPulse.Arteries;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 
@@ -21,7 +19,7 @@ public class CollectionShrinkingTests
         return
             state =>
                 {
-                    return new Result<IEnumerable<int>>(Enumerable.Repeat(42, counter++).ToList(), state);
+                    return new Result<IEnumerable<int>>([.. Enumerable.Repeat(42, counter++)], state);
                 };
     }
 
@@ -29,13 +27,16 @@ public class CollectionShrinkingTests
     [Doc(Order = $"{Chapter.Order}-1", Content = @"Usage")]
     public void Collection_shrink()
     {
-
         var script =
             from input in "input".Input(GrowingList())
             from act in "act".Act(() => { })
-            from spec in "spec".Spec(() => input.Count() <= 2)
+            from spec in "spec".Spec(() =>
+            input.Count() <= 2
+            )
             select Acid.Test;
         var report = new QState(script).Observe(15);
-        Assert.Null(report); // Input Shrinking is too greedy
+        Assert.NotNull(report);
+        var entry = report.Single<ReportInputEntry>();
+        Assert.Equal("[ _, _, _ ]", entry.Value);
     }
 }

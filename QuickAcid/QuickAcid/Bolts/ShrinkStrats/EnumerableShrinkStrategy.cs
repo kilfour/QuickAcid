@@ -14,11 +14,23 @@ public class EnumerableShrinkStrategy
         {
             var ix = index;
             var before = theList[ix];
+            //-------------------------------------------------------
+            // First try removing the element  
+            //-------------------------------------------------------
+            theList.RemoveAt(ix);
+            if (state.ShrinkRunReturnTrueIfFailed(key, theList!))
+            {
+                continue;
+            }
+            theList.Insert(ix, before);
+            //-------------------------------------------------------
+            // Then try if element value is important 
+            //-------------------------------------------------------
             var valueType = before.GetType();
             var elementType = valueType.IsGenericType
                 ? valueType.GetGenericArguments().First()
                 : typeof(object);
-            //-------------------------------------------------------
+
             var removed = false;
             state.Memory.GetNestedValue = list => ((IList)list)[ix];
             state.Memory.SetNestedValue = element =>
@@ -37,7 +49,8 @@ public class EnumerableShrinkStrategy
 
             if (shrinkOutcome == ShrinkOutcome.Irrelevant)
             {
-                theList.RemoveAt(index);
+                // theList.RemoveAt(index);
+                shrinkValues.Add($"_");
                 removed = true;
             }
             else if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
@@ -47,8 +60,8 @@ public class EnumerableShrinkStrategy
             if (!removed)
             {
                 theList[ix] = before;
-                index++;
             }
+            index++;
             state.Memory.GetNestedValue = null;
             state.Memory.SetNestedValue = null;
         }
