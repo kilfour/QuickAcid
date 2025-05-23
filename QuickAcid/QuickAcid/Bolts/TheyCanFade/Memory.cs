@@ -92,7 +92,10 @@ public class Memory
 
 	public Func<object, object>? GetNestedValue = null;
 	public Func<object, object>? SetNestedValue = null;
-
+	// put the entire swap thing in a class, allowing for Lensing
+	// including key value 
+	// the call to ShrinkRunReturnTrueIfFailed can then be wrapped in Func<NewClass, bool>
+	// and passed around
 	public IDisposable ScopedSwap(object key, object value)
 	{
 		QAcidState.GetPulse(["Memory", "ScopedSwap"])($"Executing for key={key}, value={value}, execution={getCurrentExecutionId()}");

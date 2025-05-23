@@ -31,7 +31,6 @@ public class EnumerableShrinkStrategy
                 ? valueType.GetGenericArguments().First()
                 : typeof(object);
 
-            var removed = false;
             state.Memory.GetNestedValue = list => ((IList)list)[ix];
             state.Memory.SetNestedValue = element =>
             {
@@ -45,22 +44,17 @@ public class EnumerableShrinkStrategy
                 }
                 return theList;
             };
-            var shrinkOutcome = ShrinkStrats.ShrinkStrategyPicker.Input(state, key, before);
+            var shrinkOutcome = ShrinkStrategyPicker.Input(state, key, before);
 
             if (shrinkOutcome == ShrinkOutcome.Irrelevant)
             {
-                // theList.RemoveAt(index);
                 shrinkValues.Add($"_");
-                removed = true;
             }
             else if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
             {
                 shrinkValues.Add($"{msg}");
             }
-            if (!removed)
-            {
-                theList[ix] = before;
-            }
+            theList[ix] = before;
             index++;
             state.Memory.GetNestedValue = null;
             state.Memory.SetNestedValue = null;
