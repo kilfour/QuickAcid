@@ -17,7 +17,6 @@ public class TrackedInputMemory
 
     public T Store<T>(string key, Func<T> factory, Func<T, string> stringify)
     {
-        QAcidState.GetPulse(["TrackedInputMemory"])($"Store({key} ...)");
         var val = StoreWithoutReporting(key, factory);
         ReportForCurrent()[key] = stringify(val);
         return val;
@@ -41,7 +40,6 @@ public class TrackedInputMemory
 
     public void Reset()
     {
-        QAcidState.GetPulse(["TrackedInputMemory"])($"Reset()");
         values.Clear();
         reportPerExecution.Clear();
     }

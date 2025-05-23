@@ -38,37 +38,28 @@ public class PrimitiveShrinkStrategy //: IShrinkStrategy
         var originalFails = state.ShrinkRunReturnTrueIfFailed(key, value!);
         if (!originalFails)
             return ShrinkOutcome.Irrelevant;
-        var pulse = QAcidState.GetPulse(["PrimitiveShrinkStrategy"]);
-        pulse($"(key: {key}, value:{value})");
+
         if (state.InFeedbackShrinkingPhase)
         {
-            pulse($"Phase: {state.CurrentPhase}");
             foreach (object val in primitiveVals.Where(x => !Equals(x, value)))
             {
-                pulse($"Replacing with: {val}");
                 if (state.ShrinkRunReturnTrueIfFailed(key, val))
                 {
-                    pulse($"ShrinkOutcome.Report({QuickAcidStringify.Default()(val)}) ");
                     state.Memory.ForThisExecution().Override(key, val);
                     return ShrinkOutcome.Report(QuickAcidStringify.Default()(val));
                 }
             }
-            pulse($"ShrinkOutcome.Irrelevant");
             return ShrinkOutcome.Report(QuickAcidStringify.Default()(value!));
         }
         else
         {
-            pulse($"Phase: {state.CurrentPhase}");
             foreach (object val in primitiveVals.Where(x => !Equals(x, value)))
             {
-                pulse($"Replacing with: {val}");
                 if (!state.ShrinkRunReturnTrueIfFailed(key, val))
                 {
-                    pulse($"ShrinkOutcome.Report({QuickAcidStringify.Default()(value!)}) ");
                     return ShrinkOutcome.Report(QuickAcidStringify.Default()(value!));
                 }
             }
-            pulse($"ShrinkOutcome.Irrelevant");
             return ShrinkOutcome.Irrelevant;
         }
     }

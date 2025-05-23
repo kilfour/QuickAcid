@@ -98,7 +98,6 @@ public class Memory
 	// and passed around
 	public IDisposable ScopedSwap(object key, object value)
 	{
-		QAcidState.GetPulse(["Memory", "ScopedSwap"])($"Executing for key={key}, value={value}, execution={getCurrentExecutionId()}");
 		var memory = ForThisExecution();
 
 		object oldValue = null!;
