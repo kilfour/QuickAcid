@@ -24,8 +24,8 @@ public class ShrinkStrategyPicker
         }
 
         if (typeof(IEnumerable).IsAssignableFrom(actualType))
-        {
-            return new EnumerableShrinkStrategy().Shrink(state, key, value);
+        {   // TODO : REMOVE LIST PARAM shrinkingValues
+            return new EnumerableShrinkStrategy(new DefaultCollectionShrinkingPolicy()).Shrink(state, key, value, []);
         }
 
         if (actualType.IsClass)

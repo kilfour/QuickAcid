@@ -1,4 +1,3 @@
-using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.TestsDeposition._Tools;
@@ -20,7 +19,6 @@ public class CustomShrinkingTests
             return [666];
         }
     }
-
 
     [Fact]
     [Doc(Order = $"{Chapter.Order}-1", Content = @"Usage with class")]

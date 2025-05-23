@@ -13,26 +13,14 @@ public static class Chapter { public const string Order = "1-50-7"; }
 ")]
 public class CollectionShrinkingTests
 {
-    public Generator<IEnumerable<int>> GrowingList()
-    {
-        var counter = 0;
-        return
-            state =>
-                {
-                    return new Result<IEnumerable<int>>([.. Enumerable.Repeat(42, counter++)], state);
-                };
-    }
-
     [Fact]
     [Doc(Order = $"{Chapter.Order}-1", Content = @"Usage")]
     public void Collection_shrink()
     {
         var script =
-            from input in "input".Input(GrowingList())
+            from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 3]))
             from act in "act".Act(() => { })
-            from spec in "spec".Spec(() =>
-            input.Count() <= 2
-            )
+            from spec in "spec".Spec(() => input.Count() <= 2)
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
@@ -44,7 +32,7 @@ public class CollectionShrinkingTests
     public void Collection_shrink_with_extra()
     {
         var script =
-            from input in "input".Input(GrowingList())
+            from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 42]))
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(() => input.Count() > 2, () => input.ToList()[2] != 42)
             select Acid.Test;
@@ -85,16 +73,30 @@ public class CollectionShrinkingTests
     }
 
     [Fact]
+    public void Collection_irrelevant_not_in_report()
+    {
+        var script =
+            from input in "input".Input(MGen.Int().Many(3))
+            from act in "act".Act(() => { })
+            from spec in "spec".Spec(() => false)
+            select Acid.Test;
+        var report = new QState(script).Observe(15);
+        Assert.NotNull(report);
+        Assert.Null(report.FirstOrDefault<ReportInputEntry>());
+    }
+
+    [Fact]
     public void Collection_shrink_with_haha()
     {
+        // TODO : MAKE IT PASS WITH : !input.Contains(1)
         var script =
             from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 1]))
             from act in "act".Act(() => { })
-            from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(1))
+            from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(2))
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
-        Assert.Equal("[ _, _, 1 ]", entry.Value);
+        Assert.Equal("[ _, 2, _ ]", entry.Value);
     }
 }

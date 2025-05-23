@@ -3,26 +3,16 @@ using System.Collections;
 
 namespace QuickAcid.Bolts.ShrinkStrats;
 
-public class EnumerableShrinkStrategy
+public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
 {
-    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value)
+    public T Shrink<T>(QAcidState state, string key, T value, List<string> shrinkValues)
     {
         var theList = CloneAsOriginalTypeList(value);
         int index = 0;
-        var shrinkValues = new List<string>();
         while (index < theList.Count)
         {
             var ix = index;
             var before = theList[ix];
-            //-------------------------------------------------------
-            // First try removing the element  
-            //-------------------------------------------------------
-            theList.RemoveAt(ix);
-            if (state.ShrinkRunReturnTrueIfFailed(key, theList!))
-            {
-                continue;
-            }
-            theList.Insert(ix, before);
             //-------------------------------------------------------
             // Then try if element value is important 
             //-------------------------------------------------------
@@ -45,21 +35,18 @@ public class EnumerableShrinkStrategy
                 return theList;
             };
             var shrinkOutcome = ShrinkStrategyPicker.Input(state, key, before);
-
-            if (shrinkOutcome == ShrinkOutcome.Irrelevant)
-            {
-                shrinkValues.Add($"_");
-            }
-            else if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
+            if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
             {
                 shrinkValues.Add($"{msg}");
             }
+            else
+                shrinkValues.Add($"_");
             theList[ix] = before;
             index++;
             state.Memory.GetNestedValue = null;
             state.Memory.SetNestedValue = null;
         }
-        return ShrinkOutcome.Report($"[ {string.Join(", ", shrinkValues)} ]");
+        return (T)theList;
     }
 
     public static IList CloneAsOriginalTypeList(object value)
