@@ -1,4 +1,4 @@
-namespace QuickAcid.Bolts.ShrinkStrats;
+namespace QuickAcid.Bolts.ShrinkStrats.Collections;
 
 public interface ICollectionShrinkStrategy
 {

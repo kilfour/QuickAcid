@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using QuickAcid.Bolts.ShrinkStrats.Collections;
 
 namespace QuickAcid.Bolts.ShrinkStrats;
 
@@ -24,8 +25,8 @@ public class ShrinkStrategyPicker
         }
 
         if (typeof(IEnumerable).IsAssignableFrom(actualType))
-        {   // TODO : REMOVE LIST PARAM shrinkingValues
-            return new EnumerableShrinkStrategy(new DefaultCollectionShrinkingPolicy()).Shrink(state, key, value, []);
+        {
+            return new EnumerableShrinkStrategy(new DefaultCollectionShrinkingPolicy()).Shrink(state, key, value);
         }
 
         if (actualType.IsClass)
