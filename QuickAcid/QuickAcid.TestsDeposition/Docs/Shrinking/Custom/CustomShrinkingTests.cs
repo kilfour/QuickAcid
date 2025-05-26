@@ -1,5 +1,7 @@
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Bolts.ShrinkStrats.Collections;
+using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 
@@ -63,5 +65,35 @@ public class CustomShrinkingTests
         var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
         Assert.Contains(666, observe);
+    }
+
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-4", Content = @"Custom Collection Shrinking Policy: RemoveOneByOneStrategy")]
+    public void Custom_collection_shrinking_policies_RemoveOneByOneStrategy()
+    {
+        var script =
+            from _ in ShrinkingPolicy.ForCollections(new RemoveOneByOneStrategy())
+            from input in "input".Input(MGen.Constant<List<int>>([42, 1, 2]))
+            from foo in "spec".Spec(() => !input.Contains(42))
+            select Acid.Test;
+        var report = new QState(script).ObserveOnce();
+        Assert.NotNull(report);
+        var entry = report.Single<ReportInputEntry>();
+        Assert.Equal("[ 42 ]", entry.Value);
+    }
+
+    [Fact]
+    [Doc(Order = $"{Chapter.Order}-4", Content = @"ShrinkEachElementStrategy")]
+    public void Custom_collection_shrinking_policies_ShrinkEachElementStrategy()
+    {
+        var script =
+            from _ in ShrinkingPolicy.ForCollections(new ShrinkEachElementStrategy())
+            from input in "input".Input(MGen.Constant<List<int>>([42, 1, 2]))
+            from foo in "spec".Spec(() => !input.Contains(42))
+            select Acid.Test;
+        var report = new QState(script).ObserveOnce();
+        Assert.NotNull(report);
+        var entry = report.Single<ReportInputEntry>();
+        Assert.Equal("[ 42, _, _ ]", entry.Value);
     }
 }

@@ -505,6 +505,10 @@ Usage with lambda
 
 custom list strat
 
+Custom Collection Shrinking Policy: RemoveOneByOneStrategy
+
+ShrinkEachElementStrategy
+
 ---
 
 ### Feedback Shrinking
