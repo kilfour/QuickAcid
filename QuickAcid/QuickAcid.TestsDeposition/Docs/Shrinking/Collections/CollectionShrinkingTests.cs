@@ -108,7 +108,7 @@ public class CollectionShrinkingTests
         var script =
             from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 1]))
             from act in "act".Act(() => { })
-            from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(2))
+            from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(1))
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);

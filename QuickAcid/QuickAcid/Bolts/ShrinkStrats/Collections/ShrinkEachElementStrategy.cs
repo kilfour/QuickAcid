@@ -6,7 +6,7 @@ namespace QuickAcid.Bolts.ShrinkStrats.Collections;
 
 public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
 {
-    public T Shrink<T>(QAcidState state, string key, T value, List<string> shrinkValues)
+    public IEnumerable<ShrinkTrace> Shrink<T>(QAcidState state, string key, T value)
     {
         var theList = CloneList.AsOriginalType(value!);
         int index = 0;
@@ -34,10 +34,30 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
                     var shrinkOutcome = ShrinkStrategyPicker.Input(state, key, before);
                     if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
                     {
-                        shrinkValues.Add($"{msg}");
+                        //shrinkValues.Add($"{msg}");
+                        yield return new ShrinkTrace
+                        {
+                            Key = $"{key}.{index}",
+                            Original = before,
+                            Result = before,
+                            Intent = ShrinkIntent.Keep,
+                            Strategy = "ShrinkEachElementStrategy",
+                            Message = "Minimal value causing failure"
+                        };
                     }
                     else
-                        shrinkValues.Add($"_");
+                    {
+                        //shrinkValues.Add($"_");
+                        yield return new ShrinkTrace
+                        {
+                            Key = $"{key}.{index}",
+                            Original = before,
+                            Result = null,
+                            Intent = ShrinkIntent.Irrelevant,
+                            Strategy = "ShrinkEachElementStrategy",
+                            Message = "Input value is irrelevant to failure"
+                        };
+                    }
                     theList[ix] = before;
                     index++;
                 }
@@ -67,6 +87,6 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
             // state.Memory.GetNestedValue = null;
             // state.Memory.SetNestedValue = null;
         }
-        return (T)theList;
+        //return (T)theList;
     }
 }

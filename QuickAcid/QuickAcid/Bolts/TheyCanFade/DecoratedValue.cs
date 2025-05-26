@@ -19,6 +19,8 @@ public class DecoratedValue
         };
     }
     // ---------------------------------------------------------------------------------------
+
+    public List<ShrinkTrace> ShrinkTraces { get; init; } = [];
 }
 
 public enum ReportingIntent

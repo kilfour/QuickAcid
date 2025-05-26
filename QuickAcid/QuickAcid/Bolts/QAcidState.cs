@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
 
@@ -111,6 +112,9 @@ public sealed class QAcidState : QAcidContext
             ? shrinker as IShrinker<T>
             : null;
     }
+
+    public Func<IEnumerable<ICollectionShrinkStrategy>> GetCollectionStrategies =
+        () => [new RemoveOneByOneStrategy(), new ShrinkEachElementStrategy()];
     // ---------------------------------------------------------------------------------------
     public bool AllowShrinking = true;
     public bool AllowFeedbackShrinking = false;
@@ -304,7 +308,7 @@ public sealed class QAcidState : QAcidContext
         }
     }
 
-    public bool ShrinkRunReturnTrueIfFailed(string key, object value) // Only Used by Shrink.cs
+    public bool ShrinkRunReturnTrueIfFailed(string key, object value)
     {
         using (EnterPhase(QAcidPhase.ShrinkInputEval))
         {

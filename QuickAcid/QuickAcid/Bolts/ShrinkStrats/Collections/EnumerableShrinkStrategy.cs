@@ -1,25 +1,40 @@
-using System.Collections;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 
 namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class EnumerableShrinkStrategy
 {
-    private readonly ICollectionShrinkPolicy _policy;
-
-    public EnumerableShrinkStrategy(ICollectionShrinkPolicy policy) => _policy = policy;
-
     public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value)
     {
-        var list = value;
-        List<string> shrinkValues = [];
-        foreach (var strategy in _policy.GetStrategies())
+        foreach (var strategy in state.GetCollectionStrategies())
         {
-            shrinkValues = [];
-            list = strategy.Shrink(state, key, list, shrinkValues);
-            if (((IList)list!).Count == 0)
-                return ShrinkOutcome.Irrelevant;
+            var traces = strategy.Shrink(state, key, value);
+            state.Memory.ForThisExecution().GetDecorated(key).ShrinkTraces.AddRange(traces);
         }
+        return BuildOutcome(state.Memory.ForThisExecution().GetDecorated(key).ShrinkTraces);
+    }
+
+    private ShrinkOutcome BuildOutcome(IEnumerable<ShrinkTrace> traces)
+    {
+        List<string> shrinkValues = [];
+        foreach (var key in traces.Select(a => a.Key).Distinct().Order())
+        {
+            var tracesForKey = traces.Where(a => a.Key == key);
+            if (tracesForKey.Any(a => a.IsRemoved))
+                continue;
+            if (tracesForKey.Any(a => a.IsIrrelevant))
+            {
+                shrinkValues.Add("_");
+                continue;
+            }
+            if (tracesForKey.Any(a => a.IsKeep))
+            {
+                var trace = tracesForKey.First(a => a.IsKeep);
+                shrinkValues.Add(QuickAcidStringify.Default()(trace.Original!));
+            }
+        }
+        if (!shrinkValues.Any())
+            return ShrinkOutcome.Irrelevant;
         return ShrinkOutcome.Report($"[ {string.Join(", ", shrinkValues)} ]");
     }
 }
