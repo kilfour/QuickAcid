@@ -6,9 +6,6 @@ PhaseContext => Copy
 Check always reported input on Start run  
 (Only Missing On QDiagniosticState ?)
 --- slide ---
-## QAcidState.GetPulse
-Move To QAcid.GetPulse 
---- slide ---
 ## Check Project Migration
 QuickAcid.Examples.SetTest
 --- slide ---
@@ -111,3 +108,80 @@ var flow =
     from _ in Pulse.Effect(() => box.Value--)
     from _ in Pulse.Trace(box.Value)
     select box.Value;
+
+---
+// Option 1: Registry-Based Strategy System
+
+public interface IShrinkStrategyResolver
+{
+    IEnumerable<ShrinkTrace> Resolve(QAcidState state, string key, object? value);
+}
+
+public class ShrinkRegistry : IShrinkStrategyResolver
+{
+    private readonly Dictionary<Type, IShrinkStrategy> shrinkers = new();
+
+    public ShrinkRegistry Register<T>(IShrinkStrategy strategy)
+    {
+        shrinkers[typeof(T)] = strategy;
+        return this;
+    }
+
+    public IEnumerable<ShrinkTrace> Resolve(QAcidState state, string key, object? value)
+    {
+        var type = value?.GetType() ?? typeof(object);
+        if (shrinkers.TryGetValue(type, out var strat))
+            return strat.Shrink(state, key, value);
+
+        if (type.IsClass)
+            return new ObjectShrinkStrategy().Shrink(state, key, value);
+
+        return [];
+    }
+}
+
+
+// Option 2: Strategy Resolution as a Strategy
+
+public class StrategyResolver : IShrinkStrategy
+{
+    public IEnumerable<ShrinkTrace> Shrink(QAcidState state, string key, object? value)
+    {
+        if (value == null)
+            yield break;
+
+        var type = value.GetType();
+        if (PrimitiveShrinkStrategy.CanHandle(type))
+            return new PrimitiveShrinkStrategy().Shrink(state, key, value);
+
+        if (value is IEnumerable)
+            return new EnumerableShrinkStrategy(...).Shrink(state, key, value);
+
+        if (type.IsClass)
+            return new ObjectShrinkStrategy().Shrink(state, key, value);
+
+        yield return new ShrinkTrace
+        {
+            Key = key,
+            Original = value,
+            Result = value,
+            Strategy = "NoOp",
+            Message = $"No shrinker for type {type.Name}"
+        };
+    }
+}
+
+
+// Option 3: Declarative Table-of-Handlers
+
+private static readonly List<(Predicate<Type> Match, Func<IShrinkStrategy> Strategy)> pickers =
+    new()
+    {
+        (t => CustomAvailable(t), () => new CustomShrinkStrategy(...)),
+        (PrimitiveShrinkStrategy.CanHandle, () => new PrimitiveShrinkStrategy()),
+        (t => typeof(IEnumerable).IsAssignableFrom(t), () => new EnumerableShrinkStrategy(...)),
+        (t => t.IsClass, () => new ObjectShrinkStrategy()),
+    };
+
+// Usage:
+var strat = pickers.FirstOrDefault(p => p.Match(type)).Strategy?.Invoke();

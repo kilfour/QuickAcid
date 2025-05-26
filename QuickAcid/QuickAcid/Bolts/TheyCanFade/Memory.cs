@@ -90,36 +90,50 @@ public class Memory
 	public bool Has(int executionId) // used by codegen
 		=> memoryPerExecution.ContainsKey(executionId);
 
-	public Func<object, object>? GetNestedValue = null;
-	public Func<object, object>? SetNestedValue = null;
-	// put the entire swap thing in a class, allowing for Lensing
-	// including key value 
-	// the call to ShrinkRunReturnTrueIfFailed can then be wrapped in Func<NewClass, bool>
-	// and passed around
-	public IDisposable ScopedSwap(object key, object value)
+	private readonly Stack<MemoryLens> swappers = new();
+
+	public IDisposable NestedValue(MemoryLens swapper)
+	{
+		swappers.Push(swapper);
+		return new DisposableAction(() => swappers.Pop());
+	}
+
+	public IDisposable ScopedSwap(string key, object value)
 	{
 		var memory = ForThisExecution();
 
-		object oldValue = null!;
-		if (GetNestedValue != null)
+		Func<object> getValue = () => memory.Get<object>(key);
+		var setSteps = new Stack<(MemoryLens lens, object container)>();
+
+		foreach (var lens in swappers.Reverse())
 		{
-			oldValue = GetNestedValue(memory.Get<object>(key));
-			memory.Set(key, SetNestedValue!(value), ReportingIntent.Never);
-		}
-		else
-		{
-			oldValue = memory.Get<object>(key);
-			memory.Set(key, value, ReportingIntent.Never);
+
+			var currentGet = getValue;
+			getValue = () => lens.Get(currentGet());
+
+			var container = currentGet(); // capture correct container for this lens
+			setSteps.Push((lens, container));
 		}
 
+		var oldValue = getValue();
+
+		Func<object, object> setValue = newLeaf =>
+		{
+			var updated = newLeaf;
+			foreach (var (lens, container) in setSteps)
+				updated = lens.Set(container, updated);
+
+			return updated;
+		};
+
+		memory.Set(key, setValue(value), ReportingIntent.Never);
+
 		return new DisposableAction(() =>
-			{
-				if (GetNestedValue != null)
-					memory.Set(key, SetNestedValue!(oldValue), ReportingIntent.Shrinkable);
-				else
-					memory.Set(key, oldValue, ReportingIntent.Shrinkable);
-			});
+		{
+			memory.Set(key, setValue(oldValue), ReportingIntent.Shrinkable);
+		});
 	}
+
 
 	// ---------------------------------------------------------------------------------------
 	// -- DEEP COPY

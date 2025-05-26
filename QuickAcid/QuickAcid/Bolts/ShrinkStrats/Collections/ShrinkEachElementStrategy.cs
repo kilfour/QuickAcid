@@ -1,5 +1,6 @@
 
 using System.Collections;
+using QuickAcid.Bolts.TheyCanFade;
 
 namespace QuickAcid.Bolts.ShrinkStrats.Collections;
 
@@ -18,30 +19,53 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
                 ? valueType.GetGenericArguments().First()
                 : typeof(object);
 
-            state.Memory.GetNestedValue = list => ((IList)list)[ix]!;
-            state.Memory.SetNestedValue = element =>
+            using (state.Memory.ScopedSwap(key, theList))
             {
-                if (element == null || elementType.IsAssignableFrom(element.GetType()))
+                var swapper = new MemoryLens(
+                    list => ((IList)list)[ix]!,
+                    (list, element) =>
+                    {
+                        if (element == null || elementType.IsAssignableFrom(element.GetType()))
+                            ((IList)list)[ix] = element;
+                        return list;
+                    });
+                using (state.Memory.NestedValue(swapper))
                 {
-                    theList[ix] = element;
+                    var shrinkOutcome = ShrinkStrategyPicker.Input(state, key, before);
+                    if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
+                    {
+                        shrinkValues.Add($"{msg}");
+                    }
+                    else
+                        shrinkValues.Add($"_");
+                    theList[ix] = before;
+                    index++;
                 }
-                else
-                {
-                    throw new Exception("Ouch, QuickAcid Went BOOM !");
-                }
-                return theList;
-            };
-            var shrinkOutcome = ShrinkStrategyPicker.Input(state, key, before);
-            if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
-            {
-                shrinkValues.Add($"{msg}");
             }
-            else
-                shrinkValues.Add($"_");
-            theList[ix] = before;
-            index++;
-            state.Memory.GetNestedValue = null;
-            state.Memory.SetNestedValue = null;
+            // state.Memory.GetNestedValue = list => ((IList)list)[ix]!;
+            // state.Memory.SetNestedValue = element =>
+            // {
+            //     if (element == null || elementType.IsAssignableFrom(element.GetType()))
+            //     {
+            //         theList[ix] = element;
+            //     }
+            //     else
+            //     {
+            //         throw new Exception("Ouch, QuickAcid Went BOOM !");
+            //     }
+            //     return theList;
+            // };
+            //     var shrinkOutcome = ShrinkStrategyPicker.Input(state, key, before);
+            // if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
+            // {
+            //     shrinkValues.Add($"{msg}");
+            // }
+            // else
+            //     shrinkValues.Add($"_");
+            // theList[ix] = before;
+            // index++;
+            // state.Memory.GetNestedValue = null;
+            // state.Memory.SetNestedValue = null;
         }
         return (T)theList;
     }

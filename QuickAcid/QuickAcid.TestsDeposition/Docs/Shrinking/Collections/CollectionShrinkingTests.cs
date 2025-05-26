@@ -29,6 +29,22 @@ public class CollectionShrinkingTests
     }
 
     [Fact]
+    public void Collection_nested_shrink()
+    {
+        var script =
+            from input in "input".Input(MGen.Constant<IEnumerable<List<int>>>([[42, 1], [2, 3]]))
+            from act in "act".Act(() => { })
+            from spec in "spec".SpecIf(
+                () => input.Any() && input.First().Any(),
+                () => input.First().First() != 42)
+            select Acid.Test;
+        var report = new QState(script).Observe(15);
+        Assert.NotNull(report);
+        var entry = report.Single<ReportInputEntry>();
+        Assert.Equal("[ [ 42 ] ]", entry.Value);
+    }
+
+    [Fact]
     public void Collection_shrink_with_extra()
     {
         var script =
