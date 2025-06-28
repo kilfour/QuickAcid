@@ -4,6 +4,7 @@ using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Custom;
 
@@ -78,6 +79,7 @@ public class CustomShrinkingTests
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
+        // new WriteDataToFile().ClearFile().Flow(report.ShrinkTraces.Select(a => a.Report()).ToArray());
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ 42 ]", entry.Value);
     }

@@ -1,4 +1,4 @@
-﻿namespace QuickAcid.Bolts.Nuts;
+﻿namespace QuickAcid;
 
 public static partial class QAcidCombinators
 {
@@ -10,7 +10,7 @@ public static partial class QAcidCombinators
                 var factory = () =>
                     {
                         var value = counter;
-                        counter = (counter + 1) % scripts.Length;
+                        counter = (counter + 1) % scripts.Length; // wraparound counter
                         return value;
                     };
 

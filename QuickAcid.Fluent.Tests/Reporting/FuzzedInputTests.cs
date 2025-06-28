@@ -7,7 +7,7 @@ namespace QuickAcid.Tests.Reporting;
 public class FuzzedInputTests
 {
     [Fact]
-    public void FuzzedInput_irrelevant_should_always_be_reported_twice_when_using_the_touchstone()
+    public void FuzzedInput_irrelevant_should_always_be_reported_thrice_when_using_the_touchstone()
     {
         var report =
             SystemSpecs
@@ -18,6 +18,6 @@ public class FuzzedInputTests
                 .KeepOneEyeOnTheTouchStone()
                 .AndCheckForGold(1, 1);
         var entries = report.OfType<ReportInputEntry>();
-        Assert.Equal(2, entries.Count());
+        Assert.Equal(3, entries.Count());
     }
 }

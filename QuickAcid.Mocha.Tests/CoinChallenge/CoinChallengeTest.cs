@@ -26,7 +26,6 @@ public class CoinChallengeTest
     [Fact(Skip = "demo")]
     public void AcidTest()
     {
-        var writer = new WriteDataToFile().ClearFile();
         var fastTestsOnly = false;
         var module = GetModule();
         var script =
@@ -92,7 +91,6 @@ public class CoinChallengeTest
 
     private static QAcidScript<Acid> IsOptimal(int amount, int[] coins, double result)
     {
-        var writer = new WriteDataToFile();
         return
             from _ in Acid.Script
             let optimal = amount >= 0 && coins.All(c => c > 0) ? Optimal(amount, coins) : int.MaxValue

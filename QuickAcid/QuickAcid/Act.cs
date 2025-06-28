@@ -1,20 +1,29 @@
-﻿namespace QuickAcid.Bolts.Nuts;
+﻿using QuickAcid.Bolts;
+
+namespace QuickAcid;
 
 public static partial class QAcidCombinators
 {
 	private static QAcidScript<TOutput> TryCatch<TOutput>(string key, Func<TOutput> func)
 	=> state =>
 		{
-			state.GetExecutionContext().memory.ActionKeys.Add(key);
-			try
+			var execution = state.GetExecutionContext();
+			if (state.CurrentPhase == QAcidPhase.NormalRun)
+				execution.memory.ActionKeys.Add(key);
+			var needsToAct = execution.memory.ActionKeys.Contains(key);
+			if (needsToAct)
 			{
-				return QAcidResult.Some(state, func());
+				try
+				{
+					return QAcidResult.Some(state, func());
+				}
+				catch (Exception ex)
+				{
+					state.RecordFailure(ex);
+					return QAcidResult.None<TOutput>(state);
+				}
 			}
-			catch (Exception ex)
-			{
-				state.RecordFailure(ex);
-				return QAcidResult.None<TOutput>(state);
-			}
+			return QAcidResult.None<TOutput>(state);
 		};
 
 	private static QAcidScript<TOut> TryCapture<TOut>(this string key, Func<TOut> func, Func<Exception, TOut> onError)

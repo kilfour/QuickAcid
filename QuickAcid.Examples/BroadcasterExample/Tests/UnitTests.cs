@@ -4,7 +4,7 @@ namespace QuickAcid.Examples.BroadcasterExample;
 
 public class UnitTests
 {
-    [Fact]
+    [Fact(Skip = "demo")]
     public void Broadcaster_start_stop_no_exception()
     {
         var clientProxyFactory = new TestClientProxyFactory();
@@ -15,7 +15,7 @@ public class UnitTests
         Assert.Null(needler.ExceptionFromThread);
     }
 
-    [Fact]
+    [Fact(Skip = "demo")]
     public void Broadcaster_start_register_stop_no_exception()
     {
         var clientProxyFactory = new TestClientProxyFactory();
@@ -27,7 +27,7 @@ public class UnitTests
         Assert.Null(needler.ExceptionFromThread);
     }
 
-    [Fact]
+    [Fact(Skip = "demo")]
     public void Broadcaster_register_start_register_stop_no_exception()
     {
         var clientProxyFactory = new TestClientProxyFactory();

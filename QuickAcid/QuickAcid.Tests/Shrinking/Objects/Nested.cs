@@ -1,6 +1,7 @@
 ﻿using QuickAcid.Reporting;
 using QuickMGenerate;
-using QuickAcid.Bolts.Nuts;
+using QuickPulse;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {

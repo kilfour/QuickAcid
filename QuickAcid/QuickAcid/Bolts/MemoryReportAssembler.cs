@@ -30,7 +30,8 @@ public static class MemoryReportAssembler
 
                 foreach (var (key, val) in access.GetAll())
                 {
-                    if (val.ShrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
+                    var shrinkOutcome = val.GetShrinkOutcome();
+                    if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
                     {
                         report.AddEntry(new ReportInputEntry(LabelPrettifier.Prettify(key)) { Value = msg });
                     }

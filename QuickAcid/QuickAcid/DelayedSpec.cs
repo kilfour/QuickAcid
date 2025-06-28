@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Bolts.Nuts;
+﻿using QuickAcid.Bolts;
+
+namespace QuickAcid;
 
 public class DelayedSpecResult
 {
@@ -9,25 +11,21 @@ public class DelayedSpecResult
 	public bool Passed { get { return resultState == DelayedSpecResultState.Passed; } }
 	public bool Failed { get { return resultState == DelayedSpecResultState.Failed; } }
 	public bool Skipped { get { return resultState == DelayedSpecResultState.Skipped; } }
+
 	private DelayedSpecResultState resultState { get; init; }
 
+	private DelayedSpecResult(QAcidState state, string label, DelayedSpecResultState resultState)
+	{
+		this.state = state;
+		Label = label;
+		this.resultState = resultState;
+	}
 
 	public DelayedSpecResult(QAcidState state, string label)
-	{
-		this.state = state;
-		Label = label;
-		resultState = DelayedSpecResultState.Skipped;
-	}
+		: this(state, label, DelayedSpecResultState.Skipped) { }
 
 	public DelayedSpecResult(QAcidState state, string label, bool passed)
-	{
-		this.state = state;
-		Label = label;
-		if (passed)
-			resultState = DelayedSpecResultState.Passed;
-		else
-			resultState = DelayedSpecResultState.Failed;
-	}
+		: this(state, label, passed ? DelayedSpecResultState.Passed : DelayedSpecResultState.Failed) { }
 
 	public Acid Apply()
 	{

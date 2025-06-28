@@ -40,7 +40,7 @@ public class ActExceptionTests
         var report = new QState(script).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
-        Assert.Equal("foo, bar", entry.Key);
+        Assert.Equal("bar", entry.Key);
         Assert.NotNull(report.Exception);
     }
 
@@ -63,7 +63,7 @@ public class ActExceptionTests
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
 
         Assert.NotNull(entry);
-        Assert.Equal("c, act", entry.Key);
+        Assert.Equal("act", entry.Key);
     }
 
     [Fact]

@@ -19,13 +19,9 @@ public class RunExecutionContext
 
     public bool AlreadyTried(string key) => shrinkTracker.AlreadyTried(key);
 
-    public void SetShrinkOutcome(string key, ShrinkOutcome outcome)
+    public void SetShrinkOutcome(string key)
     {
         shrinkTracker.MarkAsTriedToShrink(key);
-        if (memory.ContainsKey(key))
-        {
-            memory.SetShrinkOutcome(key, outcome);
-        }
     }
 
     public T Get<T>(string key) => memory.Get<T>(key);

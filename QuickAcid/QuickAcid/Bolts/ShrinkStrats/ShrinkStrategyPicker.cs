@@ -5,7 +5,7 @@ namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class ShrinkStrategyPicker
 {
-    public static ShrinkOutcome Input<T>(QAcidState state, string key, T value)
+    public static void Input<T>(QAcidState state, string key, T value, string fullKey)
     {
         var actualType = typeof(T) == typeof(object) && value != null
             ? value.GetType()
@@ -14,25 +14,28 @@ public class ShrinkStrategyPicker
         var normalizedType = Nullable.GetUnderlyingType(actualType) ?? actualType;
         var customShrinker = state.TryGetShrinker<T>();
         if (customShrinker != null)
-            return new CustomShrinkStrategy<T>(customShrinker).Shrink(state, key, value);
+        {
+            new CustomShrinkStrategy<T>(customShrinker).Shrink(state, key, value);
+            return;
+        }
 
         var primitiveKey = PrimitiveShrinkStrategy.PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(normalizedType));
         if (primitiveKey != null)
         {
-            var trace = new PrimitiveShrinkStrategy().Shrink(state, key, value);
-            if (trace.Single().IsIrrelevant)
-                return ShrinkOutcome.Irrelevant;
-            else
-                return ShrinkOutcome.Report(QuickAcidStringify.Default()(value!));
+            new PrimitiveShrinkStrategy().Shrink(state, key, value, fullKey);
+            return;
         }
 
         if (typeof(IEnumerable).IsAssignableFrom(actualType))
-            return new EnumerableShrinkStrategy().Shrink(state, key, value);
-
+        {
+            new EnumerableShrinkStrategy().Shrink(state, key, value, fullKey);
+            return;
+        }
 
         if (actualType.IsClass)
-            return new ObjectShrinkStrategy().Shrink(state, key, value);
-
-        return ShrinkOutcome.Report(QuickAcidStringify.Default()($"No Shrinker for: {value}"));
+        {
+            new ObjectShrinkStrategy().Shrink(state, key, value, fullKey);
+            return;
+        }
     }
 }

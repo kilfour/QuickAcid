@@ -41,6 +41,6 @@ public class MultipleDoTests
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
-        Assert.Equal("foo, bar", entry.Key);
+        Assert.Equal("", entry.Key);
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Text;
+using System.Dynamic;
+using System.Text;
+using QuickAcid.Bolts.ShrinkStrats;
 
 namespace QuickAcid.Reporting;
 
@@ -8,6 +10,7 @@ public class Report
     public List<IAmAReportEntry> Entries { get { return entries; } }
     public Exception? Exception { get; set; }
     public string Code { get; set; } = string.Empty;
+    public List<ShrinkTrace> ShrinkTraces { get; set; } = [];
 
     public virtual void AddEntry(IAmAReportEntry reportEntry)
     {
@@ -80,6 +83,20 @@ public class Report
         var arr = OfType<T>().ToArray();
         if (arr.Length < 3) return default;
         return arr[2];
+    }
+
+    public T Fourth<T>()
+    {
+        var result = FourthOrDefault<T>();
+        if (result == null) throw new NullReferenceException();
+        return result;
+    }
+
+    public T? FourthOrDefault<T>()
+    {
+        var arr = OfType<T>().ToArray();
+        if (arr.Length < 4) return default;
+        return arr[3];
     }
 
     public T Single<T>()

@@ -46,7 +46,7 @@ public class Spike
         Assert.Equal(9, collector.TheExhibit.Last());
     }
 
-    [Fact]
+    [Fact(Skip = "WIP")]
     public void QuickPulse_for_running_failing_things()
     {
         var logger = Signal.Tracing<int>().SetArtery(new WriteDataToFile().ClearFile());

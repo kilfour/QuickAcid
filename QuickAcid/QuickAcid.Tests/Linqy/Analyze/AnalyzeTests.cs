@@ -2,6 +2,7 @@ using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
 using QuickMGenerate;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.Tests.Linqy.Analyze;
 
@@ -20,7 +21,7 @@ public class AnalyzeTests
 
         var timesActShouldHaveRunOriginally = 2;
         var timesActShouldHaveRunDuringExcutionShrinking = 1;
-        var timesActShouldHaveRunDuringInputShrinking = 1;
+        var timesActShouldHaveRunDuringInputShrinking = 0; // not run because ShrinkingActions removed it
 
         var timesRun =
             timesActShouldHaveRunOriginally
@@ -28,6 +29,7 @@ public class AnalyzeTests
             + timesActShouldHaveRunDuringInputShrinking;
 
         Assert.NotNull(report);
+        new WriteDataToFile().ClearFile().Flow(report);
         Assert.Equal(timesRun, counter);
 
         var entry = report.GetSpecEntry();

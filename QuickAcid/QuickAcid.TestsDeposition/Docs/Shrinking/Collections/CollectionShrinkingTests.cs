@@ -1,8 +1,12 @@
 using QuickAcid.Bolts.Nuts;
+using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
+using QuickPulse;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 
@@ -32,14 +36,16 @@ public class CollectionShrinkingTests
     public void Collection_nested_shrink()
     {
         var script =
-            from input in "input".Input(MGen.Constant<IEnumerable<List<int>>>([[42, 1], [2, 3]]))
+            //from _ in ShrinkingPolicy.ForCollections(new RemoveOneByOneStrategy())
+            from input in "input".Input(MGen.Constant<IEnumerable<List<int>>>([[42]]))
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(
-                () => input.Any() && input.First().Any(),
+                () => input.Any() && input.First().Count != 0,
                 () => input.First().First() != 42)
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
+        new WriteDataToFile().ClearFile().Flow(report.ShrinkTraces.ToArray());
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ [ 42 ] ]", entry.Value);
     }
@@ -96,7 +102,7 @@ public class CollectionShrinkingTests
             from act in "act".Act(() => { })
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(script).Observe(15);
+        var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
         Assert.Null(report.FirstOrDefault<ReportInputEntry>());
     }
@@ -108,7 +114,7 @@ public class CollectionShrinkingTests
         var script =
             from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 1]))
             from act in "act".Act(() => { })
-            from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(1))
+            from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(2))
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);

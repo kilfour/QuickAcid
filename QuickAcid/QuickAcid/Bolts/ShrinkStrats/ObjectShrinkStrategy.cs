@@ -2,6 +2,7 @@
 using System.Reflection;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.TheyCanFade;
+using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
 namespace QuickAcid.Bolts.ShrinkStrats;
@@ -104,66 +105,78 @@ namespace QuickAcid.Bolts.ShrinkStrats;
 
 public class ObjectShrinkStrategy //: IShrinkStrategy
 {
-    public ShrinkOutcome Shrink<T>(QAcidState state, string key, T value)
+    public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
-        var shrunk = HandleProperties(state, key, value);
 
-        if (shrunk == ShrinkOutcome.Irrelevant)
+        state.Trace(key, ShrinkKind.ObjectKind, new ShrinkTrace
         {
-            var oldValues = new Dictionary<string, object>();
-            var propertyInfos = value.GetType().GetProperties(MyBinding.Flags).ToList();
-            foreach (var propertyInfo in propertyInfos)
-            {
-                oldValues[propertyInfo.Name] = propertyInfo.GetValue(value);
-            }
-            const int MaxPropertyCountForPowerset = 8;
-            if (propertyInfos.Count < MaxPropertyCountForPowerset)
-            {
-                foreach (var set in GetPowerSet(propertyInfos))
-                {
-                    if (shrunk != ShrinkOutcome.Irrelevant)
-                        break;
+            Key = fullKey,
+            Name = fullKey.Split(".").Last(),
+            Original = value,
+            Result = value,
+            Intent = ShrinkIntent.Keep,
+            Strategy = "ObjectShrinkStrategy"
+        });
 
-                    foreach (var propertyInfo in set)
-                    {
-                        SetPropertyValue(propertyInfo, value, null);
-                    }
 
-                    if (!state.ShrinkRunReturnTrueIfFailed(key, value))
-                    {
-                        shrunk = ShrinkOutcome.Report("{ " + string.Join(", ", set.Select(x => $"{x.Name} : {QuickAcidStringify.Default()(oldValues[x.Name])}")) + " }");
-                    }
+        HandleProperties(state, key, value, fullKey);
 
-                    foreach (var propertyInfo in set)
-                    {
-                        SetPropertyValue(propertyInfo, value, oldValues[propertyInfo.Name]);
-                    }
-                }
-            }
-        }
-        return shrunk;
+        // if (shrunk == ShrinkOutcome.Irrelevant)
+        // {
+        //     var oldValues = new Dictionary<string, object>();
+        //     var propertyInfos = value.GetType().GetProperties(MyBinding.Flags).ToList();
+        //     foreach (var propertyInfo in propertyInfos)
+        //     {
+        //         oldValues[propertyInfo.Name] = propertyInfo.GetValue(value);
+        //     }
+        //     const int MaxPropertyCountForPowerset = 8;
+        //     if (propertyInfos.Count < MaxPropertyCountForPowerset)
+        //     {
+        //         foreach (var set in GetPowerSet(propertyInfos))
+        //         {
+        //             if (shrunk != ShrinkOutcome.Irrelevant)
+        //                 break;
+
+        //             foreach (var propertyInfo in set)
+        //             {
+        //                 SetPropertyValue(propertyInfo, value, null);
+        //             }
+
+        //             if (!state.ShrinkRunReturnTrueIfFailed(key, value))
+        //             {
+        //                 shrunk = ShrinkOutcome.Report("{ " + string.Join(", ", set.Select(x => $"{x.Name} : {QuickAcidStringify.Default()(oldValues[x.Name])}")) + " }");
+        //             }
+
+        //             foreach (var propertyInfo in set)
+        //             {
+        //                 SetPropertyValue(propertyInfo, value, oldValues[propertyInfo.Name]);
+        //             }
+        //         }
+        //     }
+        // }
+        // return shrunk;
     }
 
-    private static ShrinkOutcome HandleProperties<T>(QAcidState state, string key, T value)
+    private static void HandleProperties<T>(QAcidState state, string key, T value, string fullKey)
     {
-        var messages = value.GetType()
+        value!.GetType()
             .GetProperties(MyBinding.Flags)
             .Where(p =>
                 p.CanRead &&
                 p.GetIndexParameters().Length == 0 &&
                 p.SetMethod is not null &&
                 p.SetMethod.IsPublic)
-            .Select(p => HandleProperty(state, key, value, p))
-            .OfType<ShrinkOutcome.ReportedOutcome>()
-            .Select(r => r.Message)
-            .ToList();
+            .ForEach(p => HandleProperty(state, key, value, p, fullKey));
+        //     .OfType<ShrinkOutcome.ReportedOutcome>()
+        //     .Select(r => r.Message)
+        //     .ToList();
 
-        return messages.Any()
-            ? ShrinkOutcome.Report("{ " + string.Join(", ", messages) + " }")
-            : ShrinkOutcome.Irrelevant;
+        // return messages.Any()
+        //     ? ShrinkOutcome.Report("{ " + string.Join(", ", messages) + " }")
+        //     : ShrinkOutcome.Irrelevant;
     }
 
-    private static ShrinkOutcome HandleProperty(QAcidState state, string key, object value, PropertyInfo propertyInfo)
+    private static void HandleProperty(QAcidState state, string key, object value, PropertyInfo propertyInfo, string fullKey)
     {
         var propertyValue = propertyInfo.GetValue(value);
         var swapper = new MemoryLens(
@@ -171,34 +184,11 @@ public class ObjectShrinkStrategy //: IShrinkStrategy
             (val, propValue) => { SetPropertyValue(propertyInfo, value, propValue); return val; });
         using (state.Memory.NestedValue(swapper))
         {
-            var outcome = ShrinkStrategyPicker.Input(state, key, propertyValue);
-            if (outcome is ShrinkOutcome.ReportedOutcome reportedOutcome)
-                return ShrinkOutcome.Report($"{propertyInfo.Name} : {reportedOutcome.Message}");
-            return outcome;
+            ShrinkStrategyPicker.Input(state, key, propertyValue, $"{fullKey}.{propertyInfo.Name}");
+            // if (outcome is ShrinkOutcome.ReportedOutcome reportedOutcome)
+            //     return ShrinkOutcome.Report($"{propertyInfo.Name} : {reportedOutcome.Message}");
+            // return outcome;
         }
-        // state.Memory.GetNestedValue = obj => propertyInfo.GetValue(obj)!;
-        // state.Memory.SetNestedValue = propValue => { SetPropertyValue(propertyInfo, value, propValue); return value; };
-        // var outcome = ShrinkStrategyPicker.Input(state, key, value);
-
-        // var primitiveKey = PrimitiveShrinkStrategy.PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(propertyInfo.PropertyType));
-
-        // if (primitiveKey != null)
-        // {
-        //     foreach (var primitiveValue in PrimitiveShrinkStrategy.PrimitiveValues[primitiveKey])
-        //     {
-        //         SetPropertyValue(propertyInfo, value, primitiveValue);
-        //         if (!state.ShrinkRunReturnTrueIfFailed(key, value))
-        //         {
-        //             SetPropertyValue(propertyInfo, value, propertyValue);
-        //             return ShrinkOutcome.Report($"{propertyInfo.Name} : {QuickAcidStringify.Default()(propertyValue)}");
-        //         }
-        //     }
-        //     SetPropertyValue(propertyInfo, value, propertyValue);
-        // }
-        // return ShrinkOutcome.Irrelevant;
-        // state.Memory.GetNestedValue = null;
-        // state.Memory.SetNestedValue = null;
-        // return outcome;
     }
 
     private static void SetPropertyValue(PropertyInfo propertyInfo, object target, object value)

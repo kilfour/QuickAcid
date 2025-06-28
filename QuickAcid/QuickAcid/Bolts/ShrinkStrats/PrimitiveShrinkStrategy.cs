@@ -1,4 +1,5 @@
 using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Bolts.TheyCanFade;
 
 namespace QuickAcid.Bolts;
 
@@ -92,19 +93,19 @@ public class PrimitiveShrinkStrategy
             { typeof(Uri),      new object[] { null!, new Uri("http://localhost"), new Uri("https://example.com/resource?query=1") } }
         };
 
-    public IEnumerable<ShrinkTrace> Shrink<T>(QAcidState state, string key, T value)
+    public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
         var actualType = typeof(T) == typeof(object) && value != null
             ? value.GetType()
             : typeof(T);
         var primitiveKey = PrimitiveValues.Keys.FirstOrDefault(k => k.IsAssignableFrom(actualType));
         if (primitiveKey == null)
-            yield break;
+            return;
 
         var primitiveVals = PrimitiveValues[primitiveKey];
         var originalFails = state.ShrinkRunReturnTrueIfFailed(key, value);
         if (!originalFails)
-            yield break;
+            return;
 
         var stringify = QuickAcidStringify.Default();
 
@@ -114,28 +115,28 @@ public class PrimitiveShrinkStrategy
             {
                 if (state.ShrinkRunReturnTrueIfFailed(key, candidate))
                 {
-                    yield return new ShrinkTrace
+                    state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                     {
-                        Key = key,
+                        Key = fullKey,
+                        Name = fullKey.Split(".").Last(),
                         Original = value,
                         Result = candidate,
                         Intent = ShrinkIntent.Replace,
-                        Strategy = "PrimitiveShrink.FeedbackFusion",
-                        Message = $"Replaced with {stringify(candidate)} to retain failure in feedback phase"
-                    };
-                    yield break;
+                        Strategy = "PrimitiveShrink.FeedbackFusion"
+                    });
+                    return;
                 }
             }
 
-            yield return new ShrinkTrace
+            state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
             {
-                Key = key,
+                Key = fullKey,
+                Name = fullKey.Split(".").Last(),
                 Original = value,
                 Result = value,
                 Intent = ShrinkIntent.Keep,
-                Strategy = "PrimitiveShrink.FeedbackFusion",
-                Message = $"No better replacement found"
-            };
+                Strategy = "PrimitiveShrink.FeedbackFusion"
+            });
         }
         else
         {
@@ -144,29 +145,29 @@ public class PrimitiveShrinkStrategy
                 if (!state.ShrinkRunReturnTrueIfFailed(key, candidate))
                 {
                     // This candidate caused test to pass — so we can't shrink past this value
-                    yield return new ShrinkTrace
+                    state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                     {
-                        Key = key,
+                        Key = fullKey,
+                        Name = fullKey.Split(".").Last(),
                         Original = value,
                         Result = value,
                         Intent = ShrinkIntent.Keep,
-                        Strategy = "PrimitiveShrink",
-                        Message = $"Minimal value causing failure"
-                    };
-                    yield break;
+                        Strategy = "PrimitiveShrink"
+                    });
+                    return;
                 }
             }
 
             // If all alternates failed just like the original → this input didn't matter
-            yield return new ShrinkTrace
+            state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
             {
-                Key = key,
+                Key = fullKey,
+                Name = fullKey.Split(".").Last(),
                 Original = value,
                 Result = null,
                 Intent = ShrinkIntent.Irrelevant,
-                Strategy = "PrimitiveShrink",
-                Message = "Input value is irrelevant to failure"
-            };
+                Strategy = "PrimitiveShrink"
+            });
         }
     }
 }

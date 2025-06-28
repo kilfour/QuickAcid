@@ -185,3 +185,6 @@ private static readonly List<(Predicate<Type> Match, Func<IShrinkStrategy> Strat
 
 // Usage:
 var strat = pickers.FirstOrDefault(p => p.Match(type)).Strategy?.Invoke();
+
+
+

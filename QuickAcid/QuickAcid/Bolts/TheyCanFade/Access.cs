@@ -58,14 +58,6 @@ public class Access
         dictionary[key].ReportingIntent = reportingIntent;
     }
 
-    public void SetShrinkOutcome(string key, ShrinkOutcome outcome)
-    {
-        if (dictionary.TryGetValue(key, out var decorated))
-        {
-            decorated.ShrinkOutcome = outcome;
-        }
-    }
-
     public bool ContainsKey(object key)
     {
         return dictionary.ContainsKey(key);

@@ -2,5 +2,5 @@ namespace QuickAcid.Bolts.ShrinkStrats.Collections;
 
 public interface ICollectionShrinkStrategy
 {
-    IEnumerable<ShrinkTrace> Shrink<T>(QAcidState state, string key, T value);
+    void Shrink<T>(QAcidState state, string key, T value, string fullKey);
 }

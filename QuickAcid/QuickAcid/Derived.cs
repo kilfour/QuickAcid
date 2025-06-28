@@ -1,7 +1,8 @@
+using QuickAcid.Bolts;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid.Bolts.Nuts
+namespace QuickAcid
 {
     public static partial class QAcidCombinators
     {

@@ -29,7 +29,7 @@ from act in ""act"".Act(() => account.Withdraw(500))
         var script =
             from account in "Account".Stashed(() => new Account())
             from act in "act".Act(() => account.Withdraw(500))
-            from spec in "fail".Spec(() => false)
+            from spec in "fail".Spec(() => account.Balance >= 0)
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
@@ -47,8 +47,8 @@ from act in ""act"".Act(() => account.GetBalance())
     public void Act_can_return_value()
     {
         var script =
-            from act in "act".Act(() => false)
-            from spec in "fail".Spec(() => act)
+            from act in "act".Act(() => 42)
+            from spec in "fail".Spec(() => act != 42)
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
@@ -68,9 +68,9 @@ from act2 in ""and act again"".Act(() => account.Withdraw(200))
     {
         var script =
             from account in "Account".Stashed(() => new Account())
-            from act1 in "act once".Act(() => account.Withdraw(500))
-            from act2 in "and act again".Act(() => account.Withdraw(500))
-            from spec in "fail".Spec(() => false)
+            from act1 in "act once".Act(() => account.Withdraw(20))
+            from act2 in "and act again".Act(() => account.Withdraw(20))
+            from spec in "fail".Spec(() => account.Balance >= -30)
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();

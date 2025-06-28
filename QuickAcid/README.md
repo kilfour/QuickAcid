@@ -485,6 +485,42 @@ from __ in "spec".Spec(() => false).SkipIf(() => true)
 
 ---
 
+### Primitives Shrinking
+
+`PrimitiveShrinkStrategy` is a shrinker used in QuickAcid to simplify failing test inputs for known primitive types.
+It operates using a predefined list of alternative values per type and attempts to
+replace the original with a simpler version that still causes the test to fail.
+
+
+#### How It Works
+
+1. **Recognize Known Type**  
+   Checks if the given value belongs to a supported primitive type (like `int`, `bool`, `string`, etc.).
+2. **Initial Check**  
+   First ensures that the original value *actually* causes a failure. Otherwise, shrinking is skipped.
+3. **Candidate Evaluation**
+   - Iterates over alternative values (excluding the current one).
+   - Tries all candidates. If one causes the test to pass, the current value is minimal.
+4. **Trace Result**  
+   After evaluation, it emits a trace indicating whether the value was kept, or marked irrelevant.
+
+
+---
+
+#### Supported Types
+
+These are matched via `Type.IsAssignableFrom(...)` to allow some flexibility:
+
+- **Boolean**: `true`, `false`
+- **Numeric Types**: `int`, `long`, `short`, `byte`, `float`, `double`, `decimal`, including unsigned variants
+- **Characters**: `\0`, `'a'`, `'Z'`, space, newline, `\uFFFF`
+- **Strings**: `null`, empty, short strings, long strings
+- **Time Types**: `DateTime`, `DateTimeOffset`, `TimeSpan`
+- **Miscellaneous**: `Guid`, `Uri`
+
+
+---
+
 ### Collection Shrinking
 
 ...
@@ -542,6 +578,9 @@ This will produce a report that contains :
  - Information about the first failed run.
 
  - Information about the run after execution shrinking.
+
+
+ - Information about the run after action shrinking.
 
 
  - Information about the run after input shrinking.

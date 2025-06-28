@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Bolts.Nuts;
+﻿using QuickAcid.Bolts;
+
+namespace QuickAcid;
 
 public static partial class QAcidCombinators
 {

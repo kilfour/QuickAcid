@@ -1,7 +1,7 @@
 ﻿using QuickAcid.Bolts.TheyCanFade;
 using QuickMGenerate;
 
-namespace QuickAcid.Bolts.Nuts;
+namespace QuickAcid;
 
 public static partial class QAcidCombinators
 {

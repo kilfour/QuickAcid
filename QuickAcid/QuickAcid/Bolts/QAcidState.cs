@@ -2,6 +2,7 @@
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
+using QuickMGenerate;
 
 
 namespace QuickAcid.Bolts;
@@ -17,6 +18,15 @@ public sealed class QAcidState : QAcidContext
         InputTracker = new InputTracker(() => CurrentExecutionNumber);
         report = new Report();
     }
+
+    // -------------------------------------------------------------------------------------------------
+    // -- New Way of Shrinking
+    // --
+    public void Trace(string key, ShrinkKind shrinkKind, ShrinkTrace trace)
+    {
+        Memory.ForThisExecution().GetDecorated(key).AddTrace(shrinkKind, trace);
+    }
+    // -------------------------------------------------------------------------------------------------
 
     public QAcidScript<Acid> Script { get; private set; }
     public int CurrentExecutionNumber { get; set; }
@@ -203,6 +213,13 @@ public sealed class QAcidState : QAcidContext
                 report.AddEntry(new ReportRunStartEntry());
                 AddMemoryToReport(report, false);
             }
+            ShrinkActions();
+            if (Verbose)
+            {
+                report.AddEntry(new ReportTitleSectionEntry(["AFTER ACTION SHRINKING"]));
+                report.AddEntry(new ReportRunStartEntry());
+                AddMemoryToReport(report, false);
+            }
             ShrinkInputs();
             if (Verbose)
             {
@@ -227,8 +244,10 @@ public sealed class QAcidState : QAcidContext
             report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees: {CurrentContext.FailingSpec}."]));
         }
         AddMemoryToReport(report, true);
-        if (CurrentContext.Exception != null)
-            report.Exception = CurrentContext.Exception;
+        report.ShrinkTraces =
+            Memory.AllAccesses()
+                .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
+                .ToList();
     }
 
     private IEnumerable<string> GetReportHeaderInfo()
@@ -263,6 +282,35 @@ public sealed class QAcidState : QAcidContext
                 }
                 current++;
                 shrinkCount++;
+            }
+        }
+    }
+
+    public void ShrinkActions() // NEEDS CHANGING
+    {
+        var max = ExecutionNumbers.Max();
+        foreach (var outerExcutionNumber in ExecutionNumbers.ToList())
+        {
+            var oldKeys = Memory.For(outerExcutionNumber).ActionKeys;
+            if (oldKeys.Count < 1) continue;
+            foreach (var key in oldKeys.ToList())
+            {
+                if (oldKeys.Count < 1) continue;
+                Memory.For(outerExcutionNumber).ActionKeys.Remove(key);
+                using (EnterPhase(QAcidPhase.ShrinkingExecutions))
+                {
+                    Memory.ResetRunScopedInputs();
+                    foreach (var executionNumber in ExecutionNumbers.ToList())
+                    {
+                        CurrentExecutionNumber = executionNumber;
+                        Script(this);
+                    }
+                    if (!CurrentContext.Failed)
+                    {
+                        Memory.For(outerExcutionNumber).ActionKeys.Add(key);
+                    }
+                    shrinkCount++;
+                }
             }
         }
     }
@@ -312,6 +360,7 @@ public sealed class QAcidState : QAcidContext
     {
         using (EnterPhase(QAcidPhase.ShrinkInputEval))
         {
+            CurrentContext.Reset();
             Memory.ResetRunScopedInputs();
             var runNumber = CurrentExecutionNumber;
             using (Memory.ScopedSwap(key, value))
@@ -336,6 +385,8 @@ public sealed class QAcidState : QAcidContext
         }
         if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
             report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(CurrentContext.FailingSpec)));
+        if (CurrentContext.Exception != null)
+            report.Exception = CurrentContext.Exception;
         return report;
     }
 

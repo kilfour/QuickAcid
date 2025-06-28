@@ -68,7 +68,6 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             let ___ = delayedSpec.Apply()
             select Acid.Test;
         var report = new QState(script).Observe(5);
-        new WriteDataToFile().ClearFile().Flow(report.ToString());
         var entry = report.Single<ReportTraceEntry>();
         Assert.NotNull(entry);
         Assert.Equal("3", entry.Value);

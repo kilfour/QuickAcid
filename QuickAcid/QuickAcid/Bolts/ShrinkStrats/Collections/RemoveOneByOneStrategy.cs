@@ -1,47 +1,42 @@
+using QuickAcid.Bolts.TheyCanFade;
+
 namespace QuickAcid.Bolts.ShrinkStrats.Collections;
 
 public class RemoveOneByOneStrategy : ICollectionShrinkStrategy
 {
-    public IEnumerable<ShrinkTrace> Shrink<T>(QAcidState state, string key, T value)
+    public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
         var theList = CloneList.AsOriginalType(value!);
         int index = 0;
         int indexKey = -1;
-        //var existingTraces = state.Memory.ForThisExecution().GetDecorated(key).ShrinkTraces;
         while (index < theList.Count)
         {
             indexKey++;
-            // if (existingTraces.Any(a => a.Key == $"{key}.{index}" && a.IsRemoved))
-            // {
-            //     index++;
-            //     continue;
-            // }
             var ix = index;
             var before = theList[ix];
             theList.RemoveAt(ix);
             if (state.ShrinkRunReturnTrueIfFailed(key, theList!))
             {
-                yield return new ShrinkTrace
+                state.Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
                 {
-                    Key = $"{key}.{indexKey}",
+                    Key = $"{fullKey}.{indexKey}",
+                    Name = fullKey.Split(".").Last(),
                     Original = before,
                     Result = null,
                     Intent = ShrinkIntent.Remove,
-                    Strategy = "RemoveOneByOneStrategy",
-                    Message = "Input value is irrelevant to failure"
-                };
+                    Strategy = "RemoveOneByOneStrategy"
+                });
                 continue;
             }
-            yield return new ShrinkTrace
+            state.Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
             {
-                Key = $"{key}.{indexKey}",
+                Key = $"{fullKey}.{indexKey}",
+                Name = fullKey.Split(".").Last(),
                 Original = before,
                 Result = before,
                 Intent = ShrinkIntent.Keep,
-                Strategy = "RemoveOneByOneStrategy",
-                Message = "Minimal value causing failure"
-            };
-            //shrinkValues.Add(QuickAcidStringify.Default()(before!));
+                Strategy = "RemoveOneByOneStrategy"
+            });
             theList.Insert(ix, before);
             index++;
         }
