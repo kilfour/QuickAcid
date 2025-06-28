@@ -17,7 +17,6 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
             var elementType = valueType.IsGenericType
                 ? valueType.GetGenericArguments().First()
                 : typeof(object);
-
             using (state.Memory.ScopedSwap(key, theList))
             {
                 var swapper = new MemoryLens(
@@ -31,33 +30,6 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
                 using (state.Memory.NestedValue(swapper))
                 {
                     ShrinkStrategyPicker.Input(state, key, before, $"{fullKey}.{index}");
-
-                    //var traces = state.Memory.TracesForThisExecution().Where(a => a.Key.StartsWith($"{fullKey}.{index}"));
-
-                    // if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
-                    // {
-                    //     state.Trace(key, new ShrinkTrace
-                    //     {
-                    //         Key = $"{fullKey}.{index}",
-                    //         Original = before,
-                    //         Result = before,
-                    //         Intent = ShrinkIntent.Keep,
-                    //         Strategy = "ShrinkEachElementStrategy",
-                    //         Message = "Minimal value causing failure"
-                    //     });
-                    // }
-                    // else
-                    // {
-                    //     state.Trace(key, new ShrinkTrace
-                    //     {
-                    //         Key = $"{fullKey}.{index}",
-                    //         Original = before,
-                    //         Result = null,
-                    //         Intent = ShrinkIntent.Irrelevant,
-                    //         Strategy = "ShrinkEachElementStrategy",
-                    //         Message = "Input value is irrelevant to failure"
-                    //     });
-                    // }
                     theList[ix] = before;
                     index++;
                 }

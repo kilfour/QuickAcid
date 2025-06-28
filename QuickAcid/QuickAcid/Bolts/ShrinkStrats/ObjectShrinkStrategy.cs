@@ -167,13 +167,6 @@ public class ObjectShrinkStrategy //: IShrinkStrategy
                 p.SetMethod is not null &&
                 p.SetMethod.IsPublic)
             .ForEach(p => HandleProperty(state, key, value, p, fullKey));
-        //     .OfType<ShrinkOutcome.ReportedOutcome>()
-        //     .Select(r => r.Message)
-        //     .ToList();
-
-        // return messages.Any()
-        //     ? ShrinkOutcome.Report("{ " + string.Join(", ", messages) + " }")
-        //     : ShrinkOutcome.Irrelevant;
     }
 
     private static void HandleProperty(QAcidState state, string key, object value, PropertyInfo propertyInfo, string fullKey)
@@ -185,9 +178,6 @@ public class ObjectShrinkStrategy //: IShrinkStrategy
         using (state.Memory.NestedValue(swapper))
         {
             ShrinkStrategyPicker.Input(state, key, propertyValue, $"{fullKey}.{propertyInfo.Name}");
-            // if (outcome is ShrinkOutcome.ReportedOutcome reportedOutcome)
-            //     return ShrinkOutcome.Report($"{propertyInfo.Name} : {reportedOutcome.Message}");
-            // return outcome;
         }
     }
 
@@ -195,7 +185,7 @@ public class ObjectShrinkStrategy //: IShrinkStrategy
     {
         var prop = propertyInfo;
         if (!prop.CanWrite)
-            prop = propertyInfo.DeclaringType.GetProperty(propertyInfo.Name);
+            prop = propertyInfo.DeclaringType!.GetProperty(propertyInfo.Name);
 
         if (prop != null && prop.CanWrite)
             prop.SetValue(target, value, null);

@@ -2,7 +2,7 @@ using QuickAcid.Bolts.ShrinkStrats;
 
 namespace QuickAcid.Bolts;
 
-public class CustomShrinkStrategy<T> //: IShrinkStrategy
+public class CustomShrinkStrategy<T>
 {
     private readonly IShrinker<T> shrinker;
 
