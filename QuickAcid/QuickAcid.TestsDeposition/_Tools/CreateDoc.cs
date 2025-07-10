@@ -64,7 +64,7 @@ public class CreateDoc
             }
         }
 
-        new WriteDataToFile("/QuickAcid/README.md").ClearFile().Flow(sb.ToString());
+        new WriteDataToFile("./QuickAcid/README.md").ClearFile().Flow(sb.ToString());
     }
 
     public class LexicalFloatArrayComparer : IComparer<float[]>
