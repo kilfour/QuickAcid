@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="QuickMGenerate" Version="0.1.0" />
     <PackageReference Include="QuickPulse" Version="0.1.1" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
@@ -23,10 +24,6 @@
    <ItemGroup>
     <ProjectReference Include="..\QuickAcid\QuickAcid\QuickAcid.csproj" />
     <ProjectReference Include="..\QuickAcid.Strike\QuickAcid.Strike.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
   </ItemGroup>
   
 </Project>

@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="QuickMGenerate" Version="0.1.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\QuickAcid\QuickAcid\QuickAcid.csproj" />
     <ProjectReference Include="..\QuickAcid.Fluent\QuickAcid.Fluent.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
   </ItemGroup>
   
 </Project>

@@ -6,6 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
+    <PackageReference Include="QuickMGenerate" Version="0.1.0" />
   </ItemGroup>
 </Project>
