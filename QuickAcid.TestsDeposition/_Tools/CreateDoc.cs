@@ -6,7 +6,7 @@ namespace QuickAcid.TestsDeposition._Tools;
 
 public class CreateDoc
 {
-    //[Fact]
+    [Fact]
     public void Go()
     {
         var typeattributes =
@@ -20,16 +20,9 @@ public class CreateDoc
                 .SelectMany(t => t.GetMethods())
                 .SelectMany(t => t.GetCustomAttributes(typeof(DocAttribute), false));
 
-        var additionalAttributes =
-            new List<DocAttribute>
-            {
-                //new() { Order = "1-1", Caption = "QuickAcid Linq 101" }
-            };
-
         var attributes =
             typeattributes
                 .Union(methodattributes)
-                .Union(additionalAttributes)
                 .Cast<DocAttribute>()
                 .OrderBy(attr => ParseOrder(attr.Order), new LexicalFloatArrayComparer());
 
@@ -42,7 +35,6 @@ public class CreateDoc
             if (!string.IsNullOrWhiteSpace(attr.Caption))
             {
                 var headingLevel = attr.Order.Split('-').Length;
-
                 if (firstHeader)
                 {
                     firstHeader = false;
@@ -52,9 +44,7 @@ public class CreateDoc
                     sb.AppendLine("---");
                     sb.AppendLine();
                 }
-
                 previousHeadingLevel = headingLevel;
-
                 var headingMarker = new string('#', headingLevel);
                 sb.AppendLine($"{headingMarker} {attr.Caption}");
                 sb.AppendLine();
@@ -66,7 +56,8 @@ public class CreateDoc
                 sb.AppendLine();
             }
         }
-        new WriteDataToFile("/QuickAcid/README.md").ClearFile().Flow(sb.ToString());
+
+        new WriteDataToFile("README.md").ClearFile().Flow(sb.ToString());
     }
 
     public class LexicalFloatArrayComparer : IComparer<float[]>
