@@ -94,14 +94,6 @@ public class QuickAcidTopLevel
             from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
             select Acid.Test;
 
-        new QState(script).Observe(50);
-    }
-
-    [Fact(Skip = "Only for reference")]
-    public void Unit_test()
-    {
-        var account = new Account();
-        account.Withdraw(42);
-        Assert.True(account.Balance >= 0);
+        Assert.Throws<FalsifiableException>(() => new QState(script).Testify(50));
     }
 }
