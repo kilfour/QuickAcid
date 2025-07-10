@@ -20,16 +20,9 @@ public class CreateDoc
                 .SelectMany(t => t.GetMethods())
                 .SelectMany(t => t.GetCustomAttributes(typeof(DocAttribute), false));
 
-        var additionalAttributes =
-            new List<DocAttribute>
-            {
-                //new() { Order = "1-1", Caption = "QuickAcid Linq 101" }
-            };
-
         var attributes =
             typeattributes
                 .Union(methodattributes)
-                .Union(additionalAttributes)
                 .Cast<DocAttribute>()
                 .OrderBy(attr => ParseOrder(attr.Order), new LexicalFloatArrayComparer());
 
