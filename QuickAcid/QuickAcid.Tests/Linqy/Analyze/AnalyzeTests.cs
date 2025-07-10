@@ -1,8 +1,5 @@
-using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
 using QuickMGenerate;
-using QuickPulse.Arteries;
 
 namespace QuickAcid.Tests.Linqy.Analyze;
 
@@ -29,7 +26,6 @@ public class AnalyzeTests
             + timesActShouldHaveRunDuringInputShrinking;
 
         Assert.NotNull(report);
-        new WriteDataToFile().ClearFile().Flow(report);
         Assert.Equal(timesRun, counter);
 
         var entry = report.GetSpecEntry();

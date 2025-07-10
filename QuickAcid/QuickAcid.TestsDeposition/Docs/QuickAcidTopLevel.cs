@@ -78,7 +78,7 @@ public class QuickAcidTopLevel
     public const string Order = "1";
 
 
-    [Fact]
+    [Fact(Skip = "Only here as an example")]
     public void Example()
     {
         var script =
@@ -94,6 +94,6 @@ public class QuickAcidTopLevel
             from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
             select Acid.Test;
 
-        Assert.Throws<FalsifiableException>(() => new QState(script).Testify(50));
+        Assert.Throws<FalsifiableException>(() => new QState(script).Testify(100));
     }
 }

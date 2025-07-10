@@ -5,12 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="QuickPulse" Version="0.1.1" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\QuickAcid\QuickAcid\QuickAcid.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
-    <ProjectReference Include="..\..\QuickPulse\QuickPulse\QuickPulse.csproj" />
   </ItemGroup>
 </Project>
