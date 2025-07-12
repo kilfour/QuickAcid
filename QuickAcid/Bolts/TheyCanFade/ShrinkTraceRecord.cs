@@ -20,7 +20,12 @@ public class ShrinkTraceRecord
             return Traces.First(a => a.IsRemoved);
         }
         if (Traces.Any(a => a.IsIrrelevant))
+        {
+            var primitiveTrace = Traces.FirstOrDefault(a => a.IsKeep && a.Strategy == "PrimitiveShrink");
+            if (primitiveTrace != null)
+                return primitiveTrace;
             return Traces.First(a => a.IsIrrelevant);
+        }
         if (Traces.Any(a => a.IsReplacement))
             return Traces.First(a => a.IsReplacement);
         return Traces.FirstOrDefault();

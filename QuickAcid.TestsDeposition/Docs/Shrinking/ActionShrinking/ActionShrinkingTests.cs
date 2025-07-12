@@ -13,7 +13,7 @@ public class ActionShrinkingTests
             from a1 in "a1".Act(() => { })
             from a2 in "a2".Act(ComputerSays.No)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = new QState(script).ShrinkingActions().ObserveOnce();
         Assert.NotNull(report);
         var entry = report.Single<ReportExecutionEntry>();
         Assert.Equal("a2", entry.Key);

@@ -71,7 +71,7 @@ This will produce a report that contains :
         var script =
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(script).Verbose().ObserveOnce();
+        var report = new QState(script).ShrinkingActions().Verbose().ObserveOnce();
         Assert.NotNull(report);
         Assert.Equal("AFTER ACTION SHRINKING", report.Third<ReportTitleSectionEntry>().Title[0]);
     }
@@ -85,7 +85,7 @@ This will produce a report that contains :
         var script =
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(script).Verbose().ObserveOnce();
+        var report = new QState(script).ShrinkingActions().Verbose().ObserveOnce();
         Assert.NotNull(report);
         Assert.Equal("AFTER INPUT SHRINKING :", report.Fourth<ReportTitleSectionEntry>().Title[0]);
     }
@@ -161,7 +161,7 @@ Outputs something similar to:
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 5)
             select Acid.Test;
-        var report = new QState(script).Verbose().Observe(20);
+        var report = new QState(script).ShrinkingActions().Verbose().Observe(20);
         var reader = LinesReader.FromText(report.ToString());
         Assert.Equal("QuickAcid Report:", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());

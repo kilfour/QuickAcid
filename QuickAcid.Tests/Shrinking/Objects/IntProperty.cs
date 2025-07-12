@@ -1,6 +1,6 @@
-﻿using QuickAcid.Reporting;
+﻿using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Reporting;
 using QuickMGenerate;
-using QuickAcid.Bolts.Nuts;
 using QuickPulse;
 using QuickPulse.Arteries;
 
@@ -119,7 +119,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.NotNull(report.Exception);
         }
 
-        [Fact(Skip = "fix ObjectShrinkingStrategy PowerSet")]
+        [Fact]
         public void TwoRelevantPropertiesTricky()
         {
             var generator =
@@ -168,7 +168,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
         }
 
 
-        [Fact(Skip = "fix ObjectShrinkingStrategy PowerSet")]
+        [Fact]
         public void TwoRelevantPropertiesEvenTrickier()
         {
             var generator =
@@ -187,7 +187,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     select Acid.Test;
 
             var report = new QState(script).Observe(50);
-
+            Signal.Tracing<ShrinkTrace>().SetArtery(new WriteDataToFile().ClearFile()).Pulse(report.ShrinkTraces);
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);
@@ -202,7 +202,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.Equal("equal", specEntry.Key);
         }
 
-        [Fact(Skip = "fix ObjectShrinkingStrategy PowerSet")]
+        [Fact]
         public void TwoRelevantPropertiesSuperTricky()
         {
             var generator =
@@ -237,7 +237,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.Equal("equal", specEntry.Key);
         }
 
-        [Fact(Skip = "fix ObjectShrinkingStrategy PowerSet")]
+        [Fact]
         public void ThreeRelevantProperties()
         {
             var generator =

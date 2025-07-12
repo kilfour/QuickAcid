@@ -54,7 +54,7 @@ public class SpecIfProblems
 		Assert.False(predicateRan);
 	}
 
-	[Fact(Skip = "not working because of ShrinkingActions")]
+	[Fact]
 	public void SpecIf_AfterFailingAct_ShouldBeSkipped()
 	{
 		var predicateRan = false;

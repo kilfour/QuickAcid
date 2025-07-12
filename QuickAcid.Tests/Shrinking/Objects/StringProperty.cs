@@ -65,7 +65,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             Assert.NotNull(report.Exception);
         }
 
-        [Fact(Skip = "fix ObjectShrinkingStrategy PowerSet")]
+        [Fact]
         public void TwoRelevantPropertiesTricky()
         {
             var generator =
@@ -114,7 +114,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
         }
 
 
-        [Fact(Skip = "fix ObjectShrinkingStrategy PowerSet")]
+        [Fact]
         public void TwoRelevantPropertiesEvenTrickier()
         {
             var generator =

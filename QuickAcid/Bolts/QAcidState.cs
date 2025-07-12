@@ -133,6 +133,7 @@ public sealed class QAcidState : QAcidContext
     private readonly Report report;
     public bool Verbose { get; set; }
     public bool AlwaysReport { get; set; }
+    public bool ShrinkingActions { get; set; }
     // -----------------------------------------------------------------
     // implementing context for fluent
     // --
@@ -213,12 +214,15 @@ public sealed class QAcidState : QAcidContext
                 report.AddEntry(new ReportRunStartEntry());
                 AddMemoryToReport(report, false);
             }
-            ShrinkActions();
-            if (Verbose)
+            if (ShrinkingActions)
             {
-                report.AddEntry(new ReportTitleSectionEntry(["AFTER ACTION SHRINKING"]));
-                report.AddEntry(new ReportRunStartEntry());
-                AddMemoryToReport(report, false);
+                ShrinkActions();
+                if (Verbose)
+                {
+                    report.AddEntry(new ReportTitleSectionEntry(["AFTER ACTION SHRINKING"]));
+                    report.AddEntry(new ReportRunStartEntry());
+                    AddMemoryToReport(report, false);
+                }
             }
             ShrinkInputs();
             if (Verbose)

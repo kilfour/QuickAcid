@@ -12,6 +12,12 @@ public class QState
         state = new QAcidState(script);
     }
 
+    public QState ShrinkingActions()
+    {
+        state.ShrinkingActions = true;
+        return this;
+    }
+
     public QState AlwaysReport()
     {
         state.AlwaysReport = true;
