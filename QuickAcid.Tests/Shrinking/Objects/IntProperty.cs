@@ -29,7 +29,6 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 select Acid.Test;
 
             var report = new QState(script).Observe(50);
-            new WriteDataToFile().ClearFile().Flow(report.ShrinkTraces.ToArray());
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);
@@ -187,7 +186,6 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     select Acid.Test;
 
             var report = new QState(script).Observe(50);
-            Signal.Tracing<ShrinkTrace>().SetArtery(new WriteDataToFile().ClearFile()).Pulse(report.ShrinkTraces);
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);

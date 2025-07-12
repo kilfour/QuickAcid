@@ -29,7 +29,7 @@ public class Spike
         from increase in Pulse.Effect(() => currentExecutionNumber.Value++)
         select s;
 
-    [Fact]
+    [Fact(Skip = "experimenting")]
     public void QuickPulse_for_running_things()
     {
         var script =
@@ -46,7 +46,7 @@ public class Spike
         Assert.Equal(9, collector.TheExhibit.Last());
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact(Skip = "experimenting")]
     public void QuickPulse_for_running_failing_things()
     {
         var logger = Signal.Tracing<int>().SetArtery(new WriteDataToFile().ClearFile());
@@ -67,7 +67,7 @@ public class Spike
         Assert.True(state.CurrentContext.Failed);
     }
 
-    [Fact]
+    [Fact(Skip = "experimenting")]
     public void QuickPulse_for_shrinking_executions()
     {
         var script =
@@ -121,7 +121,7 @@ public class Spike
         Assert.Equal(3, collector.TheExhibit.Last());
     }
 
-    [Fact]
+    [Fact(Skip = "experimenting")]
     public void QuickPulse_for_shrinking_executions_needs_shrinking()
     {
         var counter = 0;

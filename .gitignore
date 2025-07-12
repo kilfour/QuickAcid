@@ -9,3 +9,4 @@ _ReSharper.*/
 temp*.md
 reports.txt
 Tests.cs
+*.log

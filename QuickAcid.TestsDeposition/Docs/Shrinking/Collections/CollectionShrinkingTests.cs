@@ -45,7 +45,6 @@ public class CollectionShrinkingTests
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
-        new WriteDataToFile().ClearFile().Flow(report.ShrinkTraces.ToArray());
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ [ 42 ] ]", entry.Value);
     }
