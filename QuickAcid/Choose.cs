@@ -10,7 +10,7 @@ public static partial class QAcidCombinators
 
 		return state =>
 			{
-				var index = state.Remember(key, () => MGen.Int(0, scripts.Length).Generate(), ReportingIntent.Never);
+				var index = state.Remember(key, () => MGen.Int(0, scripts.Length)(state.MGenState).Value, ReportingIntent.Never);
 				return scripts[index](state);
 			};
 	}

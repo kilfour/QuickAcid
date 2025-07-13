@@ -54,7 +54,7 @@ public static partial class QAcidCombinators
 
 			default:
 				{
-					var value = generator.Generate();
+					var value = generator(state.MGenState).Value;
 					execution.SetIfNotAlreadyThere(key, value);
 					return QAcidResult.Some(state, value);
 				}

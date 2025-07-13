@@ -3,12 +3,16 @@ using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
 using QuickMGenerate;
+using QuickMGenerate.UnderTheHood;
 
 
 namespace QuickAcid.Bolts;
 
 public sealed class QAcidState : QAcidContext
 {
+
+    public State MGenState { get; } = new State();
+
     // TODO MAKE INTERNAL
     public QAcidState(QAcidScript<Acid> script)
     {
@@ -426,7 +430,6 @@ public sealed class QAcidState : QAcidContext
         }
 
         FlushCollapsed();
-
 
         if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
             report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(CurrentContext.FailingSpec)));
