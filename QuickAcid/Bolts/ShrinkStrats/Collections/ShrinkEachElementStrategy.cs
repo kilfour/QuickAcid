@@ -11,6 +11,18 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
         int index = 0;
         while (index < theList.Count)
         {
+            var removeForShrinking =
+                state.Memory.ForThisExecution().GetDecorated(key).GetShrinkTraces()
+                    .Any(a => a.Key == $"{fullKey}.{index}" && a.IsRemoved);
+            if (removeForShrinking)
+                theList.RemoveAt(index);
+            else
+                index++;
+        }
+
+        index = 0;
+        while (index < theList.Count)
+        {
             var ix = index;
             var before = theList[ix];
             var valueType = before!.GetType();
@@ -30,10 +42,28 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
                 using (state.Memory.NestedValue(swapper))
                 {
                     ShrinkStrategyPicker.Input(state, key, before, $"{fullKey}.{index}");
-                    theList[ix] = before;
+                    var removeForShrinking =
+                        state.Memory.ForThisExecution().GetDecorated(key).GetShrinkTraces()
+                            .Any(a => a.Key == $"{fullKey}.{index}" && a.IsIrrelevant);
+                    if (removeForShrinking)
+                        theList[ix] = GetPlaceholder(theList[ix]!);
+                    else
+                        theList[ix] = before;
                     index++;
                 }
             }
+
+
+            // if (removeForShrinking != null)
+            // {
+            //     theList[ix] = GetPlaceholder(removeForShrinking.Original!);
+            // }
         }
+    }
+
+    private static object GetPlaceholder(object original)
+    {
+        var type = original.GetType();
+        return type.IsValueType ? Activator.CreateInstance(type)! : null!;
     }
 }

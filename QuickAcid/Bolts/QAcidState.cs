@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Reflection.Emit;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
