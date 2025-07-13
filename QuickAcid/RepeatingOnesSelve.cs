@@ -10,13 +10,9 @@ public static class RepeatingOnesSelve
             action();
     }
 
-    public static T Times<T>(this int numberOfTimes, Func<T> func)
+    public static IEnumerable<T> Times<T>(this int numberOfTimes, Func<T> func)
     {
-        T lastValue = default!;
-        if (numberOfTimes < 0)
-            return lastValue!;
         for (int i = 0; i < numberOfTimes; i++)
-            lastValue = func();
-        return lastValue!;
+            yield return func();
     }
 }

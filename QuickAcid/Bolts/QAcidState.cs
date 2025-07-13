@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
@@ -163,6 +164,16 @@ public sealed class QAcidState : QAcidContext
     public bool Verbose { get; set; }
     public bool AlwaysReport { get; set; }
     public bool ShrinkingActions { get; set; }
+
+    private Dictionary<string, int> passedSpecCount = [];
+    public void SpecPassed(string label)
+    {
+        if (!passedSpecCount.ContainsKey(label))
+        {
+            passedSpecCount[label] = 0;
+        }
+        passedSpecCount[label] = passedSpecCount[label] + 1;
+    }
     // -----------------------------------------------------------------
     // implementing context for fluent
     // --
@@ -281,6 +292,7 @@ public sealed class QAcidState : QAcidContext
             Memory.AllAccesses()
                 .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
                 .ToList();
+        report.PassedSpecCount = passedSpecCount.Select(kv => new SpecCount(Label: kv.Key, Count: kv.Value)).ToArray();
     }
 
     private IEnumerable<string> GetReportHeaderInfo()

@@ -1,5 +1,6 @@
 using System.Dynamic;
 using System.Text;
+using QuickAcid.Bolts;
 using QuickAcid.Bolts.ShrinkStrats;
 
 namespace QuickAcid.Reporting;
@@ -11,6 +12,7 @@ public class Report
     public Exception? Exception { get; set; }
     public string Code { get; set; } = string.Empty;
     public List<ShrinkTrace> ShrinkTraces { get; set; } = [];
+    public SpecCount[] PassedSpecCount { get; set; } = [];
 
     public virtual void AddEntry(IAmAReportEntry reportEntry)
     {

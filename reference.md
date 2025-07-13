@@ -36,6 +36,7 @@ QuickAcid.Bolts.FalsifiableException : QuickAcid Report:
  -- Property 'No_Overdraft' was falsified
  -- Original failing run: 3 execution(s)
  -- Shrunk to minimal case:  1 execution(s) (3 shrinks)
+ -- Seed: 1254808606
  ----------------------------------------
  RUN START :
    => Account (tracked) : 0

@@ -31,6 +31,8 @@ public class DelayedSpecResult
 	{
 		if (Failed)
 			state.CurrentContext.MarkFailure(Label);
+		else
+			state.SpecPassed(Label);
 		return Acid.Test;
 	}
 }

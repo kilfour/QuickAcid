@@ -14,6 +14,10 @@ public static partial class QAcidCombinators
 				{
 					state.CurrentContext.MarkFailure(key);
 				}
+				else
+				{
+					state.SpecPassed(key);
+				}
 				return QAcidResult.AcidOnly(state);
 			};
 
@@ -41,6 +45,10 @@ public static partial class QAcidCombinators
 					state.AllowShrinking = false;
 					state.CurrentContext.MarkFailure(key);
 				}
+				else
+				{
+					state.SpecPassed(key);
+				}
 				return QAcidResult.AcidOnly(state);
 			};
 
@@ -64,6 +72,10 @@ public static partial class QAcidCombinators
 				{
 					state.AllowShrinking = false;
 					state.CurrentContext.MarkFailure(string.Join(", ", strings));
+				}
+				else
+				{
+					state.SpecPassed(key);
 				}
 				return QAcidResult.AcidOnly(state);
 			};
