@@ -15,4 +15,15 @@ public static class RepeatingOnesSelve
         for (int i = 0; i < numberOfTimes; i++)
             yield return func();
     }
+
+    public static IEnumerable<T> TimesUntil<T>(this int numberOfTimes, Predicate<T> predicate, Func<T> func)
+    {
+        for (int i = 0; i < numberOfTimes; i++)
+        {
+            var result = func();
+            yield return result;
+            if (predicate(result))
+                yield break;
+        }
+    }
 }
