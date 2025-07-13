@@ -180,7 +180,10 @@ public sealed class QAcidState : QAcidContext
         }
         passedSpecCount[label] = value + 1;
     }
-
+    public SpecCount[] GetPassedSpecCount()
+    {
+        return [.. passedSpecCount.Select(kv => new SpecCount(Label: kv.Key, Count: kv.Value))];
+    }
     // -----------------------------------------------------------------
     // implementing context for fluent
     // --
@@ -299,8 +302,10 @@ public sealed class QAcidState : QAcidContext
             Memory.AllAccesses()
                 .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
                 .ToList();
-        report.PassedSpecCount = passedSpecCount.Select(kv => new SpecCount(Label: kv.Key, Count: kv.Value)).ToArray();
+        report.PassedSpecCount = GetPassedSpecCount();
     }
+
+
 
     private IEnumerable<string> GetReportHeaderInfo()
     {

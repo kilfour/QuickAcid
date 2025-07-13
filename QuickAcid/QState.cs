@@ -54,4 +54,16 @@ public class QState
     {
         return state.Observe(executionsPerScope);
     }
+
+    public Report ObserveOnce(Action<QAcidState> action)
+    {
+        return Observe(1, action);
+    }
+
+    public Report Observe(int executionsPerScope, Action<QAcidState> action)
+    {
+        var report = Observe(executionsPerScope);
+        action(state);
+        return report;
+    }
 }
