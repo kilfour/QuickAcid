@@ -165,15 +165,22 @@ public sealed class QAcidState : QAcidContext
     public bool AlwaysReport { get; set; }
     public bool ShrinkingActions { get; set; }
 
+    // -----------------------------------------------------------------
+    // spec counting
+    // --
     private Dictionary<string, int> passedSpecCount = [];
     public void SpecPassed(string label)
     {
-        if (!passedSpecCount.ContainsKey(label))
+        if (CurrentPhase != QAcidPhase.NormalRun)
+            return;
+        if (!passedSpecCount.TryGetValue(label, out int value))
         {
-            passedSpecCount[label] = 0;
+            value = 0;
+            passedSpecCount[label] = value;
         }
-        passedSpecCount[label] = passedSpecCount[label] + 1;
+        passedSpecCount[label] = value + 1;
     }
+
     // -----------------------------------------------------------------
     // implementing context for fluent
     // --

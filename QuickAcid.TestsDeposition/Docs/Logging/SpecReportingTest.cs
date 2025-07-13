@@ -2,7 +2,7 @@ namespace QuickAcid.TestsDeposition.Docs.Logging;
 
 public class SpecReportingTest
 {
-    [Fact]
+    [Fact] // needs test that this only registers original run counts
     public void Count()
     {
         var counter = 0;
