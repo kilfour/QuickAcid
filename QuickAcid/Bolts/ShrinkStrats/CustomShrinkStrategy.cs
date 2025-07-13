@@ -2,25 +2,29 @@ using QuickAcid.Bolts.ShrinkStrats;
 
 namespace QuickAcid.Bolts;
 
-public class CustomShrinkStrategy<T>
+public class CustomShrinkStrategy
 {
-    private readonly IShrinker<T> shrinker;
+    private readonly IShrinkerBox shrinker;
 
-    public CustomShrinkStrategy(IShrinker<T> shrinker)
+    public CustomShrinkStrategy(IShrinkerBox shrinker)
     {
         this.shrinker = shrinker;
     }
-    public ShrinkOutcome Shrink(QAcidState state, string key, T value)
+
+    public ShrinkOutcome Shrink(QAcidState state, string key, object original)
     {
-        var values = shrinker.Shrink(value);
-        var originalFails = state.ShrinkRunReturnTrueIfFailed(key, value!);
+        var values = shrinker.Shrink(original);
+        var originalFails = state.ShrinkRunReturnTrueIfFailed(key, original);
         if (!originalFails)
             return ShrinkOutcome.Irrelevant;
-        var filtered = values;
+
         bool failureAlwaysOccurs =
-            filtered
-                .Where(x => !Equals(x, value))
-                .All(x => state.ShrinkRunReturnTrueIfFailed(key, x!));
-        return failureAlwaysOccurs ? ShrinkOutcome.Irrelevant : ShrinkOutcome.Report(QuickAcidStringify.Default()(value!));
+            values
+                .Where(x => !Equals(x, original))
+                .All(x => state.ShrinkRunReturnTrueIfFailed(key, x));
+
+        return failureAlwaysOccurs
+            ? ShrinkOutcome.Irrelevant
+            : ShrinkOutcome.Report(QuickAcidStringify.Default()(original));
     }
 }

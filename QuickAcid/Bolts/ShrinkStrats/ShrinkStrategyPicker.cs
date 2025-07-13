@@ -15,7 +15,7 @@ public class ShrinkStrategyPicker
         var customShrinker = state.TryGetShrinker<T>();
         if (customShrinker != null)
         {
-            new CustomShrinkStrategy<T>(customShrinker).Shrink(state, key, value);
+            new CustomShrinkStrategy(new ShrinkerBox<T>(customShrinker)).Shrink(state, key, value!);
             return;
         }
 

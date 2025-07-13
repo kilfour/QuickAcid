@@ -1,4 +1,6 @@
-﻿using QuickAcid.Bolts.ShrinkStrats;
+﻿using System.Linq.Expressions;
+using System.Reflection;
+using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
@@ -121,7 +123,7 @@ public sealed class QAcidState : QAcidContext
 
     // ----------------------------------------------------------------------------------
     // Shrinking Strategies
-    private readonly Dictionary<Type, object> shrinkers = new();
+    private readonly Dictionary<Type, object> shrinkers = [];
     public void RegisterShrinker<T>(IShrinker<T> shrinker)
     {
         shrinkers[typeof(T)] = shrinker;
@@ -130,6 +132,19 @@ public sealed class QAcidState : QAcidContext
     {
         return shrinkers.TryGetValue(typeof(T), out var shrinker)
             ? shrinker as IShrinker<T>
+            : null;
+    }
+
+    private readonly Dictionary<(Type, PropertyInfo), IShrinkerBox> propertyShrinkers = [];
+    public void RegisterPropertyShrinker<T, TProp>(Expression<Func<T, TProp>> expr, IShrinker<TProp> shrinker)
+    {
+        var info = expr.AsPropertyInfo();
+        propertyShrinkers[(typeof(T), info)] = new ShrinkerBox<TProp>(shrinker);
+    }
+    public IShrinkerBox? TryGetPropertyShrinker<T>(PropertyInfo info)
+    {
+        return propertyShrinkers.TryGetValue((typeof(T), info), out var shrinker)
+            ? shrinker as IShrinkerBox
             : null;
     }
 

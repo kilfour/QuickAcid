@@ -85,15 +85,19 @@ public class ObjectShrinkStrategy
             .ForEach(p => HandleProperty(state, key, value, p, fullKey));
     }
 
-    private static void HandleProperty(QAcidState state, string key, object value, PropertyInfo propertyInfo, string fullKey)
+    private static void HandleProperty<T>(QAcidState state, string key, T value, PropertyInfo propertyInfo, string fullKey)
     {
         var propertyValue = propertyInfo.GetValue(value);
         var swapper = new MemoryLens(
             obj => propertyInfo.GetValue(obj)!,
-            (val, propValue) => { SetPropertyValue(propertyInfo, value, propValue); return val; });
+            (val, propValue) => { SetPropertyValue(propertyInfo, value!, propValue); return val; });
         using (state.Memory.NestedValue(swapper))
         {
-            ShrinkStrategyPicker.Input(state, key, propertyValue, $"{fullKey}.{propertyInfo.Name}");
+            var customShrinker = state.TryGetPropertyShrinker<T>(propertyInfo);
+            if (customShrinker != null)
+                new CustomShrinkStrategy(customShrinker).Shrink(state, key, propertyValue!);
+            else
+                ShrinkStrategyPicker.Input(state, key, propertyValue, $"{fullKey}.{propertyInfo.Name}");
         }
     }
 
