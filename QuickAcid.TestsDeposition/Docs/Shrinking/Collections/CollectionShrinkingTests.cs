@@ -43,6 +43,7 @@ public class CollectionShrinkingTests
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
+        Signal.From(filterTraces).SetArtery(new WriteDataToFile().ClearFile()).Pulse(report.ShrinkTraces);
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ [ 42 ] ]", entry.Value);
     }
@@ -136,10 +137,9 @@ public class CollectionShrinkingTests
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
-        Signal.From(filterTraces).SetArtery(new WriteDataToFile().ClearFile()).Pulse(report.ShrinkTraces);
         Assert.Single(report.OfType<ReportInputEntry>());
         var entry = report.Single<ReportInputEntry>();
-        Assert.Equal("[ Composed { One = 42, Two = 0 } ]", entry.Value);
+        Assert.Equal("[ { One : 42 } ]", entry.Value);
     }
 
     private Flow<ShrinkTrace> filterTraces =

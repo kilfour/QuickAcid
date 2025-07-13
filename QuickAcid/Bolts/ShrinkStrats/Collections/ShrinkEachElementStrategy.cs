@@ -5,22 +5,14 @@ namespace QuickAcid.Bolts.ShrinkStrats.Collections;
 
 public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
 {
+    public Dictionary<int, int>? Mapper { get; set; }
+
+    private int GetMappedIndex(int index) => Mapper == null ? index : Mapper[index];
+
     public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
         var theList = CloneList.AsOriginalType(value!);
         int index = 0;
-        while (index < theList.Count)
-        {
-            var removeForShrinking =
-                state.Memory.ForThisExecution().GetDecorated(key).GetShrinkTraces()
-                    .Any(a => a.Key == $"{fullKey}.{index}" && a.IsRemoved);
-            if (removeForShrinking)
-                theList.RemoveAt(index);
-            else
-                index++;
-        }
-
-        index = 0;
         while (index < theList.Count)
         {
             var ix = index;
@@ -41,10 +33,10 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
                     });
                 using (state.Memory.NestedValue(swapper))
                 {
-                    ShrinkStrategyPicker.Input(state, key, before, $"{fullKey}.{index}");
+                    ShrinkStrategyPicker.Input(state, key, before, $"{fullKey}.{GetMappedIndex(index)}");
                     var removeForShrinking =
                         state.Memory.ForThisExecution().GetDecorated(key).GetShrinkTraces()
-                            .Any(a => a.Key == $"{fullKey}.{index}" && a.IsIrrelevant);
+                            .Any(a => a.Key == $"{fullKey}.{GetMappedIndex(index)}" && a.IsIrrelevant);
                     if (removeForShrinking)
                         theList[ix] = GetPlaceholder(theList[ix]!);
                     else
@@ -52,12 +44,6 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
                     index++;
                 }
             }
-
-
-            // if (removeForShrinking != null)
-            // {
-            //     theList[ix] = GetPlaceholder(removeForShrinking.Original!);
-            // }
         }
     }
 

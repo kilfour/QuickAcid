@@ -150,7 +150,7 @@ public sealed class QAcidState : QAcidContext
     }
 
     public Func<IEnumerable<ICollectionShrinkStrategy>> GetCollectionStrategies =
-        () => [new RemoveOneByOneStrategy(), new ShrinkEachElementStrategy()];
+        () => [new RemoveOneByOneStrategy(), new GreedyShrinkEachElementStrategy(), new ShrinkEachElementStrategy()];
 
     public Func<IEnumerable<IObjectShrinkStrategy>> GetObjectStrategies =
         () => [new ObjectShrinkStrategy()];
