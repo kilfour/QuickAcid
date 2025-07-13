@@ -2,6 +2,7 @@
 using System.Reflection;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
+using QuickAcid.Bolts.ShrinkStrats.Objects;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
 using QuickMGenerate;
@@ -144,12 +145,15 @@ public sealed class QAcidState : QAcidContext
     public IShrinkerBox? TryGetPropertyShrinker<T>(PropertyInfo info)
     {
         return propertyShrinkers.TryGetValue((typeof(T), info), out var shrinker)
-            ? shrinker as IShrinkerBox
+            ? shrinker
             : null;
     }
 
     public Func<IEnumerable<ICollectionShrinkStrategy>> GetCollectionStrategies =
         () => [new RemoveOneByOneStrategy(), new ShrinkEachElementStrategy()];
+
+    public Func<IEnumerable<IObjectShrinkStrategy>> GetObjectStrategies =
+        () => [new ObjectShrinkStrategy()];
     // ---------------------------------------------------------------------------------------
     public bool AllowShrinking = true;
     public bool AllowFeedbackShrinking = false;

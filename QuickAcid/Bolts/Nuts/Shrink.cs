@@ -16,6 +16,9 @@ public static class Shrink<T>
     public static QAcidScript<Acid> LikeThis(Func<T, IEnumerable<T>> shrinker)
         => LikeThis(new LambdaShrinker<T>(shrinker));
 
+    public static QAcidScript<Acid> None()
+        => LikeThis(new LambdaShrinker<T>(_ => []));
+
     public static QAcidScript<Acid> For<TProp>(Expression<Func<T, TProp>> expr, IShrinker<TProp> shrinker) =>
         state =>
             {
@@ -25,5 +28,8 @@ public static class Shrink<T>
 
     public static QAcidScript<Acid> For<TProp>(Expression<Func<T, TProp>> expr, Func<TProp, IEnumerable<TProp>> shrinker)
         => For(expr, new LambdaShrinker<TProp>(shrinker));
+
+    public static QAcidScript<Acid> None<TProp>(Expression<Func<T, TProp>> expr)
+        => For(expr, new LambdaShrinker<TProp>(_ => []));
 
 }

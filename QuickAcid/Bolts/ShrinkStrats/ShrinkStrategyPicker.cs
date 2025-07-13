@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
+using QuickAcid.Bolts.ShrinkStrats.Objects;
 
 namespace QuickAcid.Bolts.ShrinkStrats;
 
@@ -34,7 +35,7 @@ public class ShrinkStrategyPicker
 
         if (actualType.IsClass)
         {
-            new ObjectShrinkStrategy().Shrink(state, key, value, fullKey);
+            new CompositeObjectShrinkStrategy().Shrink(state, key, value, fullKey);
             return;
         }
     }

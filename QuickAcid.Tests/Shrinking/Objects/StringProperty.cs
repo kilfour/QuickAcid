@@ -2,6 +2,7 @@
 using QuickMGenerate;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts;
+using QuickAcid.Bolts.ShrinkStrats.Objects;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {
@@ -80,13 +81,13 @@ namespace QuickAcid.Tests.Shrinking.Objects
             for (int i = 0; i < 100; i++)
             {
                 var script =
-
-                        from input in "input".Input(generator)
-                        from foo in "act".Act(() =>
-                        {
-                            if (input.MyFirstProperty == "6" || input.MySecondProperty == "6") throw new Exception();
-                        })
-                        select Acid.Test;
+                    from _ in ShrinkingPolicy.ForObjects(new ObjectShrinkStrategy(), new PowersetPropertyNullingStrategy())
+                    from input in "input".Input(generator)
+                    from foo in "act".Act(() =>
+                    {
+                        if (input.MyFirstProperty == "6" || input.MySecondProperty == "6") throw new Exception();
+                    })
+                    select Acid.Test;
 
                 var report = new QState(script).Observe(50);
 
@@ -124,14 +125,14 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 select thing;
 
             var script =
-
-                    from input in "input".Input(generator)
-                    from result in "act".Act(() => new Something { MyFirstProperty = input.MyFirstProperty })
-                    from spec in "equal".Spec(() =>
-                        input.MyFirstProperty == result.MyFirstProperty
-                        && input.MySecondProperty == result.MySecondProperty
-                        && input.MyThirdProperty == result.MyThirdProperty)
-                    select Acid.Test;
+                from _ in ShrinkingPolicy.ForObjects(new ObjectShrinkStrategy(), new PowersetPropertyNullingStrategy())
+                from input in "input".Input(generator)
+                from result in "act".Act(() => new Something { MyFirstProperty = input.MyFirstProperty })
+                from spec in "equal".Spec(() =>
+                    input.MyFirstProperty == result.MyFirstProperty
+                    && input.MySecondProperty == result.MySecondProperty
+                    && input.MyThirdProperty == result.MyThirdProperty)
+                select Acid.Test;
 
             var report = new QState(script).Observe(50);
 

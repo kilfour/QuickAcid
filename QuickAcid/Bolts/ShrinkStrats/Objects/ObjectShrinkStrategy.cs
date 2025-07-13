@@ -1,17 +1,16 @@
 
 using System.Reflection;
-using QuickAcid.Bolts;
+using QuickAcid;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
-namespace QuickAcid.Bolts.ShrinkStrats;
+namespace QuickAcid.Bolts.ShrinkStrats.Objects;
 
-public class ObjectShrinkStrategy
+public class ObjectShrinkStrategy : IObjectShrinkStrategy
 {
     public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
-
         state.Trace(key, ShrinkKind.ObjectKind, new ShrinkTrace
         {
             Key = fullKey,
@@ -21,56 +20,7 @@ public class ObjectShrinkStrategy
             Intent = ShrinkIntent.Keep,
             Strategy = "ObjectShrinkStrategy"
         });
-
-
         HandleProperties(state, key, value, fullKey);
-
-        var shrunk = state.Memory.ForThisExecution().GetDecorated(key).GetShrinkOutcome();
-        if (shrunk == ShrinkOutcome.Irrelevant)
-        {
-            var oldValues = new Dictionary<string, object>();
-            var propertyInfos = value!.GetType().GetProperties(MyBinding.Flags).ToList();
-            foreach (var propertyInfo in propertyInfos)
-            {
-                oldValues[propertyInfo.Name] = propertyInfo.GetValue(value)!;
-            }
-            const int MaxPropertyCountForPowerset = 8;
-            if (propertyInfos.Count < MaxPropertyCountForPowerset)
-            {
-                foreach (var set in GetPowerSet(propertyInfos))
-                {
-                    if (shrunk != ShrinkOutcome.Irrelevant)
-                        break;
-
-                    foreach (var propertyInfo in set)
-                    {
-                        SetPropertyValue(propertyInfo, value, null!);
-                    }
-
-                    if (!state.ShrinkRunReturnTrueIfFailed(key, value))
-                    {
-                        foreach (var propertyInfo in set)
-                        {
-                            state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
-                            {
-                                Key = $"{fullKey}.{propertyInfo.Name}",
-                                Name = propertyInfo.Name,
-                                Original = oldValues[propertyInfo.Name],
-                                Result = oldValues[propertyInfo.Name],
-                                Intent = ShrinkIntent.Keep,
-                                Strategy = "PrimitiveShrink"
-                            });
-                        }
-                        break;
-                    }
-
-                    foreach (var propertyInfo in set)
-                    {
-                        SetPropertyValue(propertyInfo, value, oldValues[propertyInfo.Name]);
-                    }
-                }
-            }
-        }
     }
 
     private static void HandleProperties<T>(QAcidState state, string key, T value, string fullKey)

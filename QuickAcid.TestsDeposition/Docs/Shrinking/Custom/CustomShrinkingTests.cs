@@ -78,7 +78,6 @@ public class CustomShrinkingTests
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
-        // new WriteDataToFile().ClearFile().Flow(report.ShrinkTraces.Select(a => a.Report()).ToArray());
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ 42 ]", entry.Value);
     }
@@ -95,6 +94,21 @@ public class CustomShrinkingTests
         var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
-        Assert.Equal("[ 42, _, _ ]", entry.Value);
+        Assert.
+        Equal("[ 42, _, _ ]", entry.Value);
+    }
+
+    [Fact]
+    public void None()
+    {
+        var observe = new HashSet<int>();
+        var script =
+            from _ in Shrink<int>.None()
+            from input in "input".Input(MGen.Constant(42))
+            from foo in "spec".Spec(() => { observe.Add(input); return false; })
+            select Acid.Test;
+        var report = new QState(script).ObserveOnce();
+        Assert.NotNull(report);
+        Assert.All(observe, item => Assert.Equal(42, item));
     }
 }
