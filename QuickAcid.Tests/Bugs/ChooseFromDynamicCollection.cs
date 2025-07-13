@@ -20,8 +20,9 @@ public class ChooseFromDynamicCollection
         var report = new QState(script).Observe(50);
         Assert.NotNull(report);
 
-        var actEntries = report.OfType<ReportExecutionEntry>();
-        Assert.Equal(2, actEntries.Count());
+        var entry = report.Single<ReportCollapsedExecutionEntry>();
+        Assert.Equal("act", entry.Key);
+        Assert.Equal(2, entry.Times);
     }
 
     [Fact]
@@ -37,7 +38,8 @@ public class ChooseFromDynamicCollection
         var report = new QState(script).Observe(50);
         Assert.NotNull(report);
 
-        var actEntries = report.OfType<ReportExecutionEntry>();
-        Assert.Equal(2, actEntries.Count());
+        var entry = report.Single<ReportCollapsedExecutionEntry>();
+        Assert.Equal("act", entry.Key);
+        Assert.Equal(2, entry.Times);
     }
 }

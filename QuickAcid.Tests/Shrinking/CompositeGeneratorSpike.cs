@@ -13,7 +13,7 @@ public class CompositeGeneratorSpike
         public int Two { get; set; }
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact]
     public void Initial()
     {
         var script =
@@ -23,12 +23,13 @@ public class CompositeGeneratorSpike
             from composed in "composed".Input(MGen.Constant(new Composed() { One = inputOne, Two = inputTwo }))
             from spec in "spec".Spec(() => composed.One + composed.Two != 42)
             select Acid.Test;
-        new QState(script).TestifyOnce();
-        // var report = new QState(script).ObserveOnce();
-        // Signal.Tracing<ShrinkTrace>().SetArtery(new WriteDataToFile("CompositeGeneratorSpike1.log").ClearFile()).Pulse(report.ShrinkTraces);
+        var report = new QState(script).ObserveOnce();
+        var signal = Signal.Tracing<string>().SetArtery(new WriteDataToFile("CompositeGeneratorSpike1.log").ClearFile());
+        signal.Pulse(report.Entries.Select(a => a.ToString())!);
+        signal.Pulse(report.ShrinkTraces.Select(a => a.ToString()));
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact]
     public void Using_Derived()
     {
         var script =
@@ -37,13 +38,13 @@ public class CompositeGeneratorSpike
             from composed in "composed".Derived(MGen.Constant(new Composed() { One = inputOne, Two = inputTwo }))
             from spec in "spec".Spec(() => composed.One + composed.Two != 42)
             select Acid.Test;
-        //new QState(script).TestifyOnce();
         var report = new QState(script).ObserveOnce();
-        //Signal.Tracing<ShrinkTrace>().SetArtery(new WriteDataToFile().ClearFile()).Pulse(report.ShrinkTraces);
-        Signal.Tracing<string>().SetArtery(new WriteDataToFile().ClearFile()).Pulse(report.Entries.Select(a => a.ToString())!);
+        var signal = Signal.Tracing<string>().SetArtery(new WriteDataToFile("CompositeGeneratorSpike2.log").ClearFile());
+        signal.Pulse(report.Entries.Select(a => a.ToString())!);
+        signal.Pulse(report.ShrinkTraces.Select(a => a.ToString()));
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact]
     public void Desired_Result()
     {
         // MGen.For<SomeThingToGenerate>().Customize(s => s.MyProperty, MGen.Constant(42))
@@ -55,10 +56,9 @@ public class CompositeGeneratorSpike
             from trace in "trace".Trace(() => "should be: - Input : composed = { One : 42, Two : 0 }")
             from spec in "spec".Spec(() => composed.One + composed.Two != 42)
             select Acid.Test;
-
-        // new QState(script).TestifyOnce();
         var report = new QState(script).ObserveOnce();
-        // Signal.Tracing<ShrinkTrace>().SetArtery(new WriteDataToFile("CompositeGeneratorSpike2.log").ClearFile()).Pulse(report.ShrinkTraces);
-        Signal.Tracing<string>().SetArtery(new WriteDataToFile().ClearFile()).Pulse(report.Entries.Select(a => a.ToString())!);
+        var signal = Signal.Tracing<string>().SetArtery(new WriteDataToFile("CompositeGeneratorSpike3.log").ClearFile());
+        signal.Pulse(report.Entries.Select(a => a.ToString())!);
+        signal.Pulse(report.ShrinkTraces.Select(a => a.ToString()));
     }
 }

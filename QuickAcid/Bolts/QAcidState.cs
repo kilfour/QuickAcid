@@ -382,11 +382,52 @@ public sealed class QAcidState : QAcidContext
 
     private Report AddMemoryToReport(Report report, bool isFinalRun)
     {
+        ReportExecutionEntry? collapsed = null;
+        var collapsedCount = 0;
+
+        void FlushCollapsed()
+        {
+            if (collapsedCount == 1)
+                report.Entries.Add(collapsed!);
+            else if (collapsed != null)
+                report.Entries.Add(new ReportCollapsedExecutionEntry(collapsed.Key, collapsedCount));
+
+            collapsed = null;
+            collapsedCount = 0;
+        }
+
         foreach (var executionNumber in ExecutionNumbers.ToList())
         {
-            MemoryReportAssembler
-                .AddAllMemoryToReport(report, Memory, executionNumber, CurrentContext.Exception!, isFinalRun);
+            var entries = MemoryReportAssembler.GetReportEntriesForExecution(Memory, executionNumber, isFinalRun);
+
+            if (entries.Count == 1 && entries[0] is ReportExecutionEntry entry)
+            {
+                if (collapsed == null)
+                {
+                    collapsed = entry;
+                    collapsedCount = 1;
+                }
+                else if (collapsed.Key == entry.Key)
+                {
+                    collapsedCount++;
+                }
+                else
+                {
+                    FlushCollapsed();
+                    collapsed = entry;
+                    collapsedCount = 1;
+                }
+            }
+            else
+            {
+                FlushCollapsed();
+                report.Entries.AddRange(entries);
+            }
         }
+
+        FlushCollapsed();
+
+
         if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
             report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(CurrentContext.FailingSpec)));
         if (CurrentContext.Exception != null)

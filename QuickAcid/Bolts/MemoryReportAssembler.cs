@@ -4,41 +4,44 @@ using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
 
+
+
 public static class MemoryReportAssembler
 {
-    public static void AddAllMemoryToReport(
-        Report report,
+    public static List<ReportEntry> GetReportEntriesForExecution(
         Memory memory,
         int executionId,
-        Exception exception, bool isFinalRun)
+        bool isFinalRun)
     {
+        List<ReportEntry> entries = [];
+
         // Always-reported snapshot
         if (memory.TrackedSnapshot().TryGetValue(executionId, out var snapshot))
         {
             foreach (var (key, val) in snapshot)
-                report.AddEntry(new ReportTrackedEntry(key) { Value = val });
+                entries.Add(new ReportTrackedEntry(key) { Value = val });
         }
 
         // Per-action memory
         memory.TryGet(executionId).Match(
             some: access =>
             {
-                report.AddEntry(
+
+                entries.Add(
                     new ReportExecutionEntry(string.Join(", ",
                     access.ActionKeys.Select(LabelPrettifier.Prettify))));
-
 
                 foreach (var (key, val) in access.GetAll())
                 {
                     var shrinkOutcome = val.GetShrinkOutcome();
                     if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
                     {
-                        report.AddEntry(new ReportInputEntry(LabelPrettifier.Prettify(key)) { Value = msg });
+                        entries.Add(new ReportInputEntry(LabelPrettifier.Prettify(key)) { Value = msg });
                     }
                     else if (!isFinalRun)
                     {
                         if (val.ReportingIntent != ReportingIntent.Never)
-                            report.AddEntry(new ReportInputEntry(LabelPrettifier.Prettify(key))
+                            entries.Add(new ReportInputEntry(LabelPrettifier.Prettify(key))
                             {
                                 Value = QuickAcidStringify.Default()(val.Value!)
                             });
@@ -51,8 +54,10 @@ public static class MemoryReportAssembler
         // traces
         foreach (var (key, val) in memory.TracesFor(executionId))
         {
-            report.AddEntry(new ReportTraceEntry(key) { Value = val });
+            entries.Add(new ReportTraceEntry(key) { Value = val });
         }
+
+        return entries;
     }
 }
 
