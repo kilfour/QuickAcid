@@ -12,6 +12,11 @@ public class QState
         state = new QAcidState(script);
     }
 
+    public QState(QAcidScript<Acid> script, int seed)
+    {
+        state = new QAcidState(script, seed);
+    }
+
     public QState ShrinkingActions()
     {
         state.ShrinkingActions = true;

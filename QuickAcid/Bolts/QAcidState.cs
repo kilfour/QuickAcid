@@ -23,6 +23,12 @@ public sealed class QAcidState : QAcidContext
         report = new Report();
     }
 
+    public QAcidState(QAcidScript<Acid> script, int seed)
+        : this(script)
+    {
+        MGenState = new State(seed);
+    }
+
     // -------------------------------------------------------------------------------------------------
     // -- New Way of Shrinking
     // --
@@ -266,6 +272,7 @@ public sealed class QAcidState : QAcidContext
             yield return "Exception thrown";
         yield return $"Original failing run: {OriginalFailingRunExecutionCount} execution(s)";
         yield return $"Shrunk to minimal case:  {ExecutionNumbers.Count} execution(s) ({shrinkCount} shrinks)";
+        yield return $"Seed: {MGenState.Seed}";
         yield break;
     }
 
