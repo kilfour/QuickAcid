@@ -1,11 +1,7 @@
-using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Reporting;
 using QuickExplainIt;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
-using QuickPulse;
-using QuickPulse.Arteries;
-using QuickPulse.Bolts;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 
@@ -43,7 +39,6 @@ public class CollectionShrinkingTests
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
-        Signal.From(filterTraces).SetArtery(new WriteDataToFile().ClearFile()).Pulse(report.ShrinkTraces);
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ [ 42 ] ]", entry.Value);
     }
@@ -115,7 +110,6 @@ public class CollectionShrinkingTests
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
-        new WriteDataToFile().ClearFile().Flow(report.ShrinkTraces.ToArray());
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ _, _, 1 ]", entry.Value);
     }
@@ -141,12 +135,4 @@ public class CollectionShrinkingTests
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ { One : 42 } ]", entry.Value);
     }
-
-    private Flow<ShrinkTrace> filterTraces =
-        from input in Pulse.Start<ShrinkTrace>()
-        from _ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink",
-            $"{input.Key}: {input.Intent}, {input.Strategy} ({input.Original})")
-        from __ in Pulse.TraceIf(input.Strategy != "PrimitiveShrink",
-            $"{input.Key}: {input.Intent}, {input.Strategy}")
-        select input;
 }
