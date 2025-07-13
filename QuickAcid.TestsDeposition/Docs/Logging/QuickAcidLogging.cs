@@ -1,8 +1,8 @@
-using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
+using QuickExplainIt.Text;
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickMGenerate;
+using QuickExplainIt;
 
 namespace QuickAcid.TestsDeposition.Docs.Logging;
 
@@ -161,7 +161,7 @@ Outputs something similar to:
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 5)
             select Acid.Test;
-        var report = new QState(script).ShrinkingActions().Verbose().Observe(20);
+        var report = new QState(script, 666).ShrinkingActions().Verbose().Observe(20);
         var reader = LinesReader.FromText(report.ToString());
         Assert.Equal("QuickAcid Report:", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());
@@ -202,6 +202,7 @@ Outputs something similar to:
         Assert.Equal(" -- Property 'spec' was falsified", reader.NextLine());
         Assert.Equal(" -- Original failing run: 1 execution(s)", reader.NextLine());
         Assert.Equal(" -- Shrunk to minimal case:  1 execution(s) (2 shrinks)", reader.NextLine());
+        Assert.Equal(" -- Seed: 666", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());
         Assert.Equal(" RUN START :", reader.NextLine());
         Assert.Equal(" ---------------------------", reader.NextLine());

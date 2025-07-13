@@ -1,8 +1,7 @@
-using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
+using QuickExplainIt;
 using QuickMGenerate;
 using QuickPulse.Instruments;
 

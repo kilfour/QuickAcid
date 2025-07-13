@@ -1,6 +1,5 @@
-using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
-using QuickAcid.TestsDeposition._Tools;
+using QuickExplainIt;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
 
@@ -8,12 +7,12 @@ namespace QuickAcid.TestsDeposition.Docs.Shrinking;
 
 public static class Chapter { public const string Order = "1-50-50"; }
 
-[Doc(Order = Chapter.Order, Caption = "Feedback Shrinking", Content =
-@"A.k.a.: What if it fails but the run does not contain the minimal fail case ? 
-")]
+// [Doc(Order = Chapter.Order, Caption = "Feedback Shrinking", Content =
+// @"A.k.a.: What if it fails but the run does not contain the minimal fail case ? 
+// ")]
 public class FeedbackShrinkingTests
 {
-    [Fact]
+    [Fact(Skip = "disabled feedback shrinking")]
     public void Normal_Shrinking()
     {
         QDiagnosticState.RunInformation? info = null;
@@ -34,7 +33,7 @@ public class FeedbackShrinkingTests
         Assert.Equal(2, report.OfType<ReportExecutionEntry>().Count());
     }
 
-    [Fact]
+    [Fact(Skip = "disabled feedback shrinking")]
     public void Feedback_Shrinking()
     {
         QDiagnosticState.RunInformation? info = null;

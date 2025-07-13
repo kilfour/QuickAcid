@@ -1,12 +1,7 @@
-using QuickAcid.Bolts.Nuts;
-using QuickAcid.Bolts.ShrinkStrats;
-using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Reporting;
-using QuickAcid.TestsDeposition._Tools;
+using QuickExplainIt;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
-using QuickPulse;
-using QuickPulse.Arteries;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 

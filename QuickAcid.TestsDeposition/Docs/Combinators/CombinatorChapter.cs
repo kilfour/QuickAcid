@@ -1,4 +1,4 @@
-using QuickAcid.TestsDeposition._Tools;
+using QuickExplainIt;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators;
 

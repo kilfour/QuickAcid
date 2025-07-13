@@ -1,6 +1,4 @@
-using System.Globalization;
-using System.Text;
-using QuickPulse.Arteries;
+using QuickExplainIt;
 
 namespace QuickAcid.TestsDeposition._Tools;
 
@@ -9,83 +7,10 @@ public class CreateDoc
     [Fact]
     public void Go()
     {
-        var typeattributes =
-            typeof(CreateDoc).Assembly
-                .GetTypes()
-                .SelectMany(t => t.GetCustomAttributes(typeof(DocAttribute), false));
-
-        var methodattributes =
-            typeof(CreateDoc).Assembly
-                .GetTypes()
-                .SelectMany(t => t.GetMethods())
-                .SelectMany(t => t.GetCustomAttributes(typeof(DocAttribute), false));
-
-        var attributes =
-            typeattributes
-                .Union(methodattributes)
-                .Cast<DocAttribute>()
-                .OrderBy(attr => ParseOrder(attr.Order), new LexicalFloatArrayComparer());
-
-        var sb = new StringBuilder();
-        var firstHeader = true;
-        var previousHeadingLevel = 0;
-
-        foreach (var attr in attributes)
-        {
-            if (!string.IsNullOrWhiteSpace(attr.Caption))
-            {
-                var headingLevel = attr.Order.Split('-').Length;
-                if (firstHeader)
-                {
-                    firstHeader = false;
-                }
-                else if (headingLevel <= previousHeadingLevel)
-                {
-                    sb.AppendLine("---");
-                    sb.AppendLine();
-                }
-                previousHeadingLevel = headingLevel;
-                var headingMarker = new string('#', headingLevel);
-                sb.AppendLine($"{headingMarker} {attr.Caption}");
-                sb.AppendLine();
-            }
-
-            if (!string.IsNullOrWhiteSpace(attr.Content))
-            {
-                sb.AppendLine(attr.Content);
-                sb.AppendLine();
-            }
-        }
-
-        new WriteDataToFile("README.md").ClearFile().Flow(sb.ToString());
+        new Document().ToFile("README.md", typeof(CreateDoc).Assembly);
     }
 
-    public class LexicalFloatArrayComparer : IComparer<float[]>
-    {
-        public int Compare(float[]? x, float[]? y)
-        {
-            if (x == null || y == null) return Comparer<float[]>.Default.Compare(x, y);
-            var len = Math.Max(x.Length, y.Length);
-            for (int i = 0; i < len; i++)
-            {
-                var a = i < x.Length ? x[i] : 0f;
-                var b = i < y.Length ? y[i] : 0f;
-                var cmp = a.CompareTo(b);
-                if (cmp != 0) return cmp;
-            }
-            return 0;
-        }
-    }
-    public static float[] ParseOrder(string order)
-    {
-        return order
-            .Split('-')
-            .Select(part =>
-                float.TryParse(part, NumberStyles.Float, CultureInfo.InvariantCulture, out var f)
-                    ? f
-                    : throw new FormatException($"Invalid order segment: '{part}'"))
-            .ToArray();
-    }
+
 
     private const string Introduction =
 @"# QuickMGenerate

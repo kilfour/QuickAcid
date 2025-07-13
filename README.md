@@ -1,5 +1,4 @@
 # QuickAcid
-
 Before we get in the technical details and/or sales pitch, 
 I feel it might help clear up what this thing actually does, and why it's useful, if I start with an example.  
 
@@ -68,7 +67,6 @@ And in order to track those down you might think about calling in QuickAcid.
 
 
 ## QuickAcid Linq 101
-
 First of all, you need to import some namespaces if you want to use the Linq interface.  
 This is intentional. The Linq interface assumes familiarity with either Linq combinators or property-based testing concepts.
 
@@ -81,7 +79,6 @@ Yes, you need both the Nuts and the Bolts.
 
 
 ### What is a Script?
-
 Scripts are the core abstraction of QuickAcid's LINQ model. 
 They carry both the logic of the test and the mechanisms to generate input, track state, and produce a result.
 
@@ -106,10 +103,7 @@ select Acid.Test;
 Will be explained in detail later.
 
 
----
-
 ### Acid.Test Explained
-
 
 In QuickAcid, every test definition ends with:
 ```csharp
@@ -119,10 +113,7 @@ select Acid.Test;
 and serves as a **terminator** for the test chain.
 *All well-formed tests should end with it.*
 
----
-
 ### What is a Run?
-
 A **Run** in QuickAcid is a single attempt to validate a property.
 It consists of one or more executions of the test logic, usually with different fuzzed inputs.
 A run ends either when a failure is found or when the maximum number of executions is reached.
@@ -159,10 +150,7 @@ In this case :
 ```
 
 
----
-
 ### What is an Execution?
-
 In the previous section we briefly mentioned executions, let's elaborate and have a look at a simple test:
  ```csharp
 var script =
@@ -203,10 +191,7 @@ which is how QuickAcid handles mutable state and side effects.
 If any execution fails, QuickAcid immediately halts the run and begins shrinking the input to a simpler failing case. A feature we will explore in detail later on. 
 
 
----
-
 ## QState
-
 *Pronounced as:* Cue State.  
 
 Which is exactly what it is for. The Linq Run definition is a stateless function.  
@@ -236,10 +221,7 @@ This was originally the case, but it was confusing even for me and i wrote the d
 So a decision was made to sacrifice a little bit of brevity in order to gain a lot of clarity.  
 
 
----
-
 ## QuickAcid Combinators
-
 Combinators are the heart of QuickAcid's LINQ-based property testing DSL.  
 Each one introduces a **step** in the test pipeline — a value, an action, a condition, or a check — and together they form the skeleton of your test logic.
 
@@ -254,7 +236,6 @@ The sections below describe these core building blocks.
 
 
 ### Stashed
-
 **Stashed(...)** creates a value once at the start of the test run and reuses it across all executions.  
 This is typically where you'd stash your **system under test (SUT)** — a service, container, or domain object whose behavior you're exploring.  
 Unlike `Input(...)`, stashed values are fixed for the entire run and never shrink, making them ideal for holding mutable state or orchestrating effects across inputs.
@@ -267,7 +248,6 @@ from account in "account".Stashed(() => new Account())
 
 
 ##### StashedValue
-
 Stashes a primitive or scalar value without requiring a wrapper object.
 Intended for flags, counters, and other small mutable state used during generation.  
 
@@ -277,10 +257,7 @@ from flag in "flag".StashedValue(true)
 ```
 
 
----
-
 ### Tracked
-
 **Tracked(...)** behaves exactly like `Stashed(...)`: it defines a named value that is created once at the start of the test run and shared across all executions.
 The key difference is that `Tracked(...) `also ensures this value is **always included in the final report**, providing visibility into contextual or setup state even when it wasn't directly responsible for the failure.
 
@@ -294,7 +271,6 @@ The second argument is a formatter function for rendering the value into the tes
 
 ##### TrackedValue
 
-
 Similar to `StashedValue(...)`, but again, this one shows up in the report.
 
 **Example:**
@@ -303,10 +279,7 @@ from flag in "flag".TrackedValue(true)
 ```
 
 
----
-
 ### Input
-
 **Input(...)** introduces a fuzzed value that will be regenerated for every execution and shrunk when a failure occurs.  
 It represents the core mechanism for exploring input space in property-based tests.  
 Use it when you want a variable value that's subject to shrinking and included in the final report upon failure.
@@ -322,10 +295,7 @@ from input in "input".Input(() => MGen.Int())
 ```
 
 
----
-
 ### Act
-
 **Act(...)** is your go to when you want to mutate your system under test.
 ####TODO: elaborate
 
@@ -350,10 +320,7 @@ from act2 in "and act again".Act(() => account.Withdraw(200))
 ```
 
 
----
-
 ### Spec
-
 **Spec(...)** ... TODO ...
 
 
@@ -363,10 +330,7 @@ from specResult in "spec".Spec(() => false)
 ```
 
 
----
-
 ### DelayedSpec
-
 **DelayedSpec(...)** ... TODO ...
 
 
@@ -378,10 +342,7 @@ let apply = spec.Apply()
 ```
 
 
----
-
 ### Choose
-
 **Choose(...)** is one of two ways one can select different operations per execution.
 In the case of choose, you supply a number of `.Act(...)`'s and QuickAcid will randomly choose one for every execution. 
 
@@ -395,10 +356,7 @@ from _ in "ops".Choose(
 ```
 
 
----
-
 ### Derived
-
 **Derived(...)** introduces a value that is dynamically generated during each execution, 
 but is **not** shrinkable or tracked in the final report.  
 Use this when you need to **react to mutable test state**, 
@@ -417,10 +375,7 @@ from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Valu
 
 
 
----
-
 ### TestifyProvenWhen
-
 **TestifyProvenWhen(...)**
 Ends the test run early once a specified condition is satisfied.
 This combinator is not a property specification itself,
@@ -441,10 +396,7 @@ This would end the test run early once `container.Value` becomes `true`.
 `TestifyProvenWhen(...)` is about controlling *how long* a test runs based on dynamic conditions observed during execution.
 
 
----
-
 ### Trace
-
 **Trace(...)** Used to add information from the script to the QuickAcid report.
 
 
@@ -462,10 +414,7 @@ from _ in "Info Key".TraceIf(() => number == 42, () => "Extra words")
 ```
 
 
----
-
 ### Skip
-
 **Skip(...)** extension method for `QAcidScript<T>`. Useful for temporary disabling `Spec`'s.
 
 
@@ -483,17 +432,13 @@ from __ in "spec".Spec(() => false).SkipIf(() => true)
 ```
 
 
----
-
 ### Primitives Shrinking
-
 `PrimitiveShrinkStrategy` is a shrinker used in QuickAcid to simplify failing test inputs for known primitive types.
 It operates using a predefined list of alternative values per type and attempts to
 replace the original with a simpler version that still causes the test to fail.
 
 
 #### How It Works
-
 1. **Recognize Known Type**  
    Checks if the given value belongs to a supported primitive type (like `int`, `bool`, `string`, etc.).
 2. **Initial Check**  
@@ -505,10 +450,7 @@ replace the original with a simpler version that still causes the test to fail.
    After evaluation, it emits a trace indicating whether the value was kept, or marked irrelevant.
 
 
----
-
 #### Supported Types
-
 These are matched via `Type.IsAssignableFrom(...)` to allow some flexibility:
 
 - **Boolean**: `true`, `false`
@@ -519,19 +461,13 @@ These are matched via `Type.IsAssignableFrom(...)` to allow some flexibility:
 - **Miscellaneous**: `Guid`, `Uri`
 
 
----
-
 ### Collection Shrinking
-
 ...
 
 
 Usage
 
----
-
 ### Custom Shrinking
-
 ...
 
 
@@ -545,17 +481,7 @@ Custom Collection Shrinking Policy: RemoveOneByOneStrategy
 
 ShrinkEachElementStrategy
 
----
-
-### Feedback Shrinking
-
-A.k.a.: What if it fails but the run does not contain the minimal fail case ? 
-
-
----
-
 ## QuickAcid Logging
-
 Let's not call a spade a shovel: property-based testing (PBT) isn't the easiest thing in the world.
 I usually frown upon verbosity and an overdose of logging, but here, it's not just tolerable, it's necessary.
 Especially when the user starts to dig a little deeper and implements its own custom shrinkers for instance.  
@@ -564,7 +490,6 @@ There are two ways to get diagnostics out of QuickAcid's engine.
 
 
 ### Verbose Mode
-
 By adding a call to `.Verbose()` when building your test, you instruct the engine to include detailed diagnostic output in the report.
 ```csharp
 var script =
@@ -646,6 +571,5 @@ Outputs something similar to:
   Spec Failed : spec
  *******************
  ```
-
 
 
