@@ -12,7 +12,7 @@ public class DecoratedValue
     {
         return new DecoratedValue
         {
-            Value = this.Value, // shallow copy — replace if needed
+            Value = Value, // shallow copy — replace if needed
             ReportingIntent = this.ReportingIntent
         };
     }

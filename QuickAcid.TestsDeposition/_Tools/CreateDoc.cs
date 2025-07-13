@@ -7,6 +7,6 @@ public class CreateDoc
 	[Fact]
 	public void Go()
 	{
-		new Document().ToFile("README.md", typeof(CreateDoc).Assembly);
+		new Document().ToFile("reference.md", typeof(CreateDoc).Assembly);
 	}
 }

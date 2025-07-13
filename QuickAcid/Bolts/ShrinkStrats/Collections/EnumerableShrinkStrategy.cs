@@ -1,7 +1,7 @@
 using QuickAcid.Bolts.TheyCanFade;
 using QuickMGenerate;
 
-namespace QuickAcid.Bolts.ShrinkStrats;
+namespace QuickAcid.Bolts.ShrinkStrats.Collections;
 
 public class EnumerableShrinkStrategy
 {

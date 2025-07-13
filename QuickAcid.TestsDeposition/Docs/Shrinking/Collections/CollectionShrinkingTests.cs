@@ -1,7 +1,10 @@
+using QuickAcid.Bolts.Nuts;
+using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Reporting;
 using QuickExplainIt;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 
@@ -100,18 +103,19 @@ public class CollectionShrinkingTests
         Assert.Null(report.FirstOrDefault<ReportInputEntry>());
     }
 
-    [Fact(Skip = "Wip")]
+    [Fact]
     public void Collection_shrink_with_haha()
     {
-        // TODO : MAKE IT PASS WITH : !input.Contains(1)
         var script =
+            from _ in ShrinkingPolicy.ForCollections(new TrySingleElementsStrategy())
             from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 1]))
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(1))
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
+        new WriteDataToFile().ClearFile().Flow(report.ShrinkTraces.ToArray());
         var entry = report.Single<ReportInputEntry>();
-        Assert.Equal("[ 1, _, 1 ]", entry.Value);
+        Assert.Equal("[ 1, _, _ ]", entry.Value);
     }
 }
