@@ -23,7 +23,7 @@ public class ReportCollapsedExecutionEntry : ReportEntry
         {
             text = $"  EXECUTE : {Key} ({Times} Times)";
         }
-        var line = " " + new string('─', text.Length);
+        var line = " " + new string('─', 50);
         stringBuilder.AppendLine(line);
         stringBuilder.Append(text);
         return stringBuilder.ToString();

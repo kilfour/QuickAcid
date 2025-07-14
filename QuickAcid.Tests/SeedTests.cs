@@ -18,9 +18,9 @@ public class SeedTests
         var report = new QState(script).Observe(10);
         var entry = report.Single<ReportTitleSectionEntry>();
 
-        Assert.Equal(4, entry.Title.Count);
+        Assert.Equal(3, entry.Title.Count);
 
-        var line = entry.Title[3];
+        var line = entry.Title[2];
         Assert.StartsWith("Seed: ", line);
         var seedPart = line.Substring("Seed: ".Length);
         Assert.True(int.TryParse(seedPart, out _), $"Expected an int after 'Seed: ', but got: {seedPart}");

@@ -28,7 +28,6 @@ from act in ""act"".Act(() => account.Withdraw(500))
             from act in "act".Act(() => account.Withdraw(500))
             from spec in "fail".Spec(() => account.Balance >= 0)
             select Acid.Test;
-        //new QState(script).TestifyOnce();
         var report = new QState(script).ObserveOnce();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);

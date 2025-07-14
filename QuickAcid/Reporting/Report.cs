@@ -1,4 +1,3 @@
-using System.Dynamic;
 using System.Text;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.ShrinkStrats;
@@ -18,6 +17,12 @@ public class Report
     {
         entries.Add(reportEntry);
     }
+    public void AddTestMethodInfo(string testMethod, string sourceFile, int lineNumber)
+    {
+        var titleEntry = entries.OfType<ReportTitleSectionEntry>().Last();
+        titleEntry.Title.Insert(0, $"Location:                {sourceFile}:{lineNumber}");
+        titleEntry.Title.Insert(0, $"Test:                    {testMethod}");
+    }
 
     public override string ToString()
     {
@@ -27,8 +32,6 @@ public class Report
             stringBuilder.AppendLine();
             stringBuilder.Append(entry.ToString());
         }
-        // if (Exception != null)
-        //     stringBuilder.AppendLine(Exception.ToString());
         if (Code != null)
             stringBuilder.AppendLine(Code);
         return stringBuilder.ToString();

@@ -286,13 +286,16 @@ public sealed class QAcidState : QAcidContext
 
     private IEnumerable<string> GetReportHeaderInfo()
     {
-        if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
-            yield return $"Property '{LabelPrettifier.Prettify(CurrentContext.FailingSpec)}' was falsified";
-        if (CurrentContext.Exception != null)
-            yield return "Exception thrown";
-        yield return $"Original failing run: {OriginalFailingRunExecutionCount} execution(s)";
-        yield return $"Shrunk to minimal case:  {ExecutionNumbers.Count} execution(s) ({shrinkCount} shrinks)";
-        yield return $"Seed: {MGenState.Seed}";
+        // if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
+        //     yield return $"Property '{LabelPrettifier.Prettify(CurrentContext.FailingSpec)}' was falsified";
+        // if (CurrentContext.Exception != null)
+        //     yield return "Exception thrown";
+        // yield return "──────────────────────────────────────────────────";
+        var executionsText = ExecutionNumbers.Count == 1 ? "execution" : "executions";
+        var shrinkText = shrinkCount == 1 ? "shrink" : "shrinks";
+        yield return $"Original failing run:    {OriginalFailingRunExecutionCount} {executionsText}";
+        yield return $"Minimal failing case:    {ExecutionNumbers.Count} {executionsText} (after {shrinkCount} {shrinkText})";
+        yield return $"Seed:                    {MGenState.Seed}";
         yield break;
     }
 

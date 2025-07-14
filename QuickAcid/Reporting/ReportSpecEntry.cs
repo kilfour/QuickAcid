@@ -9,7 +9,7 @@ public class ReportSpecEntry : ReportEntry
 
     public override string ToString()
     {
-        var text = $"  ❌ Spec Failed : {Key}";
+        var text = $"  ❌ Spec Failed: {Key}";
         var line = " " + new string('═', text.Length);
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(line);

@@ -9,8 +9,7 @@ public class ReportExecutionEntry : ReportEntry
     public override string ToString()
     {
         var stringBuilder = new StringBuilder();
-        string text = $"  EXECUTE : {Key}";
-        //var line = " " + new string('─', text.Length);
+        string text = $"  EXECUTE: {Key}";
         var line = " " + new string('─', 50);
         stringBuilder.AppendLine(line);
         stringBuilder.Append(text);
