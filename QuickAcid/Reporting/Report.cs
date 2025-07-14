@@ -20,7 +20,7 @@ public class Report
     public void AddTestMethodInfo(string testMethod, string sourceFile, int lineNumber)
     {
         var titleEntry = entries.OfType<ReportTitleSectionEntry>().Last();
-        titleEntry.Title.Insert(0, $"Location:                {sourceFile}:{lineNumber}");
+        titleEntry.Title.Insert(0, $"Location:                {sourceFile}:{lineNumber}:1");
         titleEntry.Title.Insert(0, $"Test:                    {testMethod}");
     }
 
