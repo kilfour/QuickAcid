@@ -1,9 +1,8 @@
 using System.Diagnostics;
-using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 
-namespace QuickAcid;
+namespace QuickAcid.Bolts;
 
 public class QRunner
 {
@@ -29,7 +28,9 @@ public class QRunner
             state.GetPassedSpecCount(passedSpecCount);
             if (report.IsFailed)
             {
-                passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  {kv.Key}: {kv.Value}")));
+                report.AddEntry(new ReportInfoEntry($" Times specs succesfully evaluated:"));
+                passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  - {kv.Key}: {kv.Value}")));
+                report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
                 throw new FalsifiableException(report);
             }
         }

@@ -1,3 +1,4 @@
+using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 using QuickExplainIt;
 
@@ -24,7 +25,7 @@ from specResult in ""spec"".Spec(() => false)
             from _ in "act1".Act(() => { })
             from specResult in "spec".Spec(() => false)
             select Acid.Test;
-        Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRun().And(4.ExecutionsPerRun()));
+        Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRunAndOneExecution());
     }
 
     [Fact]

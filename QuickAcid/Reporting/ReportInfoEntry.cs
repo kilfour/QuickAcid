@@ -13,9 +13,6 @@ public class ReportInfoEntry : IAmAReportEntry
 
     public override string ToString()
     {
-        var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine();
-        stringBuilder.Append(text);
-        return stringBuilder.ToString();
+        return text;
     }
 }
