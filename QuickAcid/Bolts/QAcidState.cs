@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Reflection;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
@@ -190,27 +191,12 @@ public sealed class QAcidState : QAcidContext
     public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
     // -----------------------------------------------------------------
 
-    public void TestifyOnce()
-    {
-        Testify(1);
-    }
-
-    public void Testify(int executionsPerScope)
-    {
-        Run(executionsPerScope, true);
-    }
-
-    public Report ObserveOnce()
-    {
-        return Observe(1);
-    }
-
     public Report Observe(int executionsPerScope)
     {
-        return Run(executionsPerScope, false);
+        return Run(executionsPerScope);
     }
 
-    public Report Run(int executionsPerScope, bool throwOnFailure)
+    public Report Run(int executionsPerScope)
     {
         ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
         for (int j = 0; j < executionsPerScope; j++)
@@ -218,10 +204,7 @@ public sealed class QAcidState : QAcidContext
             ExecuteStep();
             if (CurrentContext.Failed)
             {
-                if (throwOnFailure)
-                    throw new FalsifiableException(report, CurrentContext.Exception!);
-                else
-                    return report;
+                return report;
             }
             if (AlwaysReport)
             {
@@ -241,7 +224,6 @@ public sealed class QAcidState : QAcidContext
             if (Verbose)
             {
                 report.AddEntry(new ReportTitleSectionEntry(["FIRST FAILED RUN"]));
-                report.AddEntry(new ReportRunStartEntry());
                 AddMemoryToReport(report, false);
             }
             HandleFailure();
@@ -260,7 +242,6 @@ public sealed class QAcidState : QAcidContext
             if (Verbose)
             {
                 report.AddEntry(new ReportTitleSectionEntry(["AFTER EXECUTION SHRINKING"]));
-                report.AddEntry(new ReportRunStartEntry());
                 AddMemoryToReport(report, false);
             }
             if (ShrinkingActions)
@@ -269,7 +250,6 @@ public sealed class QAcidState : QAcidContext
                 if (Verbose)
                 {
                     report.AddEntry(new ReportTitleSectionEntry(["AFTER ACTION SHRINKING"]));
-                    report.AddEntry(new ReportRunStartEntry());
                     AddMemoryToReport(report, false);
                 }
             }
@@ -279,7 +259,6 @@ public sealed class QAcidState : QAcidContext
                 var title = new List<string>(["AFTER INPUT SHRINKING :"]);
                 title.AddRange([.. GetReportHeaderInfo()]);
                 report.AddEntry(new ReportTitleSectionEntry(title));
-                report.AddEntry(new ReportRunStartEntry());
             }
             else
             {
@@ -288,7 +267,6 @@ public sealed class QAcidState : QAcidContext
                     FeedbackShrinking();
                 }
                 report.AddEntry(new ReportTitleSectionEntry([.. GetReportHeaderInfo()]));
-                report.AddEntry(new ReportRunStartEntry());
             }
 
         }

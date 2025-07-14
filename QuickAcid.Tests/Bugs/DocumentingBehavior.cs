@@ -23,7 +23,7 @@ public class DocumentingBehavior
 
         var report = new QState(script).ObserveOnce();
         Assert.NotNull(report);
-        Assert.Contains("boom", report.ToString());
+        Assert.Contains("boom", report.Exception!.Message);
     }
 
     [Fact]

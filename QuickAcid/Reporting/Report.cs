@@ -22,13 +22,13 @@ public class Report
     public override string ToString()
     {
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine("QuickAcid Report:");
         foreach (var entry in entries)
         {
-            stringBuilder.AppendLine(entry.ToString());
+            stringBuilder.AppendLine();
+            stringBuilder.Append(entry.ToString());
         }
-        if (Exception != null)
-            stringBuilder.AppendLine(Exception.ToString());
+        // if (Exception != null)
+        //     stringBuilder.AppendLine(Exception.ToString());
         if (Code != null)
             stringBuilder.AppendLine(Code);
         return stringBuilder.ToString();

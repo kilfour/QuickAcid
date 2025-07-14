@@ -9,33 +9,11 @@ public class ReportExecutionEntry : ReportEntry
     public override string ToString()
     {
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine(" ---------------------------");
-        stringBuilder.Append($" EXECUTE : {Key}");
-        return stringBuilder.ToString();
-    }
-}
-
-public class ReportCollapsedExecutionEntry : ReportEntry
-{
-    public int Times { get; }
-
-    public ReportCollapsedExecutionEntry(string key, int times) : base(key)
-    {
-        Times = times;
-    }
-
-    public override string ToString()
-    {
-        var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine(" ---------------------------");
-        if (string.IsNullOrEmpty(Key))
-        {
-            stringBuilder.Append($"EXECUTIONS: {Times} trivial runs (no observable input/state)");
-        }
-        else
-        {
-            stringBuilder.Append($" EXECUTE : {Key} ({Times} Times)");
-        }
+        string text = $"  EXECUTE : {Key}";
+        //var line = " " + new string('─', text.Length);
+        var line = " " + new string('─', 50);
+        stringBuilder.AppendLine(line);
+        stringBuilder.Append(text);
         return stringBuilder.ToString();
     }
 }

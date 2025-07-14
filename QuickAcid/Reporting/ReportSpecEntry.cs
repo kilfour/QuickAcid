@@ -9,12 +9,12 @@ public class ReportSpecEntry : ReportEntry
 
     public override string ToString()
     {
-        var text = $"  Spec Failed : {Key}";
-        var line = " " + new string('*', text.Length - 1);
+        var text = $"  ❌ Spec Failed : {Key}";
+        var line = " " + new string('═', text.Length);
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(line);
         stringBuilder.AppendLine(text);
-        stringBuilder.AppendLine(line);
+        stringBuilder.Append(line);
         return stringBuilder.ToString();
     }
 }

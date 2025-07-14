@@ -1,5 +1,4 @@
-﻿using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
+﻿using QuickAcid.Bolts.Nuts;
 
 namespace QuickAcid.Tests.Linqy.Spec
 {

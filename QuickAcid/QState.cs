@@ -1,4 +1,5 @@
-﻿using QuickAcid.Bolts;
+﻿using System.Diagnostics;
+using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 
 namespace QuickAcid;
@@ -35,14 +36,18 @@ public class QState
         return this;
     }
 
+    [StackTraceHidden]
     public void TestifyOnce()
     {
         Testify(1);
     }
 
+    [StackTraceHidden]
     public void Testify(int numberOfExecutions)
     {
-        state.Testify(numberOfExecutions);
+        var report = Observe(numberOfExecutions);
+        if (report != null)
+            throw new FalsifiableException(report);
     }
 
     public Report ObserveOnce()

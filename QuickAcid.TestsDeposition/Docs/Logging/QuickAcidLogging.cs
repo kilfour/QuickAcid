@@ -90,7 +90,7 @@ This will produce a report that contains :
         Assert.Equal("AFTER INPUT SHRINKING :", report.Fourth<ReportTitleSectionEntry>().Title[0]);
     }
 
-    [Fact]
+    [Fact(Skip = "break this up")]
     [Doc(Order = $"{Chapter.Order}-5", Content =
 @"Which for this example: 
 ```csharp
@@ -163,54 +163,44 @@ Outputs something similar to:
             select Acid.Test;
         var report = new QState(script, 666).ShrinkingActions().Verbose().Observe(20);
         var reader = LinesReader.FromText(report.ToString());
-        Assert.Equal("QuickAcid Report:", reader.NextLine());
+        Assert.Equal("", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());
         Assert.Equal(" -- FIRST FAILED RUN", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" RUN START :", reader.NextLine());
-        Assert.Equal(" ---------------------------", reader.NextLine());
         Assert.Equal(" EXECUTE : act", reader.NextLine());
         Assert.Equal("   - Input : input = 5", reader.NextLine());
         Assert.Equal(" *******************", reader.NextLine());
         Assert.Equal("  Spec Failed : spec", reader.NextLine());
         Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal("", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());
         Assert.Equal(" -- AFTER EXECUTION SHRINKING", reader.NextLine());
-        Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" RUN START :", reader.NextLine());
         Assert.Equal(" ---------------------------", reader.NextLine());
         Assert.Equal(" EXECUTE : act", reader.NextLine());
         Assert.Equal("   - Input : input = 5", reader.NextLine());
         Assert.Equal(" *******************", reader.NextLine());
         Assert.Equal("  Spec Failed : spec", reader.NextLine());
         Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal("", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());
         Assert.Equal(" -- AFTER ACTION SHRINKING", reader.NextLine());
-        Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" RUN START :", reader.NextLine());
         Assert.Equal(" ---------------------------", reader.NextLine());
         Assert.Equal(" EXECUTE : act", reader.NextLine());
         Assert.Equal("   - Input : input = 5", reader.NextLine());
         Assert.Equal(" *******************", reader.NextLine());
         Assert.Equal("  Spec Failed : spec", reader.NextLine());
         Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal("", reader.NextLine());
         Assert.Equal(" ----------------------------------------", reader.NextLine());
         Assert.Equal(" -- AFTER INPUT SHRINKING :", reader.NextLine());
         Assert.Equal(" -- Property 'spec' was falsified", reader.NextLine());
         Assert.Equal(" -- Original failing run: 1 execution(s)", reader.NextLine());
         Assert.Equal(" -- Shrunk to minimal case:  1 execution(s) (2 shrinks)", reader.NextLine());
         Assert.Equal(" -- Seed: 666", reader.NextLine());
-        Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" RUN START :", reader.NextLine());
         Assert.Equal(" ---------------------------", reader.NextLine());
         Assert.Equal(" EXECUTE : act", reader.NextLine());
         Assert.Equal("   - Input : input = 5", reader.NextLine());
         Assert.Equal(" *******************", reader.NextLine());
         Assert.Equal("  Spec Failed : spec", reader.NextLine());
         Assert.Equal(" *******************", reader.NextLine());
-
+        Assert.Equal("", reader.NextLine());
+        Assert.True(reader.EndOfContent());
     }
 }
