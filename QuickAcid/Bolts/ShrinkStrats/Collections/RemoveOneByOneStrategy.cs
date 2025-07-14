@@ -20,7 +20,7 @@ public class RemoveOneByOneStrategy : ICollectionShrinkStrategy
                 state.Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
                 {
                     Key = $"{fullKey}.{indexKey}",
-                    Name = fullKey.Split(".").Last(),
+                    Name = indexKey.ToString(),
                     Original = before,
                     Result = null,
                     Intent = ShrinkIntent.Remove,
@@ -31,7 +31,7 @@ public class RemoveOneByOneStrategy : ICollectionShrinkStrategy
             state.Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
             {
                 Key = $"{fullKey}.{indexKey}",
-                Name = fullKey.Split(".").Last(),
+                Name = indexKey.ToString(),
                 Original = before,
                 Result = before,
                 Intent = ShrinkIntent.Keep,
