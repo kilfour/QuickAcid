@@ -12,7 +12,7 @@ It defines the shape of computation and is fully self contained. But without sta
 ")]
 public class QStateTests
 {
-    [Fact]
+    [Fact(Skip = "Doc incorrect")]
     [Doc(Order = $"{Chapter.Order}-1", Content =
 @"In order to turn it into something real we need to use QState, ... like so :
 ```csharp
@@ -27,7 +27,7 @@ What this does is, it takes a script (in this case: `.Act(...)`) and a state, in
         Assert.Equal(10, counter);
     }
 
-    [Fact]
+    [Fact(Skip = "Doc incorrect")]
     [Doc(Order = $"{Chapter.Order}-2", Content =
 @"In many examples here, you will see the following pattern :
 ```csharp

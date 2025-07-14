@@ -24,7 +24,7 @@ from specResult in ""spec"".Spec(() => false)
             from _ in "act1".Act(() => { })
             from specResult in "spec".Spec(() => false)
             select Acid.Test;
-        Assert.NotNull(new QState(script).Observe(4));
+        Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRun().And(4.ExecutionsPerRun()));
     }
 
     [Fact]
@@ -35,7 +35,7 @@ from specResult in ""spec"".Spec(() => false)
             from _ in "act1".Act(() => { counter++; })
             from specResult in "spec".DelayedSpec(() => counter < 3)
             select Acid.Test;
-        Assert.Null(new QState(script).Observe(5));
+        QState.Run(script).WithOneRun().And(5.ExecutionsPerRun());
     }
 
     [Fact]
@@ -48,8 +48,8 @@ from specResult in ""spec"".Spec(() => false)
             from trace in "trace".TraceIf(() => spec.Failed, () => spec.Label)
             let apply = spec.Apply()
             select Acid.Test;
-        var report = new QState(script).Observe(5);
-        Assert.NotNull(report);
+        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRun().And(5.ExecutionsPerRun()));
+        var report = ex.QAcidReport;
         var entry = report.Single<ReportTraceEntry>();
         Assert.Equal("spec", entry.Value);
     }

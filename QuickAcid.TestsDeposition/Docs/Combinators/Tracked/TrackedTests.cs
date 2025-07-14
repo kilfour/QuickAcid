@@ -160,7 +160,7 @@ from flag in ""flag"".TrackedValue(true)
         var script =
             from flag in "flag".Tracked(true)
             select Acid.Test;
-        new QState(script).Testify(1);
+        QState.Run(script).WithOneRunAndOneExecution();
     }
 }
 

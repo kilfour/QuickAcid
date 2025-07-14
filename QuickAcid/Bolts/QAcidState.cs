@@ -221,7 +221,8 @@ public sealed class QAcidState : QAcidContext
                 return report;
             }
         }
-        return null!;
+        report.IsSuccess = true;
+        return report;
     }
 
     private void ExecuteStep()

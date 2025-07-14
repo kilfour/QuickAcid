@@ -1,11 +1,12 @@
 using System.Text;
-using QuickAcid.Bolts;
 using QuickAcid.Bolts.ShrinkStrats;
 
 namespace QuickAcid.Reporting;
 
 public class Report
 {
+    public bool IsSuccess { get; set; }
+    public bool IsFailed { get { return !IsSuccess; } }
     private readonly List<IAmAReportEntry> entries = [];
     public List<IAmAReportEntry> Entries { get { return entries; } }
     public Exception? Exception { get; set; }

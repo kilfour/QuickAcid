@@ -27,7 +27,7 @@ let apply = spec.Apply()
             from _ in "act1".Act(() => { counter++; })
             from specResult in "spec".DelayedSpec(() => counter < 3)
             select Acid.Test;
-        Assert.Null(new QState(script).Observe(5));
+        Assert.True(new QState(script).Observe(5).IsSuccess);
     }
 
     [Fact]

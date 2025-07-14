@@ -32,8 +32,7 @@ public class TrackedInputOrderingTests
             from act in "we might need an act".Act(() => { })
             from boom in Boom(dependent)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
-        Assert.Null(report);
+        Assert.True(QState.Run(script).WithOneRunAndOneExecution().IsSuccess);
     }
 
     private static QAcidScript<Acid> Boom(Dependent dependent)
@@ -51,8 +50,6 @@ public class TrackedInputOrderingTests
             from dependent in "dependent".Tracked(() => new Dependent(container)) // now container is in scope
             from _ in "spec".Spec(() => dependent.DoubledValue == 42)
             select Acid.Test;
-
-        var report = new QState(script).ObserveOnce();
-        Assert.Null(report);
+        Assert.True(QState.Run(script).WithOneRunAndOneExecution().IsSuccess);
     }
 }

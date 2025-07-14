@@ -25,7 +25,7 @@ from __ in ""spec"".Spec(() => false).Skip()
             from __ in "spec".Spec(() => false).Skip()
             from ___ in "act2".Act(() => { counter++; })
             select Acid.Test;
-        Assert.Null(new QState(script).ObserveOnce());
+        QState.Run(script).WithOneRunAndOneExecution();
         Assert.Equal(2, counter);
     }
 
@@ -46,7 +46,7 @@ from __ in ""spec"".Spec(() => false).SkipIf(() => true)
             from __ in "spec".Spec(() => false).SkipIf(() => true)
             from ___ in "act2".Act(() => { counter++; })
             select Acid.Test;
-        Assert.Null(new QState(script).ObserveOnce());
+        QState.Run(script).WithOneRunAndOneExecution();
         Assert.Equal(2, counter);
     }
 }

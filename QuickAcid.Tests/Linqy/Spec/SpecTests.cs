@@ -9,7 +9,7 @@ public class SpecTests
     [Fact]
     public void SpecOnlyReturnsTrue()
     {
-        Assert.Null(new QState("foo".Spec(() => true)).ObserveOnce());
+        Assert.True(QState.Run("foo".Spec(() => true)).WithOneRunAndOneExecution().IsSuccess);
     }
 
     [Fact]

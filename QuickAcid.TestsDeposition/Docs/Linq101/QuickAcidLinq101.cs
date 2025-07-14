@@ -94,8 +94,7 @@ nothing is reported and using this in a unit testing framework just passes the e
         var script =
             from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
             select Acid.Test;
-        var ex = Record.Exception(() => new QState(script).Testify(1));
-        Assert.Null(ex);
+        new QState(script).Testify(1);
         Assert.Equal(1, timesSpecChecked);
     }
 
@@ -111,8 +110,7 @@ For now, calling `.Testify(10)` in above example checks the Spec ten times.")]
         var script =
             from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
             select Acid.Test;
-        var ex = Record.Exception(() => new QState(script).Testify(10));
-        Assert.Null(ex);
+        new QState(script).Testify(10);
         Assert.Equal(10, timesSpecChecked);
     }
 

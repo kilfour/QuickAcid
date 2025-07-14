@@ -19,20 +19,22 @@ public class QRunner
     }
 
     [StackTraceHidden]
-    public void And(ExecutionCount executionCount)
+    public Report And(ExecutionCount executionCount)
     {
-        runCount.NumberOfRuns.Times(() =>
+        Report report = null!;
+        for (int i = 0; i < runCount.NumberOfRuns; i++)
         {
             var state = new QAcidState(script);
-            var report = state.Run(executionCount.NumberOfExecutions);
+            report = state.Run(executionCount.NumberOfExecutions);
             state.GetPassedSpecCount(passedSpecCount);
-            if (report != null)
+            if (report.IsFailed)
             {
                 passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  {kv.Key}: {kv.Value}")));
                 throw new FalsifiableException(report);
             }
-        });
+        }
+        return report;
     }
 
-    public void AndOneExecutionPerRun() => And(new ExecutionCount(1));
+    public Report AndOneExecutionPerRun() => And(new ExecutionCount(1));
 }

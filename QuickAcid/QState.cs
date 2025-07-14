@@ -7,6 +7,7 @@ namespace QuickAcid;
 
 public class QState
 {
+    [StackTraceHidden]
     public static QRunnerConfigurator Run(QAcidScript<Acid> script) => new(script);
 
     private readonly QAcidState state;
@@ -49,7 +50,7 @@ public class QState
     public void Testify(int numberOfExecutions)
     {
         var report = Observe(numberOfExecutions);
-        if (report != null)
+        if (report.IsFailed)
             throw new FalsifiableException(report);
     }
 

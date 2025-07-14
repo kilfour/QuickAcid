@@ -31,7 +31,7 @@ from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
             from act in "act".Act(() => container.Value = container.Value | val)
             from spec in "val is true".TestifyProvenWhen(() => container.Value)
             select Acid.Test;
-        new QState(script).Testify(1);
+        QState.Run(script).WithOneRunAndOneExecution();
     }
 
     [Doc(Order = $"{Chapter.Order}-2", Content =
@@ -46,7 +46,7 @@ This would end the test run early once `container.Value` becomes `true`.
             from act in "act".Act(() => counter++)
             from spec in "val is true".TestifyProvenWhen(() => counter == 3)
             select Acid.Test;
-        new QState(script).Testify(100);
+        QState.Run(script).WithOneRun().And(100.ExecutionsPerRun());
         Assert.Equal(3, counter);
     }
 

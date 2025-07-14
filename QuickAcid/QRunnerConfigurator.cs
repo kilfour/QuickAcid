@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using QuickAcid.Reporting;
+
 namespace QuickAcid;
 
 
@@ -10,8 +13,12 @@ public class QRunnerConfigurator
         this.script = script;
     }
 
+    [StackTraceHidden]
     public QRunner With(RunCount runCount) => new(script, runCount);
+    [StackTraceHidden]
     public QRunner WithOneRun() => With(new(1));
+    [StackTraceHidden]
+    public Report WithOneRunAndOneExecution() => With(new(1)).AndOneExecutionPerRun();
 }
 
 public record RunCount(int NumberOfRuns);

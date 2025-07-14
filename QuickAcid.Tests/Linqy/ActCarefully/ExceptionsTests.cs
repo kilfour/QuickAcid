@@ -14,9 +14,7 @@ public class ExceptionsTests
             from result in "act".ActCarefully(() => { throw new Exception(); })
             from throws in "throws".Spec(result.ThrewAs<Exception>)
             select Acid.Test;
-
-        var report = new QState(script).ObserveOnce(); ;
-        Assert.Null(report);
+        Assert.True(QState.Run(script).WithOneRunAndOneExecution().IsSuccess);
     }
 
     [Fact]
@@ -28,9 +26,7 @@ public class ExceptionsTests
             from result2 in "act2".ActCarefully(() => { if (!flag) throw new Exception(); })
             from throws in "throws".Spec(() => result1.ThrewAs<Exception>() || result2.ThrewAs<Exception>())
             select Acid.Test;
-
-        var report = new QState(script).ObserveOnce(); ;
-        Assert.Null(report);
+        Assert.True(QState.Run(script).WithOneRunAndOneExecution().IsSuccess);
     }
 
     [Fact]
@@ -42,9 +38,7 @@ public class ExceptionsTests
             from result2 in "act2".ActCarefully(() => { if (flag) throw new Exception(); })
             from throws in "throws".Spec(() => !flag || result2.ThrewAs<Exception>())
             select Acid.Test;
-
-        var report = new QState(script).ObserveOnce(); ;
-        Assert.Null(report);
+        Assert.True(QState.Run(script).WithOneRunAndOneExecution().IsSuccess);
     }
 
     // Stack multiple DelayedResults	            ActCarefully many things, mix and match thrown/values

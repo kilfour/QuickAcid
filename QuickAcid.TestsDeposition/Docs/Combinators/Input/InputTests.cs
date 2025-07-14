@@ -43,7 +43,7 @@ from input in ""input"".Input(() => MGen.Int())
         var script =
             from input in "input".Input(MGen.Int())
             select Acid.Test;
-        new QState(script).Testify(1);
+        QState.Run(script).WithOneRunAndOneExecution();
     }
 
     [Fact]

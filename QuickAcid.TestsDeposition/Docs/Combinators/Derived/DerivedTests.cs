@@ -37,7 +37,9 @@ from input in ""input"".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Va
             from act in "act".Act(() => container.Value.Add(42))
             from spec in "fail".Spec(() => input != 42)
             select Acid.Test;
-        var report = new QState(script).Observe(5);
+        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRun().And(5.ExecutionsPerRun()));
+        var report = ex.QAcidReport;
+        Assert.True(report.IsFailed);
         var entry = report.FirstOrDefault<ReportInputEntry>();
         Assert.Null(entry);
     }
@@ -49,7 +51,7 @@ from input in ""input"".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Va
             from container in "container".Stashed(() => new Container<List<int>>(new List<int>()))
             from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
             select Acid.Test;
-        new QState(script).Testify(1);
+        Assert.True(QState.Run(script).WithOneRun().AndOneExecutionPerRun().IsSuccess);
     }
 
     [Fact(Skip = "**not** shrinkable")]
