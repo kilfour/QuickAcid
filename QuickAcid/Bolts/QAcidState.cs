@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
@@ -222,6 +221,13 @@ public sealed class QAcidState : QAcidContext
             }
         }
         report.IsSuccess = true;
+        foreach (var executionNumber in ExecutionNumbers.ToList())
+        {
+            foreach (var (key, val) in Memory.TracesFor(executionNumber))
+            {
+                report.AddEntry(new ReportTraceEntry(key) { Value = val });
+            }
+        }
         return report;
     }
 
@@ -295,11 +301,6 @@ public sealed class QAcidState : QAcidContext
 
     private IEnumerable<string> GetReportHeaderInfo()
     {
-        // if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
-        //     yield return $"Property '{LabelPrettifier.Prettify(CurrentContext.FailingSpec)}' was falsified";
-        // if (CurrentContext.Exception != null)
-        //     yield return "Exception thrown";
-        // yield return "──────────────────────────────────────────────────";
         var executionsText = ExecutionNumbers.Count == 1 ? "execution" : "executions";
         var shrinkText = shrinkCount == 1 ? "shrink" : "shrinks";
         yield return $"Original failing run:    {OriginalFailingRunExecutionCount} {executionsText}";

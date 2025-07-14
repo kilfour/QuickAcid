@@ -1,4 +1,3 @@
-using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.MonadiXEtAl;
 
 namespace QuickAcid.Bolts.TheyCanFade;
