@@ -4,8 +4,11 @@ using QuickAcid.Reporting;
 
 namespace QuickAcid;
 
+
 public class QState
 {
+    public static QRunnerConfigurator Run(QAcidScript<Acid> script) => new(script);
+
     private readonly QAcidState state;
 
     public QState(QAcidScript<Acid> script)

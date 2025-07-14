@@ -180,10 +180,19 @@ public sealed class QAcidState : QAcidContext
         }
         passedSpecCount[label] = value + 1;
     }
-    public SpecCount[] GetPassedSpecCount()
+
+    public void GetPassedSpecCount(Dictionary<string, int> collector)
     {
-        return [.. passedSpecCount.Select(kv => new SpecCount(Label: kv.Key, Count: kv.Value))];
+        foreach (var item in passedSpecCount)
+        {
+            if (collector.TryGetValue(item.Key, out int value))
+                collector[item.Key] = value + item.Value;
+            else
+                collector[item.Key] = item.Value;
+
+        }
     }
+
     // -----------------------------------------------------------------
     // implementing context for fluent
     // --
@@ -279,7 +288,6 @@ public sealed class QAcidState : QAcidContext
             Memory.AllAccesses()
                 .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
                 .ToList();
-        report.PassedSpecCount = GetPassedSpecCount();
     }
 
 
