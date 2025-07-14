@@ -13,7 +13,7 @@ public static class RunnerExtensions
 public class QState
 {
     [StackTraceHidden]
-    public static QRunnerConfigurator Run(QAcidScript<Acid> script) => new(script);
+    public static QRunnerConfigurator Run(QAcidScript<Acid> script, int? seed = null) => new(script, seed);
 
     private readonly QAcidState state;
 
