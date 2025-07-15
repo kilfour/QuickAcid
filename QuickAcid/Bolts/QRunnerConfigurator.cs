@@ -1,9 +1,26 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using QuickAcid.Reporting;
 
 namespace QuickAcid.Bolts;
 
-public record QRunnerConfig(bool Verbose);
+public record QRunnerConfig
+{
+    public required string? ReportTo { get; init; }
+    public required string? Vault { get; init; }
+    public required bool Verbose { get; init; }
+
+    public static QRunnerConfig Default()
+    {
+        return
+            new QRunnerConfig()
+            {
+                ReportTo = null,
+                Vault = null,
+                Verbose = false,
+            };
+    }
+}
 
 public class QRunnerConfigurator
 {
@@ -11,11 +28,15 @@ public class QRunnerConfigurator
     private readonly int? seed;
     private QRunnerConfig config;
 
-    public QRunnerConfigurator(QAcidScript<Acid> script, int? seed)
+    public QRunnerConfigurator(string? testName, QAcidScript<Acid> script, int? seed)
     {
         this.script = script;
         this.seed = seed;
-        config = new QRunnerConfig(Verbose: false);
+        config = QRunnerConfig.Default();
+        if (testName != null)
+        {
+            config = config with { ReportTo = testName, Vault = testName };
+        }
     }
 
     [StackTraceHidden]

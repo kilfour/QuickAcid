@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using QuickAcid.Reporting;
 using QuickMGenerate;
+using QuickPulse;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.Bolts;
 
@@ -10,6 +12,7 @@ public class QRunner
     private readonly QRunnerConfig config;
     private readonly RunCount runCount;
     private readonly int? seed;
+    private readonly List<string> vaultMessages = [];
 
     public Dictionary<string, int> passedSpecCount { get; } = [];
 
@@ -25,6 +28,10 @@ public class QRunner
     public Report And(ExecutionCount executionCount)
     {
         Report report = null!;
+        if (config.Vault != null)
+        {
+            CheckTheVault();
+        }
         for (int i = 0; i < runCount.NumberOfRuns; i++)
         {
             var state = seed.HasValue ? new QAcidState(script, seed.Value) : new QAcidState(script);
@@ -34,12 +41,58 @@ public class QRunner
             state.GetPassedSpecCount(passedSpecCount);
             if (report.IsFailed)
             {
-                AddPassedSpecsToReport(report);
-                throw new FalsifiableException(report);
+                AddToVault(state.Seed, executionCount.NumberOfExecutions);
+                throw new FalsifiableException(ReportIt(report));
             }
         }
+        return ReportIt(report);
+    }
+
+    private Report ReportIt(Report report)
+    {
         AddPassedSpecsToReport(report);
+        AddVaultMessagesToReport(report);
+        WriteReport(report);
         return report;
+    }
+
+    private void WriteReport(Report report)
+    {
+        if (config.ReportTo != null)
+        {
+            var filename = Path.Combine(".quickacid", "reports", $"{config.ReportTo}.qr");
+            Signal.Tracing<string>().SetArtery(new WriteDataToFile(filename).ClearFile())
+                   .Pulse(report.Entries.Select(a => a.ToString()!));
+        }
+    }
+
+    private void CheckTheVault()
+    {
+        vaultMessages.Add("Checking the Vault");
+        var vault = new SeedVault(config.Vault!);
+        foreach (var vaultEntry in vault.AllSeeds)
+        {
+
+            var state = new QAcidState(script, vaultEntry.Seed);
+            var report = state.Run(vaultEntry.ExecutionsPerRun);
+            if (report.IsSuccess)
+            {
+                vault.Remove(vaultEntry);
+                vaultMessages.Add($"Seed {vaultEntry.Seed} now passes => removed.");
+            }
+            else
+            {
+                vaultMessages.Add($"Seed {vaultEntry.Seed}: still fails.");
+            }
+        }
+    }
+
+    private void AddToVault(int seed, int numberOfExecutions)
+    {
+        if (config.Vault == null) return;
+        var vault = new SeedVault(config.Vault!);
+        vault.Add(new(seed, numberOfExecutions));
+        vaultMessages.Add($"Seed {seed}: added to vault.");
     }
 
     private void AddPassedSpecsToReport(Report report)
@@ -48,6 +101,16 @@ public class QRunner
         {
             report.AddEntry(new ReportInfoEntry($" Passed Specs"));
             passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  - {kv.Key}: {kv.Value}x")));
+            report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
+        }
+    }
+
+    private void AddVaultMessagesToReport(Report report)
+    {
+        if (vaultMessages.Count > 0)
+        {
+            report.AddEntry(new ReportInfoEntry($" Vault Info"));
+            vaultMessages.ForEach(a => report.AddEntry(new ReportInfoEntry($"   {a}")));
             report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
         }
     }

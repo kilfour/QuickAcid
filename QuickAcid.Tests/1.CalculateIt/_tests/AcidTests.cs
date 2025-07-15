@@ -2,10 +2,8 @@ using QuickAcid;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts.ShrinkStrats;
-using QuickAcid.Reporting;
 using QuickMGenerate;
 using QuickPulse;
-using QuickPulse.Arteries;
 using QuickPulse.Bolts;
 
 namespace LegacyLogic;
@@ -13,26 +11,10 @@ namespace LegacyLogic;
 public class AcidTests
 {
     [Fact(Skip = "Trove of goodies, a.k.a. hard stuff to shrink")]
-    public void ModelTestingReport()
-    {
-        Report report = null!;
-        try
-        {
-            report =
-                QState.Run(TheScript)
-                    .With(500.Runs())
-                    .AndOneExecutionPerRun();
-            Signal.Tracing<string>().SetArtery(new WriteDataToFile("model-testing.log"))
-                .Pulse(report.Entries.Select(a => a.ToString()!));
-        }
-        catch (FalsifiableException ex)
-        {
-            report = ex.QAcidReport;
-            Signal.From(filterTraces).SetArtery(new WriteDataToFile("model-testing.log").ClearFile())
-                .Pulse(report.ShrinkTraces);
-            throw;
-        }
-    }
+    public void ModelTestingReport() =>
+        QState.Run("model-testing", TheScript)
+            .With(1000.Runs())
+            .AndOneExecutionPerRun();
 
     private static readonly QAcidScript<Acid> TheScript =
         from _ in Acid.Script

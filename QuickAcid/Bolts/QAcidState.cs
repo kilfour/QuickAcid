@@ -30,6 +30,7 @@ public sealed class QAcidState : QAcidContext
         : this(script)
     {
         MGenState = new State(seed);
+
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -167,6 +168,7 @@ public sealed class QAcidState : QAcidContext
     public bool Verbose { get; set; }
     public bool AlwaysReport { get; set; }
     public bool ShrinkingActions { get; set; }
+    public int Seed { get { return MGenState.Seed; } }
 
     // -----------------------------------------------------------------
     // spec counting
