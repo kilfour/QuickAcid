@@ -420,7 +420,7 @@ public sealed class QAcidState : QAcidContext
     {
         using (EnterPhase(QAcidPhase.ShrinkInputEval))
         {
-            CurrentContext.Reset();
+            // CurrentContext.Reset();
             Memory.ResetRunScopedInputs();
             var runNumber = CurrentExecutionNumber;
             using (Memory.ScopedSwap(key, value))
