@@ -30,16 +30,22 @@ public class QRunner
             state.GetPassedSpecCount(passedSpecCount);
             if (report.IsFailed)
             {
-                report.AddEntry(new ReportInfoEntry($" Passed Specs"));
-                passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  - {kv.Key}: {kv.Value}x")));
-                report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
+                AddPassedSpecsToReport(report);
                 throw new FalsifiableException(report);
             }
         }
-        report.AddEntry(new ReportInfoEntry($" Times specs succesfully evaluated:"));
-        passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  - {kv.Key}: {kv.Value}")));
-        report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
+        AddPassedSpecsToReport(report);
         return report;
+    }
+
+    private void AddPassedSpecsToReport(Report report)
+    {
+        if (passedSpecCount.Count > 0)
+        {
+            report.AddEntry(new ReportInfoEntry($" Passed Specs"));
+            passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  - {kv.Key}: {kv.Value}x")));
+            report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
+        }
     }
 
     [StackTraceHidden]
