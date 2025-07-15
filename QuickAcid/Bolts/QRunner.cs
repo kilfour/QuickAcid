@@ -51,9 +51,22 @@ public class QRunner
     private Report ReportIt(Report report)
     {
         AddPassedSpecsToReport(report);
+        AddShrinkTracesToReport(report);
         AddVaultMessagesToReport(report);
         WriteReport(report);
         return report;
+    }
+
+    private void AddShrinkTracesToReport(Report report)
+    {
+        if (config.AddShrinkInfoToReport)
+        {
+            report.AddEntry(new ReportInfoEntry("Shrink Info"));
+            Signal.From(config.ShrinkTraceFlow!)
+                .SetArtery(new ReportArtery(report))
+                .Pulse(report.ShrinkTraces);
+            report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
+        }
     }
 
     private void WriteReport(Report report)

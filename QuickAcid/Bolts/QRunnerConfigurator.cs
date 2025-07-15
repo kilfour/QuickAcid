@@ -1,11 +1,15 @@
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Reporting;
+using QuickPulse;
+using QuickPulse.Bolts;
 
 namespace QuickAcid.Bolts;
 
 public record QRunnerConfig
 {
+    public required bool AddShrinkInfoToReport { get; init; }
+    public Flow<ShrinkTrace>? ShrinkTraceFlow { get; init; }
     public required string? ReportTo { get; init; }
     public required string? Vault { get; init; }
     public required bool Verbose { get; init; }
@@ -15,6 +19,11 @@ public record QRunnerConfig
         return
             new QRunnerConfig()
             {
+                AddShrinkInfoToReport = false,
+                ShrinkTraceFlow =
+                    from input in Pulse.Start<ShrinkTrace>()
+                    from _ in Pulse.Trace($"  {input}")
+                    select input,
                 ReportTo = null,
                 Vault = null,
                 Verbose = false,
