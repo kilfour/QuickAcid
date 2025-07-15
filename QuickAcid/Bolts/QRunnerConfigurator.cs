@@ -20,15 +20,25 @@ public record QRunnerConfig
             new QRunnerConfig()
             {
                 AddShrinkInfoToReport = false,
-                ShrinkTraceFlow =
-                    from input in Pulse.Start<ShrinkTrace>()
-                    from _ in Pulse.Trace($"  {input}")
-                    select input,
+                ShrinkTraceFlow = DefaultFormat,
                 ReportTo = null,
                 Vault = null,
                 Verbose = false,
             };
     }
+
+    public static readonly Flow<ShrinkTrace> Raw =
+        from input in Pulse.Start<ShrinkTrace>()
+        from _ in Pulse.Trace($"  {input}")
+        select input;
+
+    private static readonly Flow<ShrinkTrace> DefaultFormat =
+        from input in Pulse.Start<ShrinkTrace>()
+        from _ in Pulse.TraceIf(input.Intent == ShrinkIntent.Irrelevant,
+            $"  {input.Key} = {QuickAcidStringify.Default()(input.Original!)}, ExecId = {input.ExecutionId}, Intent = {input.Intent} (Cause: {QuickAcidStringify.Default()(input.Result!)}), Strategy = {input.Strategy} ")
+        from __ in Pulse.TraceIf(input.Intent != ShrinkIntent.Irrelevant,
+            $"  {input.Key} = {QuickAcidStringify.Default()(input.Original!)}, ExecId = {input.ExecutionId}, Intent = {input.Intent}, Strategy = {input.Strategy}")
+        select input;
 }
 
 public class QRunnerConfigurator

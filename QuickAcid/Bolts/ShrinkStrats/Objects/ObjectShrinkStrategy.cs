@@ -13,6 +13,7 @@ public class ObjectShrinkStrategy : IObjectShrinkStrategy
     {
         state.Trace(key, ShrinkKind.ObjectKind, new ShrinkTrace
         {
+            ExecutionId = -1,
             Key = fullKey,
             Name = fullKey.Split(".").Last(),
             Original = value,

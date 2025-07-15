@@ -1,7 +1,5 @@
 namespace QuickAcid.Tests.Bugs;
 
-using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
 
 public class WhenTheHeartIsA
 {

@@ -42,7 +42,7 @@ public sealed class QAcidState : QAcidContext
     }
     public void Trace(string key, ShrinkKind shrinkKind, ShrinkTrace trace)
     {
-        Memory.ForThisExecution().GetDecorated(key).AddTrace(shrinkKind, trace);
+        Memory.ForThisExecution().GetDecorated(key).AddTrace(shrinkKind, trace with { ExecutionId = CurrentExecutionNumber });
     }
     // -------------------------------------------------------------------------------------------------
 

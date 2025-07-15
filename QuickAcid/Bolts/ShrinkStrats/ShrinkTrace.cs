@@ -10,6 +10,7 @@ public enum ShrinkIntent
 
 public record ShrinkTrace
 {
+    public required int ExecutionId { get; init; }
     public required string Key { get; init; }
     public required string Name { get; init; }
     public required object? Original { get; init; }

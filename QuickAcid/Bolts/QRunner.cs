@@ -61,7 +61,7 @@ public class QRunner
     {
         if (config.AddShrinkInfoToReport)
         {
-            report.AddEntry(new ReportInfoEntry("Shrink Info"));
+            report.AddEntry(new ReportInfoEntry(" Shrink Info"));
             Signal.From(config.ShrinkTraceFlow!)
                 .SetArtery(new ReportArtery(report))
                 .Pulse(report.ShrinkTraces);

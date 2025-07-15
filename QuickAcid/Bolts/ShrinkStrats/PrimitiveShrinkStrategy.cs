@@ -53,6 +53,7 @@ public class PrimitiveShrinkStrategy
                 {
                     state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                     {
+                        ExecutionId = -1,
                         Key = fullKey,
                         Name = fullKey.Split(".").Last(),
                         Original = value,
@@ -66,6 +67,7 @@ public class PrimitiveShrinkStrategy
 
             state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
             {
+                ExecutionId = -1,
                 Key = fullKey,
                 Name = fullKey.Split(".").Last(),
                 Original = value,
@@ -82,6 +84,7 @@ public class PrimitiveShrinkStrategy
                 {
                     state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                     {
+                        ExecutionId = -1,
                         Key = fullKey,
                         Name = fullKey.Split(".").Last(),
                         Original = value,
@@ -95,6 +98,7 @@ public class PrimitiveShrinkStrategy
 
             state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
             {
+                ExecutionId = -1,
                 Key = fullKey,
                 Name = fullKey.Split(".").Last(),
                 Original = value,
