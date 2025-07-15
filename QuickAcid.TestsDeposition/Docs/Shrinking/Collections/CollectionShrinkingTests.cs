@@ -47,14 +47,14 @@ public class CollectionShrinkingTests
     public void Collection_shrink_with_extra()
     {
         var script =
-            from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 42]))
+            from input in "input".Input(MGen.Constant<IEnumerable<int>>([666, 42]))
             from act in "act".Act(() => { })
-            from spec in "spec".SpecIf(() => input.Count() > 2, () => input.ToList()[2] != 42)
+            from spec in "spec".SpecIf(() => input.Count() > 1, () => input.ElementAt(1) != 42)
             select Acid.Test;
         var report = new QState(script).Observe(15);
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
-        Assert.Equal("[ _, _, 42 ]", entry.Value);
+        Assert.Equal("[ _, 42 ]", entry.Value);
     }
 
     public Generator<IEnumerable<int>> GrowingListUp()
