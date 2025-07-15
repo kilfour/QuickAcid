@@ -21,7 +21,12 @@ public class CollectionShrinkingTests
             from act in "act".Act(() => { })
             from spec in "spec".Spec(() => input.Count() <= 2)
             select Acid.Test;
-        var report = new QState(script).Observe(15);
+        var ex = Assert.Throws<FalsifiableException>(() =>
+            QState.Run(script)
+                //.Options(a => a with { Verbose = true })
+                .WithOneRun()
+                .And(15.ExecutionsPerRun()));
+        var report = ex.QAcidReport;
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ _, _, _ ]", entry.Value);

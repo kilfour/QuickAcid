@@ -7,14 +7,16 @@ namespace QuickAcid.Bolts;
 public class QRunner
 {
     private readonly QAcidScript<Acid> script;
+    private readonly QRunnerConfig config;
     private readonly RunCount runCount;
     private readonly int? seed;
 
     public Dictionary<string, int> passedSpecCount { get; } = [];
 
-    public QRunner(QAcidScript<Acid> script, RunCount runCount, int? seed)
+    public QRunner(QAcidScript<Acid> script, QRunnerConfig config, RunCount runCount, int? seed)
     {
         this.script = script;
+        this.config = config;
         this.runCount = runCount;
         this.seed = seed;
     }
@@ -26,6 +28,8 @@ public class QRunner
         for (int i = 0; i < runCount.NumberOfRuns; i++)
         {
             var state = seed.HasValue ? new QAcidState(script, seed.Value) : new QAcidState(script);
+            if (config.Verbose)
+                state.Verbose = true;
             report = state.Run(executionCount.NumberOfExecutions);
             state.GetPassedSpecCount(passedSpecCount);
             if (report.IsFailed)
