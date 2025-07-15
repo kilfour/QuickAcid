@@ -11,6 +11,8 @@ namespace LegacyLogic;
 
 public class AcidTests
 {
+    // taking Null out of primitive candidate list fixes this
+    // spec is not evaluated => run passes => keep original
     [Fact]
     public void ModelTestingReport()
     {
@@ -54,7 +56,8 @@ public class AcidTests
         from variantResult in "Variant".Act(() => variant.Total([.. items]))
             // Assert
         from bogo in "bogo".Act(() => items.Any(a => a.Category == "toys"))//&& a.Number > 1))
-        from bogoDiscount in "BOGO Discount".SpecIf(() => bogo, () => baselineResult != variantResult)
+        from bogoDiscount in "BOGO Discount".SpecIf(() => bogo && baselineResult != 0,
+            () => baselineResult != variantResult)
         from eco in "eco".Act(() => items.Any(a => a.Category == "Eco" && a.Cost < 20 && a.Import == false))
         from ecoSubsidyAgrees in "Eco Subsidy".SpecIf(() => eco, () => baselineResult != variantResult)
             // from agreesWhen in "agreesWhen".Act(() => !bogo && !eco)
@@ -71,7 +74,7 @@ public class AcidTests
     private Flow<ShrinkTrace> filterTraces =
         from input in Pulse.Start<ShrinkTrace>()
         from _ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink",
-            $"{input.Key}: {input.Intent}, {input.Strategy} ({input.Original})")
+            $"{input.Key}: {input.Intent}, {input.Strategy} ({input.Result})")
         from __ in Pulse.TraceIf(input.Strategy != "PrimitiveShrink",
             $"{input.Key}: {input.Intent}, {input.Strategy}")
         select input;
