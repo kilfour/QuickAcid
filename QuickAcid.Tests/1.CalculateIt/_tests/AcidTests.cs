@@ -19,7 +19,7 @@ public class AcidTests
         try
         {
             report =
-                QState.Run(TheScript, 1786579320)
+                QState.Run(TheScript)
                     .With(500.Runs())
                     .AndOneExecutionPerRun();
             Signal.Tracing<string>().SetArtery(new WriteDataToFile("model-testing.log"))
@@ -54,13 +54,12 @@ public class AcidTests
         from variant in "variant stashed".Stashed(() => new Calculator())
         from variantResult in "Variant".Act(() => variant.Total([.. items]))
             // Assert
-        from bogo in "bogo".Act(() => items.Any(a => a.Category == "toys"))//&& a.Number > 1))
-        from bogoDiscount in "BOGO Discount".SpecIf(() => bogo && baselineResult != 0,
-            () => baselineResult != variantResult)
+        from bogo in "bogo".Act(() => items.Any(a => a.Category == "toys" && a.Number > 1))
+        from bogoDiscount in "BOGO Discount".SpecIf(() => bogo, () => baselineResult != variantResult)
         from eco in "eco".Act(() => items.Any(a => a.Category == "Eco" && a.Cost < 20 && a.Import == false))
         from ecoSubsidyAgrees in "Eco Subsidy".SpecIf(() => eco, () => baselineResult != variantResult)
-            // from agreesWhen in "agreesWhen".Act(() => !bogo && !eco)
-            // from agrees in "Variant Matches Baseline".SpecIf(() => agreesWhen, () => baselineResult == variantResult)
+        from agreesWhen in "agreesWhen".Act(() => !bogo && !eco)
+        from agrees in "Variant Matches Baseline".SpecIf(() => agreesWhen, () => baselineResult == variantResult)
         select Acid.Test;
 
     private Flow<ShrinkTrace> filterTracesOld =
@@ -72,9 +71,11 @@ public class AcidTests
 
     private Flow<ShrinkTrace> filterTraces =
         from input in Pulse.Start<ShrinkTrace>()
-        from _ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink",
+        from _ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink" && input.Intent == ShrinkIntent.Keep,
             $"{input.Key}: {input.Intent}, {input.Strategy} ({QuickAcidStringify.Default()(input.Result!)})")
-        from __ in Pulse.TraceIf(input.Strategy != "PrimitiveShrink",
+        from __ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink" && input.Intent != ShrinkIntent.Keep,
+            $"{input.Key}: {input.Intent}, {input.Strategy}")
+        from ___ in Pulse.TraceIf(input.Strategy != "PrimitiveShrink",
             $"{input.Key}: {input.Intent}, {input.Strategy}")
         select input;
 }

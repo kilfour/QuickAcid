@@ -19,4 +19,21 @@ public class SpecNotEvaluated
         var report = ex.QAcidReport;
         Assert.Empty(report.OfType<ReportInputEntry>());
     }
+
+    [Fact]
+    public void Try_A_Number()
+    {
+        var script =
+            from input in "input".Input(MGen.Constant(42))
+            from act in "act".Act(() => { return 5 * input; })
+            from spec in "spec".Spec(() => input != 42)
+            select Acid.Test;
+        var ex = Assert.Throws<FalsifiableException>(() =>
+            QState.Run(script)
+                .WithOneRunAndOneExecution());
+        var report = ex.QAcidReport;
+        Assert.Single(report.OfType<ReportInputEntry>());
+    }
+
+
 }
