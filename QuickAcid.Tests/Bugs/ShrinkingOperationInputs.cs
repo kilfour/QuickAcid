@@ -34,7 +34,7 @@ public class ShrinkingOperationInputs
         Assert.Equal("42", entry2.Value);
     }
 
-    [Fact(Skip = "CURRENT FOCUS")]
+    [Fact] // probable culprit ... BreakRun when exception gets thrown
     public void Trying_To_Find_Failure_Again()
     {
         var script =
