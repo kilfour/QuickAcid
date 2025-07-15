@@ -5,14 +5,12 @@ namespace QuickAcid.Tests.Bugs;
 
 public class SpecNotEvaluated
 {
-    public class Simples { public string? Name { get; set; } }
-
     [Fact]
-    public void Foo()
+    public void Using_A_Value_That_Is_Not_Supposed_To_Be_Null_But_Shrinking_Tries_It_Anyway()
     {
         var script =
-            from input in "input".Input(MGen.One<Simples>())
-            from act in "act".Act(() => input.Name!.ToString())
+            from input in "input".Input(MGen.String())
+            from act in "act".Act(() => { if (input == null) throw new Exception("Boom"); })
             from spec in "spec".Spec(() => false)
             select Acid.Test;
         var ex = Assert.Throws<FalsifiableException>(() =>

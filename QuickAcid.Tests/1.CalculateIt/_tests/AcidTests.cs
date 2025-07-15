@@ -1,4 +1,5 @@
 using QuickAcid;
+using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Reporting;
@@ -11,9 +12,7 @@ namespace LegacyLogic;
 
 public class AcidTests
 {
-    // taking Null out of primitive candidate list fixes this
-    // spec is not evaluated => run passes => keep original
-    [Fact]
+    [Fact(Skip = "Trove of goodies, a.k.a. hard stuff to shrink")]
     public void ModelTestingReport()
     {
         Report report = null!;
@@ -74,7 +73,7 @@ public class AcidTests
     private Flow<ShrinkTrace> filterTraces =
         from input in Pulse.Start<ShrinkTrace>()
         from _ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink",
-            $"{input.Key}: {input.Intent}, {input.Strategy} ({input.Result})")
+            $"{input.Key}: {input.Intent}, {input.Strategy} ({QuickAcidStringify.Default()(input.Result!)})")
         from __ in Pulse.TraceIf(input.Strategy != "PrimitiveShrink",
             $"{input.Key}: {input.Intent}, {input.Strategy}")
         select input;

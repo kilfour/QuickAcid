@@ -30,7 +30,7 @@ public class PhaseContext
 
     public void MarkFailure(Exception exception, PhaseContext originalPhase)
     {
-        // Exception = exception;
+        Exception = exception;
         if (phase != QAcidPhase.NormalRun)
         {
             if (IsExceptionMismatch(exception, originalPhase))

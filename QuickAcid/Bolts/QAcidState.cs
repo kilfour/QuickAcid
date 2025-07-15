@@ -434,7 +434,8 @@ public sealed class QAcidState : QAcidContext
                 }
             }
             CurrentExecutionNumber = runNumber;
-            return CurrentContext.Failed;// || CurrentContext.Exception != null;
+            // this exception check might need some tightening
+            return CurrentContext.Failed || (OriginalRun.Exception == null && CurrentContext.Exception != null);
         }
     }
 
