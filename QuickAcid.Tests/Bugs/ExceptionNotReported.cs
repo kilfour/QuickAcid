@@ -25,7 +25,12 @@ public class ExceptionNotReported
 			from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
 			select Acid.Test;
 
-		var report = new QState(script).Observe(2);
+		var ex = Assert.Throws<FalsifiableException>(() =>
+			QState.Run(script)
+				.WithOneRun()
+				.And(2.ExecutionsPerRun()));
+
+		var report = ex.QAcidReport;
 		Assert.NotNull(report.Exception);
 
 		var entryAR1 = report.FirstOrDefault<ReportTrackedEntry>();

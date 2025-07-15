@@ -487,7 +487,10 @@ public sealed class QAcidState : QAcidContext
         if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
             report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(CurrentContext.FailingSpec)));
         if (CurrentContext.Exception != null)
-            report.Exception = CurrentContext.Exception;
+        {
+            report.Exception = CurrentContext.Exception; // TODO remove this
+            report.AddEntry(new ReportExceptionEntry(CurrentContext.Exception));
+        }
         return report;
     }
 

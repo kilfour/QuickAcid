@@ -34,6 +34,9 @@ public class Report
         }
         if (Code != null)
             stringBuilder.AppendLine(Code);
+
+        if (Exception != null)
+            stringBuilder.AppendLine(Exception.Message);
         return stringBuilder.ToString();
     }
 
