@@ -39,7 +39,7 @@ public class PrimitiveShrinkStrategy
             return;
 
         var primitiveVals = PrimitiveValues[primitiveKey];
-        var originalFails = state.ShrinkRunReturnTrueIfFailed(key, value!);
+        var originalFails = state.RunFailed(key, value!);
         if (!originalFails)
             return;
 
@@ -49,7 +49,7 @@ public class PrimitiveShrinkStrategy
         {
             foreach (var candidate in primitiveVals.Where(x => !Equals(x, value)))
             {
-                if (state.ShrinkRunReturnTrueIfFailed(key, candidate))
+                if (state.RunFailed(key, candidate))
                 {
                     state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                     {
@@ -78,14 +78,14 @@ public class PrimitiveShrinkStrategy
         {
             foreach (var candidate in primitiveVals.Where(x => !Equals(x, value)))
             {
-                if (!state.ShrinkRunReturnTrueIfFailed(key, candidate))
+                if (state.RunPassed(key, candidate))
                 {
                     state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                     {
                         Key = fullKey,
                         Name = fullKey.Split(".").Last(),
                         Original = value,
-                        Result = value,
+                        Result = candidate,
                         Intent = ShrinkIntent.Keep,
                         Strategy = "PrimitiveShrink"
                     });

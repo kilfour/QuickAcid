@@ -33,7 +33,7 @@ public class PowersetPropertyNullingStrategy : IObjectShrinkStrategy
                         SetPropertyValue(propertyInfo, value, null!);
                     }
 
-                    if (!state.ShrinkRunReturnTrueIfFailed(key, value))
+                    if (state.RunPassed(key, value))
                     {
                         foreach (var propertyInfo in set)
                         {

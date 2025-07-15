@@ -168,8 +168,12 @@ public sealed class QAcidState : QAcidContext
     // spec counting
     // --
     private Dictionary<string, int> passedSpecCount = [];
+    // private List<string> SpecsForInputEval = [];
     public void SpecPassed(string label)
     {
+        // if (CurrentPhase == QAcidPhase.ShrinkInputEval)
+        //     SpecsForInputEval.Add(label);
+
         if (CurrentPhase != QAcidPhase.NormalRun)
             return;
         if (!passedSpecCount.TryGetValue(label, out int value))
@@ -404,10 +408,16 @@ public sealed class QAcidState : QAcidContext
         }
     }
 
-    public bool ShrinkRunReturnTrueIfFailed(string key, object value)
+    public bool RunPassed(string key, object value)
+    {
+        return !RunFailed(key, value);
+    }
+
+    public bool RunFailed(string key, object value)
     {
         using (EnterPhase(QAcidPhase.ShrinkInputEval))
         {
+            // SpecsForInputEval = [];
             CurrentContext.Reset();
             Memory.ResetRunScopedInputs();
             var runNumber = CurrentExecutionNumber;
@@ -420,7 +430,7 @@ public sealed class QAcidState : QAcidContext
                 }
             }
             CurrentExecutionNumber = runNumber;
-            return CurrentContext.Failed;
+            return CurrentContext.Failed;// || CurrentContext.Exception != null;
         }
     }
 

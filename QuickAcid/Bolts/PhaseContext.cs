@@ -30,6 +30,7 @@ public class PhaseContext
 
     public void MarkFailure(Exception exception, PhaseContext originalPhase)
     {
+        // Exception = exception;
         if (phase != QAcidPhase.NormalRun)
         {
             if (IsExceptionMismatch(exception, originalPhase))
@@ -52,10 +53,4 @@ public class PhaseContext
             || actual.Message != e.Message
             || (actual.InnerException?.GetType() != e.InnerException?.GetType());
     }
-
-
-    // private static bool IsExceptionMismatch(Exception exception, PhaseContext originalPhase)
-    // {
-    //     return originalPhase.Exception == null || originalPhase.Exception.GetType() != exception.GetType();
-    // }
 }

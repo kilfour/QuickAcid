@@ -15,7 +15,7 @@ public class RemoveOneByOneStrategy : ICollectionShrinkStrategy
             var ix = index;
             var before = theList[ix];
             theList.RemoveAt(ix);
-            if (state.ShrinkRunReturnTrueIfFailed(key, theList!))
+            if (state.RunFailed(key, theList!))
             {
                 state.Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
                 {
