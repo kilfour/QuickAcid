@@ -1,7 +1,5 @@
 ﻿using QuickAcid.Reporting;
 using QuickMGenerate;
-using QuickPulse;
-using QuickPulse.Arteries;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {

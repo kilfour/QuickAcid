@@ -1,7 +1,5 @@
-using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 using QuickMGenerate;
-using QuickPulse.Arteries;
 
 namespace QuickAcid.Tests;
 
@@ -29,15 +27,15 @@ public class SeedTests
     [Fact]
     public void Seed_Allows_Reruns()
     {
-        var collector = new TheCollector<int>();
+        var collector = new List<int>();
         var script =
             from input in "input".Input(MGen.Int())
-            from act in "act".Act(() => collector.Flow(input))
-            from spec in "spec".Spec(() => collector.TheExhibit.Count != 2)
+            from act in "act".Act(() => collector.Add(input))
+            from spec in "spec".Spec(() => collector.Count != 2)
             select Acid.Test;
         var report = new QState(script, 42).Observe(10);
         var entry = report.Single<ReportCollapsedExecutionEntry>();
         Assert.Equal("act", entry.Key);
-        Assert.Equal([67, 14, 14, 67, 67, 14, 67, 67, 14, 14], collector.TheExhibit);
+        Assert.Equal([67, 14, 14, 67, 67, 14, 67, 67, 14, 14], collector);
     }
 }

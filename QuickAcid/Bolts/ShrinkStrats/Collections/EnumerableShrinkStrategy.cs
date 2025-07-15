@@ -10,15 +10,16 @@ public class EnumerableShrinkStrategy
         state.GetCollectionStrategies()
             .ForEach(a =>
             {
-                state.Trace(key, ShrinkKind.EnumerableKind, new ShrinkTrace
-                {
-                    Key = fullKey,
-                    Name = fullKey.Split(".").Last(),
-                    Original = value,
-                    Result = null,
-                    Intent = ShrinkIntent.Keep,
-                    Strategy = "EnumerableShrinkStrategy"
-                });
+                state.SetShrinkKind(key, ShrinkKind.EnumerableKind);
+                // state.Trace(key, ShrinkKind.EnumerableKind, new ShrinkTrace
+                // {
+                //     Key = fullKey,
+                //     Name = fullKey.Split(".").Last(),
+                //     Original = value,
+                //     Result = null,
+                //     Intent = ShrinkIntent.Keep,
+                //     Strategy = "EnumerableShrinkStrategy"
+                // });
                 a.Shrink(state, key, value, fullKey);
             });
     }

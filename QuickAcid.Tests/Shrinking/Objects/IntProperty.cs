@@ -2,7 +2,6 @@
 using QuickAcid.Bolts.ShrinkStrats.Objects;
 using QuickAcid.Reporting;
 using QuickMGenerate;
-using QuickPulse;
 
 namespace QuickAcid.Tests.Shrinking.Objects;
 

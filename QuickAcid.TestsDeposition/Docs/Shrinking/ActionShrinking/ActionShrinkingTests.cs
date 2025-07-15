@@ -1,6 +1,5 @@
 using QuickAcid.Reporting;
-using QuickPulse.Arteries;
-using QuickPulse.Instruments;
+
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.ActionShrinking;
 
@@ -11,7 +10,7 @@ public class ActionShrinkingTests
     {
         var script =
             from a1 in "a1".Act(() => { })
-            from a2 in "a2".Act(ComputerSays.No)
+            from a2 in "a2".Act(() => throw new Exception("Boom"))
             select Acid.Test;
         var report = new QState(script).ShrinkingActions().ObserveOnce();
         Assert.NotNull(report);
@@ -23,7 +22,7 @@ public class ActionShrinkingTests
     public void SecondActionIrrelevant()
     {
         var script =
-            from a1 in "a1".Act(ComputerSays.No)
+            from a1 in "a1".Act(() => throw new Exception("BOOM"))
             from a2 in "a2".Act(() => { })
             select Acid.Test;
         var report = new QState(script).ObserveOnce();

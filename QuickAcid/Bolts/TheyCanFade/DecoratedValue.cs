@@ -21,6 +21,8 @@ public class DecoratedValue
 
     private ShrinkTraceRecord root = new ShrinkTraceRecord();
 
+    public void SetShrinkKind(ShrinkKind shrinkKind) { root.ShrinkKind = shrinkKind; }
+
     public void AddTrace(ShrinkKind shrinkKind, ShrinkTrace trace)
     {
         var parts = trace.Key.Split('.');

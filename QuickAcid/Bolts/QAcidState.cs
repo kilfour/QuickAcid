@@ -35,6 +35,10 @@ public sealed class QAcidState : QAcidContext
     // -------------------------------------------------------------------------------------------------
     // -- New Way of Shrinking
     // --
+    public void SetShrinkKind(string key, ShrinkKind shrinkKind)
+    {
+        Memory.ForThisExecution().GetDecorated(key).SetShrinkKind(shrinkKind);
+    }
     public void Trace(string key, ShrinkKind shrinkKind, ShrinkTrace trace)
     {
         Memory.ForThisExecution().GetDecorated(key).AddTrace(shrinkKind, trace);

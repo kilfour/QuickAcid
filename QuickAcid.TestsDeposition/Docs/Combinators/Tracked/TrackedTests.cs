@@ -3,7 +3,6 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
 using QuickExplainIt;
 using QuickMGenerate;
-using QuickPulse.Instruments;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Tracked;
@@ -60,7 +59,7 @@ The second argument is a formatter function for rendering the value into the tes
             from token in "container".Tracked(() =>
             {
                 if (executionCount != 0)
-                    ComputerSays.No();
+                    throw new Exception("BOOM");
                 return new Container<bool>(true);
             })
             from act in "act".Act(() => { executionCount++; })
