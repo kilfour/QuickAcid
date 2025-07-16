@@ -19,6 +19,7 @@ public static partial class QAcidCombinators
 	private static QAcidResult<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator)
 	{
 		var execution = state.GetExecutionContext();
+		Log.This($"ENTER INPUT: {key} ({state.CurrentExecutionNumber}), {state.CurrentPhase}.");
 		switch (state.CurrentPhase)
 		{
 			case QAcidPhase.ShrinkInputEval:
@@ -26,7 +27,12 @@ public static partial class QAcidCombinators
 			case QAcidPhase.ShrinkingActions:
 				return execution.GetMaybe<T>(key).Match(
 					some: x => QAcidResult.Some(state, x),
-					none: () => QAcidResult.None<T>(state));
+					none: () =>
+					{
+						Log.This($"PROBLEM: {key} ({state.CurrentExecutionNumber})");
+						return QAcidResult.None<T>(state);
+					});
+
 
 			case QAcidPhase.FeedbackShrinking
 				when !execution.AlreadyTried(key):
@@ -44,8 +50,18 @@ public static partial class QAcidCombinators
 				}
 
 			case QAcidPhase.ShrinkingInputs
+				when execution.AlreadyTried(key):
+				{
+					Log.This($" AlreadyTried in Input: {key} ({state.CurrentExecutionNumber}).");
+					var value = generator(state.MGenState).Value;
+					execution.SetIfNotAlreadyThere(key, value);
+					return QAcidResult.Some(state, value);
+				}
+
+			case QAcidPhase.ShrinkingInputs
 				when !execution.AlreadyTried(key):
 				{
+					Log.This($" Start in Input: {key} ({state.CurrentExecutionNumber}).");
 					var value = execution.Get<T>(key);
 					ShrinkStrategyPicker.Input(state, key, value, key);
 					execution.SetShrinkOutcome(key);

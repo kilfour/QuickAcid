@@ -7,6 +7,7 @@ using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
+using QuickPulse;
 
 
 namespace QuickAcid.Bolts;
@@ -372,13 +373,17 @@ public sealed class QAcidState : QAcidContext
 
     private void ShrinkInputs()
     {
+        Log.This("Execution Numbers after Shrinking Executions:");
+        Log.This($"  - [ {string.Join(", ", ExecutionNumbers.ToList())} ]");
         using (EnterPhase(QAcidPhase.ShrinkingInputs))
         {
             Memory.ResetRunScopedInputs();
             foreach (var executionNumber in ExecutionNumbers.ToList())
             {
                 CurrentExecutionNumber = executionNumber;
+                Log.This($"  - ShrinkInputs ExecId: {CurrentExecutionNumber}.");
                 Script(this);
+                Log.This($"  - After Script(this).");
                 shrinkCount++;
             }
         }
@@ -423,8 +428,10 @@ public sealed class QAcidState : QAcidContext
             // CurrentContext.Reset();
             Memory.ResetRunScopedInputs();
             var runNumber = CurrentExecutionNumber;
+            Log.This($"Eval: {key} ({CurrentExecutionNumber}).");
             using (Memory.ScopedSwap(key, value))
             {
+
                 foreach (var actionNumber in ExecutionNumbers)
                 {
                     CurrentExecutionNumber = actionNumber;

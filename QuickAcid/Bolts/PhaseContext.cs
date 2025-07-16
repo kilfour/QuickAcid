@@ -18,7 +18,7 @@ public class PhaseContext
         Exception = null;
     }
 
-    public bool NeedsToStop() => BreakRun || Failed;
+    public bool NeedsToStop() => BreakRun || Failed && phase == QAcidPhase.NormalRun;
 
     internal void StopRun() => BreakRun = true;
 

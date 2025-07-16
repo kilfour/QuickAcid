@@ -26,24 +26,28 @@ public class AcidTests
         List<string> skills = ["DotNet", "Javascript", "Agile", "HTML", "Css", "Entity Framework", "Web API"];
         var script =
             from storage in "Storage".Stashed(() => new InMemoryStorage())
+            from coachName in "Coach Name".Input(MGen.ChooseFrom(DataLists.FirstNames).Unique("coach name"))
+            from coachEmail in "Coach Email".Input(MGen.String())
+            from coachSkill in "Coach Skill".Input(MGen.ChooseFrom(skills))
+
             from operations in "Operations".Choose(
-                from coachName in "Coach Name".Input(MGen.ChooseFrom(DataLists.FirstNames).Unique("coach name"))
-                from coachEmail in "Coach Email".Input(MGen.String())
                 from createCoach in "Create Coach".Act(() => storage.AddCoach(new Coach(coachName, coachEmail)))
                 select Acid.Test,
-                from coachSkill in "Coach Skill".Input(MGen.ChooseFrom(skills))
-                from t2 in "skill".Trace(() => coachSkill)
                 from coachToAddSkillTo in "Coach To Add Skill To".Derived(MGen.ChooseFromWithDefaultWhenEmpty(storage.Coaches.Select(a => a.Name)))
-                from t3 in "coach to add to".Trace(() => coachToAddSkillTo)
                 from addSkillToCoach in "Add Skill To Coach".ActIf(() => !string.IsNullOrWhiteSpace(coachToAddSkillTo),
                     () => storage.Coaches.Single(a => a.Name == coachToAddSkillTo).AddSkill(coachSkill))
                 select Acid.Test
             )
             select Acid.Test;
-        QState.Run("temp", script, 1364686977)
-            .Options(a => a with { AddShrinkInfoToReport = true, Verbose = true })
+        QState.Run(script, 2100155760)
+            .Options(a => a with { Verbose = true })
+            .Options(a => a with { AddShrinkInfoToReport = true, ReportTo = "temp" })
             .WithOneRun()
-            .And(3.ExecutionsPerRun());
+            .And(20.ExecutionsPerRun());
+        // QState.Run(script, 1364686977)
+        //     .Options(a => a with { AddShrinkInfoToReport = true, Verbose = true, ReportTo = "temp" })
+        //     .WithOneRun()
+        //     .And(3.ExecutionsPerRun());
         // QState.Run("just-checking", script)
         //     .Options(a => a with { AddShrinkInfoToReport = true })
         //     .With(50.Runs())

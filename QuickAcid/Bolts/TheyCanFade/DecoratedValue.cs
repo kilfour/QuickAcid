@@ -25,6 +25,7 @@ public class DecoratedValue
 
     public void AddTrace(ShrinkKind shrinkKind, ShrinkTrace trace)
     {
+        Log.This($" => AddTrace: {trace.ExecutionId}, {trace.Key})");
         var parts = trace.Key.Split('.');
         var current = root;
 

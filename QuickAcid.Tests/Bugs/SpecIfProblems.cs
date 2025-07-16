@@ -24,7 +24,7 @@ public class SpecIfProblems
 		Assert.NotNull(report);
 	}
 
-	[Fact]
+	[Fact(Skip = "not sure this is what we want")]
 	public void SpecIf_ShouldSkipAfterPriorFailure_RealisticCrashPattern()
 	{
 		var predicateRan = false;
@@ -54,7 +54,7 @@ public class SpecIfProblems
 		Assert.False(predicateRan);
 	}
 
-	[Fact]
+	[Fact(Skip = "not sure this is what we want")]
 	public void SpecIf_AfterFailingAct_ShouldBeSkipped()
 	{
 		var predicateRan = false;

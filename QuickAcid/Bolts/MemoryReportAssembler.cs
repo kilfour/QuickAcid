@@ -27,10 +27,8 @@ public static class MemoryReportAssembler
             some: access =>
             {
 
-                entries.Add(
-                    new ReportExecutionEntry(string.Join(", ",
-                    access.ActionKeys.Select(LabelPrettifier.Prettify))));
-
+                var executionKey = string.Join(", ", access.ActionKeys.Select(LabelPrettifier.Prettify));
+                entries.Add(new ReportExecutionEntry(executionKey, executionId));
                 foreach (var (key, val) in access.GetAll())
                 {
                     var shrinkOutcome = val.GetShrinkOutcome();
