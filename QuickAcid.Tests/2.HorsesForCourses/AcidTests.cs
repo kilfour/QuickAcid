@@ -10,18 +10,6 @@ using QuickPulse.Show;
 
 namespace HorsesForCourses.Tests;
 
-public class TheStringCatcher : IArtery
-{
-    private readonly StringBuilder builder = new StringBuilder();
-    public void Flow(params object[] data)
-    {
-        foreach (var item in data)
-        {
-            builder.Append(item);
-        }
-    }
-    public string GetText() { return builder.ToString(); }
-}
 
 public class InMemoryStorage
 {
