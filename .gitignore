@@ -12,3 +12,6 @@ Tests.cs
 *.log
 *.qr
 *.qv
+.vscode/
+.quickacid/
+.quickpulse/
