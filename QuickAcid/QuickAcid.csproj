@@ -10,6 +10,9 @@
     <ProjectReference Include="..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
     <ProjectReference Include="..\..\QuickPulse\QuickPulse\QuickPulse.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="QuickPulse.Show" Version="0.1.1" />
+  </ItemGroup>
   <!-- <ItemGroup>
     <PackageReference Include="QuickPulse" Version="0.1.1" />
   </ItemGroup> -->
