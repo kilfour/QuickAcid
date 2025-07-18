@@ -28,6 +28,11 @@ public class QRunner
     public Report And(ExecutionCount executionCount)
     {
         Report report = null!;
+        if (config.ReplayMode)
+        {
+            if (Replay())
+                return ReportIt(new Report());
+        }
         if (config.Vault != null)
         {
             CheckTheVault();
@@ -78,6 +83,13 @@ public class QRunner
                    .Pulse(report.Entries.Select(a => a.ToString()!));
         }
     }
+    private bool Replay()
+    {
+        if (new SeedVault(config.Vault!).AllSeeds.Count == 0)
+            return false;
+        CheckTheVault();
+        return true;
+    }
 
     private void CheckTheVault()
     {
@@ -85,7 +97,6 @@ public class QRunner
         var vault = new SeedVault(config.Vault!);
         foreach (var vaultEntry in vault.AllSeeds)
         {
-
             var state = new QAcidState(script, vaultEntry.Seed);
             var report = state.Run(vaultEntry.ExecutionsPerRun);
             if (report.IsSuccess)

@@ -38,7 +38,7 @@ public class ShrinkingOperationInputs
     [Fact]
     public void Trying_To_Find_Failure_Again()
     {
-        new WriteDataToFile().ClearFile();
+
         var script =
             from collector in "container".Stashed(() => new TheCollector<int>())
             from ops in "ops".Choose(
@@ -59,7 +59,6 @@ public class ShrinkingOperationInputs
             )
             select Acid.Test;
         var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script)
-            .Options(a => a with { AddShrinkInfoToReport = true, ReportTo = "temp" })
             .WithOneRun()
             .And(100.ExecutionsPerRun()));
         var report = ex.QAcidReport;
@@ -78,7 +77,6 @@ public class ShrinkingOperationInputs
     [Fact]
     public void Trying_To_Find_Failure_Again_Carefully()
     {
-        new WriteDataToFile().ClearFile();
         var script =
             from collector in "container".Stashed(() => new TheCollector<int>())
             from ops in "ops".Choose(
@@ -99,7 +97,6 @@ public class ShrinkingOperationInputs
             )
             select Acid.Test;
         var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script)
-            .Options(a => a with { AddShrinkInfoToReport = true, ReportTo = "temp" })
             .WithOneRun()
             .And(100.ExecutionsPerRun()));
         var report = ex.QAcidReport;

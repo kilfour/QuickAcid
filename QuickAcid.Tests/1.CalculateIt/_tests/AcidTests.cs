@@ -44,7 +44,6 @@ public class AcidTests
         from agrees in "Variant Matches Baseline".SpecIf(() => agreesWhen, () => baselineResult == variantResult)
         select Acid.Test;
 
-    // Signal.From(filterTraces).SetArtery(new WriteDataToFile("model-testing.log")).Pulse(report.ShrinkTraces);
     private Flow<ShrinkTrace> filterTracesOld =
         from input in Pulse.Start<ShrinkTrace>()
         let isToy = input.Original?.ToString() == "toys"

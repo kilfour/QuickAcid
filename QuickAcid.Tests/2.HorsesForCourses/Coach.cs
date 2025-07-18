@@ -11,6 +11,8 @@ public class Coach
 
     public List<Course> AssignedCourses { get; }
 
+    public Coach(string name) : this(name, "") { }
+
     public Coach(string name, string email)
     {
         Name = name;                        // ?? throw new ArgumentNullException(nameof(name));
@@ -70,7 +72,7 @@ public class Coach
     {
         if (slot1.Day != slot2.Day) return false;
 
-        return slot1.Start < slot2.End && slot1.End > slot2.Start;    
+        return slot1.Start < slot2.End && slot1.End > slot2.Start;
     }
 }
 

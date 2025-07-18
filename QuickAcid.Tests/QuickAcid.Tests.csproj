@@ -24,6 +24,7 @@
     <ProjectReference Include="..\QuickAcid\QuickAcid.csproj" />
     <ProjectReference Include="..\..\QuickExplainIt\QuickExplainIt\QuickExplainIt.csproj" />
     <ProjectReference Include="..\..\QuickPulse\QuickPulse\QuickPulse.csproj" />
+    <ProjectReference Include="..\..\QuickPulse.Show\QuickPulse.Show\QuickPulse.Show.csproj" />
     <ProjectReference Include="..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
   </ItemGroup>
 

@@ -13,6 +13,7 @@ public record QRunnerConfig
     public required string? ReportTo { get; init; }
     public required string? Vault { get; init; }
     public required bool Verbose { get; init; }
+    public required bool ReplayMode { get; init; }
 
     public static QRunnerConfig Default()
     {
@@ -24,6 +25,7 @@ public record QRunnerConfig
                 ReportTo = null,
                 Vault = null,
                 Verbose = false,
+                ReplayMode = false
             };
     }
 
