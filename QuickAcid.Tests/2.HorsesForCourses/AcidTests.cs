@@ -51,7 +51,7 @@ public class AcidTests
                 select Acid.Test;
             var ex = Assert.Throws<FalsifiableException>(() =>
                 QState.Run(script, 1470894469)
-                    .Options(a => a with { ReportTo = "JustChecking", Verbose = true })
+                    //.Options(a => a with { ReportTo = "JustChecking" })
                     .With(50.Runs())
                     .And(20.ExecutionsPerRun()));
             var report = ex.QAcidReport;

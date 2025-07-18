@@ -14,7 +14,10 @@ public class ReportExceptionEntry : IAmAReportEntry
     public override string ToString()
     {
         var text = $"  ❌ Exception Thrown: {exception}";
-        var line = " " + new string('═', text.Split(Environment.NewLine).Max(a => a.Length));
+        var length = text.Split(Environment.NewLine).Max(a => a.Length);
+        if (length > 80)
+            length = 80;
+        var line = " " + new string('═', length);
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(line);
         stringBuilder.AppendLine(text);
