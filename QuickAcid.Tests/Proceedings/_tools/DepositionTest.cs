@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
 using QuickExplainIt.Text;
@@ -15,7 +14,7 @@ public abstract class DepositionTest
         var result = Clerk.Transcribe(caseFile);
         var reader = LinesReader.FromText(result);
         if (IgnoreVerdictHeader)
-            reader.Skip(4); // <= ignore Verdict Header
+            reader.Skip(4);
         return reader;
 
     }
@@ -23,8 +22,7 @@ public abstract class DepositionTest
     protected void EndOfContent(LinesReader reader)
     {
         if (IgnoreFailingSpec)
-            reader.Skip(3); // <= ignore Failed Spec
-
+            reader.Skip(3);
         Assert.True(reader.EndOfContent());
     }
 }

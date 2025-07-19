@@ -22,7 +22,6 @@ public class FailedSpecDepositionsTests : DepositionTest
         Assert.Equal(" ═════════════════════════════════", reader.NextLine());
         Assert.Equal("  ❌ Spec Failed: Some Invariant", reader.NextLine());
         Assert.Equal(" ═════════════════════════════════", reader.NextLine());
-        Assert.True(reader.EndOfContent());
         EndOfContent(reader);
     }
 }
