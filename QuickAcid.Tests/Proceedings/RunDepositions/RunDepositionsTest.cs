@@ -4,17 +4,14 @@ using QuickExplainIt.Text;
 
 namespace QuickAcid.Tests.Proceedings.ExecutionDepositions;
 
-public class RunDepositionsTest
+public class RunDepositionsTest : DepositionTest
 {
     [Fact]
     public void None()
     {
         var caseFile = new CaseFile().WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant")));
-        var result = Clerk.Transcribe(caseFile);
-        var reader = LinesReader.FromText(result);
-        reader.Skip(4); // <= ignore Verdict
-        Assert.Equal("", reader.NextLine());
-        Assert.True(reader.EndOfContent());
+        var reader = Transcribe(caseFile);
+        EndOfContent(reader);
     }
 
     [Fact]
@@ -24,11 +21,8 @@ public class RunDepositionsTest
             .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant")))
             .AddRunDeposition(new RunDeposition()
                 .AddExecutionDeposition(new ExecutionDeposition(1)));
-        var result = Clerk.Transcribe(caseFile);
-        var reader = LinesReader.FromText(result);
-        reader.Skip(4); // <= ignore Verdict
-        Assert.Equal("", reader.NextLine());
-        Assert.True(reader.EndOfContent());
+        var reader = Transcribe(caseFile);
+        EndOfContent(reader);
     }
 
     [Fact]
@@ -39,10 +33,7 @@ public class RunDepositionsTest
             .AddRunDeposition(new RunDeposition()
                 .AddExecutionDeposition(new ExecutionDeposition(1))
                 .AddExecutionDeposition(new ExecutionDeposition(2)));
-        var result = Clerk.Transcribe(caseFile);
-        var reader = LinesReader.FromText(result);
-        reader.Skip(4); // <= ignore Verdict  
-        Assert.Equal("", reader.NextLine());
-        Assert.True(reader.EndOfContent());
+        var reader = Transcribe(caseFile);
+        EndOfContent(reader);
     }
 }

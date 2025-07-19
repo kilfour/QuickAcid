@@ -38,11 +38,14 @@ public static class The
 
     private static Flow<Unit> LineOf(int length) => Pulse.Trace(new string('─', length));
 
+    private static Flow<Unit> DoubleLineOf(int length) =>
+        space.Then(Pulse.Trace(new string('═', length)));
+
     private readonly static Flow<Unit> line =
         space.Then(LineOf(50)).Then(newLine);
 
     private readonly static Flow<Unit> longerLine =
-         space.Then(LineOf(75)).Then(newLine);
+         space.Then(LineOf(75));
 
     private readonly static Flow<InputDeposition> inputDeposition =
         from input in Pulse.Start<InputDeposition>()
@@ -67,7 +70,7 @@ public static class The
 
     private readonly static Flow<ExecutionDeposition> maybeExecutionDeposition =
         from input in Pulse.Start<ExecutionDeposition>()
-        from _ in Pulse.ToFlowIf(input.HasContent(), executionDeposition, () => input)
+        from _ in Pulse.ToFlowIf(input.HasContent(), newLine.Then(executionDeposition), () => input)
         select input;
 
     private readonly static Flow<RunDeposition> runDeposition =
@@ -77,14 +80,20 @@ public static class The
 
     private readonly static Flow<FailedSpecDeposition> failedSpecDeposition =
         from input in Pulse.Start<FailedSpecDeposition>()
-
+        let text = $"  ❌ Spec Failed: {input.FailedSpec}"
+        let length = text.Length + 2
+        from _1 in newLine.Then(DoubleLineOf(length)).Then(newLine)
+        from _2 in Pulse.Trace(text).Then(newLine)
+        from _3 in DoubleLineOf(length)
         select input;
+
     private readonly static Flow<ExceptionDeposition> exceptionDeposition =
         from input in Pulse.Start<ExceptionDeposition>()
-        from _1 in longerLine
-        from _2 in Pulse.Trace($"  ❌ Exception Thrown: {input.Exception}")
+        from _1 in newLine.Then(longerLine).Then(newLine)
+        from _2 in Pulse.Trace($"  ❌ Exception Thrown: {input.Exception}").Then(newLine)
         from _3 in longerLine
         select input;
+
     private readonly static Flow<FailureDeposition> failureDeposition =
         from input in Pulse.Start<FailureDeposition>()
         from _1 in Pulse.ToFlowIf(input is FailedSpecDeposition, failedSpecDeposition, () => (FailedSpecDeposition)input)
@@ -105,7 +114,6 @@ public static class The
         from _2 in Pulse.Trace($" Minimal failing case:    {_21} after ({_22}).")
         from n2 in newLine
         from _3 in Pulse.Trace($" Seed:                    {verdict.Seed}.")
-        from n3 in newLine
         from _4 in Pulse.ToFlow(maybeExecutionDeposition, verdict.ExecutionDepositions)
         from _5 in Pulse.ToFlow(failureDeposition, verdict.FailureDeposition)
         select verdict;

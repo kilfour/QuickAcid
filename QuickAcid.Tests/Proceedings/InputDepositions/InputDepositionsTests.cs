@@ -4,7 +4,7 @@ using QuickExplainIt.Text;
 
 namespace QuickAcid.Tests.Proceedings.InputDepositions;
 
-public class InputDepositionsTests
+public class InputDepositionsTests : DepositionTest
 {
     [Fact]
     public void None()
@@ -12,11 +12,8 @@ public class InputDepositionsTests
         var caseFile = new CaseFile()
             .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
                 .AddExecutionDeposition(new ExecutionDeposition(1)));
-        var result = Clerk.Transcribe(caseFile);
-        var reader = LinesReader.FromText(result);
-        reader.Skip(4); // <= ignore Verdict
-        Assert.Equal("", reader.NextLine());
-        Assert.True(reader.EndOfContent());
+        var reader = Transcribe(caseFile);
+        EndOfContent(reader);
     }
 
     [Fact]
@@ -26,13 +23,11 @@ public class InputDepositionsTests
             .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddInputDeposition(new InputDeposition("PropertyName", 42))));
-        var result = Clerk.Transcribe(caseFile);
-        var reader = LinesReader.FromText(result);
-        reader.Skip(4); // <= ignore Verdict
+        var reader = Transcribe(caseFile);
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Executed (1):", reader.NextLine());
         Assert.Equal("   - Input: PropertyName = 42", reader.NextLine());
-        Assert.True(reader.EndOfContent());
+        EndOfContent(reader);
     }
 
     [Fact]
@@ -42,13 +37,11 @@ public class InputDepositionsTests
             .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddInputDeposition(new InputDeposition("PropertyName", "42"))));
-        var result = Clerk.Transcribe(caseFile);
-        var reader = LinesReader.FromText(result);
-        reader.Skip(4); // <= ignore Verdict
+        var reader = Transcribe(caseFile);
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Executed (1):", reader.NextLine());
         Assert.Equal("   - Input: PropertyName = \"42\"", reader.NextLine());
-        Assert.True(reader.EndOfContent());
+        EndOfContent(reader);
     }
 
     [Fact]
@@ -59,13 +52,11 @@ public class InputDepositionsTests
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddInputDeposition(new InputDeposition("One", 42))
                     .AddInputDeposition(new InputDeposition("Two", "42"))));
-        var result = Clerk.Transcribe(caseFile);
-        var reader = LinesReader.FromText(result);
-        reader.Skip(4); // <= ignore Verdict
+        var reader = Transcribe(caseFile);
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Executed (1):", reader.NextLine());
         Assert.Equal("   - Input: One = 42", reader.NextLine());
         Assert.Equal("   - Input: Two = \"42\"", reader.NextLine());
-        Assert.True(reader.EndOfContent());
+        EndOfContent(reader);
     }
 }
