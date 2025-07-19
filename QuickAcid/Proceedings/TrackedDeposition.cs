@@ -1,11 +1,11 @@
 namespace QuickAcid.Proceedings;
 
-public class InputDeposition
+public class TrackedDeposition
 {
     public string Label { get; }
-    public object Value { get; }
+    public string Value { get; }
 
-    public InputDeposition(string label, object value)
+    public TrackedDeposition(string label, string value)
     {
         Label = label;
         Value = value;

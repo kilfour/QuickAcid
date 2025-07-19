@@ -7,6 +7,9 @@ public class ExecutionDeposition
     public int ExecutionId { get; }
 
     public List<ActionDeposition> ActionDepositions { get; } = [];
+
+    public List<TrackedDeposition> TrackedDepositions { get; } = [];
+
     public List<InputDeposition> InputDepositions { get; } = [];
 
     public ExecutionDeposition(int executionId)
@@ -17,6 +20,7 @@ public class ExecutionDeposition
     public bool HasContent()
     {
         if (ActionDepositions.Count > 0) return true;
+        if (TrackedDepositions.Count > 0) return true;
         if (InputDepositions.Count > 0) return true;
         return false;
     }
@@ -24,6 +28,12 @@ public class ExecutionDeposition
     public ExecutionDeposition AddActionDeposition(ActionDeposition actionDeposition)
     {
         ActionDepositions.Add(actionDeposition);
+        return this;
+    }
+
+    public ExecutionDeposition AddTrackedDeposition(TrackedDeposition trackedDeposition)
+    {
+        TrackedDepositions.Add(trackedDeposition);
         return this;
     }
 

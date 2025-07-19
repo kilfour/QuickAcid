@@ -5,7 +5,7 @@ namespace QuickAcid.Tests.Proceedings.ExecutionDepositions;
 public class ExecutionDepositionsTests : DepositionTest
 {
     [Fact]
-    public void None()
+    public void None_Empty()
     {
         var caseFile = new CaseFile().WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant")));
         var reader = Transcribe(caseFile);
@@ -13,7 +13,7 @@ public class ExecutionDepositionsTests : DepositionTest
     }
 
     [Fact]
-    public void One()
+    public void One_Empty()
     {
         var caseFile = new CaseFile()
             .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
@@ -23,7 +23,7 @@ public class ExecutionDepositionsTests : DepositionTest
     }
 
     [Fact]
-    public void Two()
+    public void Two_Empty()
     {
         var caseFile = new CaseFile()
             .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
