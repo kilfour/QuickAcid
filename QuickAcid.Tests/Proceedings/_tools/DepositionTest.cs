@@ -8,6 +8,15 @@ public abstract class DepositionTest
 {
     protected bool IgnoreVerdictHeader { get; init; } = true;
     protected bool IgnoreFailingSpec { get; init; } = true;
+    protected Dossier Dossier { get; } =
+        new Dossier(
+                FailingSpec: "Some Invariant",
+                Exception: null,
+                OriginalRunExecutionCount: 10,
+                ExecutionNumbers: [1, 2, 3, 4],
+                ShrinkCount: 1,
+                Seed: 12345678
+            );
 
     protected LinesReader Transcribe(CaseFile caseFile)
     {

@@ -10,13 +10,7 @@ public class FailedSpecDepositionsTests : DepositionTest
     public void One()
     {
         var caseFile = new CaseFile()
-            .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
-            {
-                OriginalRunExecutionCount = 10,
-                ExecutionCount = 4,
-                ShrinkCount = 1,
-                Seed = 12345678
-            });
+            .WithVerdict(Verdict.FromDossier(Dossier));
 
         var reader = Transcribe(caseFile);
         Assert.Equal(" ═════════════════════════════════", reader.NextLine());

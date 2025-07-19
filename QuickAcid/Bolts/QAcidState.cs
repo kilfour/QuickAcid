@@ -4,6 +4,8 @@ using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
 using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.Proceedings;
+using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Reporting;
 using QuickMGenerate;
 using QuickMGenerate.UnderTheHood;
@@ -292,13 +294,13 @@ public sealed class QAcidState : QAcidContext
                 }
                 report.AddEntry(new ReportTitleSectionEntry([.. GetReportHeaderInfo()]));
             }
-
         }
         else
         {
             report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees: {CurrentContext.FailingSpec}."]));
         }
         AddMemoryToReport(report, true);
+        report.CaseFile = CompileTheCaseFile();
         report.ShrinkTraces =
             Memory.AllAccesses()
                 .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
@@ -441,6 +443,20 @@ public sealed class QAcidState : QAcidContext
             // this exception check might need some tightening
             return CurrentContext.Failed || (OriginalRun.Exception == null && CurrentContext.Exception != null);
         }
+    }
+
+    private CaseFile CompileTheCaseFile()
+    {
+        var dossier =
+            new Dossier(
+                FailingSpec: CurrentContext.FailingSpec,
+                Exception: CurrentContext.Exception,
+                OriginalRunExecutionCount: OriginalFailingRunExecutionCount,
+                ExecutionNumbers: ExecutionNumbers,
+                ShrinkCount: shrinkCount,
+                Seed: MGenState.Seed
+            );
+        return Compile.TheCaseFile(Memory, dossier);
     }
 
     private Report AddMemoryToReport(Report report, bool isFinalRun)

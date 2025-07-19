@@ -1,5 +1,6 @@
 using System.Text;
 using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Proceedings;
 
 namespace QuickAcid.Reporting;
 
@@ -12,6 +13,7 @@ public class Report
     public Exception? Exception { get; set; }
     public string Code { get; set; } = string.Empty;
     public List<ShrinkTrace> ShrinkTraces { get; set; } = [];
+    public CaseFile? CaseFile { get; set; }
 
     public virtual void AddEntry(IAmAReportEntry reportEntry)
     {

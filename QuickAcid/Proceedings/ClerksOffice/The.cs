@@ -5,7 +5,7 @@ using QuickPulse.Show;
 namespace QuickAcid.Proceedings.ClerksOffice;
 
 
-public record FlowContext
+public record Decorum
 {
     public Valve Intersperse { get; init; } = Valve.Closed();
     public Valve Line { get; init; } = Valve.Closed();
@@ -35,14 +35,14 @@ public static class The
 
     private readonly static Flow<ActionDeposition> actionDeposition =
         from input in Pulse.Start<ActionDeposition>()
-        from context in Pulse.Gather<FlowContext>()
+        from context in Pulse.Gather<Decorum>()
         from _ in Pulse.When(context.Value.Intersperse.Restricted(), separator)
         from __ in Pulse.Trace($" {input.ActionLabel}")
         select input;
 
     private readonly static Flow<TrackedDeposition> trackedDeposition =
         from input in Pulse.Start<TrackedDeposition>()
-        from context in Pulse.Gather<FlowContext>()
+        from context in Pulse.Gather<Decorum>()
         from _ in Pulse.When(context.Value.Line.Passable(), line)
         from __ in Pulse.Trace($"   => {input.Label} (tracked) : {input.Value}")
         from ___ in newLine
@@ -50,10 +50,14 @@ public static class The
 
     private readonly static Flow<ExecutionDeposition> executionDeposition =
         from input in Pulse.Start<ExecutionDeposition>()
-        from _ in Pulse.Scoped<FlowContext>(a => a with { Line = Valve.Install() }, Pulse.ToFlow(trackedDeposition, input.TrackedDepositions))
+        from _ in Pulse.Scoped<Decorum>(
+            a => a with { Line = Valve.Install() },
+            Pulse.ToFlow(trackedDeposition, input.TrackedDepositions))
         from __ in line
         from ___ in Pulse.Trace($" Executed ({input.ExecutionId}):")
-        from ____ in Pulse.Scoped<FlowContext>(a => a with { Intersperse = Valve.Install() }, Pulse.ToFlow(actionDeposition, input.ActionDepositions))
+        from ____ in Pulse.Scoped<Decorum>(
+            a => a with { Intersperse = Valve.Install() },
+            Pulse.ToFlow(actionDeposition, input.ActionDepositions))
         from _____ in Pulse.ToFlow(inputDeposition, input.InputDepositions)
         select input;
 
@@ -89,12 +93,19 @@ public static class The
         from _2 in Pulse.ToFlowIf(input is ExceptionDeposition, exceptionDeposition, () => (ExceptionDeposition)input)
         select input;
 
+    private readonly static Flow<TestMethodInfoDeposition?> testMethodInfoDeposition =
+        from input in Pulse.Start<TestMethodInfoDeposition>()
+        from _1 in Pulse.Trace($" Test:                    {input.MethodName}").Then(newLine)
+        from _2 in Pulse.Trace($" Location:                {input.SourceFile}:{input.LineNumber}:1").Then(newLine)
+        select input;
+
     private static string Pluralize(int count, string str) =>
         count > 1 ? $"{str}s" : str;
 
     private readonly static Flow<Verdict?> verdict =
         from verdict in Pulse.Start<Verdict>()
         from _ in line
+        from __ in Pulse.ToFlowIf(verdict.TestMethodInfoDeposition != null, testMethodInfoDeposition, () => verdict.TestMethodInfoDeposition)
         let __1 = $"{verdict.OriginalRunExecutionCount} {Pluralize(verdict.OriginalRunExecutionCount, "execution")}"
         from _1 in Pulse.Trace($" Original failing run:    {__1}.")
         from n1 in newLine
@@ -109,7 +120,7 @@ public static class The
 
     public readonly static Flow<CaseFile> CourtStyleGuide =
         from input in Pulse.Start<CaseFile>()
-        from _ in Pulse.Gather(new FlowContext())
+        from _ in Pulse.Gather(new Decorum())
         from runDeposition in Pulse.ToFlow(runDeposition, input.RunDepositions)
         from verdict in Pulse.ToFlow(verdict, input.Verdict)
         select input;

@@ -8,7 +8,7 @@ public class ActionDepositionsTests : DepositionTest
     public void None()
     {
         var caseFile = new CaseFile()
-            .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
+            .WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)));
         var reader = Transcribe(caseFile);
         EndOfContent(reader);
@@ -18,7 +18,7 @@ public class ActionDepositionsTests : DepositionTest
     public void One()
     {
         var caseFile = new CaseFile()
-            .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
+            .WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddActionDeposition(new ActionDeposition("Something I Did"))));
         var reader = Transcribe(caseFile);
@@ -31,7 +31,7 @@ public class ActionDepositionsTests : DepositionTest
     public void Two()
     {
         var caseFile = new CaseFile()
-            .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
+            .WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddActionDeposition(new ActionDeposition("Something I Did"))
                     .AddActionDeposition(new ActionDeposition("Something Else"))));
