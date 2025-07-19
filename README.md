@@ -29,10 +29,10 @@ You can test the overdraft invariant like this:
 var script =
     from account in "Account".Tracked(() => new Account(), a => a.Balance.ToString())
     from _ in "ops".Choose(
-        from amount in "deposit".Input(MGen.Int(0, 10))
+        from amount in "deposit".Input(Fuzz.Int(0, 10))
         from act in "account.Deposit".Act(() => account.Deposit(amount))
         select Acid.Test,
-        from amount in "withdraw".Input(MGen.Constant(42))
+        from amount in "withdraw".Input(Fuzz.Constant(42))
         from act in "account.Withdraw".Act(() => account.Withdraw(amount))
         select Acid.Test
     )

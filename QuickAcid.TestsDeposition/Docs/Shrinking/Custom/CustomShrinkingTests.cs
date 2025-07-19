@@ -29,7 +29,7 @@ public class CustomShrinkingTests
         var observe = new HashSet<int>();
         var script =
             from _ in Shrink<int>.LikeThis(new Shrinky())
-            from input in "input".Input(MGen.Constant(42))
+            from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
@@ -44,7 +44,7 @@ public class CustomShrinkingTests
         var observe = new HashSet<int>();
         var script =
             from _ in Shrink<int>.LikeThis(a => [666])
-            from input in "input".Input(MGen.Constant(42))
+            from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
@@ -59,7 +59,7 @@ public class CustomShrinkingTests
         var observe = new HashSet<int>();
         var script =
             from _ in Shrink<IEnumerable<int>>.LikeThis(a => [[666]])
-            from input in "input".Input(MGen.Constant(42).Many(1))
+            from input in "input".Input(Fuzz.Constant(42).Many(1))
             from foo in "spec".Spec(() => { input.ForEach(a => observe.Add(a)); return false; })
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
@@ -73,7 +73,7 @@ public class CustomShrinkingTests
     {
         var script =
             from _ in ShrinkingPolicy.ForCollections(new RemoveOneByOneStrategy())
-            from input in "input".Input(MGen.Constant<List<int>>([42, 1, 2]))
+            from input in "input".Input(Fuzz.Constant<List<int>>([42, 1, 2]))
             from foo in "spec".Spec(() => !input.Contains(42))
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
@@ -88,7 +88,7 @@ public class CustomShrinkingTests
     {
         var script =
             from _ in ShrinkingPolicy.ForCollections(new ShrinkEachElementStrategy())
-            from input in "input".Input(MGen.Constant<List<int>>([42, 1, 2]))
+            from input in "input".Input(Fuzz.Constant<List<int>>([42, 1, 2]))
             from foo in "spec".Spec(() => !input.Contains(42))
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
@@ -104,7 +104,7 @@ public class CustomShrinkingTests
         var observe = new HashSet<int>();
         var script =
             from _ in Shrink<int>.None()
-            from input in "input".Input(MGen.Constant(42))
+            from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
         var report = new QState(script).ObserveOnce();

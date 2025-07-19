@@ -11,8 +11,8 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void OneRelevantProperty()
         {
             var generator =
-                from _ in MGen.Int(5, 7).AsString().Replace()
-                from thing in MGen.One<Something>()
+                from _ in Fuzz.Int(5, 7).AsString().Replace()
+                from thing in Fuzz.One<Something>()
                 select thing;
             var script =
 
@@ -40,8 +40,8 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void TwoRelevantProperties()
         {
             var generator =
-                from _ in MGen.Int(5, 7).AsString().Replace()
-                from thing in MGen.One<Something>()
+                from _ in Fuzz.Int(5, 7).AsString().Replace()
+                from thing in Fuzz.One<Something>()
                 select thing;
             var script =
 
@@ -69,8 +69,8 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void TwoRelevantPropertiesTricky()
         {
             var generator =
-                from _ in MGen.Int(5, 7).AsString().Replace()
-                from thing in MGen.One<Something>()
+                from _ in Fuzz.Int(5, 7).AsString().Replace()
+                from thing in Fuzz.One<Something>()
                 select thing;
 
             var sometimesPropOne = false;
@@ -118,9 +118,9 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void TwoRelevantPropertiesEvenTrickier()
         {
             var generator =
-                from _ in MGen.Constant(42).AsString().Replace()
-                from cust in MGen.For<Something>().Customize(x => x.MyFourthProperty, "")
-                from thing in MGen.One<Something>()
+                from _ in Fuzz.Constant(42).AsString().Replace()
+                from cust in Fuzz.For<Something>().Customize(x => x.MyFourthProperty, "")
+                from thing in Fuzz.One<Something>()
                 select thing;
 
             var script =

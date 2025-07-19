@@ -27,17 +27,17 @@ public class AcidTests
     }
 
     private static QAcidScript<Acid> CreateCoach(List<Coach> storage) =>
-        from name in "CC Name".Input(MGen.ChooseFrom(DataLists.FirstNames).Unique("coach name"))
-        from email in "CC Email".Input(MGen.Constant($"{name}@CoursesGalore.com"))
-        from coach in "CC Coach".Derived(MGen.Constant(new Coach(name, email)))
+        from name in "CC Name".Input(Fuzz.ChooseFrom(DataLists.FirstNames).Unique("coach name"))
+        from email in "CC Email".Input(Fuzz.Constant($"{name}@CoursesGalore.com"))
+        from coach in "CC Coach".Derived(Fuzz.Constant(new Coach(name, email)))
         from _ in "Create Coach".Act(() => storage.Add(coach))
         select Acid.Test;
 
     private static QAcidScript<Acid> AddSkillToCoach(List<Coach> storage) =>
-        from name in "AStC Name".Input(MGen.ChooseFromWithDefaultWhenEmpty(storage.Select(a => a.Name)))
-        from coach in "AStC Coach".Derived(MGen.Constant(storage.FirstOrDefault(a => a.Name == name)))
+        from name in "AStC Name".Input(Fuzz.ChooseFromWithDefaultWhenEmpty(storage.Select(a => a.Name)))
+        from coach in "AStC Coach".Derived(Fuzz.Constant(storage.FirstOrDefault(a => a.Name == name)))
         let skills = (string[])["DotNet", "Javascript", "Agile", "HTML", "Css", "Entity Framework", "Web API"]
-        from skill in "AStC Skill".Input(MGen.ChooseFrom(skills))
+        from skill in "AStC Skill".Input(Fuzz.ChooseFrom(skills))
         from _ in "Add Skill to Coach".ActIf(() => coach != null, () => coach.AddSkill(skill))
         select Acid.Test;
 }

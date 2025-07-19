@@ -23,7 +23,7 @@ public class InputTests
     public void UnusedInputIsNotReported()
     {
         var script =
-            from input in "input".Input(MGen.Int())
+            from input in "input".Input(Fuzz.Int())
             from foo in "spec".Spec(() => false)
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
@@ -34,14 +34,14 @@ public class InputTests
     [Doc(Order = $"{Chapter.Order}-2", Content =
 @"**Usage example:**
 ```csharp
-from input in ""input"".Input(() => MGen.Int())
+from input in ""input"".Input(() => Fuzz.Int())
 ```
 ")]
     [Fact]
     public void Input_usage()
     {
         var script =
-            from input in "input".Input(MGen.Int())
+            from input in "input".Input(Fuzz.Int())
             select Acid.Test;
         QState.Run(script).WithOneRunAndOneExecution();
     }
@@ -50,7 +50,7 @@ from input in ""input"".Input(() => MGen.Int())
     public void Null_shows_up_in_report_as_null()
     {
         var script =
-            from input in "input".Input(MGen.Constant<string?>(null))
+            from input in "input".Input(Fuzz.Constant<string?>(null))
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
@@ -67,7 +67,7 @@ from input in ""input"".Input(() => MGen.Int())
     public void Empty_String_shows_up_in_report_as_empty()
     {
         var script =
-            from input in "input".Input(MGen.Constant(""))
+            from input in "input".Input(Fuzz.Constant(""))
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
@@ -84,7 +84,7 @@ from input in ""input"".Input(() => MGen.Int())
     public void String_shows_up_in_report_with_quotes()
     {
         var script =
-            from input in "input".Input(MGen.Constant(" "))
+            from input in "input".Input(Fuzz.Constant(" "))
             from foo in "spec".Spec(() => !string.IsNullOrWhiteSpace(input))
             select Acid.Test;
 

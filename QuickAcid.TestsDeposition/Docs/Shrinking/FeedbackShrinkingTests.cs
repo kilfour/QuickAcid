@@ -19,14 +19,14 @@ public class FeedbackShrinkingTests
         var numberOfActionEntries = 0;
         while (numberOfActionEntries < 5)
         {
-            var firstRun = GetRun(MGen.Constant(20));
+            var firstRun = GetRun(Fuzz.Constant(20));
             var state = new QDiagnosticState(firstRun).AllowShrinking(false).Observe(50);
             info = state.GetRunInformation();
             report = state.GetReport();
             Assert.NotNull(report);
             numberOfActionEntries = report.OfType<ReportExecutionEntry>().Count();
         }
-        var shrinkingRun = GetRun(MGen.Int());
+        var shrinkingRun = GetRun(Fuzz.Int());
         report = new QDiagnosticState(shrinkingRun).Shrink(info!).GetReport();
         Assert.NotNull(report);
         Assert.Equal(2, report.OfType<ReportExecutionEntry>().Count());
@@ -40,7 +40,7 @@ public class FeedbackShrinkingTests
         var numberOfActionEntries = 0;
         while (numberOfActionEntries < 5)
         {
-            var firstRun = GetRun(MGen.Constant(20));
+            var firstRun = GetRun(Fuzz.Constant(20));
             var state = new QDiagnosticState(firstRun).AllowShrinking(false).Observe(50);
             info = state.GetRunInformation();
             report = state.GetReport();
@@ -48,7 +48,7 @@ public class FeedbackShrinkingTests
             numberOfActionEntries = report.OfType<ReportExecutionEntry>().Count();
         }
 
-        var shrinkingRun = GetRun(MGen.Int());
+        var shrinkingRun = GetRun(Fuzz.Int());
         report = new QDiagnosticState(shrinkingRun).WithFeedback().Shrink(info!).GetReport();
         Assert.NotNull(report);
         // Assert.Single(report.OfType<ReportExecutionEntry>());

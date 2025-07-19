@@ -24,7 +24,7 @@
 //         var script =
 //             from holder in "container".Stashed(() => new Holder())
 //             from ops in "ops".Choose(
-//                 from id in "to add".Input(MGen.Int(1, 10).Unique("id"))
+//                 from id in "to add".Input(Fuzz.Int(1, 10).Unique("id"))
 //                 from adding in "adding".Act(() => holder.Collection.Add(new Person(id)))
 //                 select Acid.Test,
 //                 from getPerson in "getPerson".Act()

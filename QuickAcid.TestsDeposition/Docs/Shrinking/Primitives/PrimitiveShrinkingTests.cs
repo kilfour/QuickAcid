@@ -29,8 +29,8 @@ public class PrimitiveShrinkingTests
     public void OneRelevantInt()
     {
         var script =
-            from input1 in "input1".Input(MGen.Int(5, 7))
-            from input2 in "input2".Input(MGen.Int(5, 7))
+            from input1 in "input1".Input(Fuzz.Int(5, 7))
+            from input2 in "input2".Input(Fuzz.Int(5, 7))
             from foo in "act".Act(() =>
             {
                 if (input1 == 6) throw new Exception();
@@ -56,8 +56,8 @@ public class PrimitiveShrinkingTests
     public void TwoRelevantInts()
     {
         var script =
-            from input1 in "input1".Input(MGen.Int(5, 7))
-            from input2 in "input2".Input(MGen.Int(5, 7))
+            from input1 in "input1".Input(Fuzz.Int(5, 7))
+            from input2 in "input2".Input(Fuzz.Int(5, 7))
             from foo in "act".Act(() =>
             {
                 if (input1 == 6 && input2 == 6) throw new Exception();
@@ -86,8 +86,8 @@ public class PrimitiveShrinkingTests
     public void TwoRelevantIntsTricky()
     {
         var script =
-            from input1 in "input1".Input(MGen.Int(2, 4))
-            from input2 in "input2".Input(MGen.Int(3, 5))
+            from input1 in "input1".Input(Fuzz.Int(2, 4))
+            from input2 in "input2".Input(Fuzz.Int(3, 5))
             from foo in "act".Act(() =>
             {
                 if (input1 == 3 && input2 > 3) throw new Exception();
@@ -129,8 +129,8 @@ public class PrimitiveShrinkingTests
     public void OneRelevantChar()
     {
         var script =
-            from input1 in "input1".Input(MGen.ChooseFrom(['X', 'Y']))
-            from input2 in "input2".Input(MGen.Char())
+            from input1 in "input1".Input(Fuzz.ChooseFrom(['X', 'Y']))
+            from input2 in "input2".Input(Fuzz.Char())
             from foo in "act".Act(() =>
             {
                 if (input1 == 'X') throw new Exception("Boom");

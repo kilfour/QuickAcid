@@ -12,10 +12,10 @@ public class ShrinkingOperationInputs
         var script =
             from collector in "container".Stashed(() => new TheCollector<int>())
             from ops in "ops".Choose(
-                from i1 in "i1".Input(MGen.Constant(42))
+                from i1 in "i1".Input(Fuzz.Constant(42))
                 from a1 in "act1".Act(() => collector.Flow(i1))
                 select Acid.Test,
-                from i2 in "i2".Input(MGen.Constant(42))
+                from i2 in "i2".Input(Fuzz.Constant(42))
                 from a2 in "act2".Act(() => { if (collector.TheExhibit.Contains(i2)) { throw new Exception(); } })
                 select Acid.Test
             )
@@ -41,10 +41,10 @@ public class ShrinkingOperationInputs
         var script =
             from collector in "container".Stashed(() => new TheCollector<int>())
             from ops in "ops".Choose(
-                from i1 in "i1".Input(MGen.Constant(42))
+                from i1 in "i1".Input(Fuzz.Constant(42))
                 from a1 in "act1".Act(() => collector.Flow(i1))
                 select Acid.Test,
-                from i2 in "i2".Input(MGen.Constant(42))
+                from i2 in "i2".Input(Fuzz.Constant(42))
                 let _ = i2
                 from a2 in "act2".ActCarefully(() =>
                 {
@@ -79,10 +79,10 @@ public class ShrinkingOperationInputs
         var script =
             from collector in "container".Stashed(() => new TheCollector<int>())
             from ops in "ops".Choose(
-                from i1 in "i1".Input(MGen.Constant(42))
+                from i1 in "i1".Input(Fuzz.Constant(42))
                 from a1 in "act1".Act(() => collector.Flow(i1))
                 select Acid.Test,
-                from i2 in "i2".Input(MGen.Constant(42))
+                from i2 in "i2".Input(Fuzz.Constant(42))
                 let _ = i2
                 from a2 in "act2".ActCarefully(() =>
                 {

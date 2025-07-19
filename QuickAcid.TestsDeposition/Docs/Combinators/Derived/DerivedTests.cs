@@ -24,7 +24,7 @@ public class DerivedTests
 @"**Usage example:**
 ```csharp
 from container in ""container"".Stashed(() => new Container<List<int>>([]))
-from input in ""input"".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
+from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
 ```
 
 ")]
@@ -33,7 +33,7 @@ from input in ""input"".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Va
     {
         var script =
             from container in "container".Stashed(() => new Container<List<int>>([]))
-            from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
+            from input in "input".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
             from act in "act".Act(() => container.Value.Add(42))
             from spec in "fail".Spec(() => input != 42)
             select Acid.Test;
@@ -49,7 +49,7 @@ from input in ""input"".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Va
     {
         var script =
             from container in "container".Stashed(() => new Container<List<int>>(new List<int>()))
-            from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
+            from input in "input".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
             select Acid.Test;
         Assert.True(QState.Run(script).WithOneRun().AndOneExecutionPerRun().IsSuccess);
     }

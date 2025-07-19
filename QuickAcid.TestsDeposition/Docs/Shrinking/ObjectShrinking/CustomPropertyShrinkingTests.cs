@@ -12,7 +12,7 @@ public class CustomPropertyShrinkingTests
         var observe = new HashSet<int>();
         var script =
             from _ in Shrink<Container<int>>.For(a => a.Value, a => [666])
-            from input in "input".Input(MGen.Constant(new Container<int>(42)))
+            from input in "input".Input(Fuzz.Constant(new Container<int>(42)))
             from foo in "spec".Spec(() => { observe.Add(input.Value); return false; })
             select Acid.Test;
         var report = new QState(script).ObserveOnce();
@@ -26,7 +26,7 @@ public class CustomPropertyShrinkingTests
         var observe = new HashSet<int>();
         var script =
             from _ in Shrink<Container<int>>.None(a => a.Value)
-            from input in "input".Input(MGen.Constant(new Container<int>(42)))
+            from input in "input".Input(Fuzz.Constant(new Container<int>(42)))
             from foo in "spec".Spec(() => { observe.Add(input.Value); return false; })
             select Acid.Test;
         var report = new QState(script).ObserveOnce();

@@ -19,10 +19,10 @@ funds that will cause the account balance to go below zero, we can write the fol
 var script =
     from account in "Account".Tracked(() => new Account(), a => a.Balance.ToString())
     from _ in "ops".Choose(
-        from depositAmount in "deposit".Input(MGen.Int(0, 10))
+        from depositAmount in "deposit".Input(Fuzz.Int(0, 10))
         from act in "account.Deposit".Act(() => account.Deposit(depositAmount))
         select Acid.Test,
-        from withdrawAmount in "withdraw".Input(MGen.Int(42, 42))
+        from withdrawAmount in "withdraw".Input(Fuzz.Int(42, 42))
         from withdraw in "account.Withdraw:withdraw".Act(() => account.Withdraw(withdrawAmount))
         select Acid.Test
     )
@@ -156,7 +156,7 @@ In the previous section we briefly mentioned executions, let's elaborate and hav
  ```csharp
 var script =
     from container in "container".Stashed(() => new Container(0))
-    from input in "input".Input(MGen.Int(1, 5))
+    from input in "input".Input(Fuzz.Int(1, 5))
     from act in "act".Act(() => container.Value = input)
     from spec in "spec".Spec(() => container.Value != 0)
     select Acid.Test;
@@ -292,7 +292,7 @@ This is the most common kind of test input — think of it as the default for fu
 
 **Usage example:**
 ```csharp
-from input in "input".Input(() => MGen.Int())
+from input in "input".Input(() => Fuzz.Int())
 ```
 
 
@@ -371,7 +371,7 @@ primarily intended for state-sensitive generation where traditional shrinking wo
 **Usage example:**
 ```csharp
 from container in "container".Stashed(() => new Container<List<int>>([]))
-from input in "input".Derived(MGen.ChooseFromWithDefaultWhenEmpty(container.Value))
+from input in "input".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
 ```
 
 
@@ -516,7 +516,7 @@ Which for this example:
 ```csharp
 var script =
     from container in "stashed".Stashed(() => new Container(0))
-    from input in "input".Input(MGen.Int(1, 6))
+    from input in "input".Input(Fuzz.Int(1, 6))
     from act in "act".Act(() => container.Value = input)
     from spec in "spec".Spec(() => container.Value != 5)
     select Acid.Test;

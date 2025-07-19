@@ -96,7 +96,7 @@ This will produce a report that contains :
 ```csharp
 var script =
     from container in ""stashed"".Stashed(() => new Container(0))
-    from input in ""input"".Input(MGen.Int(1, 6))
+    from input in ""input"".Input(Fuzz.Int(1, 6))
     from act in ""act"".Act(() => container.Value = input)
     from spec in ""spec"".Spec(() => container.Value != 5)
     select Acid.Test;
@@ -157,7 +157,7 @@ Outputs something similar to:
     {
         var script =
             from container in "stashed".Stashed(() => new Container<int>(0))
-            from input in "input".Input(MGen.Constant(5))
+            from input in "input".Input(Fuzz.Constant(5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 5)
             select Acid.Test;

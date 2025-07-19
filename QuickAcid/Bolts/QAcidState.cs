@@ -17,7 +17,7 @@ namespace QuickAcid.Bolts;
 public sealed class QAcidState : QAcidContext
 {
 
-    public State MGenState { get; } = new State();
+    public State FuzzState { get; } = new State();
 
     // TODO MAKE INTERNAL
     public QAcidState(QAcidScript<Acid> script)
@@ -32,7 +32,7 @@ public sealed class QAcidState : QAcidContext
     public QAcidState(QAcidScript<Acid> script, int seed)
         : this(script)
     {
-        MGenState = new State(seed);
+        FuzzState = new State(seed);
 
     }
 
@@ -171,7 +171,7 @@ public sealed class QAcidState : QAcidContext
     public bool Verbose { get; set; }
     public bool AlwaysReport { get; set; }
     public bool ShrinkingActions { get; set; }
-    public int Seed { get { return MGenState.Seed; } }
+    public int Seed { get { return FuzzState.Seed; } }
 
     // -----------------------------------------------------------------
     // spec counting
@@ -315,7 +315,7 @@ public sealed class QAcidState : QAcidContext
         var shrinkText = shrinkCount == 1 ? "shrink" : "shrinks";
         yield return $"Original failing run:    {OriginalFailingRunExecutionCount} {executionsText}";
         yield return $"Minimal failing case:    {ExecutionNumbers.Count} {executionsText} (after {shrinkCount} {shrinkText})";
-        yield return $"Seed:                    {MGenState.Seed}";
+        yield return $"Seed:                    {FuzzState.Seed}";
         yield break;
     }
 
@@ -454,7 +454,7 @@ public sealed class QAcidState : QAcidContext
                 OriginalRunExecutionCount: OriginalFailingRunExecutionCount,
                 ExecutionNumbers: ExecutionNumbers,
                 ShrinkCount: shrinkCount,
-                Seed: MGenState.Seed
+                Seed: FuzzState.Seed
             );
         return Compile.TheCaseFile(Memory, dossier);
     }

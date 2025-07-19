@@ -10,9 +10,9 @@ namespace QuickAcid.Tests.Shrinking.Objects
         {
             var script =
                 from input in "input".Input(
-                    from _ in MGen.Constant("Answer me").Replace()
-                    from __ in MGen.Constant(42).Replace()
-                    from thing in MGen.One<Parent>()
+                    from _ in Fuzz.Constant("Answer me").Replace()
+                    from __ in Fuzz.Constant(42).Replace()
+                    from thing in Fuzz.One<Parent>()
                     select thing)
                 from act in "act".Act(() => { })
                 from spec in "spec".SpecIf(() => input.MyChild != null, () => input.MyChild!.MyInt != 42)

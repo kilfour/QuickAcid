@@ -24,10 +24,10 @@ public class AcidTests
         from sCategory in Shrink<Item>.For(a => a.Category, _ => categories)
         from sRate in Shrink<Item>.For(a => a.Rate, _ => rates)
         let itemGenerator =
-            from _1 in MGen.For<Item>().Customize(a => a.Category, MGen.ChooseFromThese(categories))
-            from _2 in MGen.For<Item>().Customize(a => a.Cost, MGen.Decimal().Apply(d => Math.Round(d, 2)))
-            from _3 in MGen.For<Item>().Customize(a => a.Rate, MGen.ChooseFromThese(rates))
-            from item in MGen.One<Item>()
+            from _1 in Fuzz.For<Item>().Customize(a => a.Category, Fuzz.ChooseFromThese(categories))
+            from _2 in Fuzz.For<Item>().Customize(a => a.Cost, Fuzz.Decimal().Apply(d => Math.Round(d, 2)))
+            from _3 in Fuzz.For<Item>().Customize(a => a.Rate, Fuzz.ChooseFromThese(rates))
+            from item in Fuzz.One<Item>()
             select item
         from items in "items".Input(itemGenerator.Many(1, 1))
             // Act

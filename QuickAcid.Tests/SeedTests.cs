@@ -29,7 +29,7 @@ public class SeedTests
     {
         var collector = new List<int>();
         var script =
-            from input in "input".Input(MGen.Int())
+            from input in "input".Input(Fuzz.Int())
             from act in "act".Act(() => collector.Add(input))
             from spec in "spec".Spec(() => collector.Count != 2)
             select Acid.Test;

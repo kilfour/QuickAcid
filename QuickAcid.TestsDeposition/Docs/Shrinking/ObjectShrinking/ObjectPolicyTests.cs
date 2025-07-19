@@ -12,7 +12,7 @@ public class ObjectPolicyTests
         var observe = new HashSet<int>();
         var script =
             from _ in ShrinkingPolicy.ForObjects()
-            from input in "input".Input(MGen.Constant(new Container<int>(42)))
+            from input in "input".Input(Fuzz.Constant(new Container<int>(42)))
             from foo in "spec".Spec(() => { observe.Add(input.Value); return false; })
             select Acid.Test;
         var report = new QState(script).ObserveOnce();

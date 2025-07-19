@@ -19,7 +19,7 @@ public class ExceptionsTests
     public void How_to_catch_multiple()
     {
         var script =
-            from flag in "flag".Input(MGen.Bool())
+            from flag in "flag".Input(Fuzz.Bool())
             from result1 in "act1".ActCarefully(() => { if (flag) throw new Exception(); })
             from result2 in "act2".ActCarefully(() => { if (!flag) throw new Exception(); })
             from throws in "throws".Spec(() => result1.ThrewAs<Exception>() || result2.ThrewAs<Exception>())
@@ -31,7 +31,7 @@ public class ExceptionsTests
     public void How_to_catch_one_out_of_two()
     {
         var script =
-            from flag in "flag".Input(MGen.Bool())
+            from flag in "flag".Input(Fuzz.Bool())
             from result1 in "act1".ActCarefully(() => { })
             from result2 in "act2".ActCarefully(() => { if (flag) throw new Exception(); })
             from throws in "throws".Spec(() => !flag || result2.ThrewAs<Exception>())

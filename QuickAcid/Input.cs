@@ -52,7 +52,7 @@ public static partial class QAcidCombinators
 				when execution.AlreadyTried(key):
 				{
 					Log.This($" AlreadyTried in Input: {key} ({state.CurrentExecutionNumber}).");
-					var value = generator(state.MGenState).Value;
+					var value = generator(state.FuzzState).Value;
 					execution.SetIfNotAlreadyThere(key, value);
 					return QAcidResult.Some(state, value);
 				}
@@ -69,7 +69,7 @@ public static partial class QAcidCombinators
 
 			default:
 				{
-					var value = generator(state.MGenState).Value;
+					var value = generator(state.FuzzState).Value;
 					execution.SetIfNotAlreadyThere(key, value);
 					return QAcidResult.Some(state, value);
 				}

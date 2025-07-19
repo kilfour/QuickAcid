@@ -33,7 +33,7 @@ public class QuickAcidLinq101
     [Doc(Order = $"{Chapter.Order}-1-1", Content = "You can think of scripts as the building blocks of a property-based test.")]
     public void What_is_a_single_script()
     {
-        Assert.IsType<QAcidScript<int>>("an int".Input(MGen.Int()));
+        Assert.IsType<QAcidScript<int>>("an int".Input(Fuzz.Int()));
     }
 
     [Fact]
@@ -148,7 +148,7 @@ In this case :
  ```csharp
 var script =
     from container in ""container"".Stashed(() => new Container(0))
-    from input in ""input"".Input(MGen.Int(1, 5))
+    from input in ""input"".Input(Fuzz.Int(1, 5))
     from act in ""act"".Act(() => container.Value = input)
     from spec in ""spec"".Spec(() => container.Value != 0)
     select Acid.Test;
@@ -187,7 +187,7 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
     {
         var script =
             from container in "container".Stashed(() => new Container<int>(0))
-            from input in "input".Input(MGen.Int(1, 5))
+            from input in "input".Input(Fuzz.Int(1, 5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 0)
             select Acid.Test;

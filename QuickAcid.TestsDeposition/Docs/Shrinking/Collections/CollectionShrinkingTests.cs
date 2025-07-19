@@ -17,7 +17,7 @@ public class CollectionShrinkingTests
     public void Collection_shrink()
     {
         var script =
-            from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 3]))
+            from input in "input".Input(Fuzz.Constant<IEnumerable<int>>([1, 2, 3]))
             from act in "act".Act(() => { })
             from spec in "spec".Spec(() => input.Count() <= 2)
             select Acid.Test;
@@ -36,7 +36,7 @@ public class CollectionShrinkingTests
     public void Collection_nested_shrink()
     {
         var script =
-            from input in "input".Input(MGen.Constant<IEnumerable<List<int>>>([[42]]))
+            from input in "input".Input(Fuzz.Constant<IEnumerable<List<int>>>([[42]]))
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(
                 () => input.Any() && input.First().Count != 0,
@@ -52,7 +52,7 @@ public class CollectionShrinkingTests
     public void Collection_shrink_with_extra()
     {
         var script =
-            from input in "input".Input(MGen.Constant<IEnumerable<int>>([666, 42]))
+            from input in "input".Input(Fuzz.Constant<IEnumerable<int>>([666, 42]))
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(() => input.Count() > 1, () => input.ElementAt(1) != 42)
             select Acid.Test;
@@ -79,7 +79,7 @@ public class CollectionShrinkingTests
     public void Collection_shrink_with_dep()
     {
         var script =
-            from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 3]))
+            from input in "input".Input(Fuzz.Constant<IEnumerable<int>>([1, 2, 3]))
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(() => input.Count() > 2, () =>
             !(input.ToList()[0] == 1
@@ -96,7 +96,7 @@ public class CollectionShrinkingTests
     public void Collection_irrelevant_not_in_report()
     {
         var script =
-            from input in "input".Input(MGen.Int().Many(3))
+            from input in "input".Input(Fuzz.Int().Many(3))
             from act in "act".Act(() => { })
             from spec in "spec".Spec(() => false)
             select Acid.Test;
@@ -109,7 +109,7 @@ public class CollectionShrinkingTests
     public void Collection_shrink_with_haha()
     {
         var script =
-            from input in "input".Input(MGen.Constant<IEnumerable<int>>([1, 2, 1]))
+            from input in "input".Input(Fuzz.Constant<IEnumerable<int>>([1, 2, 1]))
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(1))
             select Acid.Test;
@@ -129,7 +129,7 @@ public class CollectionShrinkingTests
     public void Collection_shrink_with_hahaha()
     {
         var script =
-            from input in "input".Input(MGen.Constant<IEnumerable<Composed>>(
+            from input in "input".Input(Fuzz.Constant<IEnumerable<Composed>>(
                 [new Composed() { One = 42, Two = 0 }, new Composed() { One = 42, Two = 0 }]))
             from act in "act".ActIf(() => input.Count() > 0, () => input.Any(a => a.One == 42))
             from spec in "spec".Spec(() => !act)

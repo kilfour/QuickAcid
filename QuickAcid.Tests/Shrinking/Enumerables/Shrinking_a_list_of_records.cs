@@ -12,8 +12,8 @@ public class Shrinking_a_list_of_records
     {
         var counter = 41;
         var generator =
-            from name in MGen.Constant("jos")
-            from age in MGen.Constant(counter++)
+            from name in Fuzz.Constant("jos")
+            from age in Fuzz.Constant(counter++)
             select new Person(name, age);
 
         var script =

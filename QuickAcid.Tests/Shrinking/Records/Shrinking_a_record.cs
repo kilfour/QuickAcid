@@ -11,8 +11,8 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void One_record()
         {
             var generator =
-                from name in MGen.String()
-                from age in MGen.Constant(42)
+                from name in Fuzz.String()
+                from age in Fuzz.Constant(42)
                 select new Person(name, age);
 
             var script =
@@ -39,13 +39,13 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void Shrinker_cannot_shrink_relevant_field_in_record_YES_IT_CAN()
         {
             var generator1 =
-                from name in MGen.Constant("any")
-                from age in MGen.Constant(43)
+                from name in Fuzz.Constant("any")
+                from age in Fuzz.Constant(43)
                 select new Person(name, age);
 
             var generator2 =
-                from name in MGen.Constant("any")
-                from age in MGen.Constant(40)
+                from name in Fuzz.Constant("any")
+                from age in Fuzz.Constant(40)
                 select new Person(name, age);
 
             var script =
@@ -73,8 +73,8 @@ namespace QuickAcid.Tests.Shrinking.Objects
             100.Times(() =>
             {
                 var generator =
-                from name in MGen.Constant("any")
-                from age in MGen.ChooseFromThese(40, 41, 42, 1000)
+                from name in Fuzz.Constant("any")
+                from age in Fuzz.ChooseFromThese(40, 41, 42, 1000)
                 select new Person(name, age);
 
                 var script =
