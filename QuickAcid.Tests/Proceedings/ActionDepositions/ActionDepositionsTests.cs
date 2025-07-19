@@ -10,9 +10,11 @@ public class ActionDepositionsTests
     public void None()
     {
         var caseFile = new CaseFile()
-            .AddExecutionDeposition(new ExecutionDeposition(1));
+            .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
+                .AddExecutionDeposition(new ExecutionDeposition(1)));
         var result = Clerk.Transcribe(caseFile);
         var reader = LinesReader.FromText(result);
+        reader.Skip(4); // <= ignore Verdict
         Assert.Equal("", reader.NextLine());
         Assert.True(reader.EndOfContent());
     }
@@ -21,10 +23,12 @@ public class ActionDepositionsTests
     public void One()
     {
         var caseFile = new CaseFile()
-            .AddExecutionDeposition(new ExecutionDeposition(1)
-                .AddActionDeposition(new ActionDeposition("Something I Did")));
+            .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
+                .AddExecutionDeposition(new ExecutionDeposition(1)
+                    .AddActionDeposition(new ActionDeposition("Something I Did"))));
         var result = Clerk.Transcribe(caseFile);
         var reader = LinesReader.FromText(result);
+        reader.Skip(4); // <= ignore Verdict
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Executed (1): Something I Did", reader.NextLine());
         Assert.True(reader.EndOfContent());
@@ -34,11 +38,13 @@ public class ActionDepositionsTests
     public void Two()
     {
         var caseFile = new CaseFile()
-            .AddExecutionDeposition(new ExecutionDeposition(1)
-                .AddActionDeposition(new ActionDeposition("Something I Did"))
-                .AddActionDeposition(new ActionDeposition("Something Else")));
+            .WithVerdict(new Verdict(new FailedSpecDeposition("Some Invariant"))
+                .AddExecutionDeposition(new ExecutionDeposition(1)
+                    .AddActionDeposition(new ActionDeposition("Something I Did"))
+                    .AddActionDeposition(new ActionDeposition("Something Else"))));
         var result = Clerk.Transcribe(caseFile);
         var reader = LinesReader.FromText(result);
+        reader.Skip(4); // <= ignore Verdict
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Executed (1): Something I Did, Something Else", reader.NextLine());
         Assert.True(reader.EndOfContent());

@@ -18,6 +18,7 @@ public class AcidTests
                 from storage in "Storage".Stashed(() => new List<Coach>())
                 from operations in "Operations".Choose(CreateCoach(storage), AddSkillToCoach(storage))
                 select Acid.Test, 1470894469)
+            //.Options(a => a with { ReportTo = "HfC", Verbose = true })
             .With(1.Runs())
             .And(20.ExecutionsPerRun()));
         var report = ex.QAcidReport;

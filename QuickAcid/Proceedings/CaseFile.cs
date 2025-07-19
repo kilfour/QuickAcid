@@ -3,11 +3,18 @@ namespace QuickAcid.Proceedings;
 
 public class CaseFile
 {
-    public List<ExecutionDeposition> ExecutionDepositions { get; } = [];
+    public List<RunDeposition> RunDepositions { get; } = [];
+    public Verdict? Verdict { get; private set; }
 
-    public CaseFile AddExecutionDeposition(ExecutionDeposition executionDepostion)
+    public CaseFile AddRunDeposition(RunDeposition runDeposition)
     {
-        ExecutionDepositions.Add(executionDepostion);
+        RunDepositions.Add(runDeposition);
+        return this;
+    }
+
+    public CaseFile WithVerdict(Verdict verdict)
+    {
+        Verdict = verdict;
         return this;
     }
 };
