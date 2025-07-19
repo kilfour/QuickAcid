@@ -1,9 +1,8 @@
 
 using System.Reflection;
-using QuickAcid;
 using QuickAcid.Bolts.TheyCanFade;
-using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
+using QuickFuzzr;
+using QuickFuzzr.UnderTheHood;
 
 namespace QuickAcid.Bolts.ShrinkStrats.Objects;
 

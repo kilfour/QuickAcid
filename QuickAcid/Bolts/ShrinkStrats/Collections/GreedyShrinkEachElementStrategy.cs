@@ -1,6 +1,3 @@
-using System.Collections;
-using QuickAcid.Bolts.TheyCanFade;
-
 namespace QuickAcid.Bolts.ShrinkStrats.Collections;
 
 public class GreedyShrinkEachElementStrategy : ICollectionShrinkStrategy

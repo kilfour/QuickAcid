@@ -2,7 +2,7 @@ using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
 using QuickExplainIt;
-using QuickMGenerate;
+using QuickFuzzr;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Tracked;

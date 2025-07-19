@@ -1,4 +1,4 @@
-using QuickMGenerate;
+using QuickFuzzr;
 
 namespace QuickAcid.Bolts.ShrinkStrats.Objects;
 

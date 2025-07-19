@@ -2,7 +2,7 @@ using QuickAcid;
 using QuickAcid.Bolts;
 using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts.ShrinkStrats;
-using QuickMGenerate;
+using QuickFuzzr;
 using QuickPulse;
 using QuickPulse.Bolts;
 

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using QuickAcid.Reporting;
-using QuickMGenerate;
+using QuickFuzzr;
 using QuickPulse;
 using QuickPulse.Arteries;
 

@@ -1,6 +1,3 @@
-using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
-
 namespace QuickAcid.Tests.Bugs;
 
 public class SpecIfProblems

@@ -1,7 +1,7 @@
 using HorsesForCourses.Core;
-using QuickMGenerate;
+using QuickFuzzr;
 using QuickAcid;
-using QuickMGenerate.Data;
+using QuickFuzzr.Data;
 using QuickPulse;
 using QuickAcid.Reporting;
 

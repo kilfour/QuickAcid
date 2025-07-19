@@ -1,7 +1,6 @@
 using QuickAcid.Bolts.Nuts;
-using QuickAcid.Bolts.ShrinkStrats.Objects;
 using QuickAcid.TestsDeposition._Tools;
-using QuickMGenerate;
+using QuickFuzzr;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.ObjectShrinking;
 

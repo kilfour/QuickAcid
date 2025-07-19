@@ -1,5 +1,5 @@
 ﻿using QuickAcid.Reporting;
-using QuickMGenerate;
+using QuickFuzzr;
 
 namespace QuickAcid.Tests.Linqy.Act;
 

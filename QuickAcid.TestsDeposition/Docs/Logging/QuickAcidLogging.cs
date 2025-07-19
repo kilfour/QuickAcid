@@ -1,7 +1,7 @@
 using QuickExplainIt.Text;
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
-using QuickMGenerate;
+using QuickFuzzr;
 using QuickExplainIt;
 
 namespace QuickAcid.TestsDeposition.Docs.Logging;

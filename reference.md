@@ -179,7 +179,7 @@ which is how QuickAcid handles mutable state and side effects.
 
 **First execution** :
 1. () => new Container() gets called and the result is stored in memory.
-2. A 'shrinkable input' is generated using QuickMGenerate and stored in memory. Let's assume it returns 3. 
+2. A 'shrinkable input' is generated using QuickFuzzr and stored in memory. Let's assume it returns 3. 
 3. The act is performed and container.Value changed.
 4. The invariant defined in spec is checked, and in this case (3 != 0) will pass.
 

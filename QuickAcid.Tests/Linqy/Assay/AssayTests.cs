@@ -1,7 +1,5 @@
-using QuickAcid.Bolts;
-using QuickAcid.Bolts.Nuts;
 using QuickAcid.Reporting;
-using QuickMGenerate;
+using QuickFuzzr;
 
 namespace QuickAcid.Tests.Linqy.Assay;
 

@@ -1,6 +1,5 @@
 using QuickAcid.Bolts;
-using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
+using QuickFuzzr.UnderTheHood;
 
 namespace QuickAcid
 {

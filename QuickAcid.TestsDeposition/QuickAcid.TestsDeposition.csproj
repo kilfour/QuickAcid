@@ -11,7 +11,7 @@
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <!-- <PackageReference Include="QuickExplainIt" Version="0.1.0" /> -->
-    <!-- <PackageReference Include="QuickMGenerate" Version="0.1.0" /> -->
+    <!-- <PackageReference Include="QuickFuzzr" Version="0.1.0" /> -->
     <!-- <PackageReference Include="QuickPulse" Version="0.1.1" /> -->
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
@@ -25,7 +25,7 @@
     <ProjectReference Include="..\QuickAcid\QuickAcid.csproj" />
     <ProjectReference Include="..\..\QuickPulse\QuickPulse\QuickPulse.csproj" />
     <ProjectReference Include="..\..\QuickExplainIt\QuickExplainIt\QuickExplainIt.csproj" />
-    <ProjectReference Include="..\..\QuickMGenerate\QuickMGenerate\QuickMGenerate.csproj" />
+    <ProjectReference Include="..\..\QuickFuzzr\QuickFuzzr\QuickFuzzr.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace QuickAcid.Reporting;
 
 public class ReportInfoEntry : IAmAReportEntry

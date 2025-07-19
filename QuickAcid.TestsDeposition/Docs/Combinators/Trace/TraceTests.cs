@@ -1,7 +1,7 @@
 using QuickAcid.Reporting;
 using QuickExplainIt;
-using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
+using QuickFuzzr;
+using QuickFuzzr.UnderTheHood;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Trace;

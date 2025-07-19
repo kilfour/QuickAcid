@@ -7,8 +7,8 @@ using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Reporting;
-using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
+using QuickFuzzr;
+using QuickFuzzr.UnderTheHood;
 using QuickPulse;
 
 

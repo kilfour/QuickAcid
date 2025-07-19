@@ -1,6 +1,5 @@
-using System.Runtime.Intrinsics.X86;
 using QuickAcid.Reporting;
-using QuickMGenerate;
+using QuickFuzzr;
 using QuickPulse.Arteries;
 
 namespace QuickAcid.Tests.Bugs;

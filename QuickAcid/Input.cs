@@ -1,7 +1,6 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Bolts.ShrinkStrats;
-using QuickMGenerate;
-using QuickMGenerate.UnderTheHood;
+using QuickFuzzr.UnderTheHood;
 
 namespace QuickAcid;
 

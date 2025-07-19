@@ -1,6 +1,4 @@
 using QuickAcid.Proceedings;
-using QuickAcid.Proceedings.ClerksOffice;
-using QuickExplainIt.Text;
 
 namespace QuickAcid.Tests.Proceedings;
 

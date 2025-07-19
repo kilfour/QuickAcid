@@ -1,5 +1,4 @@
-using QuickAcid.Bolts.Nuts;
-using QuickMGenerate;
+using QuickFuzzr;
 
 namespace QuickAcid.Tests.Bugs;
 

@@ -1,6 +1,6 @@
 using QuickAcid.Reporting;
 using QuickExplainIt;
-using QuickMGenerate;
+using QuickFuzzr;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Primitives;
 
