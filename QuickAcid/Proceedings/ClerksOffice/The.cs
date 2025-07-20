@@ -30,20 +30,19 @@ public static class The
     private readonly static Flow<InputDeposition> inputDeposition =
         from input in Pulse.Start<InputDeposition>()
         from _ in newLine
-        from __ in Pulse.Trace($"   - Input: {input.Label} = {Introduce.This(input.Value, false)}")
+        from __ in Pulse.Trace($"   - Input: {input.Label} = {input.Value}")
         select input;
 
     private readonly static Flow<ActionDeposition> actionDeposition =
         from input in Pulse.Start<ActionDeposition>()
-        from context in Pulse.Gather<Decorum>()
-        from _ in Pulse.When(context.Value.Intersperse.Restricted(), separator)
+        from _ in Pulse.When<Decorum>(a => a.Intersperse.Restricted(), separator)
         from __ in Pulse.Trace($" {input.ActionLabel}")
         select input;
 
     private readonly static Flow<TrackedDeposition> trackedDeposition =
         from input in Pulse.Start<TrackedDeposition>()
         from context in Pulse.Gather<Decorum>()
-        from _ in Pulse.When(context.Value.Line.Passable(), line)
+        from _ in Pulse.When<Decorum>(a => a.Line.Passable(), line)
         from __ in Pulse.Trace($"   => {input.Label} (tracked) : {input.Value}")
         from ___ in newLine
         select input;
@@ -54,7 +53,7 @@ public static class The
             a => a with { Line = Valve.Install() },
             Pulse.ToFlow(trackedDeposition, input.TrackedDepositions))
         from __ in line
-        from ___ in Pulse.Trace($" Executed ({input.ExecutionId}):")
+        from ___ in Pulse.Trace($"  Executed ({input.ExecutionId}):")
         from ____ in Pulse.Scoped<Decorum>(
             a => a with { Intersperse = Valve.Install() },
             Pulse.ToFlow(actionDeposition, input.ActionDepositions))
@@ -107,13 +106,13 @@ public static class The
         from _ in line
         from __ in Pulse.ToFlowIf(verdict.TestMethodInfoDeposition != null, testMethodInfoDeposition, () => verdict.TestMethodInfoDeposition)
         let __1 = $"{verdict.OriginalRunExecutionCount} {Pluralize(verdict.OriginalRunExecutionCount, "execution")}"
-        from _1 in Pulse.Trace($" Original failing run:    {__1}.")
+        from _1 in Pulse.Trace($" Original failing run:    {__1}")
         from n1 in newLine
         let _21 = $"{verdict.ExecutionCount} {Pluralize(verdict.ExecutionCount, "execution")}"
         let _22 = $"{verdict.ShrinkCount} {Pluralize(verdict.ShrinkCount, "shrink")}"
-        from _2 in Pulse.Trace($" Minimal failing case:    {_21} after ({_22}).")
+        from _2 in Pulse.Trace($" Minimal failing case:    {_21} (after {_22})")
         from n2 in newLine
-        from _3 in Pulse.Trace($" Seed:                    {verdict.Seed}.")
+        from _3 in Pulse.Trace($" Seed:                    {verdict.Seed}")
         from _4 in Pulse.ToFlow(maybeExecutionDeposition, verdict.ExecutionDepositions)
         from _5 in Pulse.ToFlow(failureDeposition, verdict.FailureDeposition)
         select verdict;

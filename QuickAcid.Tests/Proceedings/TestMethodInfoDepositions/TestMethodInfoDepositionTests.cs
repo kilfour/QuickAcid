@@ -19,9 +19,9 @@ public class TestMethodInfoDepositionTests : DepositionTest
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Test:                    method name", reader.NextLine());
         Assert.Equal(" Location:                source/file.cs:42:1", reader.NextLine());
-        Assert.Equal(" Original failing run:    10 executions.", reader.NextLine());
-        Assert.Equal(" Minimal failing case:    4 executions after (1 shrink).", reader.NextLine());
-        Assert.Equal(" Seed:                    12345678.", reader.NextLine());
+        Assert.Equal(" Original failing run:    10 executions", reader.NextLine());
+        Assert.Equal(" Minimal failing case:    4 executions (after 1 shrink)", reader.NextLine());
+        Assert.Equal(" Seed:                    12345678", reader.NextLine());
         Assert.Equal(" ═════════════════════════════════", reader.NextLine());
         Assert.Equal("  ❌ Spec Failed: Some Invariant", reader.NextLine());
         Assert.Equal(" ═════════════════════════════════", reader.NextLine());

@@ -60,7 +60,7 @@ from input in ""input"".Input(() => Fuzz.Int())
         var entry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(entry);
         Assert.Equal("input", entry.Key);
-        Assert.Equal("<null>", entry.Value);
+        Assert.Equal("null", entry.Value);
     }
 
     [Fact]

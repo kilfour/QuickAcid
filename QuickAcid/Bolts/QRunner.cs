@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Reporting;
 using QuickFuzzr;
 using QuickPulse;
@@ -81,6 +82,10 @@ public class QRunner
             var filename = Path.Combine(".quickacid", "reports", $"{config.ReportTo}.qr");
             Signal.Tracing<string>().SetArtery(new WriteDataToFile(filename).ClearFile())
                    .Pulse(report.Entries.Select(a => a.ToString()!));
+
+            var filenameCf = Path.Combine(".quickacid", "reports", $"{config.ReportTo}Qf.qr");
+            Signal.Tracing<string>().SetArtery(new WriteDataToFile(filenameCf).ClearFile())
+                   .Pulse(Clerk.Transcribe(report.CaseFile!));
         }
     }
     private bool Replay()

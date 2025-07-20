@@ -62,9 +62,7 @@ public class FeedbackShrinkingTests
     private QAcidScript<Acid> GetRun(Generator<int> intGenerator)
     {
         return
-            from account in "Account".Tracked(
-                () => new Account(),
-                a => a.Balance.ToString())
+            from account in "Account".Tracked(() => new Account())
             from box in "flag".StashedValue(false)
             from _ in "ops".Choose(
                 from depositAmount in "deposit".Input(intGenerator)

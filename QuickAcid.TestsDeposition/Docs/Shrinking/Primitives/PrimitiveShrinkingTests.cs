@@ -142,7 +142,7 @@ public class PrimitiveShrinkingTests
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
         Assert.Equal("input1", inputEntry.Key);
-        Assert.Equal("X", inputEntry.Value); // Could use .ToString(CultureInfo.InvariantCulture) if needed
+        Assert.Equal("'X'", inputEntry.Value); // Could use .ToString(CultureInfo.InvariantCulture) if needed
 
         var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(actEntry);

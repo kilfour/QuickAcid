@@ -43,8 +43,6 @@ public class PrimitiveShrinkStrategy
         if (!originalFails)
             return;
 
-        var stringify = QuickAcidStringify.Default();
-
         if (state.InFeedbackShrinkingPhase)
         {
             foreach (var candidate in primitiveVals.Where(x => !Equals(x, value)))

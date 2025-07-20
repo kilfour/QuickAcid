@@ -1,5 +1,6 @@
 using QuickAcid.MonadiXEtAl;
 using QuickAcid.Reporting;
+using QuickPulse.Show;
 
 namespace QuickAcid.Bolts.TheyCanFade;
 
@@ -15,10 +16,10 @@ public class TrackedInputMemory
         this.getCurrentActionId = getCurrentActionId;
     }
 
-    public T Store<T>(string key, Func<T> factory, Func<T, string> stringify)
+    public T Store<T>(string key, Func<T> factory)
     {
         var val = StoreWithoutReporting(key, factory);
-        ReportForCurrent()[key] = stringify(val);
+        ReportForCurrent()[key] = Introduce.This(val!, false);
         return val;
     }
 

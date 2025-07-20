@@ -4,17 +4,13 @@ namespace QuickAcid;
 
 public static partial class QAcidCombinators
 {
-	public static QAcidScript<T> Tracked<T>(this string key, Func<T> func)
-	{
-		return Tracked(key, func, QuickAcidStringify.Default<T>());
-	}
 
-	public static QAcidScript<T> Tracked<T>(this string key, Func<T> func, Func<T, string> stringify)
+	public static QAcidScript<T> Tracked<T>(this string key, Func<T> func)
 	{
 		return
 			state =>
 				{
-					return QAcidResult.Some(state, state.Memory.StoreTracked(key, func, stringify));
+					return QAcidResult.Some(state, state.Memory.StoreTracked(key, func));
 				};
 	}
 

@@ -1,4 +1,5 @@
 using QuickAcid.Bolts.ShrinkStrats;
+using QuickPulse.Show;
 
 namespace QuickAcid.Bolts;
 
@@ -25,6 +26,6 @@ public class CustomShrinkStrategy
 
         return failureAlwaysOccurs
             ? ShrinkOutcome.Irrelevant
-            : ShrinkOutcome.Report(QuickAcidStringify.Default()(original));
+            : ShrinkOutcome.Report(Introduce.This(original, false));
     }
 }

@@ -265,9 +265,8 @@ The key difference is that `Tracked(...) `also ensures this value is **always in
 
 **Usage example:**
 ```csharp
-from account in "account".Tracked(() => new Account(), a => a.Balance.ToString())
+from account in "account".Tracked(() => new Account())
 ```
-The second argument is a formatter function for rendering the value into the test report.
 
 
 ##### TrackedValue

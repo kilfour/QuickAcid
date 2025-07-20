@@ -1,6 +1,7 @@
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Reporting;
+using QuickPulse.Show;
 
 namespace QuickAcid.Bolts;
 
@@ -41,7 +42,7 @@ public static class MemoryReportAssembler
                         if (val.ReportingIntent != ReportingIntent.Never)
                             entries.Add(new ReportInputEntry(LabelPrettifier.Prettify(key))
                             {
-                                Value = QuickAcidStringify.Default()(val.Value!)
+                                Value = Introduce.This(val.Value!, false)
                             });
                     }
                 }

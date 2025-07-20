@@ -25,7 +25,7 @@ public class TrackedDepositionsTests : DepositionTest
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal("   => Tracked Value (tracked) : { Property = 42}", reader.NextLine());
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
-        Assert.Equal(" Executed (1):", reader.NextLine());
+        Assert.Equal("  Executed (1):", reader.NextLine());
         EndOfContent(reader);
     }
 
@@ -42,7 +42,7 @@ public class TrackedDepositionsTests : DepositionTest
         Assert.Equal("   => Tracked Value (tracked) : { Property = 42}", reader.NextLine());
         Assert.Equal("   => Other (tracked) : { Truthy = false }", reader.NextLine());
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
-        Assert.Equal(" Executed (1):", reader.NextLine());
+        Assert.Equal("  Executed (1):", reader.NextLine());
         EndOfContent(reader);
     }
 }

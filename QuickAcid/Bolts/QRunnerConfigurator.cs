@@ -3,6 +3,7 @@ using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Reporting;
 using QuickPulse;
 using QuickPulse.Bolts;
+using QuickPulse.Show;
 
 namespace QuickAcid.Bolts;
 
@@ -37,9 +38,9 @@ public record QRunnerConfig
     private static readonly Flow<ShrinkTrace> DefaultFormat =
         from input in Pulse.Start<ShrinkTrace>()
         from _ in Pulse.TraceIf(input.Intent == ShrinkIntent.Irrelevant,
-            $"  {input.Key} = {QuickAcidStringify.Default()(input.Original!)}, ExecId = {input.ExecutionId}, Intent = {input.Intent} (Cause: {QuickAcidStringify.Default()(input.Result!)}), Strategy = {input.Strategy} ")
+            $"  {input.Key} = {Introduce.This(input.Original!, false)}, ExecId = {input.ExecutionId}, Intent = {input.Intent} (Cause: {Introduce.This(input.Result!, false)}), Strategy = {input.Strategy} ")
         from __ in Pulse.TraceIf(input.Intent != ShrinkIntent.Irrelevant,
-            $"  {input.Key} = {QuickAcidStringify.Default()(input.Original!)}, ExecId = {input.ExecutionId}, Intent = {input.Intent}, Strategy = {input.Strategy}")
+            $"  {input.Key} = {Introduce.This(input.Original!, false)}, ExecId = {input.ExecutionId}, Intent = {input.Intent}, Strategy = {input.Strategy}")
         select input;
 }
 

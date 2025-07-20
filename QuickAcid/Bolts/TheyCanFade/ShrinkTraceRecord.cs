@@ -1,4 +1,5 @@
 using QuickAcid.Bolts.ShrinkStrats;
+using QuickPulse.Show;
 
 namespace QuickAcid.Bolts.TheyCanFade;
 
@@ -40,9 +41,9 @@ public class ShrinkTraceRecord
         if (shrinkTrace.IsIrrelevant)
             return irrelevantString;
         if (shrinkTrace.IsReplacement)
-            return QuickAcidStringify.Default()(shrinkTrace.Result!);
+            return Introduce.This(shrinkTrace.Result!, false);
         if (shrinkTrace.IsKeep)
-            return QuickAcidStringify.Default()(shrinkTrace.Original!);
+            return Introduce.This(shrinkTrace.Original!, false);
         return string.Empty;
     }
 
@@ -61,7 +62,7 @@ public class ShrinkTraceRecord
                 return "";
             var replaced = Traces.FirstOrDefault(a => a.IsReplacement);
             if (replaced != null)
-                return QuickAcidStringify.Default()(replaced.Result!);
+                return Introduce.This(replaced.Result!, false);
             var shrinkValues = Children.Values.Select(a => a.GetShrinkReportString("_")).Where(a => !string.IsNullOrEmpty(a));
             if (shrinkValues.Any())
                 return $"[ {string.Join(", ", shrinkValues)} ]";
@@ -77,7 +78,7 @@ public class ShrinkTraceRecord
                 return "";
             var replaced = Traces.FirstOrDefault(a => a.IsReplacement);
             if (replaced != null)
-                return QuickAcidStringify.Default()(replaced.Result!);
+                return Introduce.This(replaced.Result!, false);
             var shrinkValues =
                 Children.Values
                     .Select(a => (a.GetFinalTrace()!.Name, Value: a.GetShrinkReportString("")))

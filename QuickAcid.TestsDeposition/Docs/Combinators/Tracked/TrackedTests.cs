@@ -18,27 +18,26 @@ public class TrackedTests
     [Doc(Order = $"{Chapter.Order}-1", Content =
 @"**Usage example:**
 ```csharp
-from account in ""account"".Tracked(() => new Account(), a => a.Balance.ToString())
+from account in ""account"".Tracked(() => new Account())
 ```
-The second argument is a formatter function for rendering the value into the test report.
 ")]
     [Fact]
     public void Tracked_usage_and_stringify()
     {
         var script =
-            from account in "account".Tracked(() => new Account(), a => a.Balance.ToString())
+            from account in "account".Tracked(() => new Account())
             select Acid.Test;
         var report = new QState(script).AlwaysReport().ObserveOnce();
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
-        Assert.Equal("   => account (tracked) : 0", entry.ToString());
+        Assert.Equal("   => account (tracked) : { Balance: 0 }", entry.ToString());
     }
 
     [Fact]
     public void Tracked_in_report_after_shrinking()
     {
         var script =
-           from container in "container".Tracked(() => new Container<int>(21), a => a.Value.ToString())
+           from container in "container".Tracked(() => new Container<int>(21))
            from input in "input".Input(Fuzz.Constant(42))
            from _do in "do".Act(() => { container.Value = input; })
            from _ in "spec".Spec(() => container.Value != 42)
@@ -48,7 +47,7 @@ The second argument is a formatter function for rendering the value into the tes
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
-        Assert.Equal("21", entry.Value);
+        Assert.Equal("{ Value: 21 }", entry.Value);
     }
 
     [Fact]

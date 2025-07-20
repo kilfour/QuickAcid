@@ -5,6 +5,7 @@ using QuickAcid.Bolts.ShrinkStrats;
 using QuickFuzzr;
 using QuickPulse;
 using QuickPulse.Bolts;
+using QuickPulse.Show;
 
 namespace LegacyLogic;
 
@@ -54,7 +55,7 @@ public class AcidTests
     private Flow<ShrinkTrace> filterTraces =
         from input in Pulse.Start<ShrinkTrace>()
         from _ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink" && input.Intent == ShrinkIntent.Keep,
-            $"{input.Key}: {input.Intent}, {input.Strategy} ({QuickAcidStringify.Default()(input.Result!)})")
+            $"{input.Key}: {input.Intent}, {input.Strategy} ({Introduce.This(input.Result!, false)})")
         from __ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink" && input.Intent != ShrinkIntent.Keep,
             $"{input.Key}: {input.Intent}, {input.Strategy}")
         from ___ in Pulse.TraceIf(input.Strategy != "PrimitiveShrink",

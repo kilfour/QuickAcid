@@ -36,18 +36,5 @@ public class FalsifiableException : Exception
 			}
 		}
 		return report;
-		// Skip frames:
-		// 1. This constructor
-		// 2. The throw site in QuickAcid
-		// 3. Any [StackTraceHidden] methods (they’re still counted!)
-		// var stackTrace = new StackTrace(skipFrames: 4, fNeedFileInfo: true);
-		// var frame = stackTrace.GetFrame(0);
-		// var method = frame?.GetMethod();
-
-		// var testMethod = method?.Name ?? "unknown_test";
-		// var sourceFile = frame?.GetFileName() ?? "unknown_file";
-		// var lineNumber = frame?.GetFileLineNumber() ?? 0;
-		// report.AddTestMethodInfo(testMethod, sourceFile, lineNumber);
-		// return report;
 	}
 }

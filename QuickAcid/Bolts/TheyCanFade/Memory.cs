@@ -21,8 +21,8 @@ public class Memory
 		trackedInputMemory = new TrackedInputMemory(getCurrentExecutionId);
 	}
 
-	public T StoreTracked<T>(string key, Func<T> factory, Func<T, string> stringify)
-		=> trackedInputMemory.Store(key, factory, stringify);
+	public T StoreTracked<T>(string key, Func<T> factory)
+		=> trackedInputMemory.Store(key, factory);
 
 	public T StoreStashed<T>(string key, Func<T> factory)
 		=> trackedInputMemory.StoreWithoutReporting(key, factory);
