@@ -247,11 +247,6 @@ public sealed class QAcidState : QAcidContext
         Script(this);
         if (CurrentContext.Failed)
         {
-            if (Verbose)
-            {
-                report.AddEntry(new ReportTitleSectionEntry(["FIRST FAILED RUN"]));
-                AddMemoryToReport(report, false);
-            }
             HandleFailure();
             return;
         }
@@ -260,6 +255,14 @@ public sealed class QAcidState : QAcidContext
 
     public void HandleFailure()
     {
+        var runs = new List<RunDeposition>();
+        if (Verbose)
+        {
+            report.AddEntry(new ReportTitleSectionEntry(["FIRST FAILED RUN"]));
+            AddMemoryToReport(report, false);
+            runs.Add(WitnessTheRun("FIRST FAILED RUN"));
+
+        }
         ExecutionNumbers = [.. ExecutionNumbers.Where(x => x != -1)];
         OriginalFailingRunExecutionCount = ExecutionNumbers.Count;
         if (AllowShrinking)
@@ -269,6 +272,7 @@ public sealed class QAcidState : QAcidContext
             {
                 report.AddEntry(new ReportTitleSectionEntry(["AFTER EXECUTION SHRINKING"]));
                 AddMemoryToReport(report, false);
+                runs.Add(WitnessTheRun("AFTER EXECUTION SHRINKING"));
             }
             if (ShrinkingActions)
             {
@@ -277,6 +281,7 @@ public sealed class QAcidState : QAcidContext
                 {
                     report.AddEntry(new ReportTitleSectionEntry(["AFTER ACTION SHRINKING"]));
                     AddMemoryToReport(report, false);
+                    runs.Add(WitnessTheRun("AFTER ACTION SHRINKING"));
                 }
             }
             ShrinkInputs();
@@ -301,6 +306,10 @@ public sealed class QAcidState : QAcidContext
         }
         AddMemoryToReport(report, true);
         report.CaseFile = CompileTheCaseFile();
+        foreach (var run in runs)
+        {
+            report.CaseFile.AddRunDeposition(run);
+        }
         report.ShrinkTraces =
             Memory.AllAccesses()
                 .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
@@ -457,6 +466,11 @@ public sealed class QAcidState : QAcidContext
                 Seed: FuzzState.Seed
             );
         return Compile.TheCaseFile(Memory, dossier);
+    }
+
+    private RunDeposition WitnessTheRun(string label)
+    {
+        return Compile.TheRun(label, Memory, ExecutionNumbers);
     }
 
     private Report AddMemoryToReport(Report report, bool isFinalRun)

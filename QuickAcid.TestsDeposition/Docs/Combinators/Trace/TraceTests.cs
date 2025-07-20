@@ -26,7 +26,7 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             from _ in "act".Act(() => { })
             from __ in "Info Key".Trace(() => "Extra words")
             select Acid.Test;
-        var report = new QState(script).AlwaysReport().ObserveOnce();
+        var report = QState.Run(script).WithOneRunAndOneExecution();
         var entry = report.Single<ReportTraceEntry>();
         Assert.NotNull(entry);
         Assert.Equal("Extra words", entry.Value);
@@ -42,7 +42,7 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             from __ in "Info Key".Trace(() => $"[ {string.Join(", ", ints)} ]")
             from ___ in "spec".Spec(() => counter < 3)
             select Acid.Test;
-        var report = new QState(script).AlwaysReport().ObserveOnce();
+        var report = QState.Run(script).WithOneRunAndOneExecution();
         var entry = report.Single<ReportTraceEntry>();
         Assert.NotNull(entry);
         Assert.Equal("[ 42, 42 ]", entry.Value);
@@ -88,7 +88,7 @@ from _ in ""Info Key"".TraceIf(() => number == 42, () => ""Extra words"")
             from __ in "Trace 42".TraceIf(() => input == 42, () => "YEP 1")
             from ___ in "Trace not 42".TraceIf(() => input != 42, () => "YEP 2")
             select Acid.Test;
-        var report = new QState(script).AlwaysReport().ObserveOnce();
+        var report = QState.Run(script).WithOneRunAndOneExecution();
         var entry = report.Single<ReportTraceEntry>();
         Assert.NotNull(entry);
         Assert.Equal("Trace 42", entry.Key);

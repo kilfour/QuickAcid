@@ -67,7 +67,9 @@ public static class The
 
     private readonly static Flow<RunDeposition> runDeposition =
         from input in Pulse.Start<RunDeposition>()
-        from _ in Pulse.ToFlow(maybeExecutionDeposition, input.ExecutionDepositions)
+        from _ in line
+        from __ in space.Then(Pulse.Trace(input.RunLabel))
+        from ___ in Pulse.ToFlow(maybeExecutionDeposition, input.ExecutionDepositions).Then(newLine)
         select input;
 
     private readonly static Flow<FailedSpecDeposition> failedSpecDeposition =

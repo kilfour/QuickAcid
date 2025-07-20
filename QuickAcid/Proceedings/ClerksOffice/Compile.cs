@@ -1,5 +1,6 @@
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
+using QuickPulse.Show;
 
 namespace QuickAcid.Proceedings.ClerksOffice;
 
@@ -10,18 +11,18 @@ public static class Compile
         var verdict = Verdict.FromDossier(dossier);
         foreach (var executionNumber in dossier.ExecutionNumbers.ToList())
         {
-            verdict.AddExecutionDeposition(GetExecutionDeposition(Memory, executionNumber));
+            verdict.AddExecutionDeposition(GetExecutionDeposition(Memory, executionNumber, true));
         }
         return new CaseFile().WithVerdict(verdict);
     }
 
-    private static ExecutionDeposition GetExecutionDeposition(Memory Memory, int executionNumber)
+    private static ExecutionDeposition GetExecutionDeposition(Memory Memory, int executionNumber, bool isVerdict)
     {
         var executionDeposition = new ExecutionDeposition(executionNumber);
         GetTrackedDepositions(Memory, executionNumber, executionDeposition);
         var access = Memory.For(executionNumber);
         GetActionDepositions(executionDeposition, access);
-        GetInputDepositions(executionDeposition, access);
+        GetInputDepositions(executionDeposition, access, isVerdict);
         return executionDeposition;
     }
 
@@ -34,12 +35,17 @@ public static class Compile
         }
     }
 
-    private static void GetInputDepositions(ExecutionDeposition executionDeposition, Access access)
+    private static void GetInputDepositions(ExecutionDeposition executionDeposition, Access access, bool isVerdict)
     {
         foreach (var (key, val) in access.GetAll())
         {
             var shrinkOutcome = val.GetShrinkOutcome();
-            if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
+            if (!isVerdict)
+            {
+                if (val.ReportingIntent != ReportingIntent.Never)
+                    executionDeposition.AddInputDeposition(new InputDeposition(key, Introduce.This(val.Value!, false)));
+            }
+            else if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
             {
                 executionDeposition.AddInputDeposition(new InputDeposition(key, msg));
             }
@@ -52,6 +58,16 @@ public static class Compile
         {
             executionDeposition.AddActionDeposition(new ActionDeposition(action));
         }
+    }
+
+    internal static RunDeposition TheRun(string label, Memory memory, List<int> ExecutionNumbers)
+    {
+        var runDeposition = new RunDeposition(label);
+        foreach (var executionNumber in ExecutionNumbers.ToList())
+        {
+            runDeposition.AddExecutionDeposition(GetExecutionDeposition(memory, executionNumber, false));
+        }
+        return runDeposition;
     }
 }
 
