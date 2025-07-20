@@ -7,8 +7,7 @@ public class InputDepositionsTests : DepositionTest
     [Fact]
     public void None()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier)
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)));
         var reader = Transcribe(caseFile);
         EndOfContent(reader);
@@ -17,8 +16,7 @@ public class InputDepositionsTests : DepositionTest
     [Fact]
     public void One_Int()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier)
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddInputDeposition(new InputDeposition("PropertyName", 42))));
         var reader = Transcribe(caseFile);
@@ -31,8 +29,7 @@ public class InputDepositionsTests : DepositionTest
     [Fact]
     public void One_String()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier)
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddInputDeposition(new InputDeposition("PropertyName", "\"42\""))));
         var reader = Transcribe(caseFile);
@@ -45,8 +42,7 @@ public class InputDepositionsTests : DepositionTest
     [Fact]
     public void Two()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier)
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddInputDeposition(new InputDeposition("One", 42))
                     .AddInputDeposition(new InputDeposition("Two", "\"42\""))));

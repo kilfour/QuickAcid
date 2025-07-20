@@ -12,8 +12,7 @@ public class TestMethodInfoDepositionTests : DepositionTest
     [Fact]
     public void One()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier)
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddTestMethodDisposition(new TestMethodInfoDeposition("method name", "source/file.cs", 42)));
         var reader = Transcribe(caseFile);
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());

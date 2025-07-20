@@ -7,8 +7,7 @@ public class ExceptionDepositionsTests : DepositionTest
     [Fact]
     public void One()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(
                 Dossier with { FailingSpec = null, Exception = new Exception("BOOM") }));
 
         var reader = Transcribe(caseFile);

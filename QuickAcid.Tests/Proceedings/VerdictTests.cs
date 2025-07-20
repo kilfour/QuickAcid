@@ -8,7 +8,7 @@ public class VerdictTests : DepositionTest
     [Fact]
     public void One()
     {
-        var caseFile = new CaseFile().WithVerdict(Verdict.FromDossier(Dossier));
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier));
         var reader = Transcribe(caseFile);
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Original failing run:    10 executions", reader.NextLine());

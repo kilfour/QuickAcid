@@ -7,8 +7,7 @@ public class TrackedDepositionsTests : DepositionTest
     [Fact]
     public void None()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier)
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)));
         var reader = Transcribe(caseFile);
         EndOfContent(reader);
@@ -17,8 +16,7 @@ public class TrackedDepositionsTests : DepositionTest
     [Fact]
     public void One()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier)
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddTrackedDeposition(new TrackedDeposition("Tracked Value", "{ Property = 42}"))));
         var reader = Transcribe(caseFile);
@@ -32,8 +30,7 @@ public class TrackedDepositionsTests : DepositionTest
     [Fact]
     public void Two()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier)
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddTrackedDeposition(new TrackedDeposition("Tracked Value", "{ Property = 42}"))
                     .AddTrackedDeposition(new TrackedDeposition("Other", "{ Truthy = false }"))));

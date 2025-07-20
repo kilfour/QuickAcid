@@ -9,8 +9,7 @@ public class FailedSpecDepositionsTests : DepositionTest
     [Fact]
     public void One()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier));
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier));
 
         var reader = Transcribe(caseFile);
         Assert.Equal(" ═════════════════════════════════", reader.NextLine());

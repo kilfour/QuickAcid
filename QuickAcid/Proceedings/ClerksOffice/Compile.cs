@@ -13,7 +13,7 @@ public static class Compile
         {
             verdict.AddExecutionDeposition(GetExecutionDeposition(Memory, executionNumber, true));
         }
-        return new CaseFile().WithVerdict(verdict);
+        return CaseFile.WithVerdict(verdict);
     }
 
     private static ExecutionDeposition GetExecutionDeposition(Memory Memory, int executionNumber, bool isVerdict)

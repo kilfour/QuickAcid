@@ -9,8 +9,7 @@ public class RunDepositionsTest : DepositionTest
     [Fact]
     public void One()
     {
-        var caseFile = new CaseFile()
-            .WithVerdict(Verdict.FromDossier(Dossier))
+        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier))
             .AddRunDeposition(new RunDeposition("A LABEL")
                 .AddExecutionDeposition(new ExecutionDeposition(1)
                     .AddActionDeposition(new ActionDeposition("Something I Did"))
