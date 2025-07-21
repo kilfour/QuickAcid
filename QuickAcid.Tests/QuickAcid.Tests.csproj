@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
@@ -10,8 +10,6 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <!-- <PackageReference Include="QuickPulse" Version="0.1.5" /> -->
-    <!-- <PackageReference Include="QuickFuzzr" Version="0.1.0" /> -->
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
@@ -22,10 +20,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QuickAcid\QuickAcid.csproj" />
-    <ProjectReference Include="..\..\QuickExplainIt\QuickExplainIt\QuickExplainIt.csproj" />
-    <ProjectReference Include="..\..\QuickPulse\QuickPulse\QuickPulse.csproj" />
-    <ProjectReference Include="..\..\QuickPulse.Show\QuickPulse.Show\QuickPulse.Show.csproj" />
-    <ProjectReference Include="..\..\QuickFuzzr\QuickFuzzr\QuickFuzzr.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="QuickPulse.Explains" Version="0.1.1" />
+  </ItemGroup>
+
+  <!-- <ItemGroup>
+    <ProjectReference Include="..\..\QuickPulse.Explains\QuickPulse.Explains\QuickPulse.Explains.csproj" /> 
+  </ItemGroup> -->
 
 </Project>

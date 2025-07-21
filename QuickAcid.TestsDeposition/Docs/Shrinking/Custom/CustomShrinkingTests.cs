@@ -2,7 +2,7 @@ using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Reporting;
-using QuickExplainIt;
+using QuickPulse.Explains;
 using QuickFuzzr;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Custom;

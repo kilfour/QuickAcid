@@ -1,7 +1,7 @@
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
-using QuickExplainIt;
+using QuickPulse.Explains;
 using QuickFuzzr;
 
 

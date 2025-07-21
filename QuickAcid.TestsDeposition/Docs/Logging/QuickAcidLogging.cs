@@ -1,8 +1,8 @@
-using QuickExplainIt.Text;
 using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickFuzzr;
-using QuickExplainIt;
+using QuickPulse.Explains;
+using QuickPulse.Explains.Text;
 
 namespace QuickAcid.TestsDeposition.Docs.Logging;
 

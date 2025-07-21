@@ -1,5 +1,5 @@
 using QuickAcid.TestsDeposition._Tools.Models;
-using QuickExplainIt;
+using QuickPulse.Explains;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Stashed;

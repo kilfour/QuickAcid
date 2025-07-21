@@ -1,6 +1,7 @@
 using QuickAcid.Reporting;
+using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
-using QuickExplainIt;
+using QuickPulse.Explains;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Act;
@@ -18,7 +19,6 @@ public class ActTests
 ```csharp
 from act in ""act"".Act(() => account.Withdraw(500))
 ```
-
 ")]
     [Fact]
     public void Act_usage()
@@ -28,10 +28,8 @@ from act in ""act"".Act(() => account.Withdraw(500))
             from act in "act".Act(() => account.Withdraw(500))
             from spec in "fail".Spec(() => account.Balance >= 0)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("act", entry.Key);
+        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRunAndOneExecution());
+        Assert.Equal("act", TheJournalist.Unearths(ex).TheFirstActionLabel());
     }
 
     [Doc(Order = $"{Chapter.Order}-5", Content =
@@ -47,11 +45,8 @@ from act in ""act"".Act(() => account.GetBalance())
             from act in "act".Act(() => 42)
             from spec in "fail".Spec(() => act != 42)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
-        Assert.NotNull(report);
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("act", entry.Key);
+        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRunAndOneExecution());
+        Assert.Equal("act", TheJournalist.Unearths(ex).TheFirstActionLabel());
     }
     [Doc(Order = $"{Chapter.Order}-10", Content =
 @"**Mutiple acts in one execution => can't shrink ! not the way to model things**
@@ -69,10 +64,10 @@ from act2 in ""and act again"".Act(() => account.Withdraw(200))
             from act2 in "and act again".Act(() => account.Withdraw(20))
             from spec in "fail".Spec(() => account.Balance >= -30)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("act once, and act again", entry.Key);
+        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRunAndOneExecution());
+        var investigation = TheJournalist.Unearths(ex);
+        Assert.Equal("act once", investigation.TheFirstActionLabel());
+        Assert.Equal("and act again", investigation.TheSecondActionLabel());
     }
 }
 

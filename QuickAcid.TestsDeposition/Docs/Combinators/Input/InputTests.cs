@@ -1,5 +1,5 @@
 using QuickAcid.Reporting;
-using QuickExplainIt;
+using QuickPulse.Explains;
 using QuickFuzzr;
 
 

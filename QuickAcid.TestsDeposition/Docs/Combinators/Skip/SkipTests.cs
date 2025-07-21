@@ -1,4 +1,4 @@
-using QuickExplainIt;
+using QuickPulse.Explains;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Skip;

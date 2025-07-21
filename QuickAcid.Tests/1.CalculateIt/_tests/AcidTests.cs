@@ -49,16 +49,16 @@ public class AcidTests
         from input in Pulse.Start<ShrinkTrace>()
         let isToy = input.Original?.ToString() == "toys"
         from trace in Pulse.Trace(input)
-        from traceIf in Pulse.TraceIf(isToy, $" =====>  {input}")
+        from traceIf in Pulse.TraceIf(isToy, () => $" =====>  {input}")
         select input;
 
     private Flow<ShrinkTrace> filterTraces =
         from input in Pulse.Start<ShrinkTrace>()
         from _ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink" && input.Intent == ShrinkIntent.Keep,
-            $"{input.Key}: {input.Intent}, {input.Strategy} ({Introduce.This(input.Result!, false)})")
+            () => $"{input.Key}: {input.Intent}, {input.Strategy} ({Introduce.This(input.Result!, false)})")
         from __ in Pulse.TraceIf(input.Strategy == "PrimitiveShrink" && input.Intent != ShrinkIntent.Keep,
-            $"{input.Key}: {input.Intent}, {input.Strategy}")
+            () => $"{input.Key}: {input.Intent}, {input.Strategy}")
         from ___ in Pulse.TraceIf(input.Strategy != "PrimitiveShrink",
-            $"{input.Key}: {input.Intent}, {input.Strategy}")
+            () => $"{input.Key}: {input.Intent}, {input.Strategy}")
         select input;
 }

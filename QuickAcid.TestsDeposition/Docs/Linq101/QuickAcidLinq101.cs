@@ -1,5 +1,5 @@
 using QuickAcid.TestsDeposition._Tools;
-using QuickExplainIt;
+using QuickPulse.Explains;
 using QuickFuzzr;
 
 namespace QuickAcid.TestsDeposition.Docs.Linq101;

@@ -1,5 +1,5 @@
 using QuickAcid.Reporting;
-using QuickExplainIt;
+using QuickPulse.Explains;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.DelayedSpec;
