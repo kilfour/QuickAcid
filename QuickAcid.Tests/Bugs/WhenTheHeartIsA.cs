@@ -1,3 +1,5 @@
+using QuickAcid.Bolts;
+
 namespace QuickAcid.Tests.Bugs;
 
 
@@ -12,11 +14,10 @@ public class WhenTheHeartIsA
             from _s1 in "spec if".SpecIf(() => true, () => true)
             from _s2 in MinimalSpec(obj)
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .AndOneExecutionPerRun(); ;
 
+        Assert.Throws<FalsifiableException>(() => QState.Run(script)
+            .WithOneRun()
+            .AndOneExecutionPerRun());
     }
 
     private static QAcidScript<Acid> MinimalSpec(object obj)

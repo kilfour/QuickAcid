@@ -1,8 +1,4 @@
-using QuickAcid.Reporting;
-using QuickAcid.TestsDeposition._Tools;
-using QuickFuzzr;
 using QuickPulse.Explains;
-using QuickPulse.Explains.Text;
 
 namespace QuickAcid.TestsDeposition.Docs.Logging;
 
@@ -17,8 +13,8 @@ There are two ways to get diagnostics out of QuickAcid's engine.
 ")]
 public class QuickAcidLogging
 {
-    [Fact]
-    [Doc(Order = $"{Chapter.Order}-1", Caption = "Verbose Mode", Content =
+  [Fact]
+  [Doc(Order = $"{Chapter.Order}-1", Caption = "Verbose Mode", Content =
 @"By adding a call to `.Verbose()` when building your test, you instruct the engine to include detailed diagnostic output in the report.
 ```csharp
 var script =
@@ -30,52 +26,52 @@ QState.Run(script)
 ```
 This will produce a report that contains :
 ")]
-    public void Verbose_enabling()
-    {
-        var script =
-            from spec in "spec".Spec(() => true)
-            select Acid.Test;
-        QState.Run(script)
-            .Options(a => a with { Verbose = true })
-            .WithOneRunAndOneExecution();
-    }
+  public void Verbose_enabling()
+  {
+    var script =
+        from spec in "spec".Spec(() => true)
+        select Acid.Test;
+    QState.Run(script)
+        .Options(a => a with { Verbose = true })
+        .WithOneRunAndOneExecution();
+  }
 
-    [Fact]
-    [Doc(Order = $"{Chapter.Order}-2", Content = " - Information about the first failed run.")]
-    public void Verbose_contains_first_failed_run()
-    {
+  [Fact]
+  [Doc(Order = $"{Chapter.Order}-2", Content = " - Information about the first failed run.")]
+  public void Verbose_contains_first_failed_run()
+  {
 
-    }
+  }
 
-    [Fact]
-    [Doc(Order = $"{Chapter.Order}-3", Content =
+  [Fact]
+  [Doc(Order = $"{Chapter.Order}-3", Content =
 @" - Information about the run after execution shrinking.
 ")]
-    public void Verbose_contains_after_execution_shrinking()
-    {
+  public void Verbose_contains_after_execution_shrinking()
+  {
 
-    }
+  }
 
-    [Fact]
-    [Doc(Order = $"{Chapter.Order}-3.5", Content =
+  [Fact]
+  [Doc(Order = $"{Chapter.Order}-3.5", Content =
 @" - Information about the run after action shrinking.
 ")]
-    public void Verbose_contains_after_action_shrinking()
-    {
+  public void Verbose_contains_after_action_shrinking()
+  {
 
-    }
+  }
 
-    [Fact]
-    [Doc(Order = $"{Chapter.Order}-4", Content =
+  [Fact]
+  [Doc(Order = $"{Chapter.Order}-4", Content =
 @" - Information about the run after input shrinking.
 ")]
-    public void Verbose_contains_after_input_shrinking()
-    {
+  public void Verbose_contains_after_input_shrinking()
+  {
 
-    }
+  }
 
-    [Fact(Skip = "break this up")]
-    [Doc(Order = $"{Chapter.Order}-5", Content =
+  [Fact(Skip = "break this up")]
+  [Doc(Order = $"{Chapter.Order}-5", Content =
 @"Which for this example: 
 ```csharp
 var script =
@@ -137,8 +133,8 @@ Outputs something similar to:
  *******************
  ```
 ")]
-    public void Verbose_full_output()
-    {
+  public void Verbose_full_output()
+  {
 
-    }
+  }
 }

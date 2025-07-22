@@ -1,3 +1,5 @@
+using QuickAcid.Tests._Tools.ThePress;
+
 namespace QuickAcid.Tests.Bugs;
 
 public class SpecIfProblems
@@ -48,11 +50,9 @@ public class SpecIfProblems
 				() => true)
 			select Acid.Test;
 
-		var report = QState.Run(script)
-			.Options(a => a with { DontThrow = true })
+		var article = TheJournalist.Exposes(() => QState.Run(script)
 			.WithOneRun()
-			.And(3.ExecutionsPerRun());
-
+			.And(3.ExecutionsPerRun()));
 
 		Assert.False(predicateRan);
 	}
@@ -77,10 +77,9 @@ public class SpecIfProblems
 				() => true)
 			select Acid.Test;
 
-		var report = QState.Run(script)
-			.Options(a => a with { DontThrow = true })
+		var article = TheJournalist.Exposes(() => QState.Run(script)
 			.WithOneRun()
-			.AndOneExecutionPerRun();
+			.AndOneExecutionPerRun());
 
 		Assert.False(predicateRan);
 	}

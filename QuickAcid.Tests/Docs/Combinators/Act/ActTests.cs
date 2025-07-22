@@ -1,5 +1,3 @@
-using QuickAcid.Bolts;
-using QuickAcid.Reporting;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickAcid.TestsDeposition._Tools.Models;
 using QuickPulse.Explains;

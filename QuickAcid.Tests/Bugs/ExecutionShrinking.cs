@@ -1,5 +1,4 @@
-using QuickAcid.Bolts;
-using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickPulse.Arteries;
 
 namespace QuickAcid.Tests.Bugs;
@@ -18,12 +17,11 @@ public class ExecutionShrinking
             )
             from spec in "spec".Spec(() => collector.TheExhibit.Count == collector.TheExhibit.Distinct().Count())
             select Acid.Test;
-        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script)
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
             .And(30.ExecutionsPerRun()));
-        var report = ex.QAcidReport;
-        Assert.Single(report.OfType<ReportCollapsedExecutionEntry>());
-        var entry = report.Single<ReportCollapsedExecutionEntry>();
-        Assert.Equal(2, entry.Times);
+
+        Assert.Equal(2, article.Execution(1).Read().Times);
     }
 }

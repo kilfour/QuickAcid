@@ -1,5 +1,4 @@
-using QuickAcid.Bolts;
-using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Bugs;
@@ -15,10 +14,11 @@ public class SpecIfNotEvaluated
             from act2 in "act2".Act(() => { return 6 * input; })
             from spec in "spec".SpecIf(() => act1 != 0, () => act1 == act2)
             select Acid.Test;
-        var ex = Assert.Throws<FalsifiableException>(() =>
-            QState.Run(script)
-                .WithOneRunAndOneExecution());
-        var report = ex.QAcidReport;
-        Assert.Single(report.OfType<ReportInputEntry>());
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
+            .WithOneRun()
+            .And(30.ExecutionsPerRun()));
+
+        Assert.Equal(1, article.Total().Inputs());
     }
 }
