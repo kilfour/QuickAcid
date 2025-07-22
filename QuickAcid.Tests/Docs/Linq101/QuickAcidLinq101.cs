@@ -1,6 +1,7 @@
 using QuickAcid.TestsDeposition._Tools;
 using QuickPulse.Explains;
 using QuickFuzzr;
+using QuickAcid.Bolts;
 
 namespace QuickAcid.TestsDeposition.Docs.Linq101;
 

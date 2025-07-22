@@ -1,3 +1,5 @@
+using QuickAcid.Bolts;
+
 namespace QuickAcid.TestsDeposition._Tools;
 
 public static class TheJournalist

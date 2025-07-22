@@ -2,6 +2,7 @@ using QuickAcid.Reporting;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
+using QuickAcid.Bolts;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 

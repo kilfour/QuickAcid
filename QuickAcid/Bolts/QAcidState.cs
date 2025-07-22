@@ -384,17 +384,13 @@ public sealed class QAcidState : QAcidContext
 
     private void ShrinkInputs()
     {
-        Log.This("Execution Numbers after Shrinking Executions:");
-        Log.This($"  - [ {string.Join(", ", ExecutionNumbers.ToList())} ]");
         using (EnterPhase(QAcidPhase.ShrinkingInputs))
         {
             Memory.ResetRunScopedInputs();
             foreach (var executionNumber in ExecutionNumbers.ToList())
             {
                 CurrentExecutionNumber = executionNumber;
-                Log.This($"  - ShrinkInputs ExecId: {CurrentExecutionNumber}.");
                 Script(this);
-                Log.This($"  - After Script(this).");
                 shrinkCount++;
             }
         }
@@ -438,7 +434,6 @@ public sealed class QAcidState : QAcidContext
         {
             Memory.ResetRunScopedInputs();
             var runNumber = CurrentExecutionNumber;
-            Log.This($"Eval: {key} ({CurrentExecutionNumber}).");
             using (Memory.ScopedSwap(key, value))
             {
 

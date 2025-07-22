@@ -1,4 +1,5 @@
-﻿using QuickAcid.Reporting;
+﻿using QuickAcid.Bolts;
+using QuickAcid.Reporting;
 
 
 namespace QuickAcid.Tests.Bugs;

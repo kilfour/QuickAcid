@@ -10,8 +10,6 @@ public class DocumentingBehavior
         return state => new Result<int>(counter++, state);
     }
 
-
-
     [Fact]
     public void ShrinkingInputs_phase_should_not_clear_failure()
     {

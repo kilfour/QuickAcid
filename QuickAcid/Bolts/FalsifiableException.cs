@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using QuickAcid.Reporting;
 
-namespace QuickAcid;
+namespace QuickAcid.Bolts;
 
 public class FalsifiableException : Exception
 {

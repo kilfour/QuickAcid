@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Tests.Linqy.Spec
+﻿using QuickAcid.Bolts;
+
+namespace QuickAcid.Tests.Linqy.Spec
 {
     public class SpecExceptionTests
     {

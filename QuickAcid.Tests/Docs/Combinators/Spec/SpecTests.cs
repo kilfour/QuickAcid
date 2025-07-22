@@ -1,3 +1,4 @@
+using QuickAcid.Bolts;
 using QuickAcid.Reporting;
 using QuickPulse.Explains;
 
