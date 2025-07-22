@@ -10,7 +10,7 @@ QuickAcid is a property-based testing library for C# that combines:
 
 It’s designed for sharp diagnostics, elegant expressiveness, and easy extension.
 
-## 🧪 Example
+## Example
 
 Given a naive `Account` model:
 
@@ -34,18 +34,16 @@ var script =
         select Acid.Test,
         from amount in "withdraw".Input(Fuzz.Constant(42))
         from act in "account.Withdraw".Act(() => account.Withdraw(amount))
-        select Acid.Test
-    )
+        select Acid.Test)
     from spec in "No_Overdraft".Spec(() => account.Balance >= 0)
     select Acid.Test;
 
 QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .And(50);
+    .WithOneRun()
+    .And(50.ExecutionsPerRun());
 ```
 
-## 🔍 Example Failure Output
+## Example Failure Output
 
 ```
  ----------------------------------------
@@ -64,11 +62,4 @@ QState.Run(script)
  ***************************
 ```
 
-## 📆 Features
-
-* Expressive, composable LINQ syntax
-* Deterministic, seed-based execution
-* Custom shrinkers per type or property
-* Detailed trace + shrinking diagnostics
-* No setup or boilerplate required
 

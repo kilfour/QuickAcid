@@ -43,7 +43,9 @@ This will produce a report that contains :
         var script =
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(script).Verbose().ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { Verbose = true, DontThrow = true })
+            .WithOneRunAndOneExecution();
         Assert.NotNull(report);
         Assert.Equal("FIRST FAILED RUN", report.First<ReportTitleSectionEntry>().Title[0]);
     }
@@ -57,7 +59,9 @@ This will produce a report that contains :
         var script =
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(script).Verbose().ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { Verbose = true, DontThrow = true })
+            .WithOneRunAndOneExecution();
         Assert.NotNull(report);
         Assert.Equal("AFTER EXECUTION SHRINKING", report.Second<ReportTitleSectionEntry>().Title[0]);
     }
