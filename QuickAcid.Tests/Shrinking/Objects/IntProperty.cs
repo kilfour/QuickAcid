@@ -1,4 +1,4 @@
-﻿using QuickAcid.Bolts.Nuts;
+﻿using QuickAcid;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
 using QuickAcid.Reporting;
 using QuickFuzzr;

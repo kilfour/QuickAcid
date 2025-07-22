@@ -3,6 +3,7 @@ using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using QuickAcid.Bolts;
+using QuickAcid.Tests._Tools;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 

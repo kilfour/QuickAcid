@@ -1,7 +1,8 @@
+using QuickAcid.Bolts;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
 
-namespace QuickAcid.Bolts.Nuts;
+namespace QuickAcid;
 
 public static class ShrinkingPolicy
 {

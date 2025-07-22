@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Shrinking.Objects

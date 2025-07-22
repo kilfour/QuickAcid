@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
+using QuickAcid.Bolts;
 using QuickAcid.Bolts.ShrinkStrats;
 
-namespace QuickAcid.Bolts.Nuts;
+namespace QuickAcid;
 
 public static class Shrink<T>
 {
@@ -11,7 +12,6 @@ public static class Shrink<T>
                 state.RegisterShrinker(shrinker);
                 return QAcidResult.AcidOnly(state);
             };
-
 
     public static QAcidScript<Acid> LikeThis(Func<T, IEnumerable<T>> shrinker)
         => LikeThis(new LambdaShrinker<T>(shrinker));

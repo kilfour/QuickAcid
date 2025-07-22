@@ -1,4 +1,3 @@
-using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Reporting;

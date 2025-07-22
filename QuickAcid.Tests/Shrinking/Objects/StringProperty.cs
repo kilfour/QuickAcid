@@ -1,7 +1,7 @@
 ﻿using QuickAcid.Reporting;
 using QuickFuzzr;
-using QuickAcid.Bolts.Nuts;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
+using QuickAcid;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {

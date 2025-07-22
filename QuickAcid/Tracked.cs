@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Bolts;
+using QuickPulse.Bolts;
 
 namespace QuickAcid;
 

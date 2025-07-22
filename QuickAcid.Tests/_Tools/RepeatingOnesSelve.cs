@@ -1,4 +1,4 @@
-namespace QuickAcid;
+namespace QuickAcid.Tests._Tools;
 
 public static class RepeatingOnesSelve
 {
