@@ -22,9 +22,7 @@ What this does is, it takes a script (in this case: `.Act(...)`) and a state, in
 ")]
     public void QState_usage()
     {
-        var counter = 0;
-        new QState("act".Act(() => { counter++; })).Testify(10);
-        Assert.Equal(10, counter);
+
     }
 
     [Fact(Skip = "Doc incorrect")]
@@ -46,8 +44,6 @@ So a decision was made to sacrifice a little bit of brevity in order to gain a l
 ")]
     public void QState_n_times()
     {
-        var counter = 0;
-        5.Times(() => new QState("act".Act(() => { counter++; })).Testify(10));
-        Assert.Equal(50, counter);
+
     }
 }

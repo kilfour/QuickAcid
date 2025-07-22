@@ -13,7 +13,8 @@ public class SpecTests
     [Fact]
     public void SpecOnlyReturnsFalse()
     {
-        var report = new QState("foo".Spec(() => false)).ObserveOnce();
+        var script = "foo".Spec(() => false);
+        var report = QState.Run(script).Options(a => a with { DontThrow = true }).WithOneRunAndOneExecution();
         var entry = report.Entries.OfType<ReportSpecEntry>().FirstOrDefault();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);

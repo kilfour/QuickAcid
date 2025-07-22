@@ -14,7 +14,9 @@ public class AnalyzeTests
             from as1 in "spec".Analyze(() => false)
             select Acid.Test;
 
-        var report = new QState(script).ShrinkingActions().Observe(2);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true, ShrinkingActions = true })
+            .WithOneRun().And(2.ExecutionsPerRun());
 
         var timesActShouldHaveRunOriginally = 2;
         var timesActShouldHaveRunDuringExcutionShrinking = 1;

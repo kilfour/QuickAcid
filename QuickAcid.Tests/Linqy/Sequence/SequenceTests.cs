@@ -7,11 +7,11 @@ public class SequenceTests
     [Fact]
     public void TwoActionsExceptionThrownOnFirst()
     {
-        var report = new QState(
-                "foobar".Sequence(
-                "foo".Act(() => throw new Exception()),
-                "bar".Act(() => { })))
-            .ObserveOnce();
+        var script =
+            "foobar".Sequence(
+            "foo".Act(() => throw new Exception()),
+            "bar".Act(() => { }));
+        var report = QState.Run(script).Options(a => a with { DontThrow = true }).WithOneRunAndOneExecution();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);

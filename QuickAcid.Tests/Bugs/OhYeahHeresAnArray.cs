@@ -13,6 +13,6 @@ public class OhYeahHeresAnArray
             from act in "act".Act(() => counter++)
             from spec in "spec".SpecIf(() => counter > 3, () => false)
             select Acid.Test;
-        new QState(script).Testify(100);
+        QState.Run(script).WithOneRun().And(10.ExecutionsPerRun());
     }
 }

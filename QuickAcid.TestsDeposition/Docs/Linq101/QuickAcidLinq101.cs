@@ -94,7 +94,7 @@ nothing is reported and using this in a unit testing framework just passes the e
         var script =
             from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
             select Acid.Test;
-        new QState(script).Testify(1);
+        QState.Run(script).WithOneRunAndOneExecution();
         Assert.Equal(1, timesSpecChecked);
     }
 
@@ -110,7 +110,7 @@ For now, calling `.Testify(10)` in above example checks the Spec ten times.")]
         var script =
             from spec in "spec".Spec(() => { timesSpecChecked++; return true; })
             select Acid.Test;
-        new QState(script).Testify(10);
+        QState.Run(script).WithOneRun().And(10.ExecutionsPerRun());
         Assert.Equal(10, timesSpecChecked);
     }
 
@@ -137,7 +137,7 @@ In this case :
             from spec in "spec".Spec(() => false)
             select Acid.Test;
 
-        var ex = Assert.Throws<FalsifiableException>(() => new QState(script).Testify(1));
+        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRunAndOneExecution());
         Assert.NotNull(ex.QAcidReport);
     }
 
@@ -191,6 +191,6 @@ If any execution fails, QuickAcid immediately halts the run and begins shrinking
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 0)
             select Acid.Test;
-        new QState(script).Testify(10);
+        QState.Run(script).WithOneRun().And(10.ExecutionsPerRun());
     }
 }

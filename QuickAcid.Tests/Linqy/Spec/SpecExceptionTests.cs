@@ -5,12 +5,9 @@
         [Fact]
         public void ExceptionThrownBySpecIsNotAQuickAcidException()
         {
-            var ex =
-                Assert.Throws<Exception>(() =>
-                    new QState(
-                        from spec in "spec".Spec(Throw) select Acid.Test
-                    ).TestifyOnce()
-                );
+
+            var script = from spec in "spec".Spec(Throw) select Acid.Test;
+            var ex = Assert.Throws<Exception>(() => QState.Run(script).WithOneRunAndOneExecution());
             Assert.IsNotType<FalsifiableException>(ex);
             Assert.Contains("QuickAcid.Tests.Linqy.Spec.SpecExceptionTests.Throw()", ex.StackTrace);
         }

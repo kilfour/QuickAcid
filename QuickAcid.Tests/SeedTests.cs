@@ -36,7 +36,7 @@ public class SeedTests
             from act in "act".Act(() => collector.Add(input))
             from spec in "spec".Spec(() => collector.Count != 2)
             select Acid.Test;
-        var report = new QState(script, 42).Observe(10);
+        var report = QState.Run(script, 42).Options(a => a with { DontThrow = true }).WithOneRun().And(10.ExecutionsPerRun());
         var entry = report.Single<ReportCollapsedExecutionEntry>();
         Assert.Equal("act", entry.Key);
         Assert.Equal([67, 14, 14, 67, 67, 14, 67, 67, 14, 14], collector);

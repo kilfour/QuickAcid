@@ -12,7 +12,9 @@ public class ActionShrinkingTests
             from a1 in "a1".Act(() => { })
             from a2 in "a2".Act(() => throw new Exception("Boom"))
             select Acid.Test;
-        var report = new QState(script).ShrinkingActions().ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true, ShrinkingActions = true })
+            .WithOneRunAndOneExecution();
         Assert.NotNull(report);
         var entry = report.Single<ReportExecutionEntry>();
         Assert.Equal("a2", entry.Key);
