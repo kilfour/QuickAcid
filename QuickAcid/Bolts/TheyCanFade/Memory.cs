@@ -1,6 +1,4 @@
-﻿using QuickAcid.MonadiXEtAl;
-
-namespace QuickAcid.Bolts.TheyCanFade;
+﻿namespace QuickAcid.Bolts.TheyCanFade;
 
 public class Memory
 {

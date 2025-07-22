@@ -1,5 +1,3 @@
-using QuickAcid.MonadiXEtAl;
-using QuickAcid.Reporting;
 using QuickPulse.Show;
 
 namespace QuickAcid.Bolts.TheyCanFade;
