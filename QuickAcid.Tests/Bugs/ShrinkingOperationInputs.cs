@@ -1,5 +1,6 @@
 using QuickAcid.Bolts;
 using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 using QuickPulse.Arteries;
 
@@ -22,16 +23,19 @@ public class ShrinkingOperationInputs
             )
             select Acid.Test;
 
-        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script)
-            .WithOneRun()
-            .And(100.ExecutionsPerRun()));
-        var report = ex.QAcidReport;
-        Assert.Equal(2, report.OfType<ReportInputEntry>().Count());
-        var entry1 = report.First<ReportInputEntry>();
-        Assert.Equal("i1", entry1.Key);
+        var article = TheJournalist.Exposes(() =>
+            QState.Run(script)
+                .WithOneRun()
+                .And(100.ExecutionsPerRun()));
+
+        Assert.Equal(2, article.Total().Inputs());
+
+        var entry1 = article.Execution(1).Input(1).Read();
+        Assert.Equal("i1", entry1.Label);
         Assert.Equal("42", entry1.Value);
-        var entry2 = report.Second<ReportInputEntry>();
-        Assert.Equal("i2", entry2.Key);
+
+        var entry2 = article.Execution(2).Input(1).Read();
+        Assert.Equal("i2", entry2.Label);
         Assert.Equal("42", entry2.Value);
     }
 
@@ -58,20 +62,25 @@ public class ShrinkingOperationInputs
                 select Acid.Test
             )
             select Acid.Test;
-        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script)
-            .WithOneRun()
-            .And(100.ExecutionsPerRun()));
-        var report = ex.QAcidReport;
-        Assert.Equal(3, report.OfType<ReportInputEntry>().Count());
-        var entry1 = report.First<ReportInputEntry>();
-        Assert.Equal("i2", entry1.Key);
-        Assert.Equal("42", entry1.Value);
-        var entry2 = report.Second<ReportInputEntry>();
-        Assert.Equal("i2", entry2.Key);
-        Assert.Equal("42", entry2.Value);
-        var entry3 = report.Third<ReportInputEntry>();
-        Assert.Equal("i2", entry3.Key);
-        Assert.Equal("42", entry3.Value);
+
+        var article = TheJournalist.Exposes(() =>
+            QState.Run(script)
+                .WithOneRun()
+                .And(100.ExecutionsPerRun()));
+
+        Assert.Equal(3, article.Total().Inputs());
+
+        var inputDeposition = article.Execution(1).Input(1).Read();
+        Assert.Equal("i2", inputDeposition.Label);
+        Assert.Equal("42", inputDeposition.Value);
+
+        inputDeposition = article.Execution(2).Input(1).Read();
+        Assert.Equal("i2", inputDeposition.Label);
+        Assert.Equal("42", inputDeposition.Value);
+
+        inputDeposition = article.Execution(3).Input(1).Read();
+        Assert.Equal("i2", inputDeposition.Label);
+        Assert.Equal("42", inputDeposition.Value);
     }
 
     [Fact]
@@ -96,19 +105,24 @@ public class ShrinkingOperationInputs
                 select Acid.Test
             )
             select Acid.Test;
-        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script)
-            .WithOneRun()
-            .And(100.ExecutionsPerRun()));
-        var report = ex.QAcidReport;
-        Assert.Equal(3, report.OfType<ReportInputEntry>().Count());
-        var entry1 = report.First<ReportInputEntry>();
-        Assert.Equal("i2", entry1.Key);
-        Assert.Equal("42", entry1.Value);
-        var entry2 = report.Second<ReportInputEntry>();
-        Assert.Equal("i2", entry2.Key);
-        Assert.Equal("42", entry2.Value);
-        var entry3 = report.Third<ReportInputEntry>();
-        Assert.Equal("i2", entry3.Key);
-        Assert.Equal("42", entry3.Value);
+
+        var article = TheJournalist.Exposes(() =>
+            QState.Run(script)
+                .WithOneRun()
+                .And(100.ExecutionsPerRun()));
+
+        Assert.Equal(3, article.Total().Inputs());
+
+        var inputDeposition = article.Execution(1).Input(1).Read();
+        Assert.Equal("i2", inputDeposition.Label);
+        Assert.Equal("42", inputDeposition.Value);
+
+        inputDeposition = article.Execution(2).Input(1).Read();
+        Assert.Equal("i2", inputDeposition.Label);
+        Assert.Equal("42", inputDeposition.Value);
+
+        inputDeposition = article.Execution(3).Input(1).Read();
+        Assert.Equal("i2", inputDeposition.Label);
+        Assert.Equal("42", inputDeposition.Value);
     }
 }
