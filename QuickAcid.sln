@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickAcid", "QuickAcid\Quic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickAcid.Tests", "QuickAcid.Tests\QuickAcid.Tests.csproj", "{D4EA0405-6011-4551-928C-6DD6F5182D7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickAcid.TestsDeposition", "QuickAcid.TestsDeposition\QuickAcid.TestsDeposition.csproj", "{746ECB46-6D09-4218-8F2E-89226EE909B2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,18 +41,6 @@ Global
 		{D4EA0405-6011-4551-928C-6DD6F5182D7C}.Release|x64.Build.0 = Release|Any CPU
 		{D4EA0405-6011-4551-928C-6DD6F5182D7C}.Release|x86.ActiveCfg = Release|Any CPU
 		{D4EA0405-6011-4551-928C-6DD6F5182D7C}.Release|x86.Build.0 = Release|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Debug|x64.Build.0 = Debug|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Debug|x86.Build.0 = Debug|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Release|x64.ActiveCfg = Release|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Release|x64.Build.0 = Release|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Release|x86.ActiveCfg = Release|Any CPU
-		{746ECB46-6D09-4218-8F2E-89226EE909B2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
