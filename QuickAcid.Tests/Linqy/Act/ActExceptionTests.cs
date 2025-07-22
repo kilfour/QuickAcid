@@ -42,7 +42,9 @@ public class ActExceptionTests
             from foo in "foo".Act(() => { })
             from bar in "bar".Act(() => throw new Exception())
             select Acid.Test;
-        var report = new QState(script).ShrinkingActions().ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true, ShrinkingActions = true })
+            .WithOneRunAndOneExecution();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("bar", entry.Key);
@@ -58,7 +60,10 @@ public class ActExceptionTests
             from _a1 in "c".ActIf(() => counter < 2, () => counter++)
             from _a2 in "act".ActIf(() => counter == 2, () => { throw new Exception("BOOM"); })
             select Acid.Test;
-        var report = new QState(script).ShrinkingActions().Observe(3);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true, ShrinkingActions = true })
+            .WithOneRun()
+            .And(3.ExecutionsPerRun());
 
         Assert.NotNull(report);
         Assert.NotNull(report.Exception);

@@ -48,12 +48,6 @@ public class QState
         return this;
     }
 
-    public QState Verbose()
-    {
-        state.Verbose = true;
-        return this;
-    }
-
     [StackTraceHidden]
     public void TestifyOnce()
     {

@@ -26,8 +26,11 @@ from account in ""account"".Tracked(() => new Account())
     {
         var script =
             from account in "account".Tracked(() => new Account())
+            from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(script).AlwaysReport().ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRunAndOneExecution();
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
         Assert.Equal("   => account (tracked) : { Balance: 0 }", entry.ToString());

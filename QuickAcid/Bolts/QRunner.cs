@@ -25,6 +25,9 @@ public class QRunner
         this.seed = seed;
     }
 
+    // -------------------------------------------------------------------------
+    // This method starts the actual test
+    // --
     [StackTraceHidden]
     public Report And(ExecutionCount executionCount)
     {
@@ -43,6 +46,8 @@ public class QRunner
             var state = seed.HasValue ? new QAcidState(script, seed.Value) : new QAcidState(script);
             if (config.Verbose)
                 state.Verbose = true;
+            if (config.ShrinkingActions)
+                state.ShrinkingActions = true;
             report = state.Run(executionCount.NumberOfExecutions);
             state.GetPassedSpecCount(passedSpecCount);
             if (report.IsFailed)

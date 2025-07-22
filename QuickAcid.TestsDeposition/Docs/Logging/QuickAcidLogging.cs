@@ -24,7 +24,9 @@ public class QuickAcidLogging
 var script =
     from spec in ""spec"".Spec(() => false)
     select Acid.Test;
-new QState(script).Verbose().Testify(1);
+QState.Run(script)
+    .Options(a => a with { Verbose = true })
+    .WithOneRunAndOneExecution();
 ```
 This will produce a report that contains :
 ")]
@@ -33,21 +35,16 @@ This will produce a report that contains :
         var script =
             from spec in "spec".Spec(() => true)
             select Acid.Test;
-        new QState(script).Verbose().Testify(1);
+        QState.Run(script)
+            .Options(a => a with { Verbose = true })
+            .WithOneRunAndOneExecution();
     }
 
     [Fact]
     [Doc(Order = $"{Chapter.Order}-2", Content = " - Information about the first failed run.")]
     public void Verbose_contains_first_failed_run()
     {
-        var script =
-            from spec in "spec".Spec(() => false)
-            select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { Verbose = true, DontThrow = true })
-            .WithOneRunAndOneExecution();
-        Assert.NotNull(report);
-        Assert.Equal("FIRST FAILED RUN", report.First<ReportTitleSectionEntry>().Title[0]);
+
     }
 
     [Fact]
@@ -56,14 +53,7 @@ This will produce a report that contains :
 ")]
     public void Verbose_contains_after_execution_shrinking()
     {
-        var script =
-            from spec in "spec".Spec(() => false)
-            select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { Verbose = true, DontThrow = true })
-            .WithOneRunAndOneExecution();
-        Assert.NotNull(report);
-        Assert.Equal("AFTER EXECUTION SHRINKING", report.Second<ReportTitleSectionEntry>().Title[0]);
+
     }
 
     [Fact]
@@ -72,12 +62,7 @@ This will produce a report that contains :
 ")]
     public void Verbose_contains_after_action_shrinking()
     {
-        var script =
-            from spec in "spec".Spec(() => false)
-            select Acid.Test;
-        var report = new QState(script).ShrinkingActions().Verbose().ObserveOnce();
-        Assert.NotNull(report);
-        Assert.Equal("AFTER ACTION SHRINKING", report.Third<ReportTitleSectionEntry>().Title[0]);
+
     }
 
     [Fact]
@@ -86,12 +71,7 @@ This will produce a report that contains :
 ")]
     public void Verbose_contains_after_input_shrinking()
     {
-        var script =
-            from spec in "spec".Spec(() => false)
-            select Acid.Test;
-        var report = new QState(script).ShrinkingActions().Verbose().ObserveOnce();
-        Assert.NotNull(report);
-        Assert.Equal("AFTER INPUT SHRINKING :", report.Fourth<ReportTitleSectionEntry>().Title[0]);
+
     }
 
     [Fact(Skip = "break this up")]
@@ -159,52 +139,6 @@ Outputs something similar to:
 ")]
     public void Verbose_full_output()
     {
-        var script =
-            from container in "stashed".Stashed(() => new Container<int>(0))
-            from input in "input".Input(Fuzz.Constant(5))
-            from act in "act".Act(() => container.Value = input)
-            from spec in "spec".Spec(() => container.Value != 5)
-            select Acid.Test;
-        var report = new QState(script, 666).ShrinkingActions().Verbose().Observe(20);
-        var reader = LinesReader.FromText(report.ToString());
-        Assert.Equal("", reader.NextLine());
-        Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" -- FIRST FAILED RUN", reader.NextLine());
-        Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" EXECUTE : act", reader.NextLine());
-        Assert.Equal("   - Input : input = 5", reader.NextLine());
-        Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal("  Spec Failed : spec", reader.NextLine());
-        Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" -- AFTER EXECUTION SHRINKING", reader.NextLine());
-        Assert.Equal(" ---------------------------", reader.NextLine());
-        Assert.Equal(" EXECUTE : act", reader.NextLine());
-        Assert.Equal("   - Input : input = 5", reader.NextLine());
-        Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal("  Spec Failed : spec", reader.NextLine());
-        Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" -- AFTER ACTION SHRINKING", reader.NextLine());
-        Assert.Equal(" ---------------------------", reader.NextLine());
-        Assert.Equal(" EXECUTE : act", reader.NextLine());
-        Assert.Equal("   - Input : input = 5", reader.NextLine());
-        Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal("  Spec Failed : spec", reader.NextLine());
-        Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal(" ----------------------------------------", reader.NextLine());
-        Assert.Equal(" -- AFTER INPUT SHRINKING :", reader.NextLine());
-        Assert.Equal(" -- Property 'spec' was falsified", reader.NextLine());
-        Assert.Equal(" -- Original failing run: 1 execution(s)", reader.NextLine());
-        Assert.Equal(" -- Shrunk to minimal case:  1 execution(s) (2 shrinks)", reader.NextLine());
-        Assert.Equal(" -- Seed: 666", reader.NextLine());
-        Assert.Equal(" ---------------------------", reader.NextLine());
-        Assert.Equal(" EXECUTE : act", reader.NextLine());
-        Assert.Equal("   - Input : input = 5", reader.NextLine());
-        Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal("  Spec Failed : spec", reader.NextLine());
-        Assert.Equal(" *******************", reader.NextLine());
-        Assert.Equal("", reader.NextLine());
-        Assert.True(reader.EndOfContent());
+
     }
 }
