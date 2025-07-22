@@ -16,6 +16,16 @@ public static class Compile
         return CaseFile.WithVerdict(verdict);
     }
 
+    public static RunDeposition TheRun(string label, Memory memory, List<int> ExecutionNumbers)
+    {
+        var runDeposition = new RunDeposition(label);
+        foreach (var executionNumber in ExecutionNumbers.ToList())
+        {
+            runDeposition.AddExecutionDeposition(GetExecutionDeposition(memory, executionNumber, false));
+        }
+        return runDeposition;
+    }
+
     private static ExecutionDeposition GetExecutionDeposition(Memory Memory, int executionNumber, bool isVerdict)
     {
         var executionDeposition = new ExecutionDeposition(executionNumber);
@@ -59,21 +69,4 @@ public static class Compile
             executionDeposition.AddActionDeposition(new ActionDeposition(action));
         }
     }
-
-    internal static RunDeposition TheRun(string label, Memory memory, List<int> ExecutionNumbers)
-    {
-        var runDeposition = new RunDeposition(label);
-        foreach (var executionNumber in ExecutionNumbers.ToList())
-        {
-            runDeposition.AddExecutionDeposition(GetExecutionDeposition(memory, executionNumber, false));
-        }
-        return runDeposition;
-    }
 }
-
-
-// else if (!isFinalRun)
-// {
-//     if (val.ReportingIntent != ReportingIntent.Never)
-//         executionDeposition.AddInputDeposition(new InputDeposition(key, val.Value!));
-// }

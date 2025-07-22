@@ -1,6 +1,5 @@
 using QuickPulse;
 using QuickPulse.Bolts;
-using QuickPulse.Show;
 
 namespace QuickAcid.Proceedings.ClerksOffice;
 

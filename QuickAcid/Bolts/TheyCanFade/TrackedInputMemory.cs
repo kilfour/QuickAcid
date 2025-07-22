@@ -45,20 +45,6 @@ public class TrackedInputMemory
         reportPerExecution.Clear();
     }
 
-    public void AddToReport(Report report, int executionId)
-    {
-        if (reportPerExecution.TryGetValue(executionId, out var dict))
-        {
-            foreach (var kv in dict)
-            {
-                report.AddEntry(new ReportTrackedEntry(kv.Key)
-                {
-                    Value = kv.Value
-                });
-            }
-        }
-    }
-
     private Dictionary<string, string> ReportForCurrent()
     {
         var id = getCurrentActionId();
