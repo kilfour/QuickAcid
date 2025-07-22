@@ -28,7 +28,10 @@ public class SpecTests
             from _s2 in "second passed".Spec(() => true)
             select Acid.Test;
 
-        var entry = new QState(script).ObserveOnce().Single<ReportSpecEntry>();
+        var entry = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun().Single<ReportSpecEntry>();
 
         Assert.NotNull(entry);
         Assert.Equal("first failed", entry.Key);
@@ -43,7 +46,10 @@ public class SpecTests
             from _s2 in "second failed".Spec(() => false)
             select Acid.Test;
 
-        var entry = new QState(script).ObserveOnce().Single<ReportSpecEntry>();
+        var entry = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun().Single<ReportSpecEntry>();
 
         Assert.NotNull(entry);
         Assert.Equal("second failed", entry.Key);

@@ -42,7 +42,10 @@ public class AnalyzeTests
             from as1 in "gens 3".Analyze(() => observer.Contains(3))
             select Acid.Test;
 
-        var report = new QState(script).Observe(20);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(20.ExecutionsPerRun());
         Assert.NotNull(report);
 
         var entry = report.GetSpecEntry();

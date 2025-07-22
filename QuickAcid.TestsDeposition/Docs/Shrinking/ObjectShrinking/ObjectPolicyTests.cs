@@ -15,7 +15,10 @@ public class ObjectPolicyTests
             from input in "input".Input(Fuzz.Constant(new Container<int>(42)))
             from foo in "spec".Spec(() => { observe.Add(input.Value); return false; })
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         Assert.All(observe, item => Assert.Equal(42, item));
     }

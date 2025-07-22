@@ -33,7 +33,10 @@ from _ in ""ops"".Choose(
         //     from testify in "".TestifyProvenWhen()
         //     from spec in "fail".Spec(() => false)
         //     select Acid.Test;
-        // var report = new QState(script).Observe(2);
+        // var report = QState.Run(script)
+        // .Options(a => a with { DontThrow = true })
+        // .WithOneRun()
+        // .And(2);
         // var entry = report.First<ReportExecutionEntry>();
         // Assert.NotNull(entry);
         // Assert.Equal("act", entry.Key);

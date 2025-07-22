@@ -17,7 +17,10 @@ public class SpecIfProblems
 			from _s2 in "s".Spec(() => counter.Val > 4)
 			select Acid.Test;
 
-		var report = new QState(script).Observe(5);
+		var report = QState.Run(script)
+			.Options(a => a with { DontThrow = true })
+			.WithOneRun()
+			.And(5.ExecutionsPerRun());
 		Assert.NotNull(report);
 	}
 
@@ -45,7 +48,10 @@ public class SpecIfProblems
 				() => true)
 			select Acid.Test;
 
-		var report = new QState(script).Observe(3);
+		var report = QState.Run(script)
+			.Options(a => a with { DontThrow = true })
+			.WithOneRun()
+			.And(3.ExecutionsPerRun());
 
 		Assert.NotNull(report);
 		Assert.False(predicateRan);
@@ -71,7 +77,10 @@ public class SpecIfProblems
 				() => true)
 			select Acid.Test;
 
-		var report = new QState(script).ObserveOnce();
+		var report = QState.Run(script)
+			.Options(a => a with { DontThrow = true })
+			.WithOneRun()
+			.AndOneExecutionPerRun();
 		Assert.NotNull(report);
 		Assert.False(predicateRan);
 	}

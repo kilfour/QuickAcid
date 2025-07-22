@@ -12,7 +12,10 @@ public class TrivialExecutionTests
             from act in "act".Act(() => { counter++; })
             from spec in "spec".Spec(() => counter != 5)
             select Acid.Test;
-        var report = new QState(script).Observe(10);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(10.ExecutionsPerRun());
         var entry = report.Single<ReportCollapsedExecutionEntry>();
         Assert.Equal("act", entry.Key);
         Assert.Equal(5, entry.Times);

@@ -15,7 +15,10 @@ public class ChooseFromDynamicCollection
             from spec in "spec".Spec(() => !list.Contains(2))
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
         Assert.NotNull(report);
 
         var entry = report.Single<ReportCollapsedExecutionEntry>();
@@ -33,7 +36,10 @@ public class ChooseFromDynamicCollection
             from spec in "spec".Spec(() => !list.Contains(2))
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
         Assert.NotNull(report);
 
         var entry = report.Single<ReportCollapsedExecutionEntry>();

@@ -65,7 +65,10 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             from __ in "Info Key".TraceIf(() => delayedSpec.Failed, () => $"{input}")
             let ___ = delayedSpec.Apply()
             select Acid.Test;
-        var report = new QState(script).Observe(5);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(5.ExecutionsPerRun());
         var entry = report.Single<ReportTraceEntry>();
         Assert.NotNull(entry);
         Assert.Equal("3", entry.Value);

@@ -18,7 +18,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from spec in "spec".SpecIf(() => input.MyChild != null, () => input.MyChild!.MyInt != 42)
                 select Acid.Test;
 
-            var report = new QState(script).Observe(50);
+            var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
             Assert.NotNull(report);
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);

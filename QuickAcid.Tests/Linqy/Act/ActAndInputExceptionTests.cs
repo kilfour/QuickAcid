@@ -14,7 +14,10 @@ public class ActAndInputExceptionTests
             from spec in "spec".Spec(() => true)
             select Acid.Test;
 
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);

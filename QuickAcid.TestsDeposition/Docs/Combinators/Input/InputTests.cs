@@ -26,7 +26,10 @@ public class InputTests
             from input in "input".Input(Fuzz.Int())
             from foo in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         var entry = report.FirstOrDefault<ReportInputEntry>();
         Assert.Null(entry);
     }
@@ -54,7 +57,10 @@ from input in ""input"".Input(() => Fuzz.Int())
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
@@ -71,7 +77,10 @@ from input in ""input"".Input(() => Fuzz.Int())
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
-        var report = new QState(script).ObserveOnce(); ;
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun(); ;
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
@@ -88,7 +97,10 @@ from input in ""input"".Input(() => Fuzz.Int())
             from foo in "spec".Spec(() => !string.IsNullOrWhiteSpace(input))
             select Acid.Test;
 
-        var report = new QState(script).ObserveOnce(); ;
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun(); ;
         Assert.NotNull(report);
 
         var entry = report.FirstOrDefault<ReportInputEntry>();

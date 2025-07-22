@@ -64,7 +64,10 @@ This would end the test run early once `container.Value` becomes `true`.
             from spec in "early exit".TestifyProvenWhen(() => container.Value)
             from finalspec in "val is true".Assay(() => container.Value)
             select Acid.Test;
-        var report = new QState(script).Observe(100);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(100.ExecutionsPerRun());
         Assert.NotNull(report);
         var entry = report.First<ReportTitleSectionEntry>();
         Assert.Equal("The Assayer disagrees: val is true.", entry.Title[0]);

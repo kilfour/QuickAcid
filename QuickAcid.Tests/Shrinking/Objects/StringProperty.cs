@@ -23,7 +23,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-            var report = new QState(script).Observe(50);
+            var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);
@@ -52,7 +55,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-            var report = new QState(script).Observe(50);
+            var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);
@@ -88,7 +94,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-                var report = new QState(script).Observe(50);
+                var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
                 var inputEntry = report.FirstOrDefault<ReportInputEntry>();
                 Assert.NotNull(inputEntry);
@@ -133,7 +142,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     && input.MyThirdProperty == result.MyThirdProperty)
                 select Acid.Test;
 
-            var report = new QState(script).Observe(50);
+            var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
             var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
             Assert.NotNull(inputEntry);

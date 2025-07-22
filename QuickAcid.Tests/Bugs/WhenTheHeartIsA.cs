@@ -12,7 +12,10 @@ public class WhenTheHeartIsA
             from _s1 in "spec if".SpecIf(() => true, () => true)
             from _s2 in MinimalSpec(obj)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun(); ;
         Assert.NotNull(report);
     }
 

@@ -20,7 +20,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from foo in "act".Act(() => { if (input.Age == 42) throw new Exception(); })
                 select Acid.Test;
 
-            var report = new QState(script).ObserveOnce();
+            var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
 
             Assert.Single(report.OfType<ReportInputEntry>());
 
@@ -57,7 +60,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 })
                 select Acid.Test;
 
-            var report = new QState(script).ObserveOnce();
+            var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
 
             var inputEntry = report.Single<ReportInputEntry>();
             Assert.NotNull(inputEntry);
@@ -85,7 +91,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-                var report = new QState(script).Observe(30);
+                var report = QState.Run(script)
+                    .Options(a => a with { DontThrow = true })
+                    .WithOneRun()
+                    .And(30.ExecutionsPerRun());
 
                 var inputEntry = report.Single<ReportInputEntry>();
                 Assert.NotNull(inputEntry);

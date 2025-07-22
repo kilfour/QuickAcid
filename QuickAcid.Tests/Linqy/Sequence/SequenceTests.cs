@@ -26,7 +26,10 @@ public class SequenceTests
             "foobar".Sequence(
             "foo".Act(() => { }),
             "bar".Act(() => throw new Exception()));
-        var report = new QState(script).Observe(2); ;
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(2.ExecutionsPerRun()); ;
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("bar", entry.Key);

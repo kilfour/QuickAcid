@@ -11,7 +11,10 @@ public class ActAndSpecExceptionTests
             from foo in "foo".Act(() => { if (true) throw new Exception(); })
             from spec in "spec".Spec(() => true)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.NotNull(report.Exception);

@@ -15,7 +15,10 @@ public class AssayTests
             from as1 in "gens 3".Assay(() => observer.Contains(3))
             select Acid.Test;
 
-        var report = new QState(script).Observe(20);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(20.ExecutionsPerRun());
 
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
@@ -33,7 +36,10 @@ public class AssayTests
             from as1 in "combined".Assay(("gens 3", () => observer.Contains(3)), ("gens 4", () => observer.Contains(4)))
             select Acid.Test;
 
-        var report = new QState(script).Observe(20);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(20.ExecutionsPerRun());
 
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();

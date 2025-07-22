@@ -12,7 +12,10 @@ namespace QuickAcid.TestsDeposition.Docs.Logging;
 //             from s2 in "Spec Two".SpecIf(() => counter > 2, () => counter < 4)
 //             from s3 in "Spec Three".Spec(() => true)
 //             select Acid.Test;
-//         var report = new QState(script).Observe(10);
+//         var report = QState.Run(script)
+// .Options(a => a with { DontThrow = true })
+// .WithOneRun()
+// .And(10);
 
 //         Assert.Equal("Spec One", report.PassedSpecCount[0].Label);
 //         Assert.Equal(4, report.PassedSpecCount[0].Count);

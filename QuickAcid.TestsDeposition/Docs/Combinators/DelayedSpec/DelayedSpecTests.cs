@@ -27,7 +27,10 @@ let apply = spec.Apply()
             from _ in "act1".Act(() => { counter++; })
             from specResult in "spec".DelayedSpec(() => counter < 3)
             select Acid.Test;
-        Assert.True(new QState(script).Observe(5).IsSuccess);
+        Assert.True(QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(5.ExecutionsPerRun()).IsSuccess);
     }
 
     [Fact]
@@ -40,7 +43,10 @@ let apply = spec.Apply()
             from trace in "trace".TraceIf(() => spec.Failed, () => spec.Label)
             let apply = spec.Apply()
             select Acid.Test;
-        var report = new QState(script).Observe(5);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(5.ExecutionsPerRun());
         Assert.NotNull(report);
         var entry = report.Single<ReportTraceEntry>();
         Assert.Equal("spec", entry.Value);

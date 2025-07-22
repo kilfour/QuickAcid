@@ -42,7 +42,10 @@ public class CollectionShrinkingTests
                 () => input.Any() && input.First().Count != 0,
                 () => input.First().First() != 42)
             select Acid.Test;
-        var report = new QState(script).Observe(15);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(15.ExecutionsPerRun());
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ [ 42 ] ]", entry.Value);
@@ -56,7 +59,10 @@ public class CollectionShrinkingTests
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(() => input.Count() > 1, () => input.ElementAt(1) != 42)
             select Acid.Test;
-        var report = new QState(script).Observe(15);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(15.ExecutionsPerRun());
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ _, 42 ]", entry.Value);
@@ -86,7 +92,10 @@ public class CollectionShrinkingTests
             && input.ToList()[1] == 2
             && input.ToList()[2] == 3))
             select Acid.Test;
-        var report = new QState(script).Observe(15);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(15.ExecutionsPerRun());
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ 1, 2, 3 ]", entry.Value);
@@ -100,7 +109,10 @@ public class CollectionShrinkingTests
             from act in "act".Act(() => { })
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         Assert.Null(report.FirstOrDefault<ReportInputEntry>());
     }
@@ -113,7 +125,10 @@ public class CollectionShrinkingTests
             from act in "act".Act(() => { })
             from spec in "spec".SpecIf(() => input.Count() > 2, () => !input.Contains(1))
             select Acid.Test;
-        var report = new QState(script).Observe(15);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(15.ExecutionsPerRun());
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ _, _, 1 ]", entry.Value);
@@ -134,7 +149,10 @@ public class CollectionShrinkingTests
             from act in "act".ActIf(() => input.Count() > 0, () => input.Any(a => a.One == 42))
             from spec in "spec".Spec(() => !act)
             select Acid.Test;
-        var report = new QState(script).Observe(15);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(15.ExecutionsPerRun());
         Assert.NotNull(report);
         Assert.Single(report.OfType<ReportInputEntry>());
         var entry = report.Single<ReportInputEntry>();

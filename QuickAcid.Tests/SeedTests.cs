@@ -13,7 +13,10 @@ public class SeedTests
             from spec in "spec".Spec(() => false)
             select Acid.Test;
 
-        var report = new QState(script).Observe(10);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(10.ExecutionsPerRun());
         var entry = report.Single<ReportTitleSectionEntry>();
 
         Assert.Equal(3, entry.Title.Count);

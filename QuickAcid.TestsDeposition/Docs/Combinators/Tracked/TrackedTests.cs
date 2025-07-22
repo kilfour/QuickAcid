@@ -43,7 +43,10 @@ from account in ""account"".Tracked(() => new Account())
            from _ in "spec".Spec(() => container.Value != 42)
            select Acid.Test;
 
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
@@ -63,7 +66,10 @@ from account in ""account"".Tracked(() => new Account())
             })
             from act in "act".Act(() => { executionCount++; })
             select Acid.Test;
-        new QState(script).Observe(3);
+        QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(3.ExecutionsPerRun());
     }
 
     //[Fact]

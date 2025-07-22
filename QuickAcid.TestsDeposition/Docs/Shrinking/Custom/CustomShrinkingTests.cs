@@ -32,7 +32,10 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         Assert.Contains(666, observe);
     }
@@ -47,7 +50,10 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         Assert.Contains(666, observe);
     }
@@ -62,7 +68,10 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant(42).Many(1))
             from foo in "spec".Spec(() => { input.ForEach(a => observe.Add(a)); return false; })
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         Assert.Contains(666, observe);
     }
@@ -76,7 +85,10 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant<List<int>>([42, 1, 2]))
             from foo in "spec".Spec(() => !input.Contains(42))
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ 42 ]", entry.Value);
@@ -91,7 +103,10 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant<List<int>>([42, 1, 2]))
             from foo in "spec".Spec(() => !input.Contains(42))
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         var entry = report.Single<ReportInputEntry>();
         Assert.
@@ -107,7 +122,10 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         Assert.All(observe, item => Assert.Equal(42, item));
     }

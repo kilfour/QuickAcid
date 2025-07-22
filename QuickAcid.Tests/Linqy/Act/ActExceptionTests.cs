@@ -8,7 +8,10 @@ public class ActExceptionTests
     public void SimpleExceptionThrown()
     {
         var script = "foo".Act(() => { if (true) throw new Exception(); });
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);
@@ -22,7 +25,10 @@ public class ActExceptionTests
             from foo in "foo".Act(() => throw new Exception())
             from bar in "bar".Act(() => { })
             select Acid.Test;
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
         Assert.NotNull(entry);
         Assert.Equal("foo", entry.Key);
@@ -75,7 +81,10 @@ public class ActExceptionTests
             from _a2 in "act".ActIf(() => counter == 2,
                 () => { var exc = exception; exception = new InvalidOperationException(); throw exc; })
             select Acid.Test;
-        var report = new QState(script).Observe(3);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(3.ExecutionsPerRun());
 
         Assert.NotNull(report);
         Assert.NotNull(report.Exception);

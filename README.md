@@ -39,7 +39,10 @@ var script =
     from spec in "No_Overdraft".Spec(() => account.Balance >= 0)
     select Acid.Test;
 
-new QState(script).Observe(50);
+QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50);
 ```
 
 ## 🔍 Example Failure Output

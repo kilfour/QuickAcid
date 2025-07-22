@@ -37,7 +37,10 @@ public class PrimitiveShrinkingTests
             })
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
         Assert.Single(report.OfType<ReportInputEntry>());
 
@@ -64,7 +67,10 @@ public class PrimitiveShrinkingTests
             })
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
@@ -94,7 +100,10 @@ public class PrimitiveShrinkingTests
             })
             select Acid.Test;
 
-        var report = new QState(script).Observe(100);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(100.ExecutionsPerRun());
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
@@ -137,7 +146,10 @@ public class PrimitiveShrinkingTests
             })
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);

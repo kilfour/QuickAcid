@@ -27,7 +27,10 @@ public class IntProperty
             })
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
         Assert.Equal("input", inputEntry.Key);
@@ -51,7 +54,10 @@ public class IntProperty
             from foo in "act".Act(() => { throw new Exception(); })
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.Null(inputEntry);
 
@@ -76,7 +82,10 @@ public class IntProperty
             })
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
         Assert.Equal("input", inputEntry.Key);
@@ -104,7 +113,10 @@ public class IntProperty
                 })
                 select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
@@ -140,7 +152,10 @@ public class IntProperty
                 })
                 select Acid.Test;
 
-            var report = new QState(script).Observe(50);
+            var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
             Assert.NotNull(inputEntry.Value);
@@ -184,7 +199,10 @@ public class IntProperty
                 && input.MyThirdProperty == result.MyThirdProperty)
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
         Assert.Equal("input", inputEntry.Key);
@@ -218,7 +236,10 @@ public class IntProperty
                 && input.MyThirdProperty == result.MyThirdProperty)
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);
@@ -254,7 +275,10 @@ public class IntProperty
                 && input.MyFourthProperty == result.MyFourthProperty)
             select Acid.Test;
 
-        var report = new QState(script).Observe(50);
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .And(50.ExecutionsPerRun());
 
         var inputEntry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(inputEntry);

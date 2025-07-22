@@ -19,7 +19,10 @@ public class DocumentingBehavior
             from act in "fail".Act(() => throw new Exception("boom"))
             select Acid.Test;
 
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
         Assert.NotNull(report);
         Assert.Contains("boom", report.Exception!.Message);
     }
@@ -34,7 +37,10 @@ public class DocumentingBehavior
             from _2 in "second".Spec(() => { secondSpecFailed = true; return false; })
             select Acid.Test;
 
-        var report = new QState(script).ObserveOnce();
+        var report = QState.Run(script)
+            .Options(a => a with { DontThrow = true })
+            .WithOneRun()
+            .AndOneExecutionPerRun();
 
         Assert.Equal("second", report.GetSpecEntry().Key);
     }
