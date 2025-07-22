@@ -11,6 +11,11 @@ public class WordCount
         this.depositions = depositions;
     }
 
+    public int Executions()
+    {
+        return depositions.Count;
+    }
+
     public int Inputs()
     {
         return depositions.Sum(a => a.InputDepositions.Count);

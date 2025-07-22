@@ -68,7 +68,7 @@ This would end the test run early once `container.Value` becomes `true`.
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(100.ExecutionsPerRun());
-        Assert.NotNull(report);
+
         var entry = report.First<ReportTitleSectionEntry>();
         Assert.Equal("The Assayer disagrees: val is true.", entry.Title[0]);
     }

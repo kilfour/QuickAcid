@@ -4,7 +4,7 @@ namespace QuickAcid.Proceedings
 
     public class ExceptionDeposition : FailureDeposition
     {
-        public Exception? Exception { get; }
+        public Exception Exception { get; }
 
         public ExceptionDeposition(Exception exception)
         {

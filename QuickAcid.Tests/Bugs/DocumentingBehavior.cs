@@ -1,3 +1,4 @@
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr.UnderTheHood;
 
 namespace QuickAcid.Tests.Bugs;
@@ -17,12 +18,11 @@ public class DocumentingBehavior
             from act in "fail".Act(() => throw new Exception("boom"))
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
-        Assert.NotNull(report);
-        Assert.Contains("boom", report.Exception!.Message);
+            .AndOneExecutionPerRun());
+
+        Assert.Contains("boom", article.Exception().Message);
     }
 
     [Fact]
@@ -35,11 +35,10 @@ public class DocumentingBehavior
             from _2 in "second".Spec(() => { secondSpecFailed = true; return false; })
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
-        Assert.Equal("second", report.GetSpecEntry().Key);
+        Assert.Contains("second", article.FailedSpec());
     }
 }

@@ -37,7 +37,9 @@ public class Verdict
 
     public Verdict AddExecutionDeposition(ExecutionDeposition executionDepostion)
     {
-        ExecutionDepositions.Add(executionDepostion);
+        var last = ExecutionDepositions.LastOrDefault();
+        if (last == null || !last.Collapsed(executionDepostion))
+            ExecutionDepositions.Add(executionDepostion);
         return this;
     }
 

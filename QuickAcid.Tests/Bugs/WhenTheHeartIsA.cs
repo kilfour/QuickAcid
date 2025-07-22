@@ -16,7 +16,7 @@ public class WhenTheHeartIsA
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun(); ;
-        Assert.NotNull(report);
+
     }
 
     private static QAcidScript<Acid> MinimalSpec(object obj)

@@ -27,7 +27,7 @@ public class AnalyzeTests
             + timesActShouldHaveRunDuringExcutionShrinking
             + timesActShouldHaveRunDuringInputShrinking;
 
-        Assert.NotNull(report);
+
         Assert.Equal(timesRun, counter);
 
         var entry = report.GetSpecEntry();
@@ -48,7 +48,7 @@ public class AnalyzeTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(20.ExecutionsPerRun());
-        Assert.NotNull(report);
+
 
         var entry = report.GetSpecEntry();
         Assert.Equal("gens 3", entry.Key);

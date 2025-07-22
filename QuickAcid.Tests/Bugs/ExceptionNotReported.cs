@@ -1,5 +1,6 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 
 
 namespace QuickAcid.Tests.Bugs;
@@ -24,30 +25,14 @@ public class ExceptionNotReported
 			from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
 			select Acid.Test;
 
-		var ex = Assert.Throws<FalsifiableException>(() =>
-			QState.Run(script)
-				.WithOneRun()
-				.And(2.ExecutionsPerRun()));
+		var article = TheJournalist.Exposes(() => QState.Run(script)
+			.WithOneRun()
+			.And(2.ExecutionsPerRun()));
 
-		var report = ex.QAcidReport;
-		Assert.NotNull(report.Exception);
+		Assert.NotNull(article.Exception());
 
-		var entryAR1 = report.FirstOrDefault<ReportTrackedEntry>();
-		Assert.NotNull(entryAR1);
-		Assert.Equal("BugHouse", entryAR1.Key);
-
-		var entryAR2 = report.SecondOrDefault<ReportTrackedEntry>();
-		Assert.NotNull(entryAR2);
-		Assert.Equal("BugHouse", entryAR2.Key);
-
-		var entry2 = report.FirstOrDefault<ReportExecutionEntry>();
-		Assert.NotNull(entry2);
-		Assert.Equal("BugHouse.Run", entry2.Key);
-
-		var entry3 = report.SecondOrDefault<ReportExecutionEntry>();
-		Assert.NotNull(entry3);
-		Assert.Equal("BugHouse.Run", entry3.Key);
-
-
+		Assert.Equal(2, article.Execution(1).Read().Times);
+		Assert.Equal("BugHouse", article.Execution(1).Tracked(1).Read().Label);
+		Assert.Equal("BugHouse.Run", article.Execution(1).Action(1).Read().Label);
 	}
 }

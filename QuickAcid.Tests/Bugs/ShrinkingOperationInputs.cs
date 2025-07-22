@@ -65,20 +65,13 @@ public class ShrinkingOperationInputs
 
         var article = TheJournalist.Exposes(() =>
             QState.Run(script)
+                .Options(a => a with { ReportTo = "temp" })
                 .WithOneRun()
                 .And(100.ExecutionsPerRun()));
 
-        Assert.Equal(3, article.Total().Inputs());
+        Assert.Equal(3, article.Execution(1).Read().Times);
 
         var inputDeposition = article.Execution(1).Input(1).Read();
-        Assert.Equal("i2", inputDeposition.Label);
-        Assert.Equal("42", inputDeposition.Value);
-
-        inputDeposition = article.Execution(2).Input(1).Read();
-        Assert.Equal("i2", inputDeposition.Label);
-        Assert.Equal("42", inputDeposition.Value);
-
-        inputDeposition = article.Execution(3).Input(1).Read();
         Assert.Equal("i2", inputDeposition.Label);
         Assert.Equal("42", inputDeposition.Value);
     }
@@ -111,17 +104,9 @@ public class ShrinkingOperationInputs
                 .WithOneRun()
                 .And(100.ExecutionsPerRun()));
 
-        Assert.Equal(3, article.Total().Inputs());
+        Assert.Equal(3, article.Execution(1).Read().Times);
 
         var inputDeposition = article.Execution(1).Input(1).Read();
-        Assert.Equal("i2", inputDeposition.Label);
-        Assert.Equal("42", inputDeposition.Value);
-
-        inputDeposition = article.Execution(2).Input(1).Read();
-        Assert.Equal("i2", inputDeposition.Label);
-        Assert.Equal("42", inputDeposition.Value);
-
-        inputDeposition = article.Execution(3).Input(1).Read();
         Assert.Equal("i2", inputDeposition.Label);
         Assert.Equal("42", inputDeposition.Value);
     }

@@ -15,7 +15,7 @@ public class ActionShrinkingTests
         var report = QState.Run(script)
             .Options(a => a with { DontThrow = true, ShrinkingActions = true })
             .WithOneRunAndOneExecution();
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportExecutionEntry>();
         Assert.Equal("a2", entry.Key);
     }
@@ -31,7 +31,7 @@ public class ActionShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportExecutionEntry>();
         Assert.Equal("a1", entry.Key);
     }

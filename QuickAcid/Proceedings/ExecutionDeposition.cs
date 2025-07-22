@@ -2,9 +2,11 @@
 
 namespace QuickAcid.Proceedings;
 
-public class ExecutionDeposition
+public record ExecutionDeposition
 {
     public int ExecutionId { get; }
+
+    public int Times { get; private set; } = 1;
 
     public List<ActionDeposition> ActionDepositions { get; } = [];
 
@@ -17,23 +19,47 @@ public class ExecutionDeposition
         ExecutionId = executionId;
     }
 
-    public bool HasContent()
+    public bool Collapsed(ExecutionDeposition other)
     {
-        if (ActionDepositions.Count > 0) return true;
-        if (TrackedDepositions.Count > 0) return true;
-        if (InputDepositions.Count > 0) return true;
-        return false;
+        if (!ElementsMatch(TrackedDepositions, other.TrackedDepositions))
+            return false;
+        if (!ElementsMatch(ActionDepositions, other.ActionDepositions))
+            return false;
+        if (!ElementsMatch(InputDepositions, other.InputDepositions))
+            return false;
+        Times++;
+        return true;
+    }
+    private bool ElementsMatch<T>(List<T> one, List<T> two)
+    {
+        if (one.Count != two.Count) return false;
+        for (int i = 0; i < one.Count; i++)
+        {
+            if (one[i] == null && two[i] == null) return true;
+            if (one[i] == null && two[i] != null) return false;
+            if (!one[i]!.Equals(two[i]))
+                return false;
+        }
+        return true;
     }
 
-    public ExecutionDeposition AddActionDeposition(ActionDeposition actionDeposition)
+    public bool HasContent()
     {
-        ActionDepositions.Add(actionDeposition);
-        return this;
+        if (TrackedDepositions.Count > 0) return true;
+        if (ActionDepositions.Count > 0) return true;
+        if (InputDepositions.Count > 0) return true;
+        return false;
     }
 
     public ExecutionDeposition AddTrackedDeposition(TrackedDeposition trackedDeposition)
     {
         TrackedDepositions.Add(trackedDeposition);
+        return this;
+    }
+
+    public ExecutionDeposition AddActionDeposition(ActionDeposition actionDeposition)
+    {
+        ActionDepositions.Add(actionDeposition);
         return this;
     }
 

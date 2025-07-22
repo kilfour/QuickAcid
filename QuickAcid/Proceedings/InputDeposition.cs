@@ -1,6 +1,6 @@
 namespace QuickAcid.Proceedings;
 
-public class InputDeposition
+public record InputDeposition
 {
     public string Label { get; }
     public object Value { get; }

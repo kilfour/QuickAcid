@@ -29,7 +29,7 @@ public class CollectionShrinkingTests
                 .WithOneRun()
                 .And(15.ExecutionsPerRun()));
         var report = ex.QAcidReport;
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ _, _, _ ]", entry.Value);
     }
@@ -48,7 +48,7 @@ public class CollectionShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(15.ExecutionsPerRun());
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ [ 42 ] ]", entry.Value);
     }
@@ -65,7 +65,7 @@ public class CollectionShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(15.ExecutionsPerRun());
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ _, 42 ]", entry.Value);
     }
@@ -98,7 +98,7 @@ public class CollectionShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(15.ExecutionsPerRun());
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ 1, 2, 3 ]", entry.Value);
     }
@@ -115,7 +115,7 @@ public class CollectionShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         Assert.Null(report.FirstOrDefault<ReportInputEntry>());
     }
 
@@ -131,7 +131,7 @@ public class CollectionShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(15.ExecutionsPerRun());
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ _, _, 1 ]", entry.Value);
     }
@@ -155,7 +155,7 @@ public class CollectionShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(15.ExecutionsPerRun());
-        Assert.NotNull(report);
+
         Assert.Single(report.OfType<ReportInputEntry>());
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ { One : 42 } ]", entry.Value);

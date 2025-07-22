@@ -65,7 +65,7 @@ public class ActExceptionTests
             .WithOneRun()
             .And(3.ExecutionsPerRun());
 
-        Assert.NotNull(report);
+
         Assert.NotNull(report.Exception);
         Assert.Equal("BOOM", report.Exception.Message);
 
@@ -91,7 +91,7 @@ public class ActExceptionTests
             .WithOneRun()
             .And(3.ExecutionsPerRun());
 
-        Assert.NotNull(report);
+
         Assert.NotNull(report.Exception);
         Assert.Equal("First", report.Exception.Message);
 

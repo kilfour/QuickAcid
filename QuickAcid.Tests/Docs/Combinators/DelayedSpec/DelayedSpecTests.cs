@@ -47,7 +47,7 @@ let apply = spec.Apply()
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(5.ExecutionsPerRun());
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportTraceEntry>();
         Assert.Equal("spec", entry.Value);
     }

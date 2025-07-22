@@ -18,7 +18,7 @@ public class CustomPropertyShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         Assert.Contains(666, observe);
     }
 
@@ -35,7 +35,7 @@ public class CustomPropertyShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         Assert.All(observe, item => Assert.Equal(42, item));
     }
 }

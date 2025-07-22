@@ -61,7 +61,7 @@ from input in ""input"".Input(() => Fuzz.Int())
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(entry);
@@ -81,7 +81,7 @@ from input in ""input"".Input(() => Fuzz.Int())
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun(); ;
-        Assert.NotNull(report);
+
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(entry);
@@ -101,7 +101,7 @@ from input in ""input"".Input(() => Fuzz.Int())
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun(); ;
-        Assert.NotNull(report);
+
 
         var entry = report.FirstOrDefault<ReportInputEntry>();
         Assert.NotNull(entry);

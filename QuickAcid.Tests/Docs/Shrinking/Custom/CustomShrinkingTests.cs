@@ -35,7 +35,7 @@ public class CustomShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         Assert.Contains(666, observe);
     }
 
@@ -53,7 +53,7 @@ public class CustomShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         Assert.Contains(666, observe);
     }
 
@@ -71,7 +71,7 @@ public class CustomShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         Assert.Contains(666, observe);
     }
 
@@ -88,7 +88,7 @@ public class CustomShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportInputEntry>();
         Assert.Equal("[ 42 ]", entry.Value);
     }
@@ -106,7 +106,7 @@ public class CustomShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         var entry = report.Single<ReportInputEntry>();
         Assert.
         Equal("[ 42, _, _ ]", entry.Value);
@@ -125,7 +125,7 @@ public class CustomShrinkingTests
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         Assert.All(observe, item => Assert.Equal(42, item));
     }
 }

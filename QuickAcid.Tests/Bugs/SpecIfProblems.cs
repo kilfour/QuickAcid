@@ -21,7 +21,7 @@ public class SpecIfProblems
 			.Options(a => a with { DontThrow = true })
 			.WithOneRun()
 			.And(5.ExecutionsPerRun());
-		Assert.NotNull(report);
+
 	}
 
 	[Fact(Skip = "not sure this is what we want")]
@@ -53,7 +53,7 @@ public class SpecIfProblems
 			.WithOneRun()
 			.And(3.ExecutionsPerRun());
 
-		Assert.NotNull(report);
+
 		Assert.False(predicateRan);
 	}
 
@@ -81,7 +81,7 @@ public class SpecIfProblems
 			.Options(a => a with { DontThrow = true })
 			.WithOneRun()
 			.AndOneExecutionPerRun();
-		Assert.NotNull(report);
+
 		Assert.False(predicateRan);
 	}
 }

@@ -1,6 +1,6 @@
 namespace QuickAcid.Proceedings;
 
-public class TrackedDeposition
+public record TrackedDeposition
 {
     public string Label { get; }
     public string Value { get; }

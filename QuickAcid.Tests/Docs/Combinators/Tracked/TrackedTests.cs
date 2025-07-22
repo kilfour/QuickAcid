@@ -50,7 +50,7 @@ from account in ""account"".Tracked(() => new Account())
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .AndOneExecutionPerRun();
-        Assert.NotNull(report);
+
         var entry = report.FirstOrDefault<ReportTrackedEntry>();
         Assert.NotNull(entry);
         Assert.Equal("{ Value: 21 }", entry.Value);
@@ -112,7 +112,7 @@ from account in ""account"".Tracked(() => new Account())
     //             .Do("throw", _ => throw new Exception())
     //             .DumpItInAcid()
     //             .AndCheckForGold(1, 1);
-    //     Assert.NotNull(report);
+    //     
     //     var entry = report.FirstOrDefault<ReportTrackedInputEntry>();
     //     Assert.NotNull(entry);
     //     Assert.Equal("container", entry.Key);
@@ -143,7 +143,7 @@ from account in ""account"".Tracked(() => new Account())
     //             .Do("throw", _ => throw new Exception())
     //             .DumpItInAcid()
     //             .AndCheckForGold(1, 1);
-    //     Assert.NotNull(report);
+    //     
     //     var entry = report.FirstOrDefault<ReportTrackedInputEntry>();
     //     Assert.NotNull(entry);
     //     Assert.Equal("theAnswer", entry.Key);

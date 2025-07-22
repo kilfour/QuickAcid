@@ -22,7 +22,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
             .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(50.ExecutionsPerRun());
-            Assert.NotNull(report);
+
             var inputEntry = report.FirstOrDefault<ReportInputEntry>();
             Assert.NotNull(inputEntry);
             Assert.Equal("input", inputEntry.Key);

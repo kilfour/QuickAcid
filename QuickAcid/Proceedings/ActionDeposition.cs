@@ -1,12 +1,12 @@
 namespace QuickAcid.Proceedings;
 
 
-public class ActionDeposition
+public record ActionDeposition
 {
-    public string ActionLabel { get; }
+    public string Label { get; }
 
     public ActionDeposition(string actionLabel)
     {
-        ActionLabel = actionLabel;
+        Label = actionLabel;
     }
 };
