@@ -6,6 +6,5 @@ public enum QAcidPhase
     ShrinkingExecutions,
     ShrinkingActions,
     ShrinkingInputs,
-    ShrinkInputEval,
-    FeedbackShrinking
+    ShrinkInputEval
 }

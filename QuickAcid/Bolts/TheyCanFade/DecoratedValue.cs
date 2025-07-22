@@ -5,19 +5,8 @@ namespace QuickAcid.Bolts.TheyCanFade;
 public class DecoratedValue
 {
     public object? Value { get; set; }
-    public ReportingIntent ReportingIntent { get; set; } = ReportingIntent.Shrinkable;
-    // ---------------------------------------------------------------------------------------
-    // -- DEEP COPY
-    public DecoratedValue DeepCopy()
-    {
-        return new DecoratedValue
-        {
-            Value = Value, // shallow copy — replace if needed
-            ReportingIntent = this.ReportingIntent
-        };
-    }
-    // ---------------------------------------------------------------------------------------
 
+    public ReportingIntent ReportingIntent { get; set; } = ReportingIntent.Shrinkable;
 
     private ShrinkTraceRecord root = new ShrinkTraceRecord();
 

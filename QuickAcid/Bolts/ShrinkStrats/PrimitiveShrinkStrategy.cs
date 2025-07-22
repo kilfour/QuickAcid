@@ -43,55 +43,21 @@ public class PrimitiveShrinkStrategy
         if (!originalFails)
             return;
 
-        if (state.InFeedbackShrinkingPhase)
+        foreach (var candidate in primitiveVals.Where(x => !Equals(x, value)))
         {
-            foreach (var candidate in primitiveVals.Where(x => !Equals(x, value)))
+            if (state.RunPassed(key, candidate))
             {
-                if (state.RunFailed(key, candidate))
+                state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                 {
-                    state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
-                    {
-                        ExecutionId = -1,
-                        Key = fullKey,
-                        Name = fullKey.Split(".").Last(),
-                        Original = value,
-                        Result = candidate,
-                        Intent = ShrinkIntent.Replace,
-                        Strategy = "PrimitiveShrink.FeedbackFusion"
-                    });
-                    return;
-                }
-            }
-
-            state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
-            {
-                ExecutionId = -1,
-                Key = fullKey,
-                Name = fullKey.Split(".").Last(),
-                Original = value,
-                Result = value,
-                Intent = ShrinkIntent.Keep,
-                Strategy = "PrimitiveShrink.FeedbackFusion"
-            });
-        }
-        else
-        {
-            foreach (var candidate in primitiveVals.Where(x => !Equals(x, value)))
-            {
-                if (state.RunPassed(key, candidate))
-                {
-                    state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
-                    {
-                        ExecutionId = -1,
-                        Key = fullKey,
-                        Name = fullKey.Split(".").Last(),
-                        Original = value,
-                        Result = candidate,
-                        Intent = ShrinkIntent.Keep,
-                        Strategy = "PrimitiveShrink"
-                    });
-                    return;
-                }
+                    ExecutionId = -1,
+                    Key = fullKey,
+                    Name = fullKey.Split(".").Last(),
+                    Original = value,
+                    Result = candidate,
+                    Intent = ShrinkIntent.Keep,
+                    Strategy = "PrimitiveShrink"
+                });
+                return;
             }
 
             state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace

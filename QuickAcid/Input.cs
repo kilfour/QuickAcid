@@ -23,28 +23,9 @@ public static partial class QAcidCombinators
 			case QAcidPhase.ShrinkInputEval:
 			case QAcidPhase.ShrinkingExecutions:
 			case QAcidPhase.ShrinkingActions:
-				return execution.GetMaybe<T>(key).Match(
-					some: x => QAcidResult.Some(state, x),
-					none: () =>
-					{
-						return QAcidResult.None<T>(state);
-					});
-
-
-			case QAcidPhase.FeedbackShrinking
-				when !execution.AlreadyTried(key):
-				{
-					var decoratedValue = execution.GetDecorated(key);
-					// var shrunk = ShrinkStrategyPicker.Input(state, key, decoratedValue.Value, key);
-					// if (shrunk != decoratedValue.ShrinkOutcome)
-					// {
-					// 	var number = state.CurrentExecutionNumber;
-					// 	state.ShrinkExecutions();
-					// 	state.CurrentExecutionNumber = number;
-					// }
-					// execution.SetShrinkOutcome(key, shrunk);
-					return QAcidResult.Some(state, (T)decoratedValue.Value!);
-				}
+				return execution.memory.ContainsKey(key) ?
+					QAcidResult.Some(state, execution.memory.Get<T>(key))
+					: QAcidResult.None<T>(state);
 
 			case QAcidPhase.ShrinkingInputs
 				when execution.AlreadyTried(key):

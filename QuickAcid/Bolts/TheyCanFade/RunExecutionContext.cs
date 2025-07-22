@@ -5,6 +5,7 @@ namespace QuickAcid.Bolts.TheyCanFade;
 public class RunExecutionContext
 {
     public Access memory;
+
     private readonly InputTrackerPerExecution shrinkTracker;
 
     private readonly Dictionary<string, string> traces;
@@ -25,8 +26,6 @@ public class RunExecutionContext
 
     public T Get<T>(string key) => memory.Get<T>(key);
     public DecoratedValue GetDecorated(string key) => memory.GetDecorated(key);
-
-    public Maybe<T> GetMaybe<T>(string key) => memory.GetMaybe<T>(key);
 
     public void SetIfNotAlreadyThere<T>(string key, T value) => memory.SetIfNotAlreadyThere(key, value);
 

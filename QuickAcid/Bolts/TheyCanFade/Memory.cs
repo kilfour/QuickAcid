@@ -30,6 +30,9 @@ public class Memory
 	public void ResetRunScopedInputs()
 		=> trackedInputMemory.Reset();
 
+	public bool Has(int executionId)
+		=> memoryPerExecution.ContainsKey(executionId);
+
 	public Access For(int executionId)
 	{
 		if (!memoryPerExecution.ContainsKey(executionId))
@@ -37,25 +40,11 @@ public class Memory
 		return memoryPerExecution[executionId];
 	}
 
-	public Maybe<Access> TryGet(int executionId)
-		=> memoryPerExecution.TryGetValue(executionId, out var access)
-			? Maybe<Access>.Some(access)
-			: Maybe<Access>.None;
-
 	public IEnumerable<(int executionId, Access access)> AllAccesses()
 		=> memoryPerExecution.Select(kvp => (kvp.Key, kvp.Value));
 
 	public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedSnapshot()
 		=> trackedInputMemory.ReportPerExecutionSnapshot(); // read-only exposure
-
-	public T GetForFluentInterface<T>(string key)
-		=> trackedInputMemory.Retrieve<T>(key)
-			.OrElse(For(getCurrentExecutionId()).GetMaybe<T>(key))
-			.Match(
-				some: x => x,
-				none: () => throw new ThisNotesOnYou(
-					$"You're singing in the wrong key. '{key}' wasn't found in Tracked(...) or Fuzzed(...).")
-			);
 
 	public Access ForThisExecution()
 	{
@@ -86,9 +75,6 @@ public class Memory
 	{
 		return memoryPerExecution.Last().Value;
 	}
-
-	public bool Has(int executionId) // used by codegen
-		=> memoryPerExecution.ContainsKey(executionId);
 
 	private readonly Stack<MemoryLens> swappers = new();
 
@@ -133,30 +119,4 @@ public class Memory
 			memory.Set(key, setValue(oldValue), ReportingIntent.Shrinkable);
 		});
 	}
-
-
-	// ---------------------------------------------------------------------------------------
-	// -- DEEP COPY
-	public Memory DeepCopy()
-	{
-		var newTracked = trackedInputMemory.DeepCopy(getCurrentExecutionId);
-		var newMemoryPerExecution = new Dictionary<int, Access>();
-		foreach (var kvp in memoryPerExecution)
-		{
-			newMemoryPerExecution[kvp.Key] = kvp.Value.DeepCopy();
-		}
-		var newMemory = new Memory(getCurrentExecutionId, newTracked, newMemoryPerExecution);
-		return newMemory;
-	}
-
-	public Memory(
-		Func<int> getCurrentActionId,
-		TrackedInputMemory alwaysReportedInputMemory,
-		Dictionary<int, Access> memoryPerExecution)
-	{
-		this.getCurrentExecutionId = getCurrentActionId;
-		this.trackedInputMemory = alwaysReportedInputMemory;
-		this.memoryPerExecution = memoryPerExecution;
-	}
-	// ---------------------------------------------------------------------------------------
 }

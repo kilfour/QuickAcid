@@ -34,11 +34,6 @@ public class TrackedInputMemory
         return val;
     }
 
-    public Maybe<T> Retrieve<T>(string key)
-    {
-        return values.TryGetValue(key, out var value) ? Maybe<T>.Some((T)value!) : Maybe<T>.None;
-    }
-
     public void Reset()
     {
         values.Clear();

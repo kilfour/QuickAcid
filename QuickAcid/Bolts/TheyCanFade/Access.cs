@@ -23,13 +23,6 @@ public class Access
         return dictionary[key]?.Value?.ToString()!;
     }
 
-    public Maybe<T> GetMaybe<T>(object key)
-    {
-        return dictionary.TryGetValue(key, out var value)
-            ? Maybe<T>.Some((T)value.Value!)
-            : Maybe<T>.None;
-    }
-
     public void SetIfNotAlreadyThere<T>(object key, T value)
     {
         if (dictionary.ContainsKey(key)) return;
@@ -68,25 +61,4 @@ public class Access
             .Where(kvp => kvp.Key is string)
             .ToDictionary(kvp => (string)kvp.Key, kvp => kvp.Value);
     }
-
-    // ---------------------------------------------------------------------------------------
-    // -- DEEP COPY
-    public Access DeepCopy()
-    {
-        var newAccess = new Access
-        {
-            ActionKeys = [.. ActionKeys]
-        };
-        foreach (var kvp in dictionary)
-        {
-            newAccess.Add(kvp.Key, kvp.Value.DeepCopy());
-        }
-        return newAccess;
-    }
-
-    public void Add(object key, DecoratedValue value)
-    {
-        dictionary[key] = value;
-    }
-    // ---------------------------------------------------------------------------------------
 }

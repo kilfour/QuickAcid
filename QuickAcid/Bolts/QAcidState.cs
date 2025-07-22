@@ -14,7 +14,7 @@ using QuickPulse;
 
 namespace QuickAcid.Bolts;
 
-public sealed class QAcidState : QAcidContext
+public sealed class QAcidState
 {
 
     public State FuzzState { get; } = new State();
@@ -114,7 +114,6 @@ public sealed class QAcidState : QAcidContext
     public PhaseContext CurrentContext => phaseContexts[CurrentPhase];
     public PhaseContext Phase(QAcidPhase phase) => phaseContexts[phase];
     public bool IsShrinkingExecutions => CurrentPhase == QAcidPhase.ShrinkingExecutions;
-    public bool InFeedbackShrinkingPhase = false;
     public IDisposable EnterPhase(QAcidPhase phase)
     {
         var previousPhase = CurrentPhase;
@@ -164,7 +163,6 @@ public sealed class QAcidState : QAcidContext
         () => [new ObjectShrinkStrategy()];
     // ---------------------------------------------------------------------------------------
     public bool AllowShrinking = true;
-    public bool AllowFeedbackShrinking = false;
     private int shrinkCount = 0;
     // ---------------------------------------------------------------------------------------
     private readonly Report report;
@@ -201,13 +199,6 @@ public sealed class QAcidState : QAcidContext
 
         }
     }
-
-    // -----------------------------------------------------------------
-    // implementing context for fluent
-    // --
-    public T GetItAtYourOwnRisk<T>(string key) => Memory.GetForFluentInterface<T>(key);
-    public T Get<T>(QKey<T> key) => GetItAtYourOwnRisk<T>(key.Label);
-    // -----------------------------------------------------------------
 
     public Report Observe(int executionsPerScope)
     {
@@ -293,10 +284,6 @@ public sealed class QAcidState : QAcidContext
             }
             else
             {
-                if (AllowFeedbackShrinking)
-                {
-                    FeedbackShrinking();
-                }
                 report.AddEntry(new ReportTitleSectionEntry([.. GetReportHeaderInfo()]));
             }
         }
@@ -353,7 +340,7 @@ public sealed class QAcidState : QAcidContext
         }
     }
 
-    public void ShrinkActions() // NEEDS CHANGING
+    public void ShrinkActions()
     {
         var max = ExecutionNumbers.Max();
         foreach (var outerExcutionNumber in ExecutionNumbers.ToList())
@@ -391,33 +378,6 @@ public sealed class QAcidState : QAcidContext
             {
                 CurrentExecutionNumber = executionNumber;
                 Script(this);
-                shrinkCount++;
-            }
-        }
-    }
-
-    private void FeedbackShrinking()
-    {
-        InputTracker = new InputTracker(() => CurrentExecutionNumber);
-        InFeedbackShrinkingPhase = true;
-        var max = ExecutionNumbers.Max();
-        var current = 0;
-        while (current <= max && ExecutionNumbers.Count > 1)
-        {
-            using (EnterPhase(QAcidPhase.FeedbackShrinking))
-            {
-                Memory.ResetRunScopedInputs();
-                foreach (var executionNumber in ExecutionNumbers.ToList())
-                {
-                    CurrentExecutionNumber = executionNumber;
-                    if (executionNumber != current)
-                        Script(this);
-                }
-                if (CurrentContext.Failed)
-                {
-                    ExecutionNumbers.Remove(current);
-                }
-                current++;
                 shrinkCount++;
             }
         }

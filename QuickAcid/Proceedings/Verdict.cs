@@ -46,4 +46,9 @@ public class Verdict
         TestMethodInfoDeposition = testMethodInfoDeposition;
         return this;
     }
+
+    // foreach (var (key, val) in memory.TracesFor(executionId))
+    // {
+    //     entries.Add(new ReportTraceEntry(key) { Value = val });
+    // }
 }
