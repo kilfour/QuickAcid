@@ -23,12 +23,12 @@ public static partial class QAcidCombinators
 			case QAcidPhase.ShrinkInputEval:
 			case QAcidPhase.ShrinkingExecutions:
 			case QAcidPhase.ShrinkingActions:
-				return execution.memory.ContainsKey(key) ?
-					QAcidResult.Some(state, execution.memory.Get<T>(key))
+				return execution.access.ContainsKey(key) ?
+					QAcidResult.Some(state, execution.access.Get<T>(key))
 					: QAcidResult.None<T>(state);
 
 			case QAcidPhase.ShrinkingInputs
-				when execution.AlreadyTried(key):
+				when execution.AlreadyTriedToShrink(key):
 				{
 					var value = generator(state.FuzzState).Value;
 					execution.SetIfNotAlreadyThere(key, value);
@@ -36,11 +36,11 @@ public static partial class QAcidCombinators
 				}
 
 			case QAcidPhase.ShrinkingInputs
-				when !execution.AlreadyTried(key):
+				when !execution.AlreadyTriedToShrink(key):
 				{
 					var value = execution.Get<T>(key);
 					ShrinkStrategyPicker.Input(state, key, value, key);
-					execution.SetShrinkOutcome(key);
+					execution.MarkAsTriedToShrink(key);
 					return QAcidResult.Some(state, value);
 				}
 

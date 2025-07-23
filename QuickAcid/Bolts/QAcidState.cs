@@ -18,6 +18,7 @@ namespace QuickAcid.Bolts;
 public sealed class QAcidState
 {
     public State FuzzState { get; } = new State();
+    public int Seed { get { return FuzzState.Seed; } }
 
     public QAcidState(QAcidScript<Acid> script)
     {
@@ -26,6 +27,7 @@ public sealed class QAcidState
         Memory = new Memory(() => CurrentExecutionNumber);
         InputTracker = new InputTracker(() => CurrentExecutionNumber);
         report = new Report();
+        VerifyIf = new Verifier(this);
     }
 
     public QAcidState(QAcidScript<Acid> script, int seed)
@@ -37,14 +39,7 @@ public sealed class QAcidState
     // -------------------------------------------------------------------------------------------------
     // -- Shrinking
     // --
-    public void SetShrinkKind(string key, ShrinkKind shrinkKind)
-    {
-        Memory.ForThisExecution().GetDecorated(key).SetShrinkKind(shrinkKind);
-    }
-    public void Trace(string key, ShrinkKind shrinkKind, ShrinkTrace trace)
-    {
-        Memory.ForThisExecution().GetDecorated(key).AddTrace(shrinkKind, trace with { ExecutionId = CurrentExecutionNumber });
-    }
+
     // -------------------------------------------------------------------------------------------------
 
     public QAcidScript<Acid> Script { get; private set; }
@@ -71,6 +66,7 @@ public sealed class QAcidState
     public RunExecutionContext GetExecutionContext()
     {
         return new RunExecutionContext(
+            CurrentExecutionNumber,
             Memory.ForThisExecution(),
             InputTracker.ForThisExecution(),
             Memory.TracesForThisExecution());
@@ -79,10 +75,10 @@ public sealed class QAcidState
     public T Remember<T>(string key, Func<T> factory, ReportingIntent reportingIntent = ReportingIntent.Shrinkable)
     {
         var execution = GetExecutionContext();
-        if (!execution.memory.ContainsKey(key))
+        if (!execution.access.ContainsKey(key))
         {
             var value = factory();
-            execution.memory.Set(key, value, reportingIntent);
+            execution.access.Set(key, value, reportingIntent);
             return value;
         }
         return execution.Get<T>(key);
@@ -122,6 +118,7 @@ public sealed class QAcidState
     // ---------------------------------------------------------------------------------------
 
     public ShrinkingRegistry ShrinkingRegistry { get; } = new ShrinkingRegistry();
+    public Verifier VerifyIf { get; }
 
     public bool AllowShrinking = true;
     private int shrinkCount = 0;
@@ -130,7 +127,7 @@ public sealed class QAcidState
     public bool Verbose { get; set; }
     public bool AlwaysReport { get; set; }
     public bool ShrinkingActions { get; set; }
-    public int Seed { get { return FuzzState.Seed; } }
+
 
     // -----------------------------------------------------------------
     // spec counting
@@ -267,31 +264,6 @@ public sealed class QAcidState
         yield return $"Minimal failing case:    {ExecutionNumbers.Count} {executionsText} (after {shrinkCount} {shrinkText})";
         yield return $"Seed:                    {FuzzState.Seed}";
         yield break;
-    }
-
-    public bool RunPassed(string key, object value)
-    {
-        return !RunFailed(key, value);
-    }
-
-    public bool RunFailed(string key, object value)
-    {
-        using (EnterPhase(QAcidPhase.ShrinkInputEval))
-        {
-            Memory.ResetRunScopedInputs();
-            var runNumber = CurrentExecutionNumber;
-            using (Memory.ScopedSwap(key, value))
-            {
-
-                foreach (var actionNumber in ExecutionNumbers)
-                {
-                    CurrentExecutionNumber = actionNumber;
-                    Script(this);
-                }
-            }
-            CurrentExecutionNumber = runNumber;
-            return CurrentContext.Failed || (OriginalRun.Exception == null && CurrentContext.Exception != null);
-        }
     }
 
     private CaseFile CompileTheCaseFile()

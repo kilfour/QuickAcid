@@ -15,14 +15,14 @@ public class CustomShrinkStrategy
     public ShrinkOutcome Shrink(QAcidState state, string key, object original)
     {
         var values = shrinker.Shrink(original);
-        var originalFails = state.RunFailed(key, original);
+        var originalFails = state.VerifyIf.RunFailed(key, original);
         if (!originalFails)
             return ShrinkOutcome.Irrelevant;
 
         bool failureAlwaysOccurs =
             values
                 .Where(x => !Equals(x, original))
-                .All(x => state.RunFailed(key, x));
+                .All(x => state.VerifyIf.RunFailed(key, x));
 
         return failureAlwaysOccurs
             ? ShrinkOutcome.Irrelevant

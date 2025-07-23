@@ -15,9 +15,9 @@ public class RemoveOneByOneStrategy : ICollectionShrinkStrategy
             var ix = index;
             var before = theList[ix];
             theList.RemoveAt(ix);
-            if (state.RunFailed(key, theList!))
+            if (state.VerifyIf.RunFailed(key, theList!))
             {
-                state.Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
+                state.GetExecutionContext().Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
                 {
                     ExecutionId = -1,
                     Key = $"{fullKey}.{indexKey}",
@@ -29,7 +29,7 @@ public class RemoveOneByOneStrategy : ICollectionShrinkStrategy
                 });
                 continue;
             }
-            state.Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
+            state.GetExecutionContext().Trace(key, ShrinkKind.KeepSameKind, new ShrinkTrace
             {
                 ExecutionId = -1,
                 Key = $"{fullKey}.{indexKey}",

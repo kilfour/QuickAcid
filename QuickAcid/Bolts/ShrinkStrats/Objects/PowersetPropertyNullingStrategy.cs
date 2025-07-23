@@ -33,11 +33,11 @@ public class PowersetPropertyNullingStrategy : IObjectShrinkStrategy
                         SetPropertyValue(propertyInfo, value, null!);
                     }
 
-                    if (state.RunPassed(key, value))
+                    if (state.VerifyIf.RunPassed(key, value))
                     {
                         foreach (var propertyInfo in set)
                         {
-                            state.Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
+                            state.GetExecutionContext().Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                             {
                                 ExecutionId = -1,
                                 Key = $"{fullKey}.{propertyInfo.Name}",

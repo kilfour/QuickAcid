@@ -7,20 +7,8 @@ public class EnumerableShrinkStrategy
 {
     public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
+        state.GetExecutionContext().SetShrinkKind(key, ShrinkKind.EnumerableKind);
         state.ShrinkingRegistry.GetCollectionStrategies()
-            .ForEach(a =>
-            {
-                state.SetShrinkKind(key, ShrinkKind.EnumerableKind);
-                // state.Trace(key, ShrinkKind.EnumerableKind, new ShrinkTrace
-                // {
-                //     Key = fullKey,
-                //     Name = fullKey.Split(".").Last(),
-                //     Original = value,
-                //     Result = null,
-                //     Intent = ShrinkIntent.Keep,
-                //     Strategy = "EnumerableShrinkStrategy"
-                // });
-                a.Shrink(state, key, value, fullKey);
-            });
+            .ForEach(a => { a.Shrink(state, key, value, fullKey); });
     }
 }
