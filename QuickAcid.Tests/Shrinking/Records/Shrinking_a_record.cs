@@ -1,5 +1,5 @@
-﻿using QuickAcid.Reporting;
-using QuickAcid.Tests._Tools;
+﻿using QuickAcid.Tests._Tools;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Shrinking.Objects
@@ -21,22 +21,21 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from foo in "act".Act(() => { if (input.Age == 42) throw new Exception(); })
                 select Acid.Test;
 
-            var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .AndOneExecutionPerRun();
+            var article = TheJournalist.Exposes(() => QState.Run(script)
+                .WithOneRun()
+                .AndOneExecutionPerRun());
 
-            Assert.Single(report.OfType<ReportInputEntry>());
+            Assert.Equal(1, article.Total().Inputs());
 
-            var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+            var inputEntry = article.Execution(1).Input(1).Read();
             Assert.NotNull(inputEntry);
-            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("input", inputEntry.Label);
             Assert.Equal("{ Age : 42 }", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+            var actEntry = article.Execution(1).Action(1).Read();
             Assert.NotNull(actEntry);
-            Assert.Equal("act", actEntry.Key);
-            Assert.NotNull(report.Exception);
+            Assert.Equal("act", actEntry.Label);
+            Assert.NotNull(article.Exception());
         }
 
         [Fact]
@@ -61,15 +60,14 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 })
                 select Acid.Test;
 
-            var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .AndOneExecutionPerRun();
+            var article = TheJournalist.Exposes(() => QState.Run(script)
+                .WithOneRun()
+                .AndOneExecutionPerRun());
 
-            var inputEntry = report.Single<ReportInputEntry>();
+            var inputEntry = article.Execution(1).Input(1).Read();
             Assert.NotNull(inputEntry);
 
-            Assert.Equal("input2", inputEntry.Key);
+            Assert.Equal("input2", inputEntry.Label);
             Assert.Equal("{ Age : 40 }", inputEntry.Value);
         }
 
@@ -92,12 +90,11 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-                var report = QState.Run(script)
-                    .Options(a => a with { DontThrow = true })
+                var article = TheJournalist.Exposes(() => QState.Run(script)
                     .WithOneRun()
-                    .And(30.ExecutionsPerRun());
+                    .And(30.ExecutionsPerRun()));
 
-                var inputEntry = report.Single<ReportInputEntry>();
+                var inputEntry = article.Execution(1).Input(1).Read();
                 Assert.NotNull(inputEntry);
                 Assert.NotEqual("Age : 1000", inputEntry.Value);
             });

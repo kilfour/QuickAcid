@@ -1,6 +1,6 @@
-using QuickAcid.Reporting;
 using QuickPulse.Explains;
 using QuickFuzzr;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Primitives;
 
@@ -37,22 +37,20 @@ public class PrimitiveShrinkingTests
             })
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(50.ExecutionsPerRun());
+            .And(50.ExecutionsPerRun()));
 
-        Assert.Single(report.OfType<ReportInputEntry>());
+        //Assert.Equal(0, article.Total().Inputs());
 
-        var inputEntry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.NotNull(inputEntry);
-        Assert.Equal("input1", inputEntry.Key);
+        var inputEntry = article.Execution(1).Input(1).Read();
+        Assert.Equal("input1", inputEntry.Label);
         Assert.Equal("6", inputEntry.Value);
 
-        var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+        var actEntry = article.Execution(1).Action(1).Read();
         Assert.NotNull(actEntry);
-        Assert.Equal("act", actEntry.Key);
-        Assert.NotNull(report.Exception);
+        Assert.Equal("act", actEntry.Label);
+        Assert.NotNull(article.Exception());
     }
 
     [Fact]
@@ -67,25 +65,22 @@ public class PrimitiveShrinkingTests
             })
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(50.ExecutionsPerRun());
+            .And(50.ExecutionsPerRun()));
 
-        var inputEntry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.NotNull(inputEntry);
-        Assert.Equal("input1", inputEntry.Key);
+        var inputEntry = article.Execution(1).Input(1).Read();
+        Assert.Equal("input1", inputEntry.Label);
         Assert.Equal("6", inputEntry.Value);
 
-        inputEntry = report.SecondOrDefault<ReportInputEntry>();
-        Assert.NotNull(inputEntry);
-        Assert.Equal("input2", inputEntry.Key);
+        inputEntry = article.Execution(1).Input(2).Read();
+        Assert.Equal("input2", inputEntry.Label);
         Assert.Equal("6", inputEntry.Value);
 
-        var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+        var actEntry = article.Execution(1).Action(1).Read();
         Assert.NotNull(actEntry);
-        Assert.Equal("act", actEntry.Key);
-        Assert.NotNull(report.Exception);
+        Assert.Equal("act", actEntry.Label);
+        Assert.NotNull(article.Exception());
     }
 
     [Fact]
@@ -100,28 +95,25 @@ public class PrimitiveShrinkingTests
             })
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(100.ExecutionsPerRun());
+            .And(100.ExecutionsPerRun()));
 
-        var inputEntry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.NotNull(inputEntry);
-        Assert.Equal("input1", inputEntry.Key);
+        var inputEntry = article.Execution(1).Input(1).Read();
+        Assert.Equal("input1", inputEntry.Label);
         Assert.Equal("3", inputEntry.Value);
 
-        inputEntry = report.SecondOrDefault<ReportInputEntry>();
-        Assert.NotNull(inputEntry);
-        Assert.Equal("input2", inputEntry.Key);
+        inputEntry = article.Execution(1).Input(2).Read();
+        Assert.Equal("input2", inputEntry.Label);
         Assert.NotNull(inputEntry.Value);
         bool success = int.TryParse(inputEntry.Value.ToString(), out int input2FromReport);
         Assert.True(success);
         Assert.True(input2FromReport > 3);
 
-        var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+        var actEntry = article.Execution(1).Action(1).Read();
         Assert.NotNull(actEntry);
-        Assert.Equal("act", actEntry.Key);
-        Assert.NotNull(report.Exception);
+        Assert.Equal("act", actEntry.Label);
+        Assert.NotNull(article.Exception());
     }
 
     [Doc(Order = Chapter.Order + "-2", Caption = "Supported Types", Content =
@@ -146,19 +138,17 @@ public class PrimitiveShrinkingTests
             })
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(50.ExecutionsPerRun());
+            .And(50.ExecutionsPerRun()));
 
-        var inputEntry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.NotNull(inputEntry);
-        Assert.Equal("input1", inputEntry.Key);
-        Assert.Equal("'X'", inputEntry.Value); // Could use .ToString(CultureInfo.InvariantCulture) if needed
+        var inputEntry = article.Execution(1).Input(1).Read();
+        Assert.Equal("input1", inputEntry.Label);
+        Assert.Equal("'X'", inputEntry.Value);
 
-        var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+        var actEntry = article.Execution(1).Action(1).Read();
         Assert.NotNull(actEntry);
-        Assert.Equal("act", actEntry.Key);
-        Assert.NotNull(report.Exception);
+        Assert.Equal("act", actEntry.Label);
+        Assert.NotNull(article.Exception());
     }
 }
