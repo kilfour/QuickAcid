@@ -2,6 +2,7 @@ using QuickAcid.TestsDeposition._Tools.Models;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Bolts;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs;
 
@@ -78,21 +79,26 @@ public class QuickAcidTopLevel
     public const string Order = "1";
 
 
-    [Fact(Skip = "Only here as an example")]
+    [Fact]
     public void Example()
     {
         var script =
             from account in "Account".Tracked(() => new Account())
             from _ in "ops".Choose(
-                from depositAmount in "deposit".Input(Fuzz.Int())
-                from act in "account.Deposit".Act(() => account.Deposit(depositAmount))
+                from depositAmount in "deposit amount".Input(Fuzz.Int())
+                from act in "Deposit".Act(() => account.Deposit(depositAmount))
                 select Acid.Test,
-                from withdrawAmount in "withdraw".Input(Fuzz.Int())
-                from withdraw in "account.Withdraw:withdraw".Act(() => account.Withdraw(withdrawAmount))
+                from irrelevant in "irrelevant".Input(Fuzz.Int())
+                from withdrawAmount in "withdraw amount".Input(Fuzz.Int())
+                from withdraw in "Withdraw".Act(() => account.Withdraw(withdrawAmount))
                 select Acid.Test
             )
-            from spec in "No_Overdraft: account.Balance >= 0".Spec(() => account.Balance >= 0)
+            from spec in "No Overdraft".Spec(() => account.Balance >= 0)
             select Acid.Test;
-        Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRun().And(100.ExecutionsPerRun()));
+
+        TheJournalist.Exposes(() => QState.Run(script, 1807541905)
+            .Options(a => a with { ReportTo = "temp", Verbose = true })
+            .WithOneRun()
+            .And(100.ExecutionsPerRun()));
     }
 }
