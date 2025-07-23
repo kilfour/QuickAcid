@@ -7,7 +7,7 @@ public static partial class QAcidCombinators
 	private static QAcidScript<TOutput> TryCatch<TOutput>(string key, Func<TOutput> func)
 	=> state =>
 		{
-			var execution = state.GetExecutionContext();
+			var execution = state.CurrentExecutionContext();
 			if (state.CurrentPhase == QAcidPhase.NormalRun)
 				execution.access.ActionKeys.Add(key);
 			var needsToAct = execution.access.ActionKeys.Contains(key);
@@ -29,7 +29,7 @@ public static partial class QAcidCombinators
 	private static QAcidScript<TOut> TryCapture<TOut>(this string key, Func<TOut> func, Func<Exception, TOut> onError)
 		=> state =>
 	{
-		state.GetExecutionContext().access.ActionKeys.Add(key);
+		state.CurrentExecutionContext().access.ActionKeys.Add(key);
 		try
 		{
 			var result = func();

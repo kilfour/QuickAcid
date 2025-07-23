@@ -37,7 +37,7 @@ public class PowersetPropertyNullingStrategy : IObjectShrinkStrategy
                     {
                         foreach (var propertyInfo in set)
                         {
-                            state.GetExecutionContext().Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
+                            state.CurrentExecutionContext().Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                             {
                                 ExecutionId = -1,
                                 Key = $"{fullKey}.{propertyInfo.Name}",

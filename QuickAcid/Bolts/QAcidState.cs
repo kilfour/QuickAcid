@@ -53,7 +53,7 @@ public sealed class QAcidState
         Memory.SetCurrentActionIdFunction(() => CurrentExecutionNumber);
     }
 
-    public RunExecutionContext GetExecutionContext()
+    public RunExecutionContext CurrentExecutionContext()
     {
         return new RunExecutionContext(
             CurrentExecutionNumber,
@@ -64,7 +64,7 @@ public sealed class QAcidState
 
     public void Trace<T>(string key, string trace)
     {
-        var execution = GetExecutionContext();
+        var execution = CurrentExecutionContext();
         execution.Trace(key, trace);
     }
 

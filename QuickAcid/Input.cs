@@ -17,7 +17,7 @@ public static partial class QAcidCombinators
 
 	private static QAcidResult<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator)
 	{
-		var execution = state.GetExecutionContext();
+		var execution = state.CurrentExecutionContext();
 		switch (state.CurrentPhase)
 		{
 			case QAcidPhase.ShrinkInputEval:
