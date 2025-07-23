@@ -14,7 +14,7 @@ public static partial class QAcidCombinators
                         return value;
                     };
 
-                var index = state.Remember(key, factory);
+                var index = state.GetExecutionContext().Remember(key, factory);
                 return scripts[index](state);
             };
     }

@@ -1,9 +1,4 @@
-﻿using System.Linq.Expressions;
-using System.Reflection;
-using QuickAcid.Bolts.ShrinkStrats;
-using QuickAcid.Bolts.ShrinkStrats.Collections;
-using QuickAcid.Bolts.ShrinkStrats.Objects;
-using QuickAcid.Bolts.TheyCanFade;
+﻿using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Reporting;
@@ -36,15 +31,9 @@ public sealed class QAcidState
         FuzzState = new State(seed);
     }
 
-    // -------------------------------------------------------------------------------------------------
-    // -- Shrinking
-    // --
-
-    // -------------------------------------------------------------------------------------------------
-
     public QAcidScript<Acid> Script { get; private set; }
-    public int CurrentExecutionNumber { get; set; }
 
+    public int CurrentExecutionNumber { get; set; }
     public List<int> ExecutionNumbers { get; private set; }
 
     public bool IsThisTheRunsLastExecution()
@@ -63,6 +52,7 @@ public sealed class QAcidState
         ExecutionNumbers = executionNumbers;
         Memory.SetCurrentActionIdFunction(() => CurrentExecutionNumber);
     }
+
     public RunExecutionContext GetExecutionContext()
     {
         return new RunExecutionContext(
@@ -70,18 +60,6 @@ public sealed class QAcidState
             Memory.ForThisExecution(),
             InputTracker.ForThisExecution(),
             Memory.TracesForThisExecution());
-    }
-
-    public T Remember<T>(string key, Func<T> factory, ReportingIntent reportingIntent = ReportingIntent.Shrinkable)
-    {
-        var execution = GetExecutionContext();
-        if (!execution.access.ContainsKey(key))
-        {
-            var value = factory();
-            execution.access.Set(key, value, reportingIntent);
-            return value;
-        }
-        return execution.Get<T>(key);
     }
 
     public void Trace<T>(string key, string trace)

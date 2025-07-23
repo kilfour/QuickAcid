@@ -43,8 +43,20 @@ public class RunExecutionContext
     {
         access.GetDecorated(key).SetShrinkKind(shrinkKind);
     }
+
     public void Trace(string key, ShrinkKind shrinkKind, ShrinkTrace trace)
     {
         access.GetDecorated(key).AddTrace(shrinkKind, trace with { ExecutionId = executionNumber });
+    }
+
+    public T Remember<T>(string key, Func<T> factory, ReportingIntent reportingIntent = ReportingIntent.Shrinkable)
+    {
+        if (!access.ContainsKey(key))
+        {
+            var value = factory();
+            access.Set(key, value, reportingIntent);
+            return value;
+        }
+        return Get<T>(key);
     }
 }

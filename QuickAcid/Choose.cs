@@ -10,7 +10,7 @@ public static partial class QAcidCombinators
 
 		return state =>
 			{
-				var index = state.Remember(key, () => Fuzz.Int(0, scripts.Length)(state.FuzzState).Value, ReportingIntent.Never);
+				var index = state.GetExecutionContext().Remember(key, () => Fuzz.Int(0, scripts.Length)(state.FuzzState).Value, ReportingIntent.Never);
 				return scripts[index](state);
 			};
 	}
