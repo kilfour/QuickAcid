@@ -7,7 +7,7 @@ public class EnumerableShrinkStrategy
 {
     public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
-        state.GetCollectionStrategies()
+        state.ShrinkingRegistry.GetCollectionStrategies()
             .ForEach(a =>
             {
                 state.SetShrinkKind(key, ShrinkKind.EnumerableKind);

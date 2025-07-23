@@ -9,7 +9,7 @@ public static class Shrink<T>
     public static QAcidScript<Acid> LikeThis(IShrinker<T> shrinker) =>
         state =>
             {
-                state.RegisterShrinker(shrinker);
+                state.ShrinkingRegistry.RegisterShrinker(shrinker);
                 return QAcidResult.AcidOnly(state);
             };
 
@@ -22,7 +22,7 @@ public static class Shrink<T>
     public static QAcidScript<Acid> For<TProp>(Expression<Func<T, TProp>> expr, IShrinker<TProp> shrinker) =>
         state =>
             {
-                state.RegisterPropertyShrinker(expr, shrinker);
+                state.ShrinkingRegistry.RegisterPropertyShrinker(expr, shrinker);
                 return QAcidResult.AcidOnly(state);
             };
 

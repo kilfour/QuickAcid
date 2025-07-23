@@ -80,7 +80,7 @@ public class PowersetPropertyNullingStrategy : IObjectShrinkStrategy
             (val, propValue) => { SetPropertyValue(propertyInfo, value!, propValue); return val; });
         using (state.Memory.NestedValue(swapper))
         {
-            var customShrinker = state.TryGetPropertyShrinker<T>(propertyInfo);
+            var customShrinker = state.ShrinkingRegistry.TryGetPropertyShrinker<T>(propertyInfo);
             if (customShrinker != null)
                 new CustomShrinkStrategy(customShrinker).Shrink(state, key, propertyValue!);
             else

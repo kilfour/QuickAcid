@@ -7,6 +7,7 @@ using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Reporting;
+using QuickAcid.ShrinkRunners;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using QuickPulse;
@@ -16,10 +17,8 @@ namespace QuickAcid.Bolts;
 
 public sealed class QAcidState
 {
-
     public State FuzzState { get; } = new State();
 
-    // TODO MAKE INTERNAL
     public QAcidState(QAcidScript<Acid> script)
     {
         Script = script;
@@ -33,11 +32,10 @@ public sealed class QAcidState
         : this(script)
     {
         FuzzState = new State(seed);
-
     }
 
     // -------------------------------------------------------------------------------------------------
-    // -- New Way of Shrinking
+    // -- Shrinking
     // --
     public void SetShrinkKind(string key, ShrinkKind shrinkKind)
     {
@@ -51,14 +49,9 @@ public sealed class QAcidState
 
     public QAcidScript<Acid> Script { get; private set; }
     public int CurrentExecutionNumber { get; set; }
-    public IDisposable SetCurrentExecutionNumber(int number)
-    {
-        var previousNumber = CurrentExecutionNumber;
-        CurrentExecutionNumber = number;
-        return new DisposableAction(() => { CurrentExecutionNumber = previousNumber; });
-    }
 
     public List<int> ExecutionNumbers { get; private set; }
+
     public bool IsThisTheRunsLastExecution()
     {
         return CurrentExecutionNumber == ExecutionNumbers.Last();
@@ -128,40 +121,8 @@ public sealed class QAcidState
     public PhaseContext OriginalRun => Phase(QAcidPhase.NormalRun);
     // ---------------------------------------------------------------------------------------
 
+    public ShrinkingRegistry ShrinkingRegistry { get; } = new ShrinkingRegistry();
 
-    // ----------------------------------------------------------------------------------
-    // Shrinking Strategies
-    private readonly Dictionary<Type, object> shrinkers = [];
-    public void RegisterShrinker<T>(IShrinker<T> shrinker)
-    {
-        shrinkers[typeof(T)] = shrinker;
-    }
-    public IShrinker<T>? TryGetShrinker<T>()
-    {
-        return shrinkers.TryGetValue(typeof(T), out var shrinker)
-            ? shrinker as IShrinker<T>
-            : null;
-    }
-
-    private readonly Dictionary<(Type, PropertyInfo), IShrinkerBox> propertyShrinkers = [];
-    public void RegisterPropertyShrinker<T, TProp>(Expression<Func<T, TProp>> expr, IShrinker<TProp> shrinker)
-    {
-        var info = expr.AsPropertyInfo();
-        propertyShrinkers[(typeof(T), info)] = new ShrinkerBox<TProp>(shrinker);
-    }
-    public IShrinkerBox? TryGetPropertyShrinker<T>(PropertyInfo info)
-    {
-        return propertyShrinkers.TryGetValue((typeof(T), info), out var shrinker)
-            ? shrinker
-            : null;
-    }
-
-    public Func<IEnumerable<ICollectionShrinkStrategy>> GetCollectionStrategies =
-        () => [new RemoveOneByOneStrategy(), new GreedyShrinkEachElementStrategy(), new ShrinkEachElementStrategy()];
-
-    public Func<IEnumerable<IObjectShrinkStrategy>> GetObjectStrategies =
-        () => [new ObjectShrinkStrategy()];
-    // ---------------------------------------------------------------------------------------
     public bool AllowShrinking = true;
     private int shrinkCount = 0;
     // ---------------------------------------------------------------------------------------
@@ -198,11 +159,6 @@ public sealed class QAcidState
                 collector[item.Key] = item.Value;
 
         }
-    }
-
-    public Report Observe(int executionsPerScope)
-    {
-        return Run(executionsPerScope);
     }
 
     public Report Run(int executionsPerScope)
@@ -258,7 +214,7 @@ public sealed class QAcidState
         OriginalFailingRunExecutionCount = ExecutionNumbers.Count;
         if (AllowShrinking)
         {
-            ShrinkExecutions();
+            shrinkCount += ExecutionShrinker.Run(this);
             if (Verbose)
             {
                 report.AddEntry(new ReportTitleSectionEntry(["AFTER EXECUTION SHRINKING"]));
@@ -267,7 +223,7 @@ public sealed class QAcidState
             }
             if (ShrinkingActions)
             {
-                ShrinkActions();
+                shrinkCount += ActionShrinker.Run(this);
                 if (Verbose)
                 {
                     report.AddEntry(new ReportTitleSectionEntry(["AFTER ACTION SHRINKING"]));
@@ -275,7 +231,7 @@ public sealed class QAcidState
                     runs.Add(WitnessTheRun("AFTER ACTION SHRINKING"));
                 }
             }
-            ShrinkInputs();
+            shrinkCount += InputShrinker.Run(this);
             if (Verbose)
             {
                 var title = new List<string>(["AFTER INPUT SHRINKING :"]);
@@ -303,8 +259,6 @@ public sealed class QAcidState
                 .ToList();
     }
 
-
-
     private IEnumerable<string> GetReportHeaderInfo()
     {
         var executionsText = ExecutionNumbers.Count == 1 ? "execution" : "executions";
@@ -313,74 +267,6 @@ public sealed class QAcidState
         yield return $"Minimal failing case:    {ExecutionNumbers.Count} {executionsText} (after {shrinkCount} {shrinkText})";
         yield return $"Seed:                    {FuzzState.Seed}";
         yield break;
-    }
-
-    public void ShrinkExecutions()
-    {
-        var max = ExecutionNumbers.Max();
-        var current = 0;
-        while (current <= max && ExecutionNumbers.Count() > 1)
-        {
-            using (EnterPhase(QAcidPhase.ShrinkingExecutions))
-            {
-                Memory.ResetRunScopedInputs();
-                foreach (var executionNumber in ExecutionNumbers.ToList())
-                {
-                    CurrentExecutionNumber = executionNumber;
-                    if (executionNumber != current)
-                        Script(this);
-                }
-                if (CurrentContext.Failed)
-                {
-                    ExecutionNumbers.Remove(current);
-                }
-                current++;
-                shrinkCount++;
-            }
-        }
-    }
-
-    public void ShrinkActions()
-    {
-        var max = ExecutionNumbers.Max();
-        foreach (var outerExcutionNumber in ExecutionNumbers.ToList())
-        {
-            var oldKeys = Memory.For(outerExcutionNumber).ActionKeys;
-            if (oldKeys.Count < 1) continue;
-            foreach (var key in oldKeys.ToList())
-            {
-                if (oldKeys.Count < 1) continue;
-                Memory.For(outerExcutionNumber).ActionKeys.Remove(key);
-                using (EnterPhase(QAcidPhase.ShrinkingExecutions))
-                {
-                    Memory.ResetRunScopedInputs();
-                    foreach (var executionNumber in ExecutionNumbers.ToList())
-                    {
-                        CurrentExecutionNumber = executionNumber;
-                        Script(this);
-                    }
-                    if (!CurrentContext.Failed)
-                    {
-                        Memory.For(outerExcutionNumber).ActionKeys.Add(key);
-                    }
-                    shrinkCount++;
-                }
-            }
-        }
-    }
-
-    private void ShrinkInputs()
-    {
-        using (EnterPhase(QAcidPhase.ShrinkingInputs))
-        {
-            Memory.ResetRunScopedInputs();
-            foreach (var executionNumber in ExecutionNumbers.ToList())
-            {
-                CurrentExecutionNumber = executionNumber;
-                Script(this);
-                shrinkCount++;
-            }
-        }
     }
 
     public bool RunPassed(string key, object value)
@@ -404,7 +290,6 @@ public sealed class QAcidState
                 }
             }
             CurrentExecutionNumber = runNumber;
-            // this exception check might need some tightening
             return CurrentContext.Failed || (OriginalRun.Exception == null && CurrentContext.Exception != null);
         }
     }

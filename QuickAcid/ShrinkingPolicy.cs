@@ -9,14 +9,14 @@ public static class ShrinkingPolicy
     public static QAcidScript<Acid> ForCollections(params ICollectionShrinkStrategy[] strategies) =>
         state =>
             {
-                state.GetCollectionStrategies = () => strategies;
+                state.ShrinkingRegistry.GetCollectionStrategies = () => strategies;
                 return QAcidResult.AcidOnly(state);
             };
 
     public static QAcidScript<Acid> ForObjects(params IObjectShrinkStrategy[] strategies) =>
         state =>
             {
-                state.GetObjectStrategies = () => strategies;
+                state.ShrinkingRegistry.GetObjectStrategies = () => strategies;
                 return QAcidResult.AcidOnly(state);
             };
 }
