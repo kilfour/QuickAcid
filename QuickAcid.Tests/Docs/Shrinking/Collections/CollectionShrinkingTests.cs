@@ -4,6 +4,7 @@ using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using QuickAcid.Bolts;
 using QuickAcid.Tests._Tools;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 
@@ -23,15 +24,13 @@ public class CollectionShrinkingTests
             from act in "act".Act(() => { })
             from spec in "spec".Spec(() => input.Count() <= 2)
             select Acid.Test;
-        var ex = Assert.Throws<FalsifiableException>(() =>
+
+        var article = TheJournalist.Exposes(() =>
             QState.Run(script)
-                //.Options(a => a with { Verbose = true })
                 .WithOneRun()
                 .And(15.ExecutionsPerRun()));
-        var report = ex.QAcidReport;
 
-        var entry = report.Single<ReportInputEntry>();
-        Assert.Equal("[ _, _, _ ]", entry.Value);
+        Assert.Equal("[ _, _, _ ]", article.Execution(1).Input(1).Read().Value);
     }
 
     [Fact]

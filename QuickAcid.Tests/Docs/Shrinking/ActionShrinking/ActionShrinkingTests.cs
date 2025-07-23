@@ -1,4 +1,5 @@
 using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.ActionShrinking;
@@ -12,12 +13,12 @@ public class ActionShrinkingTests
             from a1 in "a1".Act(() => { })
             from a2 in "a2".Act(() => throw new Exception("Boom"))
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true, ShrinkingActions = true })
-            .WithOneRunAndOneExecution();
 
-        var entry = report.Single<ReportExecutionEntry>();
-        Assert.Equal("a2", entry.Key);
+        var article = TheJournalist.Exposes(() => QState.Run(script)
+            .Options(a => a with { ShrinkingActions = true })
+            .WithOneRunAndOneExecution());
+
+        Assert.Equal("a2", article.Execution(1).Action(1).Read().Label);
     }
 
     [Fact]
@@ -27,12 +28,10 @@ public class ActionShrinkingTests
             from a1 in "a1".Act(() => throw new Exception("BOOM"))
             from a2 in "a2".Act(() => { })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
-        var entry = report.Single<ReportExecutionEntry>();
-        Assert.Equal("a1", entry.Key);
+        Assert.Equal("a1", article.Execution(1).Action(1).Read().Label);
     }
 }
