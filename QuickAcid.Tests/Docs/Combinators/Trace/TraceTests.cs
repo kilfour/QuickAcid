@@ -29,7 +29,7 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             select Acid.Test;
         var report = QState.Run(script).WithOneRunAndOneExecution();
         var entry = report.Single<ReportTraceEntry>();
-        Assert.NotNull(entry);
+
         Assert.Equal("Extra words", entry.Value);
     }
 
@@ -45,7 +45,7 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             select Acid.Test;
         var report = QState.Run(script).WithOneRunAndOneExecution();
         var entry = report.Single<ReportTraceEntry>();
-        Assert.NotNull(entry);
+
         Assert.Equal("[ 42, 42 ]", entry.Value);
     }
 

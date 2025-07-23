@@ -1,5 +1,6 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.Tests.Linqy.Act;
 
@@ -12,14 +13,13 @@ public class ActAndSpecExceptionTests
             from foo in "foo".Act(() => { if (true) throw new Exception(); })
             from spec in "spec".Spec(() => true)
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
-        Assert.NotNull(report.Exception);
-        Assert.Equal("foo", entry.Key);
+            .AndOneExecutionPerRun());
+        var entry = article.Execution(1).Action(1).Read();
+
+        Assert.NotNull(article.Exception());
+        Assert.Equal("foo", entry.Label);
     }
 
     [Fact]

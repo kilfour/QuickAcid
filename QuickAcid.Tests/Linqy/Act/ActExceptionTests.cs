@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.Tests.Linqy.Act;
 
@@ -8,14 +9,15 @@ public class ActExceptionTests
     public void SimpleExceptionThrown()
     {
         var script = "foo".Act(() => { if (true) throw new Exception(); });
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("foo", entry.Key);
-        Assert.NotNull(report.Exception);
+            .AndOneExecutionPerRun());
+
+        var entry = article.Execution(1).Action(1).Read();
+
+        Assert.Equal("foo", entry.Label);
+        Assert.NotNull(article.Exception());
     }
 
     [Fact]
@@ -25,14 +27,15 @@ public class ActExceptionTests
             from foo in "foo".Act(() => throw new Exception())
             from bar in "bar".Act(() => { })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("foo", entry.Key);
-        Assert.NotNull(report.Exception);
+            .AndOneExecutionPerRun());
+
+        var entry = article.Execution(1).Action(1).Read();
+
+        Assert.Equal("foo", entry.Label);
+        Assert.NotNull(article.Exception());
     }
 
     [Fact]
@@ -42,13 +45,15 @@ public class ActExceptionTests
             from foo in "foo".Act(() => { })
             from bar in "bar".Act(() => throw new Exception())
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true, ShrinkingActions = true })
-            .WithOneRunAndOneExecution();
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("bar", entry.Key);
-        Assert.NotNull(report.Exception);
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
+            .Options(a => a with { ShrinkingActions = true })
+            .WithOneRunAndOneExecution());
+
+        var entry = article.Execution(1).Action(1).Read();
+
+        Assert.Equal("bar", entry.Label);
+        Assert.NotNull(article.Exception());
     }
 
     [Fact]
@@ -60,20 +65,21 @@ public class ActExceptionTests
             from _a1 in "c".ActIf(() => counter < 2, () => counter++)
             from _a2 in "act".ActIf(() => counter == 2, () => { throw new Exception("BOOM"); })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true, ShrinkingActions = true })
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
+            .Options(a => a with { ShrinkingActions = true })
             .WithOneRun()
-            .And(3.ExecutionsPerRun());
+            .And(3.ExecutionsPerRun()));
 
 
-        Assert.NotNull(report.Exception);
-        Assert.Equal("BOOM", report.Exception.Message);
+        Assert.NotNull(article.Exception());
+        Assert.Equal("BOOM", article.Exception().Message);
 
-        Assert.Single(report.OfType<ReportExecutionEntry>());
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
+        Assert.Equal(1, article.Total().Actions());
+        var entry = article.Execution(1).Action(1).Read();
 
-        Assert.NotNull(entry);
-        Assert.Equal("act", entry.Key);
+
+        Assert.Equal("act", entry.Label);
     }
 
     [Fact]
@@ -86,19 +92,16 @@ public class ActExceptionTests
             from _a2 in "act".ActIf(() => counter == 2,
                 () => { var exc = exception; exception = new InvalidOperationException(); throw exc; })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(3.ExecutionsPerRun());
+            .And(3.ExecutionsPerRun()));
 
-
-        Assert.NotNull(report.Exception);
-        Assert.Equal("First", report.Exception.Message);
-
-        Assert.Equal(2, report.OfType<ReportExecutionEntry>().Count());
-        var entry = report.SecondOrDefault<ReportExecutionEntry>();
-
-        Assert.NotNull(entry);
-        Assert.Equal("c, act", entry.Key);
+        Assert.NotNull(article.Exception());
+        Assert.Equal("First", article.Exception().Message);
+        Assert.Equal(3, article.Total().Actions());
+        Assert.Equal("c", article.Execution(1).Action(1).Read().Label);
+        Assert.Equal("c", article.Execution(2).Action(1).Read().Label);
+        Assert.Equal("act", article.Execution(2).Action(2).Read().Label);
     }
 }

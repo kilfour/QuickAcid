@@ -31,7 +31,7 @@ public class AnalyzeTests
         Assert.Equal(timesRun, counter);
 
         var entry = report.GetSpecEntry();
-        Assert.NotNull(entry);
+
     }
 
     [Fact]

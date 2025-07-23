@@ -3,6 +3,7 @@ using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Reporting;
 using QuickPulse.Explains;
 using QuickFuzzr;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Custom;
 
@@ -31,10 +32,10 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+
+        TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
         Assert.Contains(666, observe);
     }
@@ -49,10 +50,9 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
         Assert.Contains(666, observe);
     }
@@ -67,10 +67,9 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant(42).Many(1))
             from foo in "spec".Spec(() => { input.ForEach(a => observe.Add(a)); return false; })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
         Assert.Contains(666, observe);
     }
@@ -84,12 +83,12 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant<List<int>>([42, 1, 2]))
             from foo in "spec".Spec(() => !input.Contains(42))
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .AndOneExecutionPerRun();
 
-        var entry = report.Single<ReportInputEntry>();
+        var article = TheJournalist.Exposes(() => QState.Run(script)
+            .WithOneRun()
+            .AndOneExecutionPerRun());
+
+        var entry = article.Execution(1).Input(1).Read();
         Assert.Equal("[ 42 ]", entry.Value);
     }
 
@@ -102,14 +101,12 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant<List<int>>([42, 1, 2]))
             from foo in "spec".Spec(() => !input.Contains(42))
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
-        var entry = report.Single<ReportInputEntry>();
-        Assert.
-        Equal("[ 42, _, _ ]", entry.Value);
+        var entry = article.Execution(1).Input(1).Read();
+        Assert.Equal("[ 42, _, _ ]", entry.Value);
     }
 
     [Fact]
@@ -121,10 +118,10 @@ public class CustomShrinkingTests
             from input in "input".Input(Fuzz.Constant(42))
             from foo in "spec".Spec(() => { observe.Add(input); return false; })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+
+        TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
         Assert.All(observe, item => Assert.Equal(42, item));
     }

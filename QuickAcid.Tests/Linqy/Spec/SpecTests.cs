@@ -16,7 +16,7 @@ public class SpecTests
         var script = "foo".Spec(() => false);
         var report = QState.Run(script).Options(a => a with { DontThrow = true }).WithOneRunAndOneExecution();
         var entry = report.Entries.OfType<ReportSpecEntry>().FirstOrDefault();
-        Assert.NotNull(entry);
+
         Assert.Equal("foo", entry.Key);
     }
 
@@ -34,7 +34,7 @@ public class SpecTests
             .WithOneRun()
             .AndOneExecutionPerRun().Single<ReportSpecEntry>();
 
-        Assert.NotNull(entry);
+
         Assert.Equal("first failed", entry.Key);
     }
 
@@ -52,7 +52,7 @@ public class SpecTests
             .WithOneRun()
             .AndOneExecutionPerRun().Single<ReportSpecEntry>();
 
-        Assert.NotNull(entry);
+
         Assert.Equal("second failed", entry.Key);
     }
 }

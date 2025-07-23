@@ -1,3 +1,4 @@
+using QuickAcid.Tests._Tools.ThePress;
 using QuickAcid.TestsDeposition._Tools;
 using QuickFuzzr;
 
@@ -14,10 +15,10 @@ public class ObjectPolicyTests
             from input in "input".Input(Fuzz.Constant(new Container<int>(42)))
             from foo in "spec".Spec(() => { observe.Add(input.Value); return false; })
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
         Assert.All(observe, item => Assert.Equal(42, item));
     }

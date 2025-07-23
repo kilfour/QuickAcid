@@ -13,7 +13,7 @@ public class SequenceTests
             "bar".Act(() => { }));
         var report = QState.Run(script).Options(a => a with { DontThrow = true }).WithOneRunAndOneExecution();
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
+
         Assert.Equal("foo", entry.Key);
         Assert.NotNull(report.Exception);
     }
@@ -31,7 +31,7 @@ public class SequenceTests
             .WithOneRun()
             .And(2.ExecutionsPerRun()); ;
         var entry = report.FirstOrDefault<ReportExecutionEntry>();
-        Assert.NotNull(entry);
+
         Assert.Equal("bar", entry.Key);
         Assert.NotNull(report.Exception);
     }

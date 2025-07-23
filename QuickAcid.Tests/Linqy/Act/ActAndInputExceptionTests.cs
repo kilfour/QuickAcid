@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Linqy.Act;
@@ -14,17 +15,16 @@ public class ActAndInputExceptionTests
             from spec in "spec".Spec(() => true)
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
-        var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+        var inputEntry = article.Execution(1).Input(1).Read();
         Assert.NotNull(inputEntry);
-        Assert.Equal("input", inputEntry.Key);
+        Assert.Equal("input", inputEntry.Label);
 
-        var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+        var actEntry = article.Execution(1).Action(1).Read();
         Assert.NotNull(actEntry);
-        Assert.Equal("foo", actEntry.Key);
+        Assert.Equal("foo", actEntry.Label);
     }
 }

@@ -21,7 +21,7 @@ public class AssayTests
             .And(20.ExecutionsPerRun());
 
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
-        Assert.NotNull(entry);
+
         Assert.Contains("The Assayer disagrees: gens 3.", entry.ToString());
     }
 
@@ -41,7 +41,7 @@ public class AssayTests
             .And(20.ExecutionsPerRun());
 
         var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
-        Assert.NotNull(entry);
+
         Assert.Contains("The Assayer disagrees: gens 3, gens 4.", entry.ToString());
     }
 }
