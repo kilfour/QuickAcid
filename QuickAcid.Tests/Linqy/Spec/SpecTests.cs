@@ -1,4 +1,6 @@
-﻿using QuickAcid.Reporting;
+﻿using QuickAcid.Proceedings.ClerksOffice;
+using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.Tests.Linqy.Spec;
 
@@ -7,17 +9,18 @@ public class SpecTests
     [Fact]
     public void SpecOnlyReturnsTrue()
     {
-        Assert.True(QState.Run("foo".Spec(() => true)).WithOneRunAndOneExecution().IsSuccess);
+        TheJournalist.Unearths(QState.Run("foo".Spec(() => true)).WithOneRunAndOneExecution());
     }
 
     [Fact]
     public void SpecOnlyReturnsFalse()
     {
         var script = "foo".Spec(() => false);
-        var report = QState.Run(script).Options(a => a with { DontThrow = true }).WithOneRunAndOneExecution();
-        var entry = report.Entries.OfType<ReportSpecEntry>().FirstOrDefault();
 
-        Assert.Equal("foo", entry.Key);
+        var article = TheJournalist.Exposes(() =>
+            QState.Run(script).WithOneRunAndOneExecution());
+
+        Assert.Equal("foo", article.FailedSpec());
     }
 
     [Fact]
@@ -29,13 +32,11 @@ public class SpecTests
             from _s2 in "second passed".Spec(() => true)
             select Acid.Test;
 
-        var entry = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun().Single<ReportSpecEntry>();
+            .AndOneExecutionPerRun());
 
-
-        Assert.Equal("first failed", entry.Key);
+        Assert.Equal("first failed", article.FailedSpec());
     }
 
     [Fact]
@@ -47,12 +48,10 @@ public class SpecTests
             from _s2 in "second failed".Spec(() => false)
             select Acid.Test;
 
-        var entry = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun().Single<ReportSpecEntry>();
+            .AndOneExecutionPerRun());
 
-
-        Assert.Equal("second failed", entry.Key);
+        Assert.Equal("second failed", article.FailedSpec());
     }
 }

@@ -46,4 +46,9 @@ public class Article
     {
         return new WordCount(caseFile.Verdict.ExecutionDepositions);
     }
+
+    public int Seed()
+    {
+        return caseFile.Verdict.Seed;
+    }
 }

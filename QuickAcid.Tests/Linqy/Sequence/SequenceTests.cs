@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.Tests.Linqy.Sequence;
 
@@ -11,11 +12,11 @@ public class SequenceTests
             "foobar".Sequence(
             "foo".Act(() => throw new Exception()),
             "bar".Act(() => { }));
-        var report = QState.Run(script).Options(a => a with { DontThrow = true }).WithOneRunAndOneExecution();
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
 
-        Assert.Equal("foo", entry.Key);
-        Assert.NotNull(report.Exception);
+        var article = TheJournalist.Exposes(() => QState.Run(script).WithOneRunAndOneExecution());
+
+        Assert.Equal("foo", article.Execution(1).Action(1).Read().Label);
+        Assert.NotNull(article.Exception());
     }
 
     [Fact]
@@ -26,13 +27,14 @@ public class SequenceTests
             "foobar".Sequence(
             "foo".Act(() => { }),
             "bar".Act(() => throw new Exception()));
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .And(2.ExecutionsPerRun()); ;
-        var entry = report.FirstOrDefault<ReportExecutionEntry>();
 
-        Assert.Equal("bar", entry.Key);
-        Assert.NotNull(report.Exception);
+        var article = TheJournalist.Exposes(() => QState.Run(script)
+            .WithOneRun()
+            .And(2.ExecutionsPerRun()));
+
+        Assert.Equal("bar", article.Execution(1).Action(1).Read().Label);
+        Assert.NotNull(article.Exception());
+
+
     }
 }

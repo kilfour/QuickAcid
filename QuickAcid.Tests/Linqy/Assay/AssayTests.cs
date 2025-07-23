@@ -1,4 +1,5 @@
 using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Linqy.Assay;
@@ -15,14 +16,11 @@ public class AssayTests
             from as1 in "gens 3".Assay(() => observer.Contains(3))
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(20.ExecutionsPerRun());
+            .And(20.ExecutionsPerRun()));
 
-        var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
-
-        Assert.Contains("The Assayer disagrees: gens 3.", entry.ToString());
+        Assert.Equal("gens 3", article.AssayerDisagrees());
     }
 
     [Fact]
@@ -35,13 +33,10 @@ public class AssayTests
             from as1 in "combined".Assay(("gens 3", () => observer.Contains(3)), ("gens 4", () => observer.Contains(4)))
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(20.ExecutionsPerRun());
+            .And(20.ExecutionsPerRun()));
 
-        var entry = report.FirstOrDefault<ReportTitleSectionEntry>();
-
-        Assert.Contains("The Assayer disagrees: gens 3, gens 4.", entry.ToString());
+        Assert.Equal("gens 3, gens 4", article.AssayerDisagrees());
     }
 }

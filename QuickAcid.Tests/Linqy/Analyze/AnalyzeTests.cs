@@ -1,4 +1,5 @@
 using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Linqy.Analyze;
@@ -14,9 +15,9 @@ public class AnalyzeTests
             from as1 in "spec".Analyze(() => false)
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true, ShrinkingActions = true })
-            .WithOneRun().And(2.ExecutionsPerRun());
+        TheJournalist.Exposes(() => QState.Run(script)
+            .Options(a => a with { ShrinkingActions = true })
+            .WithOneRun().And(2.ExecutionsPerRun()));
 
         var timesActShouldHaveRunOriginally = 2;
         var timesActShouldHaveRunDuringExcutionShrinking = 1;
@@ -27,11 +28,7 @@ public class AnalyzeTests
             + timesActShouldHaveRunDuringExcutionShrinking
             + timesActShouldHaveRunDuringInputShrinking;
 
-
         Assert.Equal(timesRun, counter);
-
-        var entry = report.GetSpecEntry();
-
     }
 
     [Fact]
@@ -44,21 +41,18 @@ public class AnalyzeTests
             from as1 in "gens 3".Analyze(() => observer.Contains(3))
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(20.ExecutionsPerRun());
+            .And(20.ExecutionsPerRun()));
 
 
-        var entry = report.GetSpecEntry();
-        Assert.Equal("gens 3", entry.Key);
+        Assert.Equal("gens 3", article.FailedSpec());
 
         // even though the test above will fails
         // and we expect all actions to be shrunk away, 
         // but because during shrinking the spec will not fail without an act
-        // shrinking will leave one behind.
+        // shrinking will leaves some behind.
         // for test like the one above Assay is a better candidate
-        var actEntry = report.Single<ReportExecutionEntry>();
-        Assert.NotNull(actEntry);
+        Assert.Equal(2, article.Total().Actions());
     }
 }
