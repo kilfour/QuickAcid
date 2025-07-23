@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Shrinking.Enumerables;
@@ -24,18 +25,18 @@ public class Shrinking_a_list_of_records
             })
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
-        var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+        var inputEntry = article.Execution(1).Input(1).Read();
         Assert.NotNull(inputEntry);
-        Assert.Equal("input", inputEntry.Key);
+        Assert.Equal("input", inputEntry.Label);
         Assert.Equal("[ { Age : 42 } ]", inputEntry.Value);
-        var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+
+        var actEntry = article.Execution(1).Action(1).Read();
         Assert.NotNull(actEntry);
-        Assert.Equal("act", actEntry.Key);
-        Assert.NotNull(report.Exception);
+        Assert.Equal("act", actEntry.Label);
+        Assert.NotNull(article.Exception());
     }
 }

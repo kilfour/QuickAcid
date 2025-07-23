@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Shrinking.Objects
@@ -18,14 +19,13 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 from spec in "spec".SpecIf(() => input.MyChild != null, () => input.MyChild!.MyInt != 42)
                 select Acid.Test;
 
-            var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .And(50.ExecutionsPerRun());
+            var article = TheJournalist.Exposes(() => QState.Run(script)
+                .WithOneRun()
+                .And(50.ExecutionsPerRun()));
 
-            var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+            var inputEntry = article.Execution(1).Input(1).Read();
             Assert.NotNull(inputEntry);
-            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("input", inputEntry.Label);
             Assert.Equal("{ MyChild : { MyInt : 42 } }", inputEntry.Value);
         }
 

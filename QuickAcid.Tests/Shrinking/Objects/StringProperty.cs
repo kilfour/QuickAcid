@@ -2,6 +2,7 @@
 using QuickFuzzr;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
 using QuickAcid;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {
@@ -23,20 +24,19 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-            var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .And(50.ExecutionsPerRun());
+            var article = TheJournalist.Exposes(() => QState.Run(script)
+                .WithOneRun()
+                .And(50.ExecutionsPerRun()));
 
-            var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
+            var inputEntry = article.Execution(1).Input(1).Read();
             Assert.NotNull(inputEntry);
-            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("input", inputEntry.Label);
             Assert.Equal("{ MyFirstProperty : \"6\" }", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+            var actEntry = article.Execution(1).Action(1).Read();
             Assert.NotNull(actEntry);
-            Assert.Equal("act", actEntry.Key);
-            Assert.NotNull(report.Exception);
+            Assert.Equal("act", actEntry.Label);
+            Assert.NotNull(article.Exception());
         }
 
         [Fact]
@@ -55,20 +55,19 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-            var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+            var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(50.ExecutionsPerRun());
+            .And(50.ExecutionsPerRun()));
 
-            var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
+            var inputEntry = article.Execution(1).Input(1).Read();
             Assert.NotNull(inputEntry);
-            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("input", inputEntry.Label);
             Assert.Equal("{ MyFirstProperty : \"6\", MySecondProperty : \"6\" }", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+            var actEntry = article.Execution(1).Action(1).Read();
             Assert.NotNull(actEntry);
-            Assert.Equal("act", actEntry.Key);
-            Assert.NotNull(report.Exception);
+            Assert.Equal("act", actEntry.Label);
+            Assert.NotNull(article.Exception());
         }
 
         [Fact]
@@ -94,14 +93,13 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     })
                     select Acid.Test;
 
-                var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+                var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(50.ExecutionsPerRun());
+            .And(50.ExecutionsPerRun()));
 
-                var inputEntry = report.FirstOrDefault<ReportInputEntry>();
+                var inputEntry = article.Execution(1).Input(1).Read();
                 Assert.NotNull(inputEntry);
-                Assert.Equal("input", inputEntry.Key);
+                Assert.Equal("input", inputEntry.Label);
                 if ((string)inputEntry.Value! == "{ MyFirstProperty : \"6\" }")
                     sometimesPropOne = true;
                 else if ((string)inputEntry.Value! == "{ MySecondProperty : \"6\" }")
@@ -111,10 +109,10 @@ namespace QuickAcid.Tests.Shrinking.Objects
                 else
                     somethingElse = (string)inputEntry.Value!;
 
-                var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+                var actEntry = article.Execution(1).Action(1).Read();
                 Assert.NotNull(actEntry);
-                Assert.Equal("act", actEntry.Key);
-                Assert.NotNull(report.Exception);
+                Assert.Equal("act", actEntry.Label);
+                Assert.NotNull(article.Exception());
             }
             Assert.Equal("", somethingElse);
             Assert.True(sometimesPropOne);
@@ -142,23 +140,21 @@ namespace QuickAcid.Tests.Shrinking.Objects
                     && input.MyThirdProperty == result.MyThirdProperty)
                 select Acid.Test;
 
-            var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+            var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(50.ExecutionsPerRun());
+            .And(50.ExecutionsPerRun()));
 
-            var inputEntry = report.FirstOrDefault<ReportInputEntry>(); ;
+            var inputEntry = article.Execution(1).Input(1).Read();
             Assert.NotNull(inputEntry);
-            Assert.Equal("input", inputEntry.Key);
+            Assert.Equal("input", inputEntry.Label);
             Assert.Equal("{ MySecondProperty : \"42\", MyThirdProperty : \"42\" }", inputEntry.Value);
 
-            var actEntry = report.FirstOrDefault<ReportExecutionEntry>();
+            var actEntry = article.Execution(1).Action(1).Read();
             Assert.NotNull(actEntry);
-            Assert.Equal("act", actEntry.Key);
-            Assert.Null(report.Exception);
+            Assert.Equal("act", actEntry.Label);
+            Assert.Null(article.Exception());
 
-            var specEntry = report.GetSpecEntry();
-            Assert.Equal("equal", specEntry.Key);
+            Assert.Equal("equal", article.FailedSpec());
         }
 
 

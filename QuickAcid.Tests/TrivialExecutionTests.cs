@@ -1,4 +1,5 @@
 using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.Tests;
 
@@ -12,12 +13,13 @@ public class TrivialExecutionTests
             from act in "act".Act(() => { counter++; })
             from spec in "spec".Spec(() => counter != 5)
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(10.ExecutionsPerRun());
-        var entry = report.Single<ReportCollapsedExecutionEntry>();
-        Assert.Equal("act", entry.Key);
-        Assert.Equal(5, entry.Times);
+            .And(10.ExecutionsPerRun()));
+
+        Assert.Equal(1, article.Total().Actions());
+        Assert.Equal("act", article.Execution(1).Action(1).Read().Label);
+        Assert.Equal(5, article.Execution(1).Read().Times);
     }
 }

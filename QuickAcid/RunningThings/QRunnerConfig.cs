@@ -7,13 +7,6 @@ namespace QuickAcid.Bolts;
 
 public record QRunnerConfig
 {
-    //----------------------------------------------------------------
-    // REMOVE
-    // --
-    public required bool DontThrow { get; init; }
-    //----------------------------------------------------------------
-
-
     public required bool AddShrinkInfoToReport { get; init; }
     public Flow<ShrinkTrace>? ShrinkTraceFlow { get; init; }
 
@@ -39,7 +32,6 @@ public record QRunnerConfig
                 Vault = null,
                 Verbose = false,
                 ReplayMode = false,
-                DontThrow = false,
                 ShrinkingActions = false
             };
     }

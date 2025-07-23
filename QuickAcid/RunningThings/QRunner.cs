@@ -53,8 +53,7 @@ public class QRunner
             if (report.IsFailed)
             {
                 AddToVault(state.Seed, executionCount.NumberOfExecutions);
-                if (!config.DontThrow)
-                    throw new FalsifiableException(ReportIt(report));
+                throw new FalsifiableException(ReportIt(report));
             }
         }
         return ReportIt(report);

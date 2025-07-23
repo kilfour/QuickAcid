@@ -22,20 +22,20 @@ public static class MemoryReportAssembler
         if (memory.Has(executionId))
         {
             var access = memory.For(executionId);
-            var executionKey = string.Join(", ", access.ActionKeys.Select(LabelPrettifier.Prettify));
+            var executionKey = string.Join(", ", access.ActionKeys);
             entries.Add(new ReportExecutionEntry(executionKey, executionId));
             foreach (var (key, val) in access.GetAll())
             {
                 var shrinkOutcome = val.GetShrinkOutcome();
                 if (shrinkOutcome is ShrinkOutcome.ReportedOutcome(var msg))
                 {
-                    entries.Add(new ReportInputEntry(LabelPrettifier.Prettify(key)) { Value = msg });
+                    entries.Add(new ReportInputEntry(key) { Value = msg });
                 }
                 else if (!isFinalRun)
                 {
                     if (val.ReportingIntent != ReportingIntent.Never)
                     {
-                        entries.Add(new ReportInputEntry(LabelPrettifier.Prettify(key))
+                        entries.Add(new ReportInputEntry(key)
                         {
                             Value = Introduce.This(val.Value!, false)
                         });

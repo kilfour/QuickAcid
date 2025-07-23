@@ -311,7 +311,7 @@ public sealed class QAcidState
         FlushCollapsed();
 
         if (!string.IsNullOrEmpty(CurrentContext.FailingSpec))
-            report.AddEntry(new ReportSpecEntry(LabelPrettifier.Prettify(CurrentContext.FailingSpec)));
+            report.AddEntry(new ReportSpecEntry(CurrentContext.FailingSpec));
         if (CurrentContext.Exception != null)
         {
             report.Exception = CurrentContext.Exception; // TODO remove this
