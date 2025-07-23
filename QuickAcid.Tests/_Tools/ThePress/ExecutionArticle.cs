@@ -21,4 +21,10 @@ public class ExecutionArticle : AbstractArticle<ExecutionDeposition>
     {
         return new InputArticle(deposition.InputDepositions[number - 1]);
     }
+
+    public TraceArticle Trace(int number)
+    {
+        return new TraceArticle(deposition.TraceDepositions[number - 1]);
+    }
 }
+

@@ -2,6 +2,7 @@ using QuickAcid.Reporting;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
+using QuickAcid.Tests._Tools.ThePress;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Trace;
@@ -65,13 +66,12 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             from __ in "Info Key".TraceIf(() => delayedSpec.Failed, () => $"{input}")
             let ___ = delayedSpec.Apply()
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(5.ExecutionsPerRun());
-        var entry = report.Single<ReportTraceEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("3", entry.Value);
+            .And(5.ExecutionsPerRun()));
+
+        Assert.Equal("3", article.Execution(1).Trace(1).Read().Value);
     }
 
     [Doc(Order = $"{Chapter.Order}-2", Content =
@@ -90,11 +90,12 @@ from _ in ""Info Key"".TraceIf(() => number == 42, () => ""Extra words"")
             from _ in "act".Act(() => { })
             from __ in "Trace 42".TraceIf(() => input == 42, () => "YEP 1")
             from ___ in "Trace not 42".TraceIf(() => input != 42, () => "YEP 2")
+            from ____ in "spec".Spec(() => false) // <= Needs to fail for Traces to show up
             select Acid.Test;
-        var report = QState.Run(script).WithOneRunAndOneExecution();
-        var entry = report.Single<ReportTraceEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("Trace 42", entry.Key);
+
+        var article = TheJournalist.Exposes(() => QState.Run(script).WithOneRunAndOneExecution());
+        var entry = article.Execution(1).Trace(1).Read();
+        Assert.Equal("Trace 42", entry.Label);
         Assert.Equal("YEP 1", entry.Value);
     }
 }

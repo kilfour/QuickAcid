@@ -3,6 +3,7 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
 using QuickPulse.Explains;
 using QuickFuzzr;
+using QuickAcid.Tests._Tools.ThePress;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Tracked;
@@ -28,12 +29,11 @@ from account in ""account"".Tracked(() => new Account())
             from account in "account".Tracked(() => new Account())
             from spec in "spec".Spec(() => false)
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRunAndOneExecution();
-        var entry = report.FirstOrDefault<ReportTrackedEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("   => account (tracked) : { Balance: 0 }", entry.ToString());
+        var article = TheJournalist.Exposes(() => QState.Run(script)
+            .WithOneRunAndOneExecution());
+        var entry = article.Execution(1).Tracked(1).Read();
+        Assert.Equal("account", entry.Label);
+        Assert.Equal("{ Balance: 0 }", entry.Value);
     }
 
     [Fact]
@@ -46,13 +46,12 @@ from account in ""account"".Tracked(() => new Account())
            from _ in "spec".Spec(() => container.Value != 42)
            select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
-        var entry = report.FirstOrDefault<ReportTrackedEntry>();
-        Assert.NotNull(entry);
+        var entry = article.Execution(1).Tracked(1).Read();
+        Assert.Equal("container", entry.Label);
         Assert.Equal("{ Value: 21 }", entry.Value);
     }
 
@@ -70,7 +69,6 @@ from account in ""account"".Tracked(() => new Account())
             from act in "act".Act(() => { executionCount++; })
             select Acid.Test;
         QState.Run(script)
-            .Options(a => a with { DontThrow = true })
             .WithOneRun()
             .And(3.ExecutionsPerRun());
     }
