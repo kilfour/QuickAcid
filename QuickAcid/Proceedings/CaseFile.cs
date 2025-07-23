@@ -12,6 +12,13 @@ public class CaseFile
         return this;
     }
 
+    public bool HasVerdict() { return Verdict != null; }
+
+    public static CaseFile Empty()
+    {
+        return new CaseFile(null!);
+    }
+
     public static CaseFile WithVerdict(Verdict verdict)
     {
         return new CaseFile(verdict);

@@ -1,4 +1,5 @@
 using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickPulse.Explains;
 
 
@@ -22,34 +23,26 @@ let apply = spec.Apply()
     [Fact]
     public void DelayedSpec_usage_failed_not_applied()
     {
-        var counter = 0;
+
         var script =
-            from _ in "act1".Act(() => { counter++; })
-            from specResult in "spec".DelayedSpec(() => counter < 3)
+            from _ in "act1".Act(() => { })
+            from specResult in "spec".DelayedSpec(() => false)
             select Acid.Test;
-        Assert.True(QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .And(5.ExecutionsPerRun()).IsSuccess);
+        var article = TheJournalist.Unearths(QState.Run(script).WithOneRunAndOneExecution());
+        Assert.False(article.VerdictReached());
     }
 
     [Fact]
     public void DelayedSpec_usage_failed_applied()
     {
-        var counter = 0;
         var script =
-            from _ in "act1".Act(() => { counter++; })
-            from spec in "spec".DelayedSpec(() => counter < 3)
-            from trace in "trace".TraceIf(() => spec.Failed, () => spec.Label)
+            from _ in "act1".Act(() => { })
+            from spec in "spec".DelayedSpec(() => false)
             let apply = spec.Apply()
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
-            .WithOneRun()
-            .And(5.ExecutionsPerRun());
 
-        var entry = report.Single<ReportTraceEntry>();
-        Assert.Equal("spec", entry.Value);
+        var article = TheJournalist.Exposes(() => QState.Run(script).WithOneRunAndOneExecution());
+        Assert.Equal("spec", article.FailedSpec());
     }
 }
 

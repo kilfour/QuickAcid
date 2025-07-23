@@ -125,7 +125,6 @@ public sealed class QAcidState
     // ---------------------------------------------------------------------------------------
     private readonly Report report;
     public bool Verbose { get; set; }
-    public bool AlwaysReport { get; set; }
     public bool ShrinkingActions { get; set; }
 
 
@@ -168,11 +167,6 @@ public sealed class QAcidState
             {
                 return report;
             }
-            if (AlwaysReport)
-            {
-                AddMemoryToReport(report, true);
-                return report;
-            }
         }
         report.IsSuccess = true;
         foreach (var executionNumber in ExecutionNumbers.ToList())
@@ -182,6 +176,7 @@ public sealed class QAcidState
                 report.AddEntry(new ReportTraceEntry(key) { Value = val });
             }
         }
+        report.CaseFile = CaseFile.Empty();
         return report;
     }
 

@@ -8,6 +8,8 @@ public class Article
 
     public Article(CaseFile caseFile) => this.caseFile = caseFile;
 
+    public bool VerdictReached() => caseFile.HasVerdict();
+
     public Exception Exception()
     {
         if (caseFile.Verdict.FailureDeposition is ExceptionDeposition exceptionDeposition)
