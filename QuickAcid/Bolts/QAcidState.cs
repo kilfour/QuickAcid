@@ -96,15 +96,17 @@ public sealed class QAcidState
     // ---------------------------------------------------------------------------------------
 
     public ShrinkingRegistry ShrinkingRegistry { get; } = new ShrinkingRegistry();
-    public Verifier VerifyIf { get; }
+    public Verifier VerifyIf { get; } // initialized in ctor with (this)
 
-    public bool AllowShrinking = true;
+    public bool AllowShrinking = true; // toggle for Assayer et al
     private int shrinkCount = 0;
     // ---------------------------------------------------------------------------------------
     private readonly Report report;
+
+    // ---------------------------------------------------------------------------------------
+    // Configurable options
     public bool Verbose { get; set; }
     public bool ShrinkingActions { get; set; }
-
 
     // -----------------------------------------------------------------
     // spec counting
