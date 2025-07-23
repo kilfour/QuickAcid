@@ -21,7 +21,6 @@ public class AssayerDepositionsTests : DepositionTest
             )));
 
         var reader = Transcribe(caseFile);
-        reader.AsAssertsToLogFile();
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Original failing run:    10 executions", reader.NextLine());
         Assert.Equal(" Seed:                    12345678", reader.NextLine());

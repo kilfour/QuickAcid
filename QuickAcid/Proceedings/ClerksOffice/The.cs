@@ -26,6 +26,12 @@ public static class The
     private readonly static Flow<Unit> line =
         space.Then(LineOf(50)).Then(newLine);
 
+    private readonly static Flow<TraceDeposition> traceDeposition =
+        from input in Pulse.Start<TraceDeposition>()
+        from _ in newLine
+        from __ in Pulse.Trace($"   - Trace: {input.Label} = {input.Value}")
+        select input;
+
     private readonly static Flow<InputDeposition> inputDeposition =
         from input in Pulse.Start<InputDeposition>()
         from _ in newLine
@@ -45,14 +51,7 @@ public static class The
         from __ in Pulse.Trace($"   => {input.Label} (tracked) : {input.Value}")
         from ___ in newLine
         select input;
-    // if (string.IsNullOrEmpty(Key))
-    //     {
-    //         text = $"  EXECUTIONS: {Times} trivial runs (no observable input/state)";
-    //     }
-    //     else
-    //     {
-    //         text = $"  EXECUTE : {Key} ({Times} Times)";
-    //     }
+
     private readonly static Flow<ExecutionDeposition> executionDeposition =
         from input in Pulse.Start<ExecutionDeposition>()
         from _ in Pulse.Scoped<Decorum>(
@@ -62,12 +61,12 @@ public static class The
         from ___ in input.Times == 1
                 ? Pulse.Trace($"  Executed ({input.ExecutionId}):")
                 : Pulse.Trace($"  Executed :")
-            //from ___ in Pulse.Trace($"  Executed :")
         from ____ in Pulse.Scoped<Decorum>(
             a => a with { Intersperse = Valve.Install() },
             Pulse.ToFlow(actionDeposition, input.ActionDepositions))
         from _____ in Pulse.TraceIf(input.Times > 1, () => $" ({input.Times} Times)")
         from ______ in Pulse.ToFlow(inputDeposition, input.InputDepositions)
+        from _______ in Pulse.ToFlow(traceDeposition, input.TraceDepositions)
         select input;
 
     private readonly static Flow<ExecutionDeposition> maybeExecutionDeposition =

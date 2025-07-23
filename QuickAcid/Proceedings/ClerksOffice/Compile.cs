@@ -26,13 +26,14 @@ public static class Compile
         return runDeposition;
     }
 
-    private static ExecutionDeposition GetExecutionDeposition(Memory Memory, int executionNumber, bool isVerdict)
+    private static ExecutionDeposition GetExecutionDeposition(Memory memory, int executionNumber, bool isVerdict)
     {
         var executionDeposition = new ExecutionDeposition(executionNumber);
-        GetTrackedDepositions(Memory, executionNumber, executionDeposition);
-        var access = Memory.For(executionNumber);
+        GetTrackedDepositions(memory, executionNumber, executionDeposition);
+        var access = memory.For(executionNumber);
         GetActionDepositions(executionDeposition, access);
         GetInputDepositions(executionDeposition, access, isVerdict);
+        GetTraceDepositions(executionDeposition, memory.TracesFor(executionNumber));
         return executionDeposition;
     }
 
@@ -42,6 +43,14 @@ public static class Compile
         {
             foreach (var (key, val) in snapshot)
                 executionDeposition.AddTrackedDeposition(new TrackedDeposition(key, val));
+        }
+    }
+
+    private static void GetActionDepositions(ExecutionDeposition executionDeposition, Access access)
+    {
+        foreach (var action in access.ActionKeys)
+        {
+            executionDeposition.AddActionDeposition(new ActionDeposition(action));
         }
     }
 
@@ -62,11 +71,11 @@ public static class Compile
         }
     }
 
-    private static void GetActionDepositions(ExecutionDeposition executionDeposition, Access access)
+    private static void GetTraceDepositions(ExecutionDeposition executionDeposition, Dictionary<string, string> traces)
     {
-        foreach (var action in access.ActionKeys)
+        foreach (var (key, val) in traces)
         {
-            executionDeposition.AddActionDeposition(new ActionDeposition(action));
+            executionDeposition.AddTraceDeposition(new TraceDeposition(key, val));
         }
     }
 }
