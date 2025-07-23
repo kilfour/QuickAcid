@@ -194,6 +194,7 @@ public sealed class QAcidState
 
     public void HandleFailure()
     {
+        var forAssayer = false;
         var runs = new List<RunDeposition>();
         if (Verbose)
         {
@@ -238,9 +239,10 @@ public sealed class QAcidState
         else
         {
             report.AddEntry(new ReportTitleSectionEntry([$"The Assayer disagrees: {CurrentContext.FailingSpec}."]));
+            forAssayer = true;
         }
         AddMemoryToReport(report, true);
-        report.CaseFile = CompileTheCaseFile();
+        report.CaseFile = CompileTheCaseFile(forAssayer);
         foreach (var run in runs)
         {
             report.CaseFile.AddRunDeposition(run);
@@ -261,11 +263,12 @@ public sealed class QAcidState
         yield break;
     }
 
-    private CaseFile CompileTheCaseFile()
+    private CaseFile CompileTheCaseFile(bool forAssayer = false)
     {
         var dossier =
             new Dossier(
-                FailingSpec: CurrentContext.FailingSpec,
+                AssayerSpec: forAssayer ? CurrentContext.FailingSpec : null,
+                FailingSpec: forAssayer ? null : CurrentContext.FailingSpec,
                 Exception: CurrentContext.Exception,
                 OriginalRunExecutionCount: OriginalFailingRunExecutionCount,
                 ExecutionNumbers: ExecutionNumbers,

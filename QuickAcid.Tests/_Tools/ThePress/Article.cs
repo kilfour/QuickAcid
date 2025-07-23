@@ -10,11 +10,11 @@ public class Article
 
     public bool VerdictReached() => caseFile.HasVerdict();
 
-    public Exception Exception()
+    public string AssayerDisagrees()
     {
-        if (caseFile.Verdict.FailureDeposition is ExceptionDeposition exceptionDeposition)
+        if (caseFile.Verdict.FailureDeposition is AssayerDeposition assayerDeposition)
         {
-            return exceptionDeposition.Exception;
+            return assayerDeposition.FailedSpec;
         }
         return null!;
     }
@@ -24,6 +24,15 @@ public class Article
         if (caseFile.Verdict.FailureDeposition is FailedSpecDeposition failedSpecDeposition)
         {
             return failedSpecDeposition.FailedSpec;
+        }
+        return null!;
+    }
+
+    public Exception Exception()
+    {
+        if (caseFile.Verdict.FailureDeposition is ExceptionDeposition exceptionDeposition)
+        {
+            return exceptionDeposition.Exception;
         }
         return null!;
     }

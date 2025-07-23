@@ -21,4 +21,14 @@ namespace QuickAcid.Proceedings
             FailedSpec = failedSpec;
         }
     };
+
+    public class AssayerDeposition : FailureDeposition
+    {
+        public string FailedSpec { get; }
+
+        public AssayerDeposition(string failedSpec)
+        {
+            FailedSpec = failedSpec;
+        }
+    };
 }

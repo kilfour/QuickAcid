@@ -31,7 +31,9 @@ public class Verdict
     private static FailureDeposition GetFailureDeposition(Dossier dossier)
     {
         return (dossier.Exception == null)
-            ? new FailedSpecDeposition(dossier.FailingSpec!)
+            ? (dossier.FailingSpec == null)
+                ? new AssayerDeposition(dossier.AssayerSpec!) :
+                new FailedSpecDeposition(dossier.FailingSpec!)
             : new ExceptionDeposition(dossier.Exception);
     }
 

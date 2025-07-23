@@ -82,6 +82,15 @@ public static class The
         from ___ in Pulse.ToFlow(maybeExecutionDeposition, input.ExecutionDepositions).Then(newLine)
         select input;
 
+    private readonly static Flow<AssayerDeposition> assayerDeposition =
+        from input in Pulse.Start<AssayerDeposition>()
+        let text = $"  ❌  The Assayer Disagrees: {input.FailedSpec}"
+        let length = text.Length + 2
+        from _1 in newLine.Then(DoubleLineOf(length)).Then(newLine)
+        from _2 in Pulse.Trace(text).Then(newLine)
+        from _3 in DoubleLineOf(length)
+        select input;
+
     private readonly static Flow<FailedSpecDeposition> failedSpecDeposition =
         from input in Pulse.Start<FailedSpecDeposition>()
         let text = $"  ❌ Spec Failed: {input.FailedSpec}"
@@ -102,6 +111,7 @@ public static class The
         from input in Pulse.Start<FailureDeposition>()
         from _1 in Pulse.ToFlowIf(input is FailedSpecDeposition, failedSpecDeposition, () => (FailedSpecDeposition)input)
         from _2 in Pulse.ToFlowIf(input is ExceptionDeposition, exceptionDeposition, () => (ExceptionDeposition)input)
+        from _3 in Pulse.ToFlowIf(input is AssayerDeposition, assayerDeposition, () => (AssayerDeposition)input)
         select input;
 
     private readonly static Flow<TestMethodInfoDeposition?> testMethodInfoDeposition =
@@ -122,8 +132,7 @@ public static class The
         from n1 in newLine
         let _21 = $"{verdict.ExecutionCount} {Pluralize(verdict.ExecutionCount, "execution")}"
         let _22 = $"{verdict.ShrinkCount} {Pluralize(verdict.ShrinkCount, "shrink")}"
-        from _2 in Pulse.Trace($" Minimal failing case:    {_21} (after {_22})")
-        from n2 in newLine
+        from _2 in Pulse.TraceIf(verdict.ShrinkCount > 0, () => $" Minimal failing case:    {_21} (after {_22}){Environment.NewLine}")
         from _3 in Pulse.Trace($" Seed:                    {verdict.Seed}")
         from _4 in Pulse.ToFlow(maybeExecutionDeposition, verdict.ExecutionDepositions)
         from _5 in Pulse.ToFlow(failureDeposition, verdict.FailureDeposition)

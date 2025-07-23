@@ -63,7 +63,6 @@ public class ShrinkingOperationInputs
 
         var article = TheJournalist.Exposes(() =>
             QState.Run(script)
-                .Options(a => a with { ReportTo = "temp" })
                 .WithOneRun()
                 .And(100.ExecutionsPerRun()));
 

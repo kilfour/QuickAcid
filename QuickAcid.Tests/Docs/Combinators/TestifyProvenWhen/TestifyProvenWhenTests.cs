@@ -2,6 +2,8 @@ using QuickAcid.Reporting;
 using QuickAcid.TestsDeposition._Tools;
 using QuickPulse.Explains;
 using QuickFuzzr;
+using QuickAcid.Proceedings.ClerksOffice;
+using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.TestifyProvenWhen;
 
@@ -64,13 +66,10 @@ This would end the test run early once `container.Value` becomes `true`.
             from spec in "early exit".TestifyProvenWhen(() => container.Value)
             from finalspec in "val is true".Assay(() => container.Value)
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .And(100.ExecutionsPerRun());
-
-        var entry = report.First<ReportTitleSectionEntry>();
-        Assert.Equal("The Assayer disagrees: val is true.", entry.Title[0]);
+            .And(100.ExecutionsPerRun()));
+        Assert.Equal("val is true", article.AssayerDisagrees());
     }
 }
 

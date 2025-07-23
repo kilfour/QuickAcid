@@ -12,6 +12,7 @@ public abstract class DepositionTest
         new Dossier(
                 FailingSpec: "Some Invariant",
                 Exception: null,
+                AssayerSpec: null,
                 OriginalRunExecutionCount: 10,
                 ExecutionNumbers: [1, 2, 3, 4],
                 ShrinkCount: 1,
