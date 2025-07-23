@@ -3,6 +3,7 @@ using QuickAcid.TestsDeposition._Tools;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Bolts;
+using QuickAcid.Tests._Tools.ThePress;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Derived;
@@ -27,7 +28,6 @@ public class DerivedTests
 from container in ""container"".Stashed(() => new Container<List<int>>([]))
 from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
 ```
-
 ")]
     [Fact]
     public void Derived_usage()
@@ -38,11 +38,8 @@ from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Va
             from act in "act".Act(() => container.Value.Add(42))
             from spec in "fail".Spec(() => input != 42)
             select Acid.Test;
-        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRun().And(5.ExecutionsPerRun()));
-        var report = ex.QAcidReport;
-        Assert.True(report.IsFailed);
-        var entry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.Null(entry);
+        var article = TheJournalist.Exposes(() => QState.Run(script).WithOneRun().And(5.ExecutionsPerRun()));
+        Assert.Equal(0, article.Total().Inputs());
     }
 
     [Fact]
@@ -52,7 +49,8 @@ from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Va
             from container in "container".Stashed(() => new Container<List<int>>(new List<int>()))
             from input in "input".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
             select Acid.Test;
-        Assert.True(QState.Run(script).WithOneRun().AndOneExecutionPerRun().IsSuccess);
+        var article = TheJournalist.Unearths(QState.Run(script).WithOneRunAndOneExecution());
+        Assert.False(article.VerdictReached());
     }
 
     [Fact(Skip = "**not** shrinkable")]

@@ -1,6 +1,6 @@
-using QuickAcid.Reporting;
 using QuickPulse.Explains;
 using QuickFuzzr;
+using QuickAcid.Tests._Tools.ThePress;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Input;
@@ -26,12 +26,10 @@ public class InputTests
             from input in "input".Input(Fuzz.Int())
             from foo in "spec".Spec(() => false)
             select Acid.Test;
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
-        var entry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.Null(entry);
+            .AndOneExecutionPerRun());
+        Assert.Equal(0, article.Total().Inputs());
     }
 
     [Doc(Order = $"{Chapter.Order}-2", Content =
@@ -57,16 +55,13 @@ from input in ""input"".Input(() => Fuzz.Int())
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun();
+            .AndOneExecutionPerRun());
 
-
-        var entry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("input", entry.Key);
-        Assert.Equal("null", entry.Value);
+        var deposition = article.Execution(1).Input(1).Read();
+        Assert.Equal("input", deposition.Label);
+        Assert.Equal("null", deposition.Value);
     }
 
     [Fact]
@@ -77,16 +72,13 @@ from input in ""input"".Input(() => Fuzz.Int())
             from foo in "spec".Spec(() => !string.IsNullOrEmpty(input))
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun(); ;
+            .AndOneExecutionPerRun());
 
-
-        var entry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("input", entry.Key);
-        Assert.Equal("\"\"", entry.Value);
+        var deposition = article.Execution(1).Input(1).Read();
+        Assert.Equal("input", deposition.Label);
+        Assert.Equal("\"\"", deposition.Value);
     }
 
     [Fact]
@@ -97,16 +89,13 @@ from input in ""input"".Input(() => Fuzz.Int())
             from foo in "spec".Spec(() => !string.IsNullOrWhiteSpace(input))
             select Acid.Test;
 
-        var report = QState.Run(script)
-            .Options(a => a with { DontThrow = true })
+        var article = TheJournalist.Exposes(() => QState.Run(script)
             .WithOneRun()
-            .AndOneExecutionPerRun(); ;
+            .AndOneExecutionPerRun());
 
-
-        var entry = report.FirstOrDefault<ReportInputEntry>();
-        Assert.NotNull(entry);
-        Assert.Equal("input", entry.Key);
-        Assert.Equal("\" \"", entry.Value);
+        var deposition = article.Execution(1).Input(1).Read();
+        Assert.Equal("input", deposition.Label);
+        Assert.Equal("\" \"", deposition.Value);
     }
 }
 

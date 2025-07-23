@@ -19,10 +19,9 @@ public class SpecIfProblems
 			from _s2 in "s".Spec(() => counter.Val > 4)
 			select Acid.Test;
 
-		var report = QState.Run(script)
-			.Options(a => a with { DontThrow = true })
+		TheJournalist.Exposes(() => QState.Run(script)
 			.WithOneRun()
-			.And(5.ExecutionsPerRun());
+			.And(5.ExecutionsPerRun()));
 
 	}
 
