@@ -1,5 +1,6 @@
 ﻿using QuickAcid.Bolts;
-using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Phasers;
+using QuickAcid.Shrinking;
 using QuickFuzzr.UnderTheHood;
 
 namespace QuickAcid;
@@ -18,7 +19,7 @@ public static partial class QAcidCombinators
 	private static QAcidResult<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator)
 	{
 		var execution = state.CurrentExecutionContext();
-		switch (state.CurrentPhase)
+		switch (state.Shifter.CurrentPhase)
 		{
 			case QAcidPhase.ShrinkInputEval:
 			case QAcidPhase.ShrinkingExecutions:

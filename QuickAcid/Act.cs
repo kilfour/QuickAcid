@@ -1,4 +1,5 @@
 ﻿using QuickAcid.Bolts;
+using QuickAcid.Phasers;
 
 namespace QuickAcid;
 
@@ -8,7 +9,7 @@ public static partial class QAcidCombinators
 	=> state =>
 		{
 			var execution = state.CurrentExecutionContext();
-			if (state.CurrentPhase == QAcidPhase.NormalRun)
+			if (state.Shifter.CurrentPhase == QAcidPhase.NormalRun)
 				execution.access.ActionKeys.Add(key);
 			var needsToAct = execution.access.ActionKeys.Contains(key);
 			if (needsToAct)

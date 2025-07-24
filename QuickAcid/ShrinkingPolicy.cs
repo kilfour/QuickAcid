@@ -1,6 +1,6 @@
 using QuickAcid.Bolts;
-using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
+using QuickAcid.Shrinking.Collections;
 
 namespace QuickAcid;
 

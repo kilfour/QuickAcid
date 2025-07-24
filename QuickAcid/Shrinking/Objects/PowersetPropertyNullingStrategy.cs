@@ -1,11 +1,14 @@
 
 using System.Reflection;
 using QuickAcid;
-using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.Bolts;
+using QuickAcid.Bolts.ShrinkStrats.Objects;
+using QuickAcid.Shrinking.Custom;
+using QuickAcid.TheyCanFade;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 
-namespace QuickAcid.Bolts.ShrinkStrats.Objects;
+namespace QuickAcid.Shrinking.Objects;
 
 public class PowersetPropertyNullingStrategy : IObjectShrinkStrategy
 {

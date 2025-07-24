@@ -1,7 +1,8 @@
-using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.Bolts;
+using QuickAcid.TheyCanFade;
 using QuickFuzzr;
 
-namespace QuickAcid.Bolts.ShrinkStrats.Collections;
+namespace QuickAcid.Shrinking.Collections;
 
 public class EnumerableShrinkStrategy
 {

@@ -1,5 +1,6 @@
 ﻿using QuickAcid;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
+using QuickAcid.Shrinking.Objects;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 

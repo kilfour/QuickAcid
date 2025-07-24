@@ -1,6 +1,4 @@
-using QuickAcid.Bolts.ShrinkStrats;
-
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Shrinking.Custom;
 
 public class LambdaShrinker<T> : IShrinker<T>
 {

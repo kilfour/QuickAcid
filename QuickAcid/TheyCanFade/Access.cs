@@ -1,4 +1,4 @@
-namespace QuickAcid.Bolts.TheyCanFade;
+namespace QuickAcid.TheyCanFade;
 
 public class Access
 {

@@ -1,12 +1,4 @@
-namespace QuickAcid.Bolts.ShrinkStrats;
-
-public enum ShrinkIntent
-{
-    Keep,
-    Replace,
-    Remove,
-    Irrelevant
-}
+namespace QuickAcid.Shrinking;
 
 public record ShrinkTrace
 {

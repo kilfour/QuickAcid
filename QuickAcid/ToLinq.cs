@@ -9,7 +9,7 @@ public static class ToLinq
 		Func<TValueOne, TValueTwo> selector) =>
 			state =>
 				{
-					if (state.CurrentContext.NeedsToStop())
+					if (state.Shifter.CurrentContext.NeedsToStop())
 						return QAcidResult.None<TValueTwo>(state);
 					return QAcidResult.Some(state, selector(script(state).Value));
 				};
@@ -19,10 +19,10 @@ public static class ToLinq
 		Func<TSource, QAcidScript<TResult>> selector) =>
 			state =>
 				{
-					if (state.CurrentContext.NeedsToStop())
+					if (state.Shifter.CurrentContext.NeedsToStop())
 						return QAcidResult.None<TResult>(state);
 					var result = source(state);
-					if (state.CurrentContext.NeedsToStop())
+					if (state.Shifter.CurrentContext.NeedsToStop())
 						return QAcidResult.None<TResult>(state);
 					return selector(result.Value)(state);
 				};

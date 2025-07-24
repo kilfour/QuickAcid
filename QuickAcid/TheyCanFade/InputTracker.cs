@@ -1,4 +1,4 @@
-namespace QuickAcid.Bolts;
+namespace QuickAcid.TheyCanFade;
 
 public class InputTracker
 {

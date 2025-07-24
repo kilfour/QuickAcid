@@ -1,8 +1,11 @@
 ﻿using System.Collections;
-using QuickAcid.Bolts.ShrinkStrats.Collections;
-using QuickAcid.Bolts.ShrinkStrats.Objects;
+using QuickAcid.Bolts;
+using QuickAcid.Shrinking.Collections;
+using QuickAcid.Shrinking.Custom;
+using QuickAcid.Shrinking.Objects;
+using QuickAcid.Shrinking.Primitives;
 
-namespace QuickAcid.Bolts.ShrinkStrats;
+namespace QuickAcid.Shrinking;
 
 public class ShrinkStrategyPicker
 {

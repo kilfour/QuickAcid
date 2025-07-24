@@ -1,6 +1,7 @@
 using QuickAcid.Bolts;
+using QuickAcid.Phasers;
 
-namespace QuickAcid.ShrinkRunners;
+namespace QuickAcid.Shrinking.Runners;
 
 public class Verifier
 {
@@ -17,7 +18,7 @@ public class Verifier
 
     public bool RunFailed(string key, object value)
     {
-        using (state.EnterPhase(QAcidPhase.ShrinkInputEval))
+        using (state.Shifter.EnterPhase(QAcidPhase.ShrinkInputEval))
         {
             state.Memory.ResetRunScopedInputs();
             var runNumber = state.CurrentExecutionNumber;
@@ -31,7 +32,8 @@ public class Verifier
                 }
             }
             state.CurrentExecutionNumber = runNumber;
-            return state.CurrentContext.Failed || (state.OriginalRun.Exception == null && state.CurrentContext.Exception != null);
+            return state.Shifter.CurrentContext.Failed
+                || (state.Shifter.OriginalRun.Exception == null && state.Shifter.CurrentContext.Exception != null);
         }
     }
 }

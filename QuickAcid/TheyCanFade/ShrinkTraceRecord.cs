@@ -1,7 +1,8 @@
-using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid;
+using QuickAcid.Shrinking;
 using QuickPulse.Show;
 
-namespace QuickAcid.Bolts.TheyCanFade;
+namespace QuickAcid.TheyCanFade;
 
 public enum ShrinkKind { PrimitiveKind, ObjectKind, EnumerableKind, KeepSameKind }
 

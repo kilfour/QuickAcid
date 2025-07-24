@@ -1,7 +1,7 @@
-using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Bolts;
 using QuickPulse.Show;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Shrinking.Custom;
 
 public class CustomShrinkStrategy
 {

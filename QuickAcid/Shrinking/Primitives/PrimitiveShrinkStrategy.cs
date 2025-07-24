@@ -1,7 +1,8 @@
-using QuickAcid.Bolts.ShrinkStrats;
-using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.Bolts;
+using QuickAcid.Shrinking;
+using QuickAcid.TheyCanFade;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Shrinking.Primitives;
 
 public class PrimitiveShrinkStrategy
 {

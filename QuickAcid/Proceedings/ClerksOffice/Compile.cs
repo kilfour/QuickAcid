@@ -1,5 +1,6 @@
-using QuickAcid.Bolts.ShrinkStrats;
 using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.Shrinking;
+using QuickAcid.TheyCanFade;
 using QuickPulse.Show;
 
 namespace QuickAcid.Proceedings.ClerksOffice;

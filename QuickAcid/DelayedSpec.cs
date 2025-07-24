@@ -30,7 +30,7 @@ public class DelayedSpecResult
 	public Acid Apply()
 	{
 		if (Failed)
-			state.CurrentContext.MarkFailure(Label);
+			state.Shifter.CurrentContext.MarkFailure(Label);
 		else
 			state.SpecPassed(Label);
 		return Acid.Test;

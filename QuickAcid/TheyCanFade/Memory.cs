@@ -1,4 +1,6 @@
-﻿namespace QuickAcid.Bolts.TheyCanFade;
+﻿using QuickAcid.TheyCanFade;
+
+namespace QuickAcid.Bolts.TheyCanFade;
 
 public class Memory
 {

@@ -1,6 +1,7 @@
 using QuickAcid.Bolts;
+using QuickAcid.Phasers;
 
-namespace QuickAcid.ShrinkRunners;
+namespace QuickAcid.Shrinking.Runners;
 
 public class ExecutionShrinker
 {
@@ -11,7 +12,7 @@ public class ExecutionShrinker
         var current = 0;
         while (current <= max && state.ExecutionNumbers.Count() > 1)
         {
-            using (state.EnterPhase(QAcidPhase.ShrinkingExecutions))
+            using (state.Shifter.EnterPhase(QAcidPhase.ShrinkingExecutions))
             {
                 state.Memory.ResetRunScopedInputs();
                 foreach (var executionNumber in state.ExecutionNumbers.ToList())
@@ -20,7 +21,7 @@ public class ExecutionShrinker
                     if (executionNumber != current)
                         state.Script(state);
                 }
-                if (state.CurrentContext.Failed)
+                if (state.Shifter.CurrentContext.Failed)
                 {
                     state.ExecutionNumbers.Remove(current);
                 }

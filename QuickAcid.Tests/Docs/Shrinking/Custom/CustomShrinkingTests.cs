@@ -1,8 +1,8 @@
-using QuickAcid.Bolts.ShrinkStrats;
-using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
+using QuickAcid.Shrinking.Collections;
+using QuickAcid.Shrinking.Custom;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Custom;
 

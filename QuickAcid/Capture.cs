@@ -1,5 +1,5 @@
-﻿using QuickAcid.Bolts.TheyCanFade;
-using QuickAcid.Bolts;
+﻿using QuickAcid.Bolts;
+using QuickAcid.TheyCanFade;
 
 namespace QuickAcid;
 

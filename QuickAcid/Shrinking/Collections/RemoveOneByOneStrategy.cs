@@ -1,6 +1,7 @@
-using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.Bolts;
+using QuickAcid.TheyCanFade;
 
-namespace QuickAcid.Bolts.ShrinkStrats.Collections;
+namespace QuickAcid.Shrinking.Collections;
 
 public class RemoveOneByOneStrategy : ICollectionShrinkStrategy
 {

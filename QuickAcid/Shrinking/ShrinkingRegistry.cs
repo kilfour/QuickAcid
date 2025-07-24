@@ -1,11 +1,11 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using QuickAcid.Bolts.ShrinkStrats;
-using QuickAcid.Bolts.ShrinkStrats.Collections;
 using QuickAcid.Bolts.ShrinkStrats.Objects;
+using QuickAcid.Shrinking.Collections;
+using QuickAcid.Shrinking.Custom;
 using QuickFuzzr.UnderTheHood;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Shrinking;
 
 public class ShrinkingRegistry
 {

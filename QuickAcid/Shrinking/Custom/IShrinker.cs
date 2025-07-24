@@ -1,4 +1,4 @@
-namespace QuickAcid.Bolts.ShrinkStrats;
+namespace QuickAcid.Shrinking.Custom;
 
 public interface IShrinkerBox
 {

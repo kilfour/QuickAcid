@@ -1,6 +1,6 @@
-using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Shrinking;
 
-namespace QuickAcid.Bolts.TheyCanFade;
+namespace QuickAcid.TheyCanFade;
 
 public class RunExecutionContext
 {

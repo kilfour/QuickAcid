@@ -1,7 +1,9 @@
 using System.Collections;
+using QuickAcid.Bolts;
 using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.TheyCanFade;
 
-namespace QuickAcid.Bolts.ShrinkStrats.Collections;
+namespace QuickAcid.Shrinking.Collections;
 
 public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
 {

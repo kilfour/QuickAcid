@@ -1,7 +1,10 @@
 ﻿using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.Phasers;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
-using QuickAcid.ShrinkRunners;
+using QuickAcid.Shrinking;
+using QuickAcid.Shrinking.Runners;
+using QuickAcid.TheyCanFade;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 
@@ -12,6 +15,8 @@ public sealed class QAcidState
 {
     public State FuzzState { get; } = new State();
     public int Seed { get { return FuzzState.Seed; } }
+
+    public Verifier VerifyIf { get; }
 
     public QAcidState(QAcidScript<Acid> script)
     {
@@ -38,7 +43,11 @@ public sealed class QAcidState
         return CurrentExecutionNumber == ExecutionNumbers.Last();
     }
 
-    //only for report
+    //--
+    public ShrinkingRegistry ShrinkingRegistry { get; } = new ShrinkingRegistry();
+    public Shifter Shifter { get; } = new Shifter();
+
+    // only for report
     public int OriginalFailingRunExecutionCount { get; private set; }
 
     public Memory Memory { get; private set; }
@@ -59,41 +68,10 @@ public sealed class QAcidState
             Memory.TracesForThisExecution());
     }
 
-    public void Trace<T>(string key, string trace)
-    {
-        var execution = CurrentExecutionContext();
-        execution.Trace(key, trace);
-    }
-
     public void RecordFailure(Exception ex)
     {
-        CurrentContext.MarkFailure(ex, OriginalRun);
+        Shifter.CurrentContext.MarkFailure(ex, Shifter.OriginalRun);
     }
-
-    // ---------------------------------------------------------------------------------------
-    // -- PHASERS
-    private readonly Dictionary<QAcidPhase, PhaseContext> phaseContexts =
-        Enum.GetValues<QAcidPhase>().ToDictionary(phase => phase, phase => new PhaseContext(phase));
-    public QAcidPhase CurrentPhase { get; private set; } = QAcidPhase.NormalRun;
-    public PhaseContext CurrentContext => phaseContexts[CurrentPhase];
-    public PhaseContext Phase(QAcidPhase phase) => phaseContexts[phase];
-    public bool IsShrinkingExecutions => CurrentPhase == QAcidPhase.ShrinkingExecutions;
-    public IDisposable EnterPhase(QAcidPhase phase)
-    {
-        var previousPhase = CurrentPhase;
-        CurrentPhase = phase;
-        CurrentContext.Reset();
-        return new DisposableAction(() =>
-        {
-            CurrentPhase = previousPhase;
-        });
-    }
-
-    public PhaseContext OriginalRun => Phase(QAcidPhase.NormalRun);
-    // ---------------------------------------------------------------------------------------
-
-    public ShrinkingRegistry ShrinkingRegistry { get; } = new ShrinkingRegistry();
-    public Verifier VerifyIf { get; } // initialized in ctor with (this)
 
     public bool AllowShrinking = true; // toggle for Assayer et al
     private int shrinkCount = 0;
@@ -111,7 +89,7 @@ public sealed class QAcidState
 
     public void SpecPassed(string label)
     {
-        if (CurrentPhase != QAcidPhase.NormalRun)
+        if (Shifter.CurrentPhase != QAcidPhase.NormalRun)
             return;
         if (!passedSpecCount.TryGetValue(label, out int value))
         {
@@ -139,18 +117,11 @@ public sealed class QAcidState
         for (int j = 0; j < executionsPerScope; j++)
         {
             var caseFile = ExecuteStep();
-            if (CurrentContext.Failed)
+            if (Shifter.CurrentContext.Failed)
             {
                 return caseFile;
             }
         }
-        // foreach (var executionNumber in ExecutionNumbers.ToList())
-        // {
-        //     foreach (var (key, val) in Memory.TracesFor(executionNumber))
-        //     {
-        //         report.AddEntry(new ReportTraceEntry(key) { Value = val });
-        //     }
-        // }
         return CaseFile.Empty();
     }
 
@@ -158,7 +129,7 @@ public sealed class QAcidState
     {
         ExecutionNumbers[CurrentExecutionNumber] = CurrentExecutionNumber;
         Script(this);
-        if (CurrentContext.Failed)
+        if (Shifter.CurrentContext.Failed)
         {
             return HandleFailure();
         }
@@ -209,9 +180,9 @@ public sealed class QAcidState
     {
         var dossier =
             new Dossier(
-                AssayerSpec: forAssayer ? CurrentContext.FailingSpec : null,
-                FailingSpec: forAssayer ? null : CurrentContext.FailingSpec,
-                Exception: CurrentContext.Exception,
+                AssayerSpec: forAssayer ? Shifter.CurrentContext.FailingSpec : null,
+                FailingSpec: forAssayer ? null : Shifter.CurrentContext.FailingSpec,
+                Exception: Shifter.CurrentContext.Exception,
                 OriginalRunExecutionCount: OriginalFailingRunExecutionCount,
                 ExecutionNumbers: ExecutionNumbers,
                 ShrinkCount: shrinkCount,

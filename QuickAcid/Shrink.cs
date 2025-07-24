@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using QuickAcid.Bolts;
-using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Shrinking.Custom;
 
 namespace QuickAcid;
 

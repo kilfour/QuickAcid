@@ -1,5 +1,5 @@
 using QuickAcid;
-using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid.Shrinking;
 using QuickPulse;
 using QuickPulse.Bolts;
 using QuickPulse.Show;

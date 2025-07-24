@@ -2,6 +2,7 @@
 using QuickAcid.Bolts.ShrinkStrats.Objects;
 using QuickAcid;
 using QuickAcid.Tests._Tools.ThePress;
+using QuickAcid.Shrinking.Objects;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {

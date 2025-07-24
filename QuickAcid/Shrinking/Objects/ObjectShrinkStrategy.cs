@@ -1,6 +1,8 @@
 
 using System.Reflection;
-using QuickAcid.Bolts.TheyCanFade;
+using QuickAcid.Shrinking;
+using QuickAcid.Shrinking.Custom;
+using QuickAcid.TheyCanFade;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 

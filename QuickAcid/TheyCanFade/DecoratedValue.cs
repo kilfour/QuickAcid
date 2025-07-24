@@ -1,6 +1,7 @@
-using QuickAcid.Bolts.ShrinkStrats;
+using QuickAcid;
+using QuickAcid.Shrinking;
 
-namespace QuickAcid.Bolts.TheyCanFade;
+namespace QuickAcid.TheyCanFade;
 
 public class DecoratedValue
 {
@@ -65,11 +66,4 @@ public class DecoratedValue
             return ShrinkOutcome.Irrelevant;
         return ShrinkOutcome.Report(shrinkString);
     }
-}
-
-public enum ReportingIntent
-{
-    Shrinkable,   // only include if shrink contributed
-    Always,       // always include (e.g., Assay, Touchstone)
-    Never         // captured, never include
 }

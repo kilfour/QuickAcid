@@ -1,6 +1,7 @@
+using QuickAcid.Bolts;
 using QuickFuzzr;
 
-namespace QuickAcid.Bolts.ShrinkStrats.Objects;
+namespace QuickAcid.Shrinking.Objects;
 
 public class CompositeObjectShrinkStrategy
 {

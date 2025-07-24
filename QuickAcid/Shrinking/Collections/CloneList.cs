@@ -1,7 +1,7 @@
 
 using System.Collections;
 
-namespace QuickAcid.Bolts.ShrinkStrats
+namespace QuickAcid.Shrinking.Collections
 {
     public static class CloneList
     {

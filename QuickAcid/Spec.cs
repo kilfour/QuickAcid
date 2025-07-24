@@ -12,7 +12,7 @@ public static partial class QAcidCombinators
 				bool passed = condition();
 				if (!passed)
 				{
-					state.CurrentContext.MarkFailure(key);
+					state.Shifter.CurrentContext.MarkFailure(key);
 				}
 				else
 				{
@@ -29,7 +29,7 @@ public static partial class QAcidCombinators
 		=> state => predicate() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
 
 	private static bool ShouldSkipSpec(string key, QAcidState state)
-		=> state.OriginalRun.FailingSpec is { } failedKey && failedKey != key;
+		=> state.Shifter.OriginalRun.FailingSpec is { } failedKey && failedKey != key;
 
 	public static QAcidScript<Acid> Analyze(this string key, Func<bool> condition)
 		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
@@ -43,7 +43,7 @@ public static partial class QAcidCombinators
 				if (!passed)
 				{
 					state.AllowShrinking = false;
-					state.CurrentContext.MarkFailure(key);
+					state.Shifter.CurrentContext.MarkFailure(key);
 				}
 				else
 				{
@@ -71,7 +71,7 @@ public static partial class QAcidCombinators
 				if (!passed)
 				{
 					state.AllowShrinking = false;
-					state.CurrentContext.MarkFailure(string.Join(", ", strings));
+					state.Shifter.CurrentContext.MarkFailure(string.Join(", ", strings));
 				}
 				else
 				{
@@ -88,7 +88,7 @@ public static partial class QAcidCombinators
 				bool passed = condition();
 				if (passed)
 				{
-					state.CurrentContext.StopRun();
+					state.Shifter.CurrentContext.StopRun();
 				}
 				return QAcidResult.AcidOnly(state);
 			};

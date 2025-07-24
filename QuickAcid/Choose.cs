@@ -1,4 +1,4 @@
-﻿using QuickAcid.Bolts.TheyCanFade;
+﻿using QuickAcid.TheyCanFade;
 using QuickFuzzr;
 
 namespace QuickAcid;

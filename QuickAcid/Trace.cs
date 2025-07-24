@@ -1,4 +1,5 @@
 using QuickAcid.Bolts;
+using QuickAcid.Phasers;
 
 namespace QuickAcid;
 
@@ -6,7 +7,7 @@ public static partial class QAcidCombinators
 {
     public static QAcidScript<string> Trace(this string key, Func<string> trace) =>
         state =>
-            state.CurrentPhase == QAcidPhase.NormalRun
+            state.Shifter.CurrentPhase == QAcidPhase.NormalRun
                 ? QAcidResult.Some(state, state.CurrentExecutionContext().Trace(key, trace()))
                 : QAcidResult.None<string>(state);
 

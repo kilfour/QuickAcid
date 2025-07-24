@@ -1,4 +1,4 @@
-namespace QuickAcid.Bolts;
+namespace QuickAcid.Phasers;
 
 public class PhaseContext
 {
