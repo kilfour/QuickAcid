@@ -2,6 +2,7 @@ using QuickAcid.TestsDeposition._Tools.Models;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
+using QuickAcid.Proceedings.ClerksOffice;
 
 namespace QuickAcid.TestsDeposition.Docs;
 
@@ -77,7 +78,6 @@ public class QuickAcidTopLevel
 {
     public const string Order = "1";
 
-
     [Fact]
     public void Example()
     {
@@ -94,8 +94,9 @@ public class QuickAcidTopLevel
             from spec in "No Overdraft".Spec(() => account.Balance >= 0)
             select Acid.Test;
 
-        QState.Run("temp other", script)
+        TheJournalist.Exposes(() => QState.Run(script, 1047294985)
+            .Options(a => a with { FileAs = "QuickAcidTopLevel.Example" })
            .WithOneRun()
-           .And(100.ExecutionsPerRun());
+           .And(100.ExecutionsPerRun()));
     }
 }

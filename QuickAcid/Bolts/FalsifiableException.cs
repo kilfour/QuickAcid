@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using QuickAcid.Proceedings;
+using QuickAcid.Proceedings.ClerksOffice;
 
 
 namespace QuickAcid.Bolts;
@@ -9,12 +10,12 @@ public class FalsifiableException : Exception
 	public CaseFile CaseFile { get; private set; }
 
 	public FalsifiableException(CaseFile caseFile)
-		: base(AddTestMethodInfo(caseFile).ToString())
+		: base(Environment.NewLine + TheClerk.Transcribes(AddTestMethodInfo(caseFile)))
 	{
 		CaseFile = caseFile;
 	}
 	public FalsifiableException(CaseFile caseFile, Exception? exception)
-		: base(AddTestMethodInfo(caseFile).ToString(), exception)
+		: base(Environment.NewLine + TheClerk.Transcribes(AddTestMethodInfo(caseFile)), exception)
 	{
 		CaseFile = caseFile;
 	}
