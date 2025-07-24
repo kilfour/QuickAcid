@@ -12,9 +12,9 @@ public class ExtraDepositionsTests : DepositionTest
                     .AddMessage("Some Message"));
         var reader = Transcribe(caseFile);
         reader.Skip(3); // ignore spec, coz these come after 
-        Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Some Title", reader.NextLine());
-        Assert.Equal("   Some Message", reader.NextLine());
+        Assert.Equal("  Some Message", reader.NextLine());
+        Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         EndOfContent(reader);
     }
 
@@ -29,13 +29,13 @@ public class ExtraDepositionsTests : DepositionTest
                     .AddMessage("Yet Another Message"));
         var reader = Transcribe(caseFile);
         reader.Skip(3); // ignore spec, coz these come after 
-        Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Some Title", reader.NextLine());
-        Assert.Equal("   Some Message", reader.NextLine());
+        Assert.Equal("  Some Message", reader.NextLine());
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Some Other Title", reader.NextLine());
-        Assert.Equal("   Some Other Message", reader.NextLine());
-        Assert.Equal("   Yet Another Message", reader.NextLine());
+        Assert.Equal("  Some Other Message", reader.NextLine());
+        Assert.Equal("  Yet Another Message", reader.NextLine());
+        Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         EndOfContent(reader);
     }
 }

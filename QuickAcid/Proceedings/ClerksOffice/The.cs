@@ -139,21 +139,25 @@ public static class The
 
     private readonly static Flow<string> extraDepositionMessage =
         from input in Pulse.Start<string>()
-        from _ in newLine.Then(Pulse.Trace($"   {input}"))
+        from _ in newLine
+        from __ in Pulse.Trace($"  {input}")
         select input;
 
     private readonly static Flow<ExtraDeposition> extraDeposition =
         from input in Pulse.Start<ExtraDeposition>()
-        from _1 in newLine.Then(line)
-        from _2 in Pulse.Trace($" {input.Label}")
-        from _3 in Pulse.ToFlow(extraDepositionMessage, input.Messages)
+        from _ in Pulse.Trace($" {input.Label}")
+        from __ in Pulse.ToFlow(extraDepositionMessage, input.Messages)
+        from ___ in newLine
+        from ____ in line
         select input;
 
     public readonly static Flow<CaseFile> CourtStyleGuide =
         from input in Pulse.Start<CaseFile>()
         from _ in Pulse.Gather(new Decorum())
         from runDeposition in Pulse.ToFlow(runDeposition, input.RunDepositions)
-        from verdict in Pulse.ToFlow(verdict, input.Verdict)
+        from verdict in Pulse.ToFlowIf(input.Verdict != null, verdict, () => input.Verdict)
+        let needsBreak = input.Verdict != null && input.ExtraDepositions.Count > 0
+        from nl in Pulse.TraceIf(needsBreak, () => Environment.NewLine)
         from extra in Pulse.ToFlow(extraDeposition, input.ExtraDepositions)
         select input;
 }

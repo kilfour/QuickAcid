@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using QuickAcid;
 using QuickAcid.Bolts;
+using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Reporting;
 using QuickFuzzr;
@@ -64,22 +65,9 @@ public class QRunner
     private Report ReportIt(Report report)
     {
         AddPassedSpecsToReport(report);
-        AddShrinkTracesToReport(report);
         AddVaultMessagesToReport(report);
         WriteReport(report);
         return report;
-    }
-
-    private void AddShrinkTracesToReport(Report report)
-    {
-        if (config.AddShrinkInfoToReport)
-        {
-            report.AddEntry(new ReportInfoEntry(" Shrink Info"));
-            Signal.From(config.ShrinkTraceFlow!)
-                .SetArtery(new ReportArtery(report))
-                .Pulse(report.ShrinkTraces);
-            report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
-        }
     }
 
     private void WriteReport(Report report)
@@ -138,6 +126,10 @@ public class QRunner
             report.AddEntry(new ReportInfoEntry($" Passed Specs"));
             passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  - {kv.Key}: {kv.Value}x")));
             report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
+
+            var extraDeposition = new ExtraDeposition("Passed Specs");
+            passedSpecCount.ForEach(kv => extraDeposition.AddMessage($"- {kv.Key}: {kv.Value}x"));
+            report.CaseFile!.AddExtraDeposition(extraDeposition);
         }
     }
 
@@ -148,6 +140,10 @@ public class QRunner
             report.AddEntry(new ReportInfoEntry($" Vault Info"));
             vaultMessages.ForEach(a => report.AddEntry(new ReportInfoEntry($"   {a}")));
             report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
+
+            var extraDeposition = new ExtraDeposition("Vault Info");
+            vaultMessages.ForEach(a => extraDeposition.AddMessage(a));
+            report.CaseFile!.AddExtraDeposition(extraDeposition);
         }
     }
 

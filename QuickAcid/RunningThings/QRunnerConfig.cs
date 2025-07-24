@@ -8,10 +8,8 @@ namespace QuickAcid.RunningThings;
 
 public record QRunnerConfig
 {
-    public required bool AddShrinkInfoToReport { get; init; }
-    public Flow<ShrinkTrace>? ShrinkTraceFlow { get; init; }
-
     public required string? ReportTo { get; init; }
+
     public required string? Vault { get; init; }
     public required bool ReplayMode { get; init; }
 
@@ -27,8 +25,6 @@ public record QRunnerConfig
         return
             new QRunnerConfig()
             {
-                AddShrinkInfoToReport = false,
-                ShrinkTraceFlow = DefaultFormat,
                 ReportTo = null,
                 Vault = null,
                 Verbose = false,
