@@ -70,9 +70,9 @@ public class QRunner
 
     private void WriteCaseFile(CaseFile caseFile)
     {
-        if (config.ReportTo != null)
+        if (config.FileAs != null)
         {
-            var filenameCf = Path.Combine(".quickacid", "caseFiles", $"{config.ReportTo}.qr");
+            var filenameCf = Path.Combine(".quickacid", "archive", $"{config.FileAs}.qr");
             Signal.Tracing<string>().SetArtery(new WriteDataToFile(filenameCf).ClearFile())
                    .Pulse(TheClerk.Transcribes(caseFile));
         }

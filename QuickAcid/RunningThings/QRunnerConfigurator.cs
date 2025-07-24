@@ -16,7 +16,7 @@ public class QRunnerConfigurator
         config = QRunnerConfig.Default();
         if (testName != null)
         {
-            config = config with { ReportTo = testName, Vault = testName };
+            config = config with { FileAs = testName, Vault = testName };
         }
     }
 

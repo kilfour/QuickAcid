@@ -17,7 +17,7 @@ public class SeedVault
     {
         var root = SolutionLocator.FindSolutionRoot();
         root ??= AppContext.BaseDirectory;
-        path = Path.Combine(root!, ".quickacid", "failures", $"{name}.qv");
+        path = Path.Combine(root!, ".quickacid", "contested", $"{name}.qv");
         entries = GetVaultEntries();
         this.script = script;
     }

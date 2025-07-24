@@ -94,8 +94,8 @@ public class QuickAcidTopLevel
             from spec in "No Overdraft".Spec(() => account.Balance >= 0)
             select Acid.Test;
 
-        TheJournalist.Exposes(() => QState.Run("temp", script)
-            .WithOneRun()
-            .And(100.ExecutionsPerRun()));
+        QState.Run("temp other", script)
+           .WithOneRun()
+           .And(100.ExecutionsPerRun());
     }
 }

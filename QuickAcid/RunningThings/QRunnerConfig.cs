@@ -8,7 +8,7 @@ namespace QuickAcid.RunningThings;
 
 public record QRunnerConfig
 {
-    public required string? ReportTo { get; init; }
+    public required string? FileAs { get; init; }
 
     public required string? Vault { get; init; }
     public required bool ReplayMode { get; init; }
@@ -25,7 +25,7 @@ public record QRunnerConfig
         return
             new QRunnerConfig()
             {
-                ReportTo = null,
+                FileAs = null,
                 Vault = null,
                 Verbose = false,
                 ReplayMode = false,
