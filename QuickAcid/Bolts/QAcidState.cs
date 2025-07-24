@@ -150,16 +150,13 @@ public sealed class QAcidState
         {
             shrinkCount += ExecutionShrinker.Run(this);
             if (Verbose)
-            {
                 runs.Add(DeposeTheRun("AFTER EXECUTION SHRINKING"));
-            }
+
             if (ShrinkingActions)
             {
                 shrinkCount += ActionShrinker.Run(this);
                 if (Verbose)
-                {
                     runs.Add(DeposeTheRun("AFTER ACTION SHRINKING"));
-                }
             }
             shrinkCount += InputShrinker.Run(this);
         }

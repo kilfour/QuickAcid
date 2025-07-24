@@ -9,15 +9,10 @@ public static partial class QAcidCombinators
 			{
 				if (ShouldSkipSpec(key, state))
 					return QAcidResult.AcidOnly(state);
-				bool passed = condition();
-				if (!passed)
-				{
-					state.Shifter.CurrentContext.MarkFailure(key);
-				}
-				else
-				{
+				if (condition())
 					state.SpecPassed(key);
-				}
+				else
+					state.Shifter.CurrentContext.MarkFailure(key);
 				return QAcidResult.AcidOnly(state);
 			};
 
