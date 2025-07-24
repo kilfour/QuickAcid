@@ -1,5 +1,4 @@
 using QuickAcid;
-using QuickAcid.Bolts;
 using QuickPulse.Instruments;
 
 namespace QuickAcid.RunningThings;
@@ -46,35 +45,9 @@ public class SeedVault
             : null!;
     }
 
-    private void Replay()
-    {
-        CheckTheVault();
-    }
-
-    public void CheckTheVault()
-    {
-        List<string> vaultMessages = [];
-        vaultMessages.Add("Checking the Vault");
-        foreach (var vaultEntry in AllSeeds)
-        {
-            var state = new QAcidState(script, vaultEntry.Seed);
-            var report = state.Run(vaultEntry.ExecutionsPerRun);
-            if (report.IsSuccess)
-            {
-                Remove(vaultEntry);
-                vaultMessages.Add($"Seed {vaultEntry.Seed} now passes => removed.");
-            }
-            else
-            {
-                vaultMessages.Add($"Seed {vaultEntry.Seed}: still fails.");
-            }
-        }
-    }
-
     public void AddToVault(int seed, int numberOfExecutions)
     {
         Add(new(seed, numberOfExecutions));
-        //vaultMessages.Add($"Seed {seed}: added to vault.");
     }
 
     public bool Contains(VaultEntry vaultEntry) => entries.Contains(vaultEntry);

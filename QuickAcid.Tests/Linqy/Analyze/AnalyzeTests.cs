@@ -1,4 +1,3 @@
-using QuickAcid.Reporting;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 

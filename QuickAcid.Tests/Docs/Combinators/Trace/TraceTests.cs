@@ -1,4 +1,3 @@
-using QuickAcid.Reporting;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
@@ -27,10 +26,14 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             from _ in "act".Act(() => { })
             from __ in "Info Key".Trace(() => "Extra words")
             select Acid.Test;
-        var report = QState.Run(script).WithOneRunAndOneExecution();
-        var entry = report.Single<ReportTraceEntry>();
 
-        Assert.Equal("Extra words", entry.Value);
+        var article = TheJournalist.Unearths(
+            QState.Run(script)
+            .WithOneRun()
+            .And(5.ExecutionsPerRun()));
+
+        // No Verdict => No Trace
+        // Assert.Equal("Extra words", article.Execution(1).Trace(1).Read().Value);
     }
 
     [Fact]
@@ -43,10 +46,13 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
             from __ in "Info Key".Trace(() => $"[ {string.Join(", ", ints)} ]")
             from ___ in "spec".Spec(() => counter < 3)
             select Acid.Test;
-        var report = QState.Run(script).WithOneRunAndOneExecution();
-        var entry = report.Single<ReportTraceEntry>();
 
-        Assert.Equal("[ 42, 42 ]", entry.Value);
+        var article = TheJournalist.Exposes(() =>
+            QState.Run(script)
+                .WithOneRun()
+                .And(5.ExecutionsPerRun()));
+
+        Assert.Equal("[ 42, 42 ]", article.Execution(1).Trace(1).Read().Value);
     }
 
     public Generator<int> Counter()

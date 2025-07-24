@@ -1,6 +1,4 @@
-﻿using QuickAcid.Proceedings.ClerksOffice;
-using QuickAcid.Reporting;
-using QuickAcid.Tests._Tools.ThePress;
+﻿using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.Tests.Linqy.Spec;
 

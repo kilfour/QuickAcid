@@ -139,7 +139,7 @@ In this case :
             select Acid.Test;
 
         var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRunAndOneExecution());
-        Assert.NotNull(ex.QAcidReport);
+        Assert.NotNull(ex.CaseFile);
     }
 
 

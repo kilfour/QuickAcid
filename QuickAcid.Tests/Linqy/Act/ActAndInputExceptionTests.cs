@@ -1,5 +1,4 @@
-﻿using QuickAcid.Reporting;
-using QuickAcid.Tests._Tools.ThePress;
+﻿using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 
 namespace QuickAcid.Tests.Linqy.Act;

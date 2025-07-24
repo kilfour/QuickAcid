@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using QuickAcid.Reporting;
+using QuickAcid.Proceedings;
 
 namespace QuickAcid.RunningThings;
 
@@ -32,7 +32,7 @@ public class QRunnerConfigurator
     [StackTraceHidden]
     public QRunner WithOneRun() => With(new(1));
     [StackTraceHidden]
-    public Report WithOneRunAndOneExecution() => With(new(1)).AndOneExecutionPerRun();
+    public CaseFile WithOneRunAndOneExecution() => With(new(1)).AndOneExecutionPerRun();
 }
 
 public record RunCount(int NumberOfRuns);

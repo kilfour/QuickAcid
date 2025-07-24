@@ -1,9 +1,7 @@
 using System.Diagnostics;
-using QuickAcid;
 using QuickAcid.Bolts;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
-using QuickAcid.Reporting;
 using QuickFuzzr;
 using QuickPulse;
 using QuickPulse.Arteries;
@@ -32,13 +30,13 @@ public class QRunner
     // This method starts the actual test
     // --
     [StackTraceHidden]
-    public Report And(ExecutionCount executionCount)
+    public CaseFile And(ExecutionCount executionCount)
     {
-        Report report = null!;
+        CaseFile caseFile = null!;
         if (config.ReplayMode)
         {
             if (Replay())
-                return ReportIt(new Report());
+                return FileIt(CaseFile.Empty()); // need to get the verdicts ?
         }
         if (config.Vault != null)
         {
@@ -51,36 +49,32 @@ public class QRunner
                 state.Verbose = true;
             if (config.ShrinkingActions)
                 state.ShrinkingActions = true;
-            report = state.Run(executionCount.NumberOfExecutions);
+            caseFile = state.Run(executionCount.NumberOfExecutions);
             state.GetPassedSpecCount(passedSpecCount);
-            if (report.IsFailed)
+            if (caseFile.HasVerdict())
             {
                 AddToVault(state.Seed, executionCount.NumberOfExecutions);
-                throw new FalsifiableException(ReportIt(report));
+                throw new FalsifiableException(FileIt(caseFile));
             }
         }
-        return ReportIt(report);
+        return FileIt(caseFile);
     }
 
-    private Report ReportIt(Report report)
+    private CaseFile FileIt(CaseFile caseFile)
     {
-        AddPassedSpecsToReport(report);
-        AddVaultMessagesToReport(report);
-        WriteReport(report);
-        return report;
+        AddPassedSpecsToCaseFile(caseFile);
+        AddVaultMessagesToCaseFile(caseFile);
+        WriteCaseFile(caseFile);
+        return caseFile;
     }
 
-    private void WriteReport(Report report)
+    private void WriteCaseFile(CaseFile caseFile)
     {
         if (config.ReportTo != null)
         {
-            var filename = Path.Combine(".quickacid", "reports", $"{config.ReportTo}.qr");
-            Signal.Tracing<string>().SetArtery(new WriteDataToFile(filename).ClearFile())
-                   .Pulse(report.Entries.Select(a => a.ToString()!));
-
-            var filenameCf = Path.Combine(".quickacid", "reports", $"{config.ReportTo}Qf.qr");
+            var filenameCf = Path.Combine(".quickacid", "caseFiles", $"{config.ReportTo}.qr");
             Signal.Tracing<string>().SetArtery(new WriteDataToFile(filenameCf).ClearFile())
-                   .Pulse(TheClerk.Transcribes(report.CaseFile!));
+                   .Pulse(TheClerk.Transcribes(caseFile));
         }
     }
     private bool Replay()
@@ -98,15 +92,15 @@ public class QRunner
         foreach (var vaultEntry in vault.AllSeeds)
         {
             var state = new QAcidState(script, vaultEntry.Seed);
-            var report = state.Run(vaultEntry.ExecutionsPerRun);
-            if (report.IsSuccess)
+            var caseFile = state.Run(vaultEntry.ExecutionsPerRun);
+            if (caseFile.HasVerdict())
             {
-                vault.Remove(vaultEntry);
-                vaultMessages.Add($"Seed {vaultEntry.Seed} now passes => removed.");
+                vaultMessages.Add($"Seed {vaultEntry.Seed}: still fails.");
             }
             else
             {
-                vaultMessages.Add($"Seed {vaultEntry.Seed}: still fails.");
+                vault.Remove(vaultEntry);
+                vaultMessages.Add($"Seed {vaultEntry.Seed} now passes => removed.");
             }
         }
     }
@@ -119,34 +113,26 @@ public class QRunner
         vaultMessages.Add($"Seed {seed}: added to vault.");
     }
 
-    private void AddPassedSpecsToReport(Report report)
+    private void AddPassedSpecsToCaseFile(CaseFile caseFile)
     {
         if (passedSpecCount.Count > 0)
         {
-            report.AddEntry(new ReportInfoEntry($" Passed Specs"));
-            passedSpecCount.ForEach(kv => report.AddEntry(new ReportInfoEntry($"  - {kv.Key}: {kv.Value}x")));
-            report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
-
             var extraDeposition = new ExtraDeposition("Passed Specs");
             passedSpecCount.ForEach(kv => extraDeposition.AddMessage($"- {kv.Key}: {kv.Value}x"));
-            report.CaseFile!.AddExtraDeposition(extraDeposition);
+            caseFile.AddExtraDeposition(extraDeposition);
         }
     }
 
-    private void AddVaultMessagesToReport(Report report)
+    private void AddVaultMessagesToCaseFile(CaseFile caseFile)
     {
         if (vaultMessages.Count > 0)
         {
-            report.AddEntry(new ReportInfoEntry($" Vault Info"));
-            vaultMessages.ForEach(a => report.AddEntry(new ReportInfoEntry($"   {a}")));
-            report.AddEntry(new ReportInfoEntry(" " + new string('─', 50)));
-
             var extraDeposition = new ExtraDeposition("Vault Info");
             vaultMessages.ForEach(a => extraDeposition.AddMessage(a));
-            report.CaseFile!.AddExtraDeposition(extraDeposition);
+            caseFile.AddExtraDeposition(extraDeposition);
         }
     }
 
     [StackTraceHidden]
-    public Report AndOneExecutionPerRun() => And(new ExecutionCount(1));
+    public CaseFile AndOneExecutionPerRun() => And(new ExecutionCount(1));
 }

@@ -1,5 +1,5 @@
 using QuickAcid.Bolts;
-using QuickAcid.Reporting;
+using QuickAcid.Tests._Tools.ThePress;
 using QuickPulse.Explains;
 
 
@@ -49,10 +49,10 @@ from specResult in ""spec"".Spec(() => false)
             from trace in "trace".TraceIf(() => spec.Failed, () => spec.Label)
             let apply = spec.Apply()
             select Acid.Test;
-        var ex = Assert.Throws<FalsifiableException>(() => QState.Run(script).WithOneRun().And(5.ExecutionsPerRun()));
-        var report = ex.QAcidReport;
-        var entry = report.Single<ReportTraceEntry>();
-        Assert.Equal("spec", entry.Value);
+
+        var article = TheJournalist.Exposes(() => QState.Run(script).WithOneRun().And(5.ExecutionsPerRun()));
+
+        Assert.Equal("spec", article.Execution(1).Trace(1).Read().Value);
     }
 }
 

@@ -1,24 +1,25 @@
 ﻿using System.Diagnostics;
-using QuickAcid.Reporting;
+using QuickAcid.Proceedings;
+
 
 namespace QuickAcid.Bolts;
 
 public class FalsifiableException : Exception
 {
-	public Report QAcidReport { get; private set; }
+	public CaseFile CaseFile { get; private set; }
 
-	public FalsifiableException(Report report)
-		: base(AddTestMethodInfo(report).ToString())
+	public FalsifiableException(CaseFile caseFile)
+		: base(AddTestMethodInfo(caseFile).ToString())
 	{
-		QAcidReport = report;
+		CaseFile = caseFile;
 	}
-	public FalsifiableException(Report report, Exception? exception)
-		: base(AddTestMethodInfo(report).ToString(), exception)
+	public FalsifiableException(CaseFile caseFile, Exception? exception)
+		: base(AddTestMethodInfo(caseFile).ToString(), exception)
 	{
-		QAcidReport = report;
+		CaseFile = caseFile;
 	}
 
-	private static Report AddTestMethodInfo(Report report)
+	private static CaseFile AddTestMethodInfo(CaseFile caseFile)
 	{
 		var quickAcidAssembly = typeof(Acid).Assembly;
 		var trace = new StackTrace(fNeedFileInfo: true);
@@ -31,10 +32,12 @@ public class FalsifiableException : Exception
 				if (method == null) continue;
 				var declaringAssembly = method.DeclaringType?.Assembly;
 				if (declaringAssembly == quickAcidAssembly) continue;
-				report.AddTestMethodInfo(method?.Name ?? "unknown_test", file, frame.GetFileLineNumber());
-				return report;
+				caseFile.Verdict.AddTestMethodDisposition(
+					new TestMethodInfoDeposition(
+						method?.Name ?? "unknown_test", file, frame.GetFileLineNumber()));
+				return caseFile;
 			}
 		}
-		return report;
+		return caseFile;
 	}
 }
