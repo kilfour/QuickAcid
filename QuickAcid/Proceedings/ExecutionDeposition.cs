@@ -23,27 +23,15 @@ public record ExecutionDeposition
 
     public bool Collapsed(ExecutionDeposition other)
     {
-        if (!ElementsMatch(TrackedDepositions, other.TrackedDepositions))
+        if (!TrackedDepositions.SequenceEqual(other.TrackedDepositions))
             return false;
-        if (!ElementsMatch(ActionDepositions, other.ActionDepositions))
+        if (!ActionDepositions.SequenceEqual(other.ActionDepositions))
             return false;
-        if (!ElementsMatch(InputDepositions, other.InputDepositions))
+        if (!InputDepositions.SequenceEqual(other.InputDepositions))
             return false;
-        if (!ElementsMatch(TraceDepositions, other.TraceDepositions))
+        if (!TraceDepositions.SequenceEqual(other.TraceDepositions))
             return false;
         Times++;
-        return true;
-    }
-    private bool ElementsMatch<T>(List<T> one, List<T> two)
-    {
-        if (one.Count != two.Count) return false;
-        for (int i = 0; i < one.Count; i++)
-        {
-            if (one[i] == null && two[i] == null) return true;
-            if (one[i] == null && two[i] != null) return false;
-            if (!one[i]!.Equals(two[i]))
-                return false;
-        }
         return true;
     }
 
