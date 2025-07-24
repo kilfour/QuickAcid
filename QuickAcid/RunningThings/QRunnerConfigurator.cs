@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using QuickAcid.Reporting;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.RunningThings;
 
 public class QRunnerConfigurator
 {

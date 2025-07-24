@@ -1,11 +1,13 @@
 using System.Diagnostics;
+using QuickAcid;
+using QuickAcid.Bolts;
 using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Reporting;
 using QuickFuzzr;
 using QuickPulse;
 using QuickPulse.Arteries;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.RunningThings;
 
 public class QRunner
 {
@@ -90,12 +92,12 @@ public class QRunner
 
             var filenameCf = Path.Combine(".quickacid", "reports", $"{config.ReportTo}Qf.qr");
             Signal.Tracing<string>().SetArtery(new WriteDataToFile(filenameCf).ClearFile())
-                   .Pulse(Clerk.Transcribe(report.CaseFile!));
+                   .Pulse(TheClerk.Transcribes(report.CaseFile!));
         }
     }
     private bool Replay()
     {
-        if (new SeedVault(config.Vault!).AllSeeds.Count == 0)
+        if (new SeedVault(config.Vault!, script).AllSeeds.Count == 0)
             return false;
         CheckTheVault();
         return true;
@@ -104,7 +106,7 @@ public class QRunner
     private void CheckTheVault()
     {
         vaultMessages.Add("Checking the Vault");
-        var vault = new SeedVault(config.Vault!);
+        var vault = new SeedVault(config.Vault!, script);
         foreach (var vaultEntry in vault.AllSeeds)
         {
             var state = new QAcidState(script, vaultEntry.Seed);
@@ -124,7 +126,7 @@ public class QRunner
     private void AddToVault(int seed, int numberOfExecutions)
     {
         if (config.Vault == null) return;
-        var vault = new SeedVault(config.Vault!);
+        var vault = new SeedVault(config.Vault!, script);
         vault.Add(new(seed, numberOfExecutions));
         vaultMessages.Add($"Seed {seed}: added to vault.");
     }

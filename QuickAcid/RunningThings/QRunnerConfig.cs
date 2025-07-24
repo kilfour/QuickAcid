@@ -1,9 +1,10 @@
+using QuickAcid;
 using QuickAcid.Bolts.ShrinkStrats;
 using QuickPulse;
 using QuickPulse.Bolts;
 using QuickPulse.Show;
 
-namespace QuickAcid.Bolts;
+namespace QuickAcid.RunningThings;
 
 public record QRunnerConfig
 {

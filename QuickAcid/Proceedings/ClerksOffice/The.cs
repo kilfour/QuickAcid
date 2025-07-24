@@ -137,10 +137,23 @@ public static class The
         from _5 in Pulse.ToFlow(failureDeposition, verdict.FailureDeposition)
         select verdict;
 
+    private readonly static Flow<string> extraDepositionMessage =
+        from input in Pulse.Start<string>()
+        from _ in newLine.Then(Pulse.Trace($"   {input}"))
+        select input;
+
+    private readonly static Flow<ExtraDeposition> extraDeposition =
+        from input in Pulse.Start<ExtraDeposition>()
+        from _1 in newLine.Then(line)
+        from _2 in Pulse.Trace($" {input.Label}")
+        from _3 in Pulse.ToFlow(extraDepositionMessage, input.Messages)
+        select input;
+
     public readonly static Flow<CaseFile> CourtStyleGuide =
         from input in Pulse.Start<CaseFile>()
         from _ in Pulse.Gather(new Decorum())
         from runDeposition in Pulse.ToFlow(runDeposition, input.RunDepositions)
         from verdict in Pulse.ToFlow(verdict, input.Verdict)
+        from extra in Pulse.ToFlow(extraDeposition, input.ExtraDepositions)
         select input;
 }

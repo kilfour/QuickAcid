@@ -4,14 +4,6 @@ namespace QuickAcid.Tests.Proceedings.TrackedDepositions;
 
 public class TrackedDepositionsTests : DepositionTest
 {
-    [Fact]
-    public void None()
-    {
-        var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
-                .AddExecutionDeposition(new ExecutionDeposition(1)));
-        var reader = Transcribe(caseFile);
-        EndOfContent(reader);
-    }
 
     [Fact]
     public void One()

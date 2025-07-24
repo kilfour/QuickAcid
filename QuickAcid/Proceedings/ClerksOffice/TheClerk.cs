@@ -3,9 +3,9 @@ using QuickPulse.Arteries;
 
 namespace QuickAcid.Proceedings.ClerksOffice;
 
-public static class Clerk
+public static class TheClerk
 {
-    public static string Transcribe(CaseFile caseFile)
+    public static string Transcribes(CaseFile caseFile)
     {
         return
             Signal.From(The.CourtStyleGuide)

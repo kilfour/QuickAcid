@@ -21,7 +21,7 @@ public abstract class DepositionTest
 
     protected LinesReader Transcribe(CaseFile caseFile)
     {
-        var result = Clerk.Transcribe(caseFile);
+        var result = TheClerk.Transcribes(caseFile);
         var reader = LinesReader.FromText(result);
         if (IgnoreVerdictHeader)
             reader.Skip(4);

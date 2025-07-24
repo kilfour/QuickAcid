@@ -88,7 +88,6 @@ public class QuickAcidTopLevel
                 from depositAmount in "deposit amount".Input(Fuzz.Int())
                 from act in "Deposit".Act(() => account.Deposit(depositAmount))
                 select Acid.Test,
-                from irrelevant in "irrelevant".Input(Fuzz.Int())
                 from withdrawAmount in "withdraw amount".Input(Fuzz.Int())
                 from withdraw in "Withdraw".Act(() => account.Withdraw(withdrawAmount))
                 select Acid.Test
@@ -96,8 +95,7 @@ public class QuickAcidTopLevel
             from spec in "No Overdraft".Spec(() => account.Balance >= 0)
             select Acid.Test;
 
-        TheJournalist.Exposes(() => QState.Run(script, 1807541905)
-            .Options(a => a with { ReportTo = "temp", Verbose = true })
+        TheJournalist.Exposes(() => QState.Run("temp", script)
             .WithOneRun()
             .And(100.ExecutionsPerRun()));
     }
