@@ -35,13 +35,13 @@ public static class The
     private readonly static Flow<InputDeposition> inputDeposition =
         from input in Pulse.Start<InputDeposition>()
         from _ in newLine
-        from __ in Pulse.Trace($"   - Input: {input.Label} = {input.Value}")
+        from __ in Pulse.Trace($"   - Input: {input.Label.Trim()} = {input.Value}")
         select input;
 
     private readonly static Flow<ActionDeposition> actionDeposition =
         from input in Pulse.Start<ActionDeposition>()
         from _ in Pulse.When<Decorum>(a => a.Intersperse.Restricted(), separator)
-        from __ in Pulse.Trace($" {input.Label}")
+        from __ in Pulse.Trace($" {input.Label.Trim()}")
         select input;
 
     private readonly static Flow<TrackedDeposition> trackedDeposition =
@@ -77,7 +77,7 @@ public static class The
     private readonly static Flow<RunDeposition> runDeposition =
         from input in Pulse.Start<RunDeposition>()
         from _ in line
-        from __ in space.Then(Pulse.Trace(input.RunLabel))
+        from __ in space.Then(Pulse.Trace(input.Label))
         from ___ in Pulse.ToFlow(maybeExecutionDeposition, input.ExecutionDepositions).Then(newLine)
         select input;
 
@@ -92,7 +92,7 @@ public static class The
 
     private readonly static Flow<FailedSpecDeposition> failedSpecDeposition =
         from input in Pulse.Start<FailedSpecDeposition>()
-        let text = $"  ❌ Spec Failed: {input.FailedSpec}"
+        let text = $"  ❌ Spec Failed: {input.FailedSpec.Trim()}"
         let length = text.Length + 2
         from _1 in newLine.Then(DoubleLineOf(length)).Then(newLine)
         from _2 in Pulse.Trace(text).Then(newLine)
@@ -102,7 +102,7 @@ public static class The
     private readonly static Flow<ExceptionDeposition> exceptionDeposition =
         from input in Pulse.Start<ExceptionDeposition>()
         from _1 in newLine.Then(DoubleLineOf(75)).Then(newLine)
-        from _2 in Pulse.Trace($"  ❌ Exception Thrown: {input.Exception}").Then(newLine)
+        from _2 in Pulse.Trace($"  ❌ Exception Thrown: {input.Exception.Message}").Then(newLine)
         from _3 in DoubleLineOf(75)
         select input;
 

@@ -7,5 +7,8 @@ namespace QuickAcid
     {
         public static QAcidScript<T> Derived<T>(this string key, Generator<T> generator) =>
             state => QAcidResult.Some(state, generator(state.FuzzState).Value);
+
+        public static QAcidScript<T> Derived<T>(this string key, Func<T> func) =>
+            state => QAcidResult.Some(state, func());
     }
 }

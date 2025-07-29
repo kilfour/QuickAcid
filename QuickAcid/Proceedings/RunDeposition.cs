@@ -2,12 +2,12 @@ namespace QuickAcid.Proceedings;
 
 public class RunDeposition
 {
-    public string RunLabel { get; } = string.Empty;
+    public string Label { get; } = string.Empty;
     public List<ExecutionDeposition> ExecutionDepositions { get; } = [];
 
     public RunDeposition(string runLabel)
     {
-        RunLabel = runLabel;
+        Label = runLabel;
     }
 
     public RunDeposition AddExecutionDeposition(ExecutionDeposition executionDepostion)

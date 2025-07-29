@@ -5,13 +5,13 @@ namespace QuickAcid;
 
 public static partial class QAcidCombinators
 {
-	private static QAcidScript<TOutput> TryCatch<TOutput>(string key, Func<TOutput> func)
-	=> state =>
+	private static QAcidScript<TOutput> TryCatch<TOutput>(string key, Func<TOutput> func) =>
+	state =>
 		{
 			var execution = state.CurrentExecutionContext();
 			if (state.Shifter.CurrentPhase == QAcidPhase.NormalRun)
-				execution.access.ActionKeys.Add(key);
-			var needsToAct = execution.access.ActionKeys.Contains(key);
+				execution.AddActionKey(key);
+			var needsToAct = execution.ContainsActionKey(key);
 			if (needsToAct)
 			{
 				try
@@ -30,7 +30,7 @@ public static partial class QAcidCombinators
 	private static QAcidScript<TOut> TryCapture<TOut>(this string key, Func<TOut> func, Func<Exception, TOut> onError)
 		=> state =>
 	{
-		state.CurrentExecutionContext().access.ActionKeys.Add(key);
+		state.CurrentExecutionContext().AddActionKey(key);
 		try
 		{
 			var result = func();
@@ -53,16 +53,7 @@ public static partial class QAcidCombinators
 
 	public static QAcidScript<Acid> ActIf(this string key, Func<bool> predicate, Action func)
 		=> state => predicate() ? key.Act(func)(state) : QAcidResult.AcidOnly(state);
-	// public static QAcidScript<Acid> ActOnce(this string key, Func<bool> predicate, Action func)
-	// 	=> state =>
-	// 		{
-	// 			var flag = state.Memory.StoreStashed(key, () => false);
-	// 			if (flag)
-	// 			{
 
-	// 			}
-	// 			return predicate() ? key.Act(func)(state) : QAcidResult.AcidOnly(state);
-	// 		};
 	public static QAcidScript<QAcidDelayedResult> ActCarefully(this string key, Action action)
 		=> key.TryCapture(() => { action(); return new QAcidDelayedResult(); }, ex => new QAcidDelayedResult(ex));
 

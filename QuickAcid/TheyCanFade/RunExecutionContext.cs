@@ -5,7 +5,7 @@ namespace QuickAcid.TheyCanFade;
 public class RunExecutionContext
 {
     private readonly int executionNumber;
-    public Access access;
+    private Access access;
     private readonly InputTrackerPerExecution shrinkTracker;
     private readonly Dictionary<string, string> traces;
 
@@ -28,7 +28,13 @@ public class RunExecutionContext
         shrinkTracker.MarkAsTriedToShrink(key);
     }
 
+    public bool ContainsActionKey(string key) => access.ActionKeys.Contains(key);
+    public void AddActionKey(string key) => access.ActionKeys.Add(key);
+
+
+    public bool ContainsKey(string key) => access.ContainsKey(key);
     public T Get<T>(string key) => access.Get<T>(key);
+
     public DecoratedValue GetDecorated(string key) => access.GetDecorated(key);
 
     public void SetIfNotAlreadyThere<T>(string key, T value) => access.SetIfNotAlreadyThere(key, value);

@@ -6,6 +6,11 @@ public class Access
 
     private Dictionary<object, DecoratedValue> dictionary = [];
 
+    public bool ContainsKey(object key)
+    {
+        return dictionary.ContainsKey(key);
+    }
+
     public T Get<T>(object key)
     {
         return (T)dictionary[key].Value!;
@@ -46,11 +51,6 @@ public class Access
     public void SetReportingIntent<T>(object key, ReportingIntent reportingIntent)
     {
         dictionary[key].ReportingIntent = reportingIntent;
-    }
-
-    public bool ContainsKey(object key)
-    {
-        return dictionary.ContainsKey(key);
     }
 
     public Dictionary<string, DecoratedValue> GetAll()

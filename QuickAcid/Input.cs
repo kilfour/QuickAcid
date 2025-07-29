@@ -24,8 +24,8 @@ public static partial class QAcidCombinators
 			case QAcidPhase.ShrinkInputEval:
 			case QAcidPhase.ShrinkingExecutions:
 			case QAcidPhase.ShrinkingActions:
-				return execution.access.ContainsKey(key) ?
-					QAcidResult.Some(state, execution.access.Get<T>(key))
+				return execution.ContainsKey(key) ?
+					QAcidResult.Some(state, execution.Get<T>(key))
 					: QAcidResult.None<T>(state);
 
 			case QAcidPhase.ShrinkingInputs
@@ -39,10 +39,14 @@ public static partial class QAcidCombinators
 			case QAcidPhase.ShrinkingInputs
 				when !execution.AlreadyTriedToShrink(key):
 				{
-					var value = execution.Get<T>(key);
-					ShrinkStrategyPicker.Input(state, key, value, key);
-					execution.MarkAsTriedToShrink(key);
-					return QAcidResult.Some(state, value);
+					if (execution.ContainsKey(key))
+					{
+						var value = execution.Get<T>(key);
+						ShrinkStrategyPicker.Input(state, key, value, key);
+						execution.MarkAsTriedToShrink(key);
+						return QAcidResult.Some(state, value);
+					}
+					return QAcidResult.None<T>(state); // TODO Test with multiple actions, first one throws
 				}
 
 			default:

@@ -9,13 +9,13 @@
   <ItemGroup>
     <PackageReference Include="QuickFuzzr" Version="0.1.0" />
     <PackageReference Include="QuickPulse" Version="0.2.0" />
-    <PackageReference Include="QuickPulse.Show" Version="0.1.2" />
+    <!-- <PackageReference Include="QuickPulse.Show" Version="0.1.2" /> -->
   </ItemGroup>
 
   <ItemGroup>
     <!-- <ProjectReference Include="..\..\QuickFuzzr\QuickFuzzr\QuickFuzzr.csproj" /> -->
     <!-- <ProjectReference Include="..\..\QuickPulse\QuickPulse\QuickPulse.csproj" /> -->
-    <!-- <ProjectReference Include="..\..\QuickPulse.Show\QuickPulse.Show\QuickPulse.Show.csproj" /> -->
+    <ProjectReference Include="..\..\QuickPulse.Show\QuickPulse.Show\QuickPulse.Show.csproj" />
   </ItemGroup>
 
 </Project>
