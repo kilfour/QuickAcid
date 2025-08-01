@@ -3,15 +3,15 @@ using QuickPulse.Explains;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Choose;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-70"; }
-
-[Doc(Order = $"{Chapter.Order}", Caption = "Choose", Content =
+[DocFile]
+[DocContent(
 @"**Choose(...)** is one of two ways one can select different operations per execution.
 In the case of choose, you supply a number of `.Act(...)`'s and QuickAcid will randomly choose one for every execution. 
 ")]
 public class ChooseTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from _ in ""ops"".Choose(
@@ -20,7 +20,6 @@ from _ in ""ops"".Choose(
     )
 ```
 ")]
-    [Fact]
     public void Choose_usage()
     {
         // var hashset = new HashSet<string>();

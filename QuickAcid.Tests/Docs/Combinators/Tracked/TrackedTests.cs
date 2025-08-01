@@ -7,21 +7,20 @@ using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Tracked;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-20"; }
-
-[Doc(Order = $"{Chapter.Order}", Caption = "Tracked", Content =
+[DocFile]
+[DocContent(
 @"**Tracked(...)** behaves exactly like `Stashed(...)`: it defines a named value that is created once at the start of the test run and shared across all executions.
 The key difference is that `Tracked(...) `also ensures this value is **always included in the final report**, providing visibility into contextual or setup state even when it wasn't directly responsible for the failure.
 ")]
 public class TrackedTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from account in ""account"".Tracked(() => new Account())
 ```
 ")]
-    [Fact]
     public void Tracked_usage_and_stringify()
     {
         var script =
@@ -149,7 +148,8 @@ from account in ""account"".Tracked(() => new Account())
 
 
 
-    [Doc(Order = $"{Chapter.Order}-2-1", Caption = "TrackedValue", Content =
+    [Fact]
+    [DocContent(
 @"
 Similar to `StashedValue(...)`, but again, this one shows up in the report.
 
@@ -158,7 +158,6 @@ Similar to `StashedValue(...)`, but again, this one shows up in the report.
 from flag in ""flag"".TrackedValue(true)
 ```
 ")]
-    [Fact]
     public void StashedValue_usage()
     {
         var script =

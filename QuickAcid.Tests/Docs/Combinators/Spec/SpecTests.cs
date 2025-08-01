@@ -5,20 +5,19 @@ using QuickPulse.Explains;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Spec;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-65"; }
-
-[Doc(Order = $"{Chapter.Order}", Caption = "Spec", Content =
+[DocFile]
+[DocContent(
 @"**Spec(...)** ... TODO ...
 ")]
 public class SpecTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from specResult in ""spec"".Spec(() => false)
 ```
 ")]
-    [Fact]
     public void Spec_usage()
     {
         var script =

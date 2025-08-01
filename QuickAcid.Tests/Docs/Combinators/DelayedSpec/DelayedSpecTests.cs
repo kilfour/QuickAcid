@@ -4,14 +4,12 @@ using QuickPulse.Explains;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.DelayedSpec;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-67"; }
 
-[Doc(Order = $"{Chapter.Order}", Caption = "DelayedSpec", Content =
-@"**DelayedSpec(...)** ... TODO ...
-")]
+[DocFile]
 public class DelayedSpecTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from spec in ""spec"".DelayedSpec(() => false)
@@ -19,7 +17,6 @@ from trace in ""trace"".TraceIf(() => spec.Failed, spec.Label)
 let apply = spec.Apply()
 ```
 ")]
-    [Fact]
     public void DelayedSpec_usage_failed_not_applied()
     {
 

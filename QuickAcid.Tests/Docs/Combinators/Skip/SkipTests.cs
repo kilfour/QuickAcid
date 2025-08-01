@@ -3,20 +3,19 @@ using QuickPulse.Explains;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Skip;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-3000"; }
-
-[Doc(Order = $"{Chapter.Order}", Caption = "Skip", Content =
+[DocFile]
+[DocContent(
 @"**Skip(...)** extension method for `QAcidScript<T>`. Useful for temporary disabling `Spec`'s.
 ")]
 public class SkipTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from __ in ""spec"".Spec(() => false).Skip()
 ```
 ")]
-    [Fact]
     public void Skip_usage()
     {
         var counter = 0;
@@ -29,7 +28,8 @@ from __ in ""spec"".Spec(() => false).Skip()
         Assert.Equal(2, counter);
     }
 
-    [Doc(Order = $"{Chapter.Order}-2", Content =
+    [Fact]
+    [DocContent(
 @"**SkipIf(...)** is the same as `Skip(...)` but only skips conditionally.  
 
 **Usage example:**
@@ -37,7 +37,6 @@ from __ in ""spec"".Spec(() => false).Skip()
 from __ in ""spec"".Spec(() => false).SkipIf(() => true)
 ```
 ")]
-    [Fact]
     public void SkipIf_usage()
     {
         var counter = 0;

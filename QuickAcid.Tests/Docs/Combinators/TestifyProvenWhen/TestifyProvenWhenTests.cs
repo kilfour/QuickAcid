@@ -5,10 +5,9 @@ using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.TestifyProvenWhen;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-200"; }
 
-
-[Doc(Order = $"{Chapter.Order}", Caption = "TestifyProvenWhen", Content =
+[DocFile]
+[DocContent(
 @"**TestifyProvenWhen(...)**
 Ends the test run early once a specified condition is satisfied.
 This combinator is not a property specification itself,
@@ -16,13 +15,13 @@ but a control structure that governs when a test run is considered 'proven' and 
 ")]
 public class TestifyProvenWhenTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
 ```
 ")]
-    [Fact]
     public void TestifyProvenWhen_usage()
     {
         var script =
@@ -34,11 +33,11 @@ from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
         QState.Run(script).WithOneRunAndOneExecution();
     }
 
-    [Doc(Order = $"{Chapter.Order}-2", Content =
+    [Fact]
+    [DocContent(
 @"
 This would end the test run early once `container.Value` becomes `true`.
 ")]
-    [Fact]
     public void TestifyProvenWhen_breaks_run_early()
     {
         var counter = 0;
@@ -50,11 +49,11 @@ This would end the test run early once `container.Value` becomes `true`.
         Assert.Equal(3, counter);
     }
 
-    [Doc(Order = $"{Chapter.Order}-3", Content =
-@"**Note:** This does not assert a property directly — use `Assay(...)` or `Analyze(...)` for that.
+    [Fact]
+    [DocContent(
+    @"**Note:** This does not assert a property directly — use `Assay(...)` or `Analyze(...)` for that.
 `TestifyProvenWhen(...)` is about controlling *how long* a test runs based on dynamic conditions observed during execution.
 ")]
-    [Fact]
     public void TestifyProvenWhen_scaffold()
     {
         var script =

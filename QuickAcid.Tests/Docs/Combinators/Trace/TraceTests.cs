@@ -6,20 +6,19 @@ using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Trace;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-2000"; }
-
-[Doc(Order = $"{Chapter.Order}", Caption = "Trace", Content =
+[DocFile]
+[DocContent(
 @"**Trace(...)** Used to add information from the script to the QuickAcid report.
 ")]
 public class TraceTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from _ in ""Info Key"".Trace(() => ""Extra words"")
 ```
 ")]
-    [Fact]
     public void Trace_usage()
     {
         var script =
@@ -80,7 +79,8 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
         Assert.Equal("3", article.Execution(1).Trace(1).Read().Value);
     }
 
-    [Doc(Order = $"{Chapter.Order}-2", Content =
+    [Fact]
+    [DocContent(
 @"**TraceIf(...)** is the same as `Trace(...)` but only injects information in the report conditionally.  
 
 **Usage example:**
@@ -88,7 +88,6 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
 from _ in ""Info Key"".TraceIf(() => number == 42, () => ""Extra words"")
 ```
 ")]
-    [Fact]
     public void TraceIf_usage()
     {
         var script =

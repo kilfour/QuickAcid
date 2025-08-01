@@ -7,6 +7,6 @@ public class CreateDoc
 	[Fact(Skip = "Not Ready")]
 	public void Go()
 	{
-		new Document().ToFile("reference.md", typeof(CreateDoc).Assembly);
+		//new Document().ToFile("reference.md", typeof(CreateDoc).Assembly);
 	}
 }

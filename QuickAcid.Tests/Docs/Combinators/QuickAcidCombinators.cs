@@ -2,7 +2,8 @@ using QuickPulse.Explains;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators;
 
-[Doc(Order = Order, Caption = "QuickAcid Combinators", Content =
+[DocFile]
+[DocContent(
 @"Combinators are the heart of QuickAcid's LINQ-based property testing DSL.  
 Each one introduces a **step** in the test pipeline — a value, an action, a condition, or a check — and together they form the skeleton of your test logic.
 
@@ -15,7 +16,4 @@ to **express your intent declaratively** and let the QuickAcid engine take care 
 The sections below describe these core building blocks.
 
 ")]
-public class CombinatorChapter
-{
-    public const string Order = "1-30";
-}
+public class QuickAcidCombinators { }

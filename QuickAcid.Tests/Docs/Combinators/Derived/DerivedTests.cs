@@ -6,9 +6,9 @@ using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Derived;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-100"; }
 
-[Doc(Order = $"{Chapter.Order}", Caption = "Derived", Content =
+[DocFile]
+[DocContent(
 @"**Derived(...)** introduces a value that is dynamically generated during each execution, 
 but is **not** shrinkable or tracked in the final report.  
 Use this when you need to **react to mutable test state**, 
@@ -20,14 +20,14 @@ primarily intended for state-sensitive generation where traditional shrinking wo
 ")]
 public class DerivedTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from container in ""container"".Stashed(() => new Container<List<int>>([]))
 from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
 ```
 ")]
-    [Fact]
     public void Derived_usage()
     {
         var script =

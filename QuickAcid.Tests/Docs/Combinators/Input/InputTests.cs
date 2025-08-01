@@ -5,9 +5,9 @@ using QuickAcid.Tests._Tools.ThePress;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Input;
 
-public static class Chapter { public const string Order = CombinatorChapter.Order + "-50"; }
 
-[Doc(Order = $"{Chapter.Order}", Caption = "Input", Content =
+[DocFile]
+[DocContent(
 @"**Input(...)** introduces a fuzzed value that will be regenerated for every execution and shrunk when a failure occurs.  
 It represents the core mechanism for exploring input space in property-based tests.  
 Use it when you want a variable value that's subject to shrinking and included in the final report upon failure.
@@ -16,10 +16,10 @@ This is the most common kind of test input — think of it as the default for fu
 ]
 public class InputTests
 {
-    [Doc(Order = $"{Chapter.Order}-1", Content =
+    [Fact]
+    [DocContent(
 @"**Note:** If an input is not involved in a failing execution, it will not appear in the report.
 ")]
-    [Fact]
     public void UnusedInputIsNotReported()
     {
         var script =
@@ -32,13 +32,13 @@ public class InputTests
         Assert.Equal(0, article.Total().Inputs());
     }
 
-    [Doc(Order = $"{Chapter.Order}-2", Content =
+    [Fact]
+    [DocContent(
 @"**Usage example:**
 ```csharp
 from input in ""input"".Input(() => Fuzz.Int())
 ```
 ")]
-    [Fact]
     public void Input_usage()
     {
         var script =
