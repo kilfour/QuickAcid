@@ -1,4 +1,6 @@
 # QuickAcid
+> Drop it in acid. Look for gold. Like alchemy, but reproducible.
+
 
 QuickAcid is a property-based testing library for C# that combines:
 

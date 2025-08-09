@@ -4,18 +4,31 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>0.0.1</Version>
+    <Authors>Kilfour</Authors>
+    <PackageId>QuickAcid</PackageId>
+    <Description>Drop it in acid. Look for gold. Like alchemy, but reproducible.</Description>
+    <RepositoryUrl>https://github.com/kilfour/QuickAcid</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>LINQ;fuzzing;testing;diagnostics;PBT</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="QuickFuzzr" Version="0.1.0" />
+    <None Include="..\README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="QuickFuzzr" Version="0.1.1" />
     <PackageReference Include="QuickPulse" Version="0.2.0" />
-    <!-- <PackageReference Include="QuickPulse.Show" Version="0.1.2" /> -->
+    <PackageReference Include="QuickPulse.Show" Version="0.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- <ProjectReference Include="..\..\QuickFuzzr\QuickFuzzr\QuickFuzzr.csproj" /> -->
     <!-- <ProjectReference Include="..\..\QuickPulse\QuickPulse\QuickPulse.csproj" /> -->
-    <ProjectReference Include="..\..\QuickPulse.Show\QuickPulse.Show\QuickPulse.Show.csproj" />
+    <!-- <ProjectReference Include="..\..\QuickPulse.Show\QuickPulse.Show\QuickPulse.Show.csproj" /> -->
   </ItemGroup>
 
 </Project>

@@ -102,7 +102,7 @@ public static class The
     private readonly static Flow<ExceptionDeposition> exceptionDeposition =
         from input in Pulse.Start<ExceptionDeposition>()
         from _1 in newLine.Then(DoubleLineOf(75)).Then(newLine)
-        from _2 in Pulse.Trace($"  ❌ Exception Thrown: {input.Exception.Message}").Then(newLine)
+        from _2 in Pulse.Trace($"  ❌ Exception Thrown: {input.Exception}").Then(newLine)
         from _3 in DoubleLineOf(75)
         select input;
 
