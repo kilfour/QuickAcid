@@ -137,18 +137,17 @@ public static class The
         from _5 in Pulse.ToFlow(failureDeposition, verdict.FailureDeposition)
         select verdict;
 
+    private readonly static Flow<IEnumerable<PassedSpecDeposition>> passedSpecDepositions =
+        from input in Pulse.Start<IEnumerable<PassedSpecDeposition>>()
+        from _ in Pulse.Trace($" Passed Specs")
+        from __ in Pulse.ToFlow(a => Pulse.Trace($"{Environment.NewLine} - {a.Label}: {a.TimesPassed}x"), input)
+        from ___ in Pulse.When(input.Any(), newLine.Then(space).Then(LineOf(50)))
+        select input;
+
     private readonly static Flow<string> extraDepositionMessage =
         from input in Pulse.Start<string>()
         from _ in newLine
         from __ in Pulse.Trace($"  {input}")
-        select input;
-
-    private readonly static Flow<ExtraDeposition> extraDeposition =
-        from input in Pulse.Start<ExtraDeposition>()
-        from _ in Pulse.Trace($" {input.Label}")
-        from __ in Pulse.ToFlow(extraDepositionMessage, input.Messages)
-        from ___ in newLine
-        from ____ in line
         select input;
 
     public readonly static Flow<CaseFile> CourtStyleGuide =
@@ -156,8 +155,8 @@ public static class The
         from _ in Pulse.Gather(new Decorum())
         from runDeposition in Pulse.ToFlow(runDeposition, input.RunDepositions)
         from verdict in Pulse.ToFlowIf(input.Verdict != null, verdict, () => input.Verdict)
-        let needsBreak = input.Verdict != null && input.ExtraDepositions.Count > 0
+        let needsBreak = input.Verdict != null && input.PassedSpecDepositions.Count > 0
         from nl in Pulse.TraceIf(needsBreak, () => Environment.NewLine)
-        from extra in Pulse.ToFlow(extraDeposition, input.ExtraDepositions)
+        from passedSpec in Pulse.ToFlowIf(input.PassedSpecDepositions.Count > 0, passedSpecDepositions, () => input.PassedSpecDepositions)
         select input;
 }

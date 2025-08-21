@@ -24,10 +24,10 @@ public class CaseFile
         return this;
     }
 
-    public List<ExtraDeposition> ExtraDepositions { get; } = [];
-    public CaseFile AddExtraDeposition(ExtraDeposition extraDeposition)
+    public List<PassedSpecDeposition> PassedSpecDepositions { get; } = [];
+    public CaseFile AddPassedSpecDeposition(PassedSpecDeposition passedSpecDeposition)
     {
-        ExtraDepositions.Add(extraDeposition);
+        PassedSpecDepositions.Add(passedSpecDeposition);
         return this;
     }
 };

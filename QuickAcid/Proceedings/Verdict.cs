@@ -11,8 +11,6 @@ public class Verdict
 
     public FailureDeposition FailureDeposition { get; }
 
-    public List<ExecutionDeposition> PassedSpecDepositions { get; } = [];
-
     public List<ExecutionDeposition> ExecutionDepositions { get; } = [];
 
     public TestMethodInfoDeposition? TestMethodInfoDeposition { get; private set; }

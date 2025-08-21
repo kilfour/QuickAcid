@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using QuickAcid.Proceedings;
 
 namespace QuickAcid.Tests._Tools.ThePress;
@@ -37,10 +38,18 @@ public class Article
         return null!;
     }
 
+    [StackTraceHidden]
     public ExecutionArticle Execution(int number)
     {
         return new ExecutionArticle(caseFile.Verdict.ExecutionDepositions[number - 1]);
     }
+
+    [StackTraceHidden]
+    public PassedSpecArticle PassedSpec(int number)
+    {
+        return new PassedSpecArticle(caseFile.PassedSpecDepositions[number - 1]);
+    }
+
 
     public WordCount Total()
     {

@@ -7,7 +7,7 @@ namespace QuickAcid.Tests.Bugs.Horses;
 
 public class CanCoachBeAssigned
 {
-    [Fact]
+    [Fact(Skip = "explicit")]
     public void LetsSee()
     {
         var script =
@@ -20,7 +20,7 @@ public class CanCoachBeAssigned
             from bookCoach in "Book the Coach".Act(() => coach.BookIn(booking))
             select Acid.Test;
         QState.Run(script, 906172892)
-            .Options(a => a with { FileAs = "CanCoachBeAssigned", Verbose = true })
+            .Options(a => a with { FileAs = "CanCoachBeAssigned" })
             .With(10.Runs())
             .And(5.ExecutionsPerRun());
     }

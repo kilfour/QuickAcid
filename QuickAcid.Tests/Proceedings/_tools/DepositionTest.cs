@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
 using QuickPulse.Explains.Text;
@@ -6,8 +7,8 @@ namespace QuickAcid.Tests.Proceedings;
 
 public abstract class DepositionTest
 {
-    protected bool IgnoreVerdictHeader { get; init; } = true;
-    protected bool IgnoreFailingSpec { get; init; } = true;
+    protected virtual bool IgnoreVerdictHeader { get; init; } = true;
+    protected virtual bool IgnoreFailingSpec { get; init; } = true;
     protected Dossier Dossier { get; } =
         new Dossier(
                 FailingSpec: "Some Invariant",
@@ -29,6 +30,7 @@ public abstract class DepositionTest
 
     }
 
+    [StackTraceHidden]
     protected void EndOfContent(LinesReader reader)
     {
         if (IgnoreFailingSpec)

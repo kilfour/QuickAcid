@@ -77,6 +77,7 @@ public class QRunner
                    .Pulse(TheClerk.Transcribes(caseFile));
         }
     }
+
     private bool Replay()
     {
         if (new SeedVault(config.Vault!, script).AllSeeds.Count == 0)
@@ -117,20 +118,19 @@ public class QRunner
     {
         if (passedSpecCount.Count > 0)
         {
-            var extraDeposition = new ExtraDeposition("Passed Specs");
-            passedSpecCount.ForEach(kv => extraDeposition.AddMessage($"- {kv.Key}: {kv.Value}x"));
-            caseFile.AddExtraDeposition(extraDeposition);
+            passedSpecCount.ForEach(kv =>
+                caseFile.AddPassedSpecDeposition(new PassedSpecDeposition(kv.Key, kv.Value)));
         }
     }
 
     private void AddVaultMessagesToCaseFile(CaseFile caseFile)
     {
-        if (vaultMessages.Count > 0)
-        {
-            var extraDeposition = new ExtraDeposition("Vault Info");
-            vaultMessages.ForEach(a => extraDeposition.AddMessage(a));
-            caseFile.AddExtraDeposition(extraDeposition);
-        }
+        // if (vaultMessages.Count > 0)
+        // {
+        //     var extraDeposition = new ExtraDeposition("Vault Info");
+        //     vaultMessages.ForEach(a => extraDeposition.AddMessage(a));
+        //     caseFile.AddExtraDeposition(extraDeposition);
+        // }
     }
 
     [StackTraceHidden]
