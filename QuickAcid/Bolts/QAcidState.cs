@@ -166,11 +166,12 @@ public sealed class QAcidState
         {
             caseFile.AddRunDeposition(run);
         }
-        return caseFile;
-        // report.ShrinkTraces =
+        // caseFile.ShrinkTraces =
         //     Memory.AllAccesses()
         //         .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
         //         .ToList();
+        return caseFile;
+
     }
 
     private CaseFile CompileTheCaseFile(bool forAssayer = false)

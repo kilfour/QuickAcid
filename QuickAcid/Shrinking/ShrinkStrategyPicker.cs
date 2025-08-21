@@ -4,6 +4,7 @@ using QuickAcid.Shrinking.Collections;
 using QuickAcid.Shrinking.Custom;
 using QuickAcid.Shrinking.Objects;
 using QuickAcid.Shrinking.Primitives;
+using QuickAcid.TheyCanFade;
 
 namespace QuickAcid.Shrinking;
 
@@ -41,5 +42,16 @@ public class ShrinkStrategyPicker
             new CompositeObjectShrinkStrategy().Shrink(state, key, value, fullKey);
             return;
         }
+
+        state.CurrentExecutionContext().Trace(key, ShrinkKind.Unknown, new ShrinkTrace
+        {
+            ExecutionId = -1,
+            Key = fullKey,
+            Name = fullKey.Split(".").Last(),
+            Original = value,
+            Result = null,
+            Intent = ShrinkIntent.Keep,
+            Strategy = "NoneFound"
+        });
     }
 }

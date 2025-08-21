@@ -4,7 +4,7 @@ using QuickPulse.Show;
 
 namespace QuickAcid.TheyCanFade;
 
-public enum ShrinkKind { PrimitiveKind, ObjectKind, EnumerableKind, KeepSameKind }
+public enum ShrinkKind { Unknown, PrimitiveKind, ObjectKind, EnumerableKind, KeepSameKind }
 
 public class ShrinkTraceRecord
 {
@@ -89,7 +89,10 @@ public class ShrinkTraceRecord
                 return $"{{ {string.Join(", ", shrinkValues)} }}";
             return "";
         }
-
+        if (ShrinkKind == ShrinkKind.Unknown)
+        {
+            return ShrinkTraceToString(GetFinalTrace(), irrelevantString);
+        }
         return "";
     }
 }
