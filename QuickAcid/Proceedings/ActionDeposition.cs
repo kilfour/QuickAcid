@@ -9,4 +9,4 @@ public record ActionDeposition
     {
         Label = actionLabel;
     }
-};
+}

@@ -14,7 +14,7 @@ public class QRunner
     private readonly QRunnerConfig config;
     private readonly RunCount runCount;
     private readonly int? seed;
-    private readonly List<string> vaultMessages = [];
+    //private readonly List<string> vaultMessages = [];
 
     public Dictionary<string, int> passedSpecCount { get; } = [];
 
@@ -32,15 +32,16 @@ public class QRunner
     [StackTraceHidden]
     public CaseFile And(ExecutionCount executionCount)
     {
+        var vault = config.Vault == null ? new EmptyVault() : new SeedVault(config.Vault!, script);
         CaseFile caseFile = null!;
         if (config.ReplayMode)
         {
-            if (Replay())
-                return FileIt(CaseFile.Empty()); // need to get the verdicts ?
+            if (vault.Replay())
+                return FileIt(CaseFile.Empty());
         }
         if (config.Vault != null)
         {
-            CheckTheVault();
+            vault.Check();
         }
         for (int i = 0; i < runCount.NumberOfRuns; i++)
         {
@@ -53,7 +54,8 @@ public class QRunner
             state.GetPassedSpecCount(passedSpecCount);
             if (caseFile.HasVerdict())
             {
-                AddToVault(state.Seed, executionCount.NumberOfExecutions);
+                vault.AddSeed(state.Seed, executionCount.NumberOfExecutions);
+                //vaultMessages.Add($"Seed {seed}: added to vault.");
                 throw new FalsifiableException(FileIt(caseFile));
             }
         }
@@ -78,49 +80,10 @@ public class QRunner
         }
     }
 
-    private bool Replay()
-    {
-        if (new SeedVault(config.Vault!, script).AllSeeds.Count == 0)
-            return false;
-        CheckTheVault();
-        return true;
-    }
-
-    private void CheckTheVault()
-    {
-        vaultMessages.Add("Checking the Vault");
-        var vault = new SeedVault(config.Vault!, script);
-        foreach (var vaultEntry in vault.AllSeeds)
-        {
-            var state = new QAcidState(script, vaultEntry.Seed);
-            var caseFile = state.Run(vaultEntry.ExecutionsPerRun);
-            if (caseFile.HasVerdict())
-            {
-                vaultMessages.Add($"Seed {vaultEntry.Seed}: still fails.");
-            }
-            else
-            {
-                vault.Remove(vaultEntry);
-                vaultMessages.Add($"Seed {vaultEntry.Seed} now passes => removed.");
-            }
-        }
-    }
-
-    private void AddToVault(int seed, int numberOfExecutions)
-    {
-        if (config.Vault == null) return;
-        var vault = new SeedVault(config.Vault!, script);
-        vault.Add(new(seed, numberOfExecutions));
-        vaultMessages.Add($"Seed {seed}: added to vault.");
-    }
-
     private void AddPassedSpecsToCaseFile(CaseFile caseFile)
     {
-        if (passedSpecCount.Count > 0)
-        {
-            passedSpecCount.ForEach(kv =>
-                caseFile.AddPassedSpecDeposition(new PassedSpecDeposition(kv.Key, kv.Value)));
-        }
+        passedSpecCount.ForEach(kv =>
+            caseFile.AddPassedSpecDeposition(new PassedSpecDeposition(kv.Key, kv.Value)));
     }
 
     private void AddVaultMessagesToCaseFile(CaseFile caseFile)

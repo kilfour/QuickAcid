@@ -1,17 +1,24 @@
 using QuickAcid;
+using QuickAcid.Bolts;
 using QuickPulse.Instruments;
 
 namespace QuickAcid.RunningThings;
 
 public record VaultEntry(int Seed, int ExecutionsPerRun);
 
-public class SeedVault
+
+public class EmptyVault
+{
+    public virtual void Check() { }
+    public virtual bool Replay() { return false; }
+    public virtual void AddSeed(int seed, int numberOfExecutions) { }
+}
+
+public class SeedVault : EmptyVault
 {
     private readonly string path;
     private readonly HashSet<VaultEntry> entries;
     private readonly QAcidScript<Acid> script;
-
-    public IReadOnlyCollection<VaultEntry> AllSeeds => entries;
 
     public SeedVault(string name, QAcidScript<Acid> script)
     {
@@ -22,6 +29,42 @@ public class SeedVault
         this.script = script;
     }
 
+    public override void Check()
+    {
+        foreach (var vaultEntry in entries)
+        {
+            var state = new QAcidState(script, vaultEntry.Seed);
+            var caseFile = state.Run(vaultEntry.ExecutionsPerRun);
+            if (caseFile.HasVerdict())
+            {
+                // vaultMessages.Add($"Seed {vaultEntry.Seed}: still fails.");
+            }
+            else
+            {
+                Remove(vaultEntry);
+                // vaultMessages.Add($"Seed {vaultEntry.Seed} now passes => removed.");
+            }
+        }
+    }
+
+    public override bool Replay()
+    {
+        if (entries.Count == 0)
+            return false;
+        Check();
+        return true;
+    }
+
+    public override void AddSeed(int seed, int numberOfExecutions)
+    {
+        Add(new(seed, numberOfExecutions));
+    }
+
+    private void Add(VaultEntry vaultEntry)
+    {
+        if (entries.Add(vaultEntry))
+            Save();
+    }
     private HashSet<VaultEntry> GetVaultEntries()
     {
         return File.Exists(path) ? ReadEntriesFromFile() : [];
@@ -45,20 +88,7 @@ public class SeedVault
             : null!;
     }
 
-    public void AddToVault(int seed, int numberOfExecutions)
-    {
-        Add(new(seed, numberOfExecutions));
-    }
-
-    public bool Contains(VaultEntry vaultEntry) => entries.Contains(vaultEntry);
-
-    public void Add(VaultEntry vaultEntry)
-    {
-        if (entries.Add(vaultEntry))
-            Save();
-    }
-
-    public void Remove(VaultEntry vaultEntry)
+    private void Remove(VaultEntry vaultEntry)
     {
         if (entries.Remove(vaultEntry))
             SaveOrDelete();
