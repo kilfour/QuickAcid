@@ -24,7 +24,9 @@ public class PrimitiveShrinkStrategy
             { typeof(char),     new object[] { '\0', 'a', 'Z', ' ', '\n', '\uFFFF' } },
             { typeof(string),   new object[] { null!, "", "a", "the quick brown fox", new string('-', 256), new string('-', 1024) } },
             { typeof(DateTime), new object[] { DateTime.MinValue, DateTime.MaxValue, DateTime.UnixEpoch, DateTime.UtcNow, DateTime.Today } },
+            { typeof(DateOnly), new object[] { DateOnly.FromDateTime(DateTime.MinValue), DateOnly.FromDateTime(DateTime.MaxValue), DateOnly.FromDateTime(DateTime.UnixEpoch), DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.Today) } },
             { typeof(DateTimeOffset), new object[] { DateTimeOffset.MinValue, DateTimeOffset.MaxValue, DateTimeOffset.UtcNow, DateTimeOffset.Now } },
+            { typeof(TimeOnly), new object[] { new TimeOnly(0), new TimeOnly(0, 1), new TimeOnly(10, 2), new TimeOnly(20, 3), new TimeOnly(23, 4), new TimeOnly(23, 59, 59, 999) } },
             { typeof(TimeSpan), new object[] { TimeSpan.Zero, TimeSpan.FromSeconds(1), TimeSpan.FromDays(1), TimeSpan.MinValue, TimeSpan.MaxValue } },
             { typeof(Guid),     new object[] { Guid.Empty, Guid.NewGuid() } },
             { typeof(Uri),      new object[] { null!, new Uri("http://localhost"), new Uri("https://example.com/resource?query=1") } }
