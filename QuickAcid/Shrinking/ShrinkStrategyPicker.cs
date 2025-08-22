@@ -31,6 +31,12 @@ public class ShrinkStrategyPicker
             return;
         }
 
+        if (actualType.IsEnum)
+        {
+            new EnumShrinkStrategy().Shrink(state, key, value, fullKey);
+            return;
+        }
+
         if (typeof(IEnumerable).IsAssignableFrom(actualType))
         {
             new EnumerableShrinkStrategy().Shrink(state, key, value, fullKey);

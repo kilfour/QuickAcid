@@ -14,7 +14,6 @@ public class QRunner
     private readonly QRunnerConfig config;
     private readonly RunCount runCount;
     private readonly int? seed;
-    //private readonly List<string> vaultMessages = [];
 
     public Dictionary<string, int> passedSpecCount { get; } = [];
 
@@ -65,7 +64,7 @@ public class QRunner
     private CaseFile FileIt(CaseFile caseFile)
     {
         AddPassedSpecsToCaseFile(caseFile);
-        AddVaultMessagesToCaseFile(caseFile);
+        //AddVaultMessagesToCaseFile(caseFile);
         WriteCaseFile(caseFile);
         return caseFile;
     }
@@ -84,16 +83,6 @@ public class QRunner
     {
         passedSpecCount.ForEach(kv =>
             caseFile.AddPassedSpecDeposition(new PassedSpecDeposition(kv.Key, kv.Value)));
-    }
-
-    private void AddVaultMessagesToCaseFile(CaseFile caseFile)
-    {
-        // if (vaultMessages.Count > 0)
-        // {
-        //     var extraDeposition = new ExtraDeposition("Vault Info");
-        //     vaultMessages.ForEach(a => extraDeposition.AddMessage(a));
-        //     caseFile.AddExtraDeposition(extraDeposition);
-        // }
     }
 
     [StackTraceHidden]
