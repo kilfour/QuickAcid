@@ -1,4 +1,5 @@
 using QuickAcid;
+using QuickAcid.Shrinking.Custom;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using WibblyWobbly;
@@ -7,7 +8,16 @@ namespace QuickAcid.Tests.Bugs.Horses;
 
 public class CanCoachBeAssigned
 {
-    [Fact(Skip = "explicit")]
+
+    public class TimeSlotShrinker : IShrinker<TimeSlot>
+    {
+        public IEnumerable<TimeSlot> Shrink(TimeSlot value)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [Fact]
     public void LetsSee()
     {
         var script =
