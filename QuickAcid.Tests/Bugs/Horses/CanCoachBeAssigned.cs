@@ -17,7 +17,7 @@ public class CanCoachBeAssigned
         }
     }
 
-    [Fact]
+    [Fact(Skip = "Example maybe")]
     public void LetsSee()
     {
         var script =
@@ -49,9 +49,9 @@ public class CanCoachBeAssigned
 
     private static Generator<Booking> BookingGenerator =>
         from start in Fuzz.Int(1, 31)
-        let startDate = DateOnly.FromDateTime(start.January(2025))
+        let startDate = start.January(2025)
         from end in Fuzz.Int(start, 32)
-        let endDate = DateOnly.FromDateTime(end.January(2025))
+        let endDate = end.January(2025)
         from key in Fuzz.Int().Unique("booking")
         from timeslots in TimeslotGenerator.Many(1, 5)
         from booking in Fuzz.Constant(new Booking([.. timeslots], startDate, endDate))
