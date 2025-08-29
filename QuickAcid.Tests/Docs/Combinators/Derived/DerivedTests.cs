@@ -9,14 +9,10 @@ namespace QuickAcid.TestsDeposition.Docs.Combinators.Derived;
 
 [DocFile]
 [DocContent(
-@"**Derived(...)** introduces a value that is dynamically generated during each execution, 
+@"**Script.Execute(...)** introduces a value that is dynamically generated during each execution, 
 but is **not** shrinkable or tracked in the final report.  
 Use this when you need to **react to mutable test state**, 
 for example, selecting an input based on a previously `Stashed(...)` value.  
-
-This is a niche combinator, 
-primarily intended for state-sensitive generation where traditional shrinking would be inappropriate or misleading.
-
 ")]
 public class DerivedTests
 {
@@ -32,7 +28,7 @@ from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Va
     {
         var script =
             from container in "container".Stashed(() => new Container<List<int>>([]))
-            from input in "input".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
+            from input in Script.Execute(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
             from act in "act".Act(() => container.Value.Add(42))
             from spec in "fail".Spec(() => input != 42)
             select Acid.Test;
@@ -45,7 +41,7 @@ from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Va
     {
         var script =
             from container in "container".Stashed(() => new Container<List<int>>(new List<int>()))
-            from input in "input".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
+            from input in Script.Execute(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
             select Acid.Test;
         var article = TheJournalist.Unearths(QState.Run(script).WithOneRunAndOneExecution());
         Assert.False(article.VerdictReached());

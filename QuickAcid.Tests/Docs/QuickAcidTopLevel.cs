@@ -82,7 +82,7 @@ public class QuickAcidTopLevel
     {
         var script =
             from account in "Account".Tracked(() => new Account())
-            from _ in "ops".Choose(
+            from _ in Script.Choose(
                 from depositAmount in "deposit amount".Input(Fuzz.Int())
                 from act in "Deposit".Act(() => account.Deposit(depositAmount))
                 select Acid.Test,

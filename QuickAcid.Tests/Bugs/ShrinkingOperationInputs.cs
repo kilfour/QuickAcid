@@ -11,7 +11,7 @@ public class ShrinkingOperationInputs
     {
         var script =
             from collector in "container".Stashed(() => new TheCollector<int>())
-            from ops in "ops".Choose(
+            from ops in Script.Choose(
                 from i1 in "i1".Input(Fuzz.Constant(42))
                 from a1 in "act1".Act(() => collector.Flow(i1))
                 select Acid.Test,
@@ -43,7 +43,7 @@ public class ShrinkingOperationInputs
 
         var script =
             from collector in "container".Stashed(() => new TheCollector<int>())
-            from ops in "ops".Choose(
+            from ops in Script.Choose(
                 from i1 in "i1".Input(Fuzz.Constant(42))
                 from a1 in "act1".Act(() => collector.Flow(i1))
                 select Acid.Test,
@@ -78,7 +78,7 @@ public class ShrinkingOperationInputs
     {
         var script =
             from collector in "container".Stashed(() => new TheCollector<int>())
-            from ops in "ops".Choose(
+            from ops in Script.Choose(
                 from i1 in "i1".Input(Fuzz.Constant(42))
                 from a1 in "act1".Act(() => collector.Flow(i1))
                 select Acid.Test,

@@ -10,7 +10,7 @@ public class ExecutionShrinking
     {
         var script =
             from collector in "collector".Stashed(() => new TheCollector<int>())
-            from ops in "ops".Choose(
+            from ops in Script.Choose(
                 "act1".Act(() => collector.Flow(1)),
                 "act2".Act(() => collector.Flow(2)),
                 "act3".Act(() => collector.Flow(3))
