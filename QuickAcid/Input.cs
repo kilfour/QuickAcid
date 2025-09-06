@@ -16,7 +16,7 @@ public static partial class QAcidCombinators
 			};
 	}
 
-	private static QAcidResult<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator)
+	private static Vessel<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator)
 	{
 		var execution = state.CurrentExecutionContext();
 		switch (state.Shifter.CurrentPhase)
@@ -25,15 +25,15 @@ public static partial class QAcidCombinators
 			case QAcidPhase.ShrinkingExecutions:
 			case QAcidPhase.ShrinkingActions:
 				return execution.ContainsKey(key) ?
-					QAcidResult.Some(state, execution.Get<T>(key))
-					: QAcidResult.None<T>(state);
+					Vessel.Some(state, execution.Get<T>(key))
+					: Vessel.None<T>(state);
 
 			case QAcidPhase.ShrinkingInputs
 				when execution.AlreadyTriedToShrink(key):
 				{
 					var value = generator(state.FuzzState).Value;
 					execution.SetIfNotAlreadyThere(key, value);
-					return QAcidResult.Some(state, value);
+					return Vessel.Some(state, value);
 				}
 
 			case QAcidPhase.ShrinkingInputs
@@ -44,16 +44,16 @@ public static partial class QAcidCombinators
 						var value = execution.Get<T>(key);
 						ShrinkStrategyPicker.Input(state, key, value, key);
 						execution.MarkAsTriedToShrink(key);
-						return QAcidResult.Some(state, value);
+						return Vessel.Some(state, value);
 					}
-					return QAcidResult.None<T>(state); // TODO Test with multiple actions, first one throws
+					return Vessel.None<T>(state); // TODO Test with multiple actions, first one throws
 				}
 
 			default:
 				{
 					var value = generator(state.FuzzState).Value;
 					execution.SetIfNotAlreadyThere(key, value);
-					return QAcidResult.Some(state, value);
+					return Vessel.Some(state, value);
 				}
 		}
 	}

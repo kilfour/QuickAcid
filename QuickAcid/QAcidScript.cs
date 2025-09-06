@@ -2,6 +2,6 @@
 
 namespace QuickAcid;
 
-public delegate QAcidResult<TValue> QAcidScript<TValue>(QAcidState state);
+public delegate Vessel<TValue> QAcidScript<TValue>(QAcidState state);
 
 

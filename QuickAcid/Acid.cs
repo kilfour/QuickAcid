@@ -12,5 +12,5 @@ public readonly struct Acid : IComparable<Acid>, IEquatable<Acid>
     public int CompareTo(Acid other) => 0;
     public override int GetHashCode() => 0;
 
-    public static QAcidScript<Acid> Script = QAcidResult.AcidOnly;
+    public static QAcidScript<Acid> Script = Vessel.AcidOnly;
 }

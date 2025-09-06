@@ -8,12 +8,12 @@ public static partial class QAcidCombinators
 		state =>
 			{
 				if (ShouldSkipSpec(key, state))
-					return QAcidResult.AcidOnly(state);
+					return Vessel.AcidOnly(state);
 				if (condition())
 					state.SpecPassed(key);
 				else
 					state.Shifter.CurrentContext.MarkFailure(key);
-				return QAcidResult.AcidOnly(state);
+				return Vessel.AcidOnly(state);
 			};
 
 
@@ -21,19 +21,19 @@ public static partial class QAcidCombinators
 		=> InnerSpec(key, condition);
 
 	public static QAcidScript<Acid> SpecIf(this string key, Func<bool> predicate, Func<bool> condition)
-		=> state => predicate() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
+		=> state => predicate() ? key.InnerSpec(condition)(state) : Vessel.AcidOnly(state);
 
 	private static bool ShouldSkipSpec(string key, QAcidState state)
 		=> state.Shifter.OriginalRun.FailingSpec is { } failedKey && failedKey != key;
 
 	public static QAcidScript<Acid> Analyze(this string key, Func<bool> condition)
-		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition)(state) : QAcidResult.AcidOnly(state);
+		=> state => state.IsThisTheRunsLastExecution() ? key.InnerSpec(condition)(state) : Vessel.AcidOnly(state);
 
 	public static QAcidScript<Acid> Assay(this string key, Func<bool> condition)
 		=> state =>
 			{
 				if (!state.IsThisTheRunsLastExecution())
-					return QAcidResult.AcidOnly(state);
+					return Vessel.AcidOnly(state);
 				bool passed = condition();
 				if (!passed)
 				{
@@ -44,14 +44,14 @@ public static partial class QAcidCombinators
 				{
 					state.SpecPassed(key);
 				}
-				return QAcidResult.AcidOnly(state);
+				return Vessel.AcidOnly(state);
 			};
 
 	public static QAcidScript<Acid> Assay(this string key, params (string label, Func<bool> condition)[] specs) =>
 		state =>
 			{
 				if (!state.IsThisTheRunsLastExecution())
-					return QAcidResult.AcidOnly(state);
+					return Vessel.AcidOnly(state);
 
 				bool passed = true;
 				var strings = new List<string>();
@@ -72,20 +72,20 @@ public static partial class QAcidCombinators
 				{
 					state.SpecPassed(key);
 				}
-				return QAcidResult.AcidOnly(state);
+				return Vessel.AcidOnly(state);
 			};
 
 	public static QAcidScript<Acid> TestifyProvenWhen(this string key, Func<bool> condition) =>
 		state =>
 			{
 				if (ShouldSkipSpec(key, state))
-					return QAcidResult.AcidOnly(state);
+					return Vessel.AcidOnly(state);
 				bool passed = condition();
 				if (passed)
 				{
 					state.SpecPassed(key);
 					state.Shifter.CurrentContext.StopRun();
 				}
-				return QAcidResult.AcidOnly(state);
+				return Vessel.AcidOnly(state);
 			};
 }

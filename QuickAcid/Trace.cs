@@ -8,16 +8,25 @@ public static partial class QAcidCombinators
     public static QAcidScript<string> Trace(this string key, Func<string> trace) =>
         state =>
             state.Shifter.CurrentPhase == QAcidPhase.NormalRun
-                ? QAcidResult.Some(state, state.CurrentExecutionContext().Trace(key, trace()))
-                : QAcidResult.None<string>(state);
+                ? Vessel.Some(state, state.CurrentExecutionContext().Trace(key, trace()))
+                : Vessel.None<string>(state);
 
     public static QAcidScript<string> TraceIf(this string key, Func<bool> predicate, Func<string> trace) =>
-        state => predicate() ? key.Trace(trace)(state) : QAcidResult.None<string>(state);
+        state => predicate() ? key.Trace(trace)(state) : Vessel.None<string>(state);
 
 
-    public static QAcidScript<string> Custom(this string key, Func<string> trace) =>
+    public record CustomArgs(QAcidPhase Phase);
+    public static QAcidScript<Acid> Diagnose(
+        this string key,
+        Func<CustomArgs, string> trace,
+        Func<CustomArgs, bool> predicate) =>
         state =>
-            state.Shifter.CurrentPhase == QAcidPhase.NormalRun
-                ? QAcidResult.Some(state, state.CurrentExecutionContext().Trace(key, trace()))
-                : QAcidResult.None<string>(state);
+        {
+            if (predicate(new CustomArgs(state.Shifter.CurrentPhase)))
+            {
+                state.CurrentExecutionContext().Trace(key, "TODO");
+                return Vessel.AcidOnly(state);
+            }
+            return Vessel.AcidOnly(state);
+        };
 }

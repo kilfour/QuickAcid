@@ -10,8 +10,8 @@ public static class ToLinq
 			state =>
 				{
 					if (state.Shifter.CurrentContext.NeedsToStop())
-						return QAcidResult.None<TValueTwo>(state);
-					return QAcidResult.Some(state, selector(script(state).Value));
+						return Vessel.None<TValueTwo>(state);
+					return Vessel.Some(state, selector(script(state).Value));
 				};
 
 	public static QAcidScript<TResult> SelectMany<TSource, TResult>(
@@ -20,10 +20,10 @@ public static class ToLinq
 			state =>
 				{
 					if (state.Shifter.CurrentContext.NeedsToStop())
-						return QAcidResult.None<TResult>(state);
+						return Vessel.None<TResult>(state);
 					var result = source(state);
 					if (state.Shifter.CurrentContext.NeedsToStop())
-						return QAcidResult.None<TResult>(state);
+						return Vessel.None<TResult>(state);
 					return selector(result.Value)(state);
 				};
 

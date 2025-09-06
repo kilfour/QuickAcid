@@ -44,8 +44,8 @@ public static partial class QAcidCombinators
 		state =>
 			{
 				if (ShouldSkipSpec(key, state))
-					return QAcidResult.Some(state, new DelayedSpecResult(state, key));
-				return QAcidResult.Some(state, new DelayedSpecResult(state, key, condition()));
+					return Vessel.Some(state, new DelayedSpecResult(state, key));
+				return Vessel.Some(state, new DelayedSpecResult(state, key, condition()));
 			};
 
 	public static QAcidScript<DelayedSpecResult> DelayedSpec(this string key, Func<bool> condition)
@@ -54,5 +54,5 @@ public static partial class QAcidCombinators
 	public static QAcidScript<DelayedSpecResult> DelayedSpecIf(this string key, Func<bool> predicate, Func<bool> condition)
 		=> state => predicate()
 		? key.InnerDelayedSpec(condition)(state)
-		: QAcidResult.Some(state, new DelayedSpecResult(state, key));
+		: Vessel.Some(state, new DelayedSpecResult(state, key));
 }
