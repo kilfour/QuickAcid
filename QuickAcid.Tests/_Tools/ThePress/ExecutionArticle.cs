@@ -10,26 +10,17 @@ public class ExecutionArticle : AbstractArticle<ExecutionDeposition>
 
     [StackTraceHidden]
     public TrackedArticle Tracked(int number)
-    {
-        return new TrackedArticle(deposition.TrackedDepositions[number - 1]);
-    }
+        => new(deposition.TrackedDepositions[number - 1]);
 
     [StackTraceHidden]
     public ActionArticle Action(int number)
-    {
-        return new ActionArticle(deposition.ActionDepositions[number - 1]);
-    }
+        => new(deposition.ActionDepositions[number - 1]);
 
     [StackTraceHidden]
     public InputArticle Input(int number)
-    {
-        return new InputArticle(deposition.InputDepositions[number - 1]);
-    }
+        => new(deposition.InputDepositions[number - 1]);
 
     [StackTraceHidden]
     public TraceArticle Trace(int number)
-    {
-        return new TraceArticle(deposition.TraceDepositions[number - 1]);
-    }
+        => new(deposition.TraceDepositions[number - 1]);
 }
-

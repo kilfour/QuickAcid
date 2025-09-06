@@ -4,7 +4,7 @@ public class Access
 {
     public HashSet<string> ActionKeys { get; set; } = [];
 
-    private Dictionary<object, DecoratedValue> dictionary = [];
+    private readonly Dictionary<object, DecoratedValue> dictionary = [];
 
     public bool ContainsKey(object key)
     {
@@ -19,11 +19,6 @@ public class Access
     public DecoratedValue GetDecorated(object key)
     {
         return dictionary[key];
-    }
-
-    public string GetAsString(object key) // for codegen
-    {
-        return dictionary[key]?.Value?.ToString()!;
     }
 
     public void SetIfNotAlreadyThere<T>(object key, T value)

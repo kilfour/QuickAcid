@@ -2,14 +2,9 @@ using QuickAcid.Proceedings;
 
 namespace QuickAcid.Tests._Tools.ThePress;
 
-public class WordCount
+public class WordCount(List<ExecutionDeposition> depositions)
 {
-    private readonly List<ExecutionDeposition> depositions;
-
-    public WordCount(List<ExecutionDeposition> depositions)
-    {
-        this.depositions = depositions;
-    }
+    private readonly List<ExecutionDeposition> depositions = depositions;
 
     public int Executions()
     {

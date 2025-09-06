@@ -4,14 +4,14 @@ namespace QuickAcid.TheyCanFade;
 
 public class TrackedInputMemory
 {
-    private readonly Func<int> getCurrentActionId;
+    private readonly Func<int> getCurrentExecutionId;
 
     private readonly Dictionary<string, object> values = [];
     private readonly Dictionary<int, Dictionary<string, string>> reportPerExecution = [];
 
-    public TrackedInputMemory(Func<int> getCurrentActionId)
+    public TrackedInputMemory(Func<int> getCurrentExecutionId)
     {
-        this.getCurrentActionId = getCurrentActionId;
+        this.getCurrentExecutionId = getCurrentExecutionId;
     }
 
     public T Store<T>(string key, Func<T> factory)
@@ -40,50 +40,19 @@ public class TrackedInputMemory
 
     private Dictionary<string, string> ReportForCurrent()
     {
-        var id = getCurrentActionId();
+        var id = getCurrentExecutionId();
         if (!reportPerExecution.ContainsKey(id))
             reportPerExecution[id] = [];
         return reportPerExecution[id];
     }
 
-    public IReadOnlyDictionary<int, Dictionary<string, string>> ReportPerExecutionSnapshot()
+    public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedInputsPerExecution()
     {
-        // If you're okay exposing the actual dictionary (it's not modified externally):
         return reportPerExecution;
-
-        // OR: if you'd rather clone it to avoid accidental mutation:
-        // return reportPerExecution.ToDictionary(
-        //     entry => entry.Key,
-        //     entry => new Dictionary<string, string>(entry.Value));
     }
 
     public IEnumerable<string> GetAllTrackedKeys()
     {
         return values.Keys;
     }
-
-    // ---------------------------------------------------------------------------------------
-    // -- DEEP COPY
-    public TrackedInputMemory DeepCopy(Func<int> getCurrentActionId)
-    {
-        var newValues = new Dictionary<string, object>(values); // shallow copy of values
-        var newReports = new Dictionary<int, Dictionary<string, string>>();
-        foreach (var kvp in reportPerExecution)
-        {
-            var copiedInner = new Dictionary<string, string>(kvp.Value);
-            newReports[kvp.Key] = copiedInner;
-        }
-        return new TrackedInputMemory(getCurrentActionId, newValues, newReports);
-    }
-
-    public TrackedInputMemory(
-        Func<int> getCurrentActionId,
-        Dictionary<string, object> values,
-        Dictionary<int, Dictionary<string, string>> reportPerExecution)
-    {
-        this.getCurrentActionId = getCurrentActionId;
-        this.values = values;
-        this.reportPerExecution = reportPerExecution;
-    }
-    // ---------------------------------------------------------------------------------------
 }

@@ -1,25 +1,19 @@
-﻿using QuickAcid.TheyCanFade;
+﻿using QuickAcid;
 
-namespace QuickAcid.Bolts.TheyCanFade;
+namespace QuickAcid.TheyCanFade;
 
-public class Memory
+public class Memory(Func<int> getCurrentExecutionId)
 {
-	private Func<int> getCurrentExecutionId;
+	private Func<int> getCurrentExecutionId = getCurrentExecutionId;
 
-	public void SetCurrentActionIdFunction(Func<int> getCurrentActionId)
-	{
-		this.getCurrentExecutionId = getCurrentActionId;
-	}
-	private readonly TrackedInputMemory trackedInputMemory;
-	private readonly Dictionary<int, Access> memoryPerExecution = [];
-
-	private readonly Dictionary<int, Dictionary<string, string>> tracesPerExecution = [];
-
-	public Memory(Func<int> getCurrentExecutionId)
+	public void SetCurrentActionIdFunction(Func<int> getCurrentExecutionId)
 	{
 		this.getCurrentExecutionId = getCurrentExecutionId;
-		trackedInputMemory = new TrackedInputMemory(getCurrentExecutionId);
 	}
+
+	private readonly TrackedInputMemory trackedInputMemory = new TrackedInputMemory(getCurrentExecutionId);
+	public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedSnapshot()
+		=> trackedInputMemory.TrackedInputsPerExecution();
 
 	public T StoreTracked<T>(string key, Func<T> factory)
 		=> trackedInputMemory.Store(key, factory);
@@ -30,51 +24,39 @@ public class Memory
 	public void ResetRunScopedInputs()
 		=> trackedInputMemory.Reset();
 
-	public bool Has(int executionId)
-		=> memoryPerExecution.ContainsKey(executionId);
 
+
+	private readonly Dictionary<int, Access> memoryPerExecution = [];
 	public Access For(int executionId)
 	{
 		if (!memoryPerExecution.ContainsKey(executionId))
 			memoryPerExecution[executionId] = new Access();
 		return memoryPerExecution[executionId];
 	}
+	public Access ForThisExecution() => For(getCurrentExecutionId());
 
-	public IEnumerable<(int executionId, Access access)> AllAccesses()
-		=> memoryPerExecution.Select(kvp => (kvp.Key, kvp.Value));
 
-	public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedSnapshot()
-		=> trackedInputMemory.ReportPerExecutionSnapshot(); // read-only exposure
 
-	public Access ForThisExecution()
-	{
-		var executionId = getCurrentExecutionId();
-		if (!memoryPerExecution.ContainsKey(executionId))
-			memoryPerExecution[executionId] = new Access();
-		return memoryPerExecution[executionId];
-	}
-
+	private readonly Dictionary<int, Dictionary<string, string>> tracesPerExecution = [];
 	public Dictionary<string, string> TracesFor(int executionId)
 	{
 		if (!tracesPerExecution.ContainsKey(executionId))
 			tracesPerExecution[executionId] = [];
 		return tracesPerExecution[executionId];
 	}
+	public Dictionary<string, string> TracesForThisExecution() => TracesFor(getCurrentExecutionId());
 
-	public Dictionary<string, string> TracesForThisExecution()
-	{
-		return TracesFor(getCurrentExecutionId());
-	}
 
-	public IEnumerable<string> GetAllTrackedKeys() // used by code gen
+	private readonly Dictionary<int, Dictionary<string, List<string>>> diagnosisPerExecution = [];
+	public Dictionary<string, List<string>> DiagnosisFor(int executionId)
 	{
-		return trackedInputMemory.GetAllTrackedKeys();
+		if (!diagnosisPerExecution.ContainsKey(executionId))
+			diagnosisPerExecution[executionId] = [];
+		return diagnosisPerExecution[executionId];
 	}
+	public Dictionary<string, List<string>> DiagnosisForThisExecution() => DiagnosisFor(getCurrentExecutionId());
 
-	public Access ForLastExecution() // used by codegen
-	{
-		return memoryPerExecution.Last().Value;
-	}
+
 
 	private readonly Stack<MemoryLens> swappers = new();
 

@@ -144,6 +144,24 @@ public static class The
         from ___ in Pulse.When(input.Any(), newLine.Then(space).Then(LineOf(50)))
         select input;
 
+    private readonly static Flow<DiagnosisDeposition> diagnosisDeposition =
+        from input in Pulse.Start<DiagnosisDeposition>()
+        from _ in Pulse.Trace($"   - {input.Label}:").Then(newLine)
+        from __ in Pulse.ToFlow(a => Pulse.Trace($"     -> {a}").Then(newLine), [.. input.Traces])
+        select input;
+
+    private readonly static Flow<DiagnosisExecutionDeposition> diagnosisExecutionDeposition =
+        from input in Pulse.Start<DiagnosisExecutionDeposition>()
+        from __ in input.Times == 1
+                ? Pulse.Trace($"  Diagnosis ({input.ExecutionId}):")
+                : Pulse.Trace($"  Diagnosis :")
+        from ___ in newLine
+        from ____ in Pulse.TraceIf(input.Times > 1, () => $" ({input.Times} Times)")
+        from _____ in Pulse.ToFlow(diagnosisDeposition, input.DiagnosisDepositions)
+        select input;
+
+
+
     private readonly static Flow<string> extraDepositionMessage =
         from input in Pulse.Start<string>()
         from _ in newLine
@@ -157,6 +175,13 @@ public static class The
         from verdict in Pulse.ToFlowIf(input.Verdict != null, verdict, () => input.Verdict)
         let needsBreak = input.Verdict != null && input.PassedSpecDepositions.Count > 0
         from nl in Pulse.TraceIf(needsBreak, () => Environment.NewLine)
-        from passedSpec in Pulse.ToFlowIf(input.PassedSpecDepositions.Count > 0, passedSpecDepositions, () => input.PassedSpecDepositions)
+        from __ in Pulse.ToFlowIf(
+            input.PassedSpecDepositions.Count > 0,
+            passedSpecDepositions,
+            () => input.PassedSpecDepositions)
+        from ___ in Pulse.ToFlowIf(
+            input.DiagnosisExecutionDepositions.Count > 0,
+            diagnosisExecutionDeposition,
+            () => input.DiagnosisExecutionDepositions)
         select input;
 }

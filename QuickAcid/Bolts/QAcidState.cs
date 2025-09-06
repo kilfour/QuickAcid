@@ -1,5 +1,4 @@
-﻿using QuickAcid.Bolts.TheyCanFade;
-using QuickAcid.Phasers;
+﻿using QuickAcid.Phasers;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Shrinking;
@@ -67,7 +66,8 @@ public sealed class QAcidState
             CurrentExecutionNumber,
             Memory.ForThisExecution(),
             InputTracker.ForThisExecution(),
-            Memory.TracesForThisExecution());
+            Memory.TracesForThisExecution(),
+            Memory.DiagnosisForThisExecution());
     }
 
     public void RecordFailure(Exception ex)
@@ -128,7 +128,7 @@ public sealed class QAcidState
                 return caseFile;
             }
         }
-        return CaseFile.Empty();
+        return Annotate.TheCaseFile(CaseFile.Empty(), Memory, ExecutionNumbers);
     }
     // ---------------------------------------------------------------------
     // FOR SEEDVAULT
@@ -172,6 +172,7 @@ public sealed class QAcidState
         }
         var forAssayer = !AllowShrinking;
         var caseFile = CompileTheCaseFile(forAssayer);
+
         foreach (var run in runs)
         {
             caseFile.AddRunDeposition(run);
@@ -196,7 +197,7 @@ public sealed class QAcidState
                 ShrinkCount: shrinkCount,
                 Seed: FuzzState.Seed
             );
-        return Compile.TheCaseFile(Memory, dossier);
+        return Annotate.TheCaseFile(Compile.TheCaseFile(Memory, dossier), Memory, dossier.ExecutionNumbers);
     }
 
     private RunDeposition DeposeTheRun(string label)

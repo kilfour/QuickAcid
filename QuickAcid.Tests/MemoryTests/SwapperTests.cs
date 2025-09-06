@@ -1,4 +1,3 @@
-using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.TheyCanFade;
 
 namespace QuickAcid.Tests.MemoryTests;

@@ -30,4 +30,11 @@ public class CaseFile
         PassedSpecDepositions.Add(passedSpecDeposition);
         return this;
     }
+
+    public List<DiagnosisExecutionDeposition> DiagnosisExecutionDepositions { get; } = [];
+    public CaseFile AddExecutionDiagnosisDeposition(DiagnosisExecutionDeposition diagnosisExecutionDeposition)
+    {
+        DiagnosisExecutionDepositions.Add(diagnosisExecutionDeposition);
+        return this;
+    }
 };

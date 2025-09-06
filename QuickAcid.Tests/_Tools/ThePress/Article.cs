@@ -3,11 +3,9 @@ using QuickAcid.Proceedings;
 
 namespace QuickAcid.Tests._Tools.ThePress;
 
-public class Article
+public class Article(CaseFile caseFile)
 {
-    private readonly CaseFile caseFile;
-
-    public Article(CaseFile caseFile) => this.caseFile = caseFile;
+    private readonly CaseFile caseFile = caseFile;
 
     public bool VerdictReached() => caseFile.HasVerdict();
 
@@ -40,24 +38,23 @@ public class Article
 
     [StackTraceHidden]
     public ExecutionArticle Execution(int number)
-    {
-        return new ExecutionArticle(caseFile.Verdict.ExecutionDepositions[number - 1]);
-    }
+        => new(caseFile.Verdict.ExecutionDepositions[number - 1]);
+
+    [StackTraceHidden]
+    public DiagnosisExecutionArticle DiagnoseExecutions(int number) =>
+        new(caseFile.DiagnosisExecutionDepositions[number - 1]);
+    public int DiagnosisExecutionsCount => caseFile.DiagnosisExecutionDepositions.Count;
+
 
     [StackTraceHidden]
     public PassedSpecArticle PassedSpec(int number)
-    {
-        return new PassedSpecArticle(caseFile.PassedSpecDepositions[number - 1]);
-    }
+        => new(caseFile.PassedSpecDepositions[number - 1]);
 
 
     public WordCount Total()
-    {
-        return new WordCount(caseFile.Verdict.ExecutionDepositions);
-    }
+        => new(caseFile.Verdict.ExecutionDepositions);
 
-    public int Seed()
-    {
-        return caseFile.Verdict.Seed;
-    }
+    public int Seed() => caseFile.Verdict.Seed;
+
+
 }

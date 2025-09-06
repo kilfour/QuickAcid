@@ -1,6 +1,5 @@
 using System.Collections;
 using QuickAcid.Bolts;
-using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.TheyCanFade;
 
 namespace QuickAcid.Shrinking.Collections;

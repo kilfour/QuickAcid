@@ -1,4 +1,3 @@
-using QuickAcid.Bolts.TheyCanFade;
 using QuickAcid.Shrinking;
 using QuickAcid.TheyCanFade;
 using QuickPulse.Show;

@@ -6,12 +6,15 @@ public class RunExecutionContext(
     int executionNumber,
     Access access,
     InputTrackerPerExecution shrinkTracker,
-    Dictionary<string, string> traces)
+    Dictionary<string, string> traces,
+    Dictionary<string, List<string>> diagnosis)
 {
     private readonly int executionNumber = executionNumber;
     private readonly Access access = access;
     private readonly InputTrackerPerExecution shrinkTracker = shrinkTracker;
     private readonly Dictionary<string, string> traces = traces;
+
+    private readonly Dictionary<string, List<string>> diagnosis = diagnosis;
 
     public bool AlreadyTriedToShrink(string key) => shrinkTracker.AlreadyTried(key);
     public void MarkAsTriedToShrink(string key) => shrinkTracker.MarkAsTriedToShrink(key);
@@ -43,5 +46,15 @@ public class RunExecutionContext(
             return value;
         }
         return Get<T>(key);
+    }
+
+
+    public string Diagnose(string key, string trace)
+    {
+        if (diagnosis.TryGetValue(key, out var list))
+            list.Add(trace);
+        else
+            diagnosis[key] = [trace];
+        return trace;
     }
 }
