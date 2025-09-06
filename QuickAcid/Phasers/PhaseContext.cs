@@ -2,7 +2,8 @@ namespace QuickAcid.Phasers;
 
 public class PhaseContext
 {
-    public bool Failed { get; set; }
+    public bool Failed { get; private set; }
+    public bool Passed => !Failed;
     private bool BreakRun;
     public string? FailingSpec { get; set; }
     public Exception? Exception { get; set; }

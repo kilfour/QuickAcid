@@ -45,11 +45,7 @@ public class QRunner
         for (int i = 0; i < runCount.NumberOfRuns; i++)
         {
             var state = seed.HasValue ? new QAcidState(script, seed.Value) : new QAcidState(script);
-            if (config.Verbose)
-                state.Verbose = true;
-            if (config.ShrinkingActions)
-                state.ShrinkingActions = true;
-            caseFile = state.Run(executionCount.NumberOfExecutions);
+            caseFile = state.Run(executionCount.NumberOfExecutions, new(config.Verbose, config.ShrinkingActions));
             state.GetPassedSpecCount(passedSpecCount);
             if (caseFile.HasVerdict())
             {

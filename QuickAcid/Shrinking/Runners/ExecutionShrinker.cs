@@ -5,7 +5,7 @@ namespace QuickAcid.Shrinking.Runners;
 
 public class ExecutionShrinker
 {
-    public static int Run(QAcidState state)
+    public int Run(QAcidState state)
     {
         var shrinkCount = 0;
         var max = state.ExecutionNumbers.Max();
@@ -21,14 +21,19 @@ public class ExecutionShrinker
                     if (executionNumber != current)
                         state.Script(state);
                 }
-                if (state.Shifter.CurrentContext.Failed)
-                {
-                    state.ExecutionNumbers.Remove(current);
-                }
+                if (state.Shifter.CurrentContext.Passed)
+                    OnRunPassed(state, current);
+                else
+                    OnRunFailed(state, current);
                 current++;
                 shrinkCount++;
             }
         }
         return shrinkCount;
     }
+
+    protected virtual void OnRunPassed(QAcidState state, int current) { }
+
+    protected virtual void OnRunFailed(QAcidState state, int current)
+        => state.ExecutionNumbers.Remove(current);
 }

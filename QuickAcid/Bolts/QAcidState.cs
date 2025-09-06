@@ -25,6 +25,8 @@ public sealed class QAcidState
         Memory = new Memory(() => CurrentExecutionNumber);
         InputTracker = new InputTracker(() => CurrentExecutionNumber);
         VerifyIf = new Verifier(this);
+
+        executionShrinker = new();
     }
 
     public QAcidState(QAcidScript<Acid> script, int seed)
@@ -48,7 +50,7 @@ public sealed class QAcidState
     public Shifter Shifter { get; } = new Shifter();
 
     // only for report
-    public int OriginalFailingRunExecutionCount { get; private set; }
+    private int originalFailingRunExecutionCount;
 
     public Memory Memory { get; private set; }
     public InputTracker InputTracker { get; private set; }
@@ -79,8 +81,8 @@ public sealed class QAcidState
 
     // ---------------------------------------------------------------------------------------
     // Configurable options
-    public bool Verbose { get; set; }
-    public bool ShrinkingActions { get; set; }
+    // public bool Verbose { get; set; }
+    // public bool ShrinkingActions { get; set; }
 
     // -----------------------------------------------------------------
     // spec counting
@@ -110,13 +112,17 @@ public sealed class QAcidState
 
         }
     }
-
-    public CaseFile Run(int executionsPerScope)
+    // -----------------------------------------------------------------
+    // Shrinking Machinery
+    // --
+    private readonly ExecutionShrinker executionShrinker;
+    // -----------------------------------------------------------------
+    public CaseFile Run(int executionsPerScope, QAcidStateConfig config)
     {
         ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
         for (int j = 0; j < executionsPerScope; j++)
         {
-            var caseFile = ExecuteStep();
+            var caseFile = ExecuteStep(config);
             if (Shifter.CurrentContext.Failed)
             {
                 return caseFile;
@@ -125,37 +131,37 @@ public sealed class QAcidState
         return CaseFile.Empty();
     }
 
-    private CaseFile ExecuteStep()
+    private CaseFile ExecuteStep(QAcidStateConfig config)
     {
         ExecutionNumbers[CurrentExecutionNumber] = CurrentExecutionNumber;
         Script(this);
         if (Shifter.CurrentContext.Failed)
         {
-            return HandleFailure();
+            return HandleFailure(config);
         }
         CurrentExecutionNumber++;
         return CaseFile.Empty();
     }
 
-    public CaseFile HandleFailure()
+    public CaseFile HandleFailure(QAcidStateConfig config)
     {
         var runs = new List<RunDeposition>();
-        if (Verbose)
+        if (config.Verbose)
         {
             runs.Add(DeposeTheRun("FIRST FAILED RUN"));
         }
         ExecutionNumbers = [.. ExecutionNumbers.Where(x => x != -1)];
-        OriginalFailingRunExecutionCount = ExecutionNumbers.Count;
+        originalFailingRunExecutionCount = ExecutionNumbers.Count;
         if (AllowShrinking)
         {
-            shrinkCount += ExecutionShrinker.Run(this);
-            if (Verbose)
+            shrinkCount += executionShrinker.Run(this);
+            if (config.Verbose)
                 runs.Add(DeposeTheRun("AFTER EXECUTION SHRINKING"));
 
-            if (ShrinkingActions)
+            if (config.ShrinkingActions)
             {
                 shrinkCount += ActionShrinker.Run(this);
-                if (Verbose)
+                if (config.Verbose)
                     runs.Add(DeposeTheRun("AFTER ACTION SHRINKING"));
             }
             shrinkCount += InputShrinker.Run(this);
@@ -181,7 +187,7 @@ public sealed class QAcidState
                 AssayerSpec: forAssayer ? Shifter.CurrentContext.FailingSpec : null,
                 FailingSpec: forAssayer ? null : Shifter.CurrentContext.FailingSpec,
                 Exception: Shifter.CurrentContext.Exception,
-                OriginalRunExecutionCount: OriginalFailingRunExecutionCount,
+                OriginalRunExecutionCount: originalFailingRunExecutionCount,
                 ExecutionNumbers: ExecutionNumbers,
                 ShrinkCount: shrinkCount,
                 Seed: FuzzState.Seed
