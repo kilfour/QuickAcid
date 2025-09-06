@@ -130,6 +130,10 @@ public sealed class QAcidState
         }
         return CaseFile.Empty();
     }
+    // ---------------------------------------------------------------------
+    // FOR SEEDVAULT
+    public CaseFile Run(int executionsPerScope) => Run(executionsPerScope, new());
+    // ---------------------------------------------------------------------
 
     private CaseFile ExecuteStep(QAcidStateConfig config)
     {
