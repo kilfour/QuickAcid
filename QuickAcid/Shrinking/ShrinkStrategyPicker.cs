@@ -49,7 +49,7 @@ public class ShrinkStrategyPicker
             return;
         }
 
-        state.CurrentExecutionContext().Trace(key, ShrinkKind.Unknown, new ShrinkTrace
+        state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.Unknown, new ShrinkTrace
         {
             ExecutionId = -1,
             Key = fullKey,

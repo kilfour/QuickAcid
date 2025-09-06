@@ -21,7 +21,7 @@ public class EnumShrinkStrategy
         {
             if (state.VerifyIf.RunPassed(key, candidate))
             {
-                state.CurrentExecutionContext().Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
+                state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                 {
                     ExecutionId = -1,
                     Key = fullKey,
@@ -34,7 +34,7 @@ public class EnumShrinkStrategy
                 return;
             }
 
-            state.CurrentExecutionContext().Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
+            state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
             {
                 ExecutionId = -1,
                 Key = fullKey,

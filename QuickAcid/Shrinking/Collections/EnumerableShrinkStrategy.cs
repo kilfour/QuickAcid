@@ -8,7 +8,7 @@ public class EnumerableShrinkStrategy
 {
     public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
-        state.CurrentExecutionContext().Trace(key, ShrinkKind.EnumerableKind, new ShrinkTrace
+        state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.EnumerableKind, new ShrinkTrace
         {
             ExecutionId = -1,
             Key = fullKey,

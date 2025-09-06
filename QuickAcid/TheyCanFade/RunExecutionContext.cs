@@ -29,7 +29,7 @@ public class RunExecutionContext(
         return trace;
     }
 
-    public void Trace(string key, ShrinkKind shrinkKind, ShrinkTrace trace)
+    public void ShrinkTrace(string key, ShrinkKind shrinkKind, ShrinkTrace trace)
     {
         access.GetDecorated(key).AddTrace(shrinkKind, trace with { ExecutionId = executionNumber });
     }

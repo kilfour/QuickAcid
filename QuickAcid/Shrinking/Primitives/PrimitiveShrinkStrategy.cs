@@ -50,7 +50,7 @@ public class PrimitiveShrinkStrategy
         {
             if (state.VerifyIf.RunPassed(key, candidate))
             {
-                state.CurrentExecutionContext().Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
+                state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
                 {
                     ExecutionId = -1,
                     Key = fullKey,
@@ -63,7 +63,7 @@ public class PrimitiveShrinkStrategy
                 return;
             }
 
-            state.CurrentExecutionContext().Trace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
+            state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
             {
                 ExecutionId = -1,
                 Key = fullKey,

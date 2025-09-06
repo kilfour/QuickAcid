@@ -12,7 +12,7 @@ public class ObjectShrinkStrategy : IObjectShrinkStrategy
 {
     public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
-        state.CurrentExecutionContext().Trace(key, ShrinkKind.ObjectKind, new ShrinkTrace
+        state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.ObjectKind, new ShrinkTrace
         {
             ExecutionId = -1,
             Key = fullKey,
