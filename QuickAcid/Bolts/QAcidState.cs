@@ -158,7 +158,9 @@ public sealed class QAcidState
         originalFailingRunExecutionCount = ExecutionNumbers.Count;
         if (AllowShrinking)
         {
-            shrinkCount += executionShrinker.Run(this);
+            shrinkCount += executionShrinker.Run(this); // <= 
+            shrinkCount += executionShrinker.Run(this); // <= 
+            shrinkCount += executionShrinker.Run(this); // <= This should not be needed 3 times.
             if (config.Verbose)
                 runs.Add(DeposeTheRun("AFTER EXECUTION SHRINKING"));
 

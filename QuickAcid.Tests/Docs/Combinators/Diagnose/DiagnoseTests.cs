@@ -17,8 +17,8 @@ public class DiagnoseTests
     {
         var script =
             from _ in "act".Act(() => { })
-            from __ in "Info Key".Diagnose(a => true, a => "Extra words")
-            from ___ in "Info Key".Diagnose(a => a.ExecutionId == 1, a => "More Extra words")
+            from __ in "Info Key".Diagnose(a => "Extra words")
+            from ___ in "Info Key".DiagnoseIf(a => a.ExecutionId == 1, a => "More Extra words")
             select Acid.Test;
 
         var article = TheJournalist.Unearths(
