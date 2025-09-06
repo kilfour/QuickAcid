@@ -10,7 +10,7 @@ public class ExecutionShrinker
         var shrinkCount = 0;
         var max = state.ExecutionNumbers.Max();
         var current = 0;
-        while (current <= max && state.ExecutionNumbers.Count() > 1)
+        while (current <= max && state.ExecutionNumbers.Count > 1)
         {
             using (state.Shifter.EnterPhase(QAcidPhase.ShrinkingExecutions))
             {
