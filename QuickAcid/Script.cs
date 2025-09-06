@@ -62,7 +62,10 @@ public static class Script
 						.Select(a => a.ix);
 				var index = state.CurrentExecutionContext().Remember(key,
 					() => Fuzz.ChooseFrom(validScriptIndexes)(state.FuzzState).Value, ReportingIntent.Never);
-				return scripts[index].script(state);
+				var script = scripts[index];
+				if (script.condition())
+					return scripts[index].script(state);
+				return Vessel.None<T>(state);
 			};
 	}
 

@@ -8,25 +8,34 @@ public class ExecutionShrinker
     public int Run(QAcidState state)
     {
         var shrinkCount = 0;
-        var max = state.ExecutionNumbers.Max();
-        var current = 0;
-        while (current <= max && state.ExecutionNumbers.Count > 1)
+        var stillShrinking = true;
+        while (stillShrinking) // not sure why this is needed
         {
-            using (state.Shifter.EnterPhase(QAcidPhase.ShrinkingExecutions))
+            stillShrinking = false;
+            var max = state.ExecutionNumbers.Max();
+            var current = 0;
+            while (current <= max && state.ExecutionNumbers.Count > 1)
             {
-                state.Memory.ResetRunScopedInputs();
-                foreach (var executionNumber in state.ExecutionNumbers.ToList())
+                using (state.Shifter.EnterPhase(QAcidPhase.ShrinkingExecutions))
                 {
-                    state.CurrentExecutionNumber = executionNumber;
-                    if (executionNumber != current)
-                        state.Script(state);
+                    state.Memory.ResetRunScopedInputs();
+                    foreach (var executionNumber in state.ExecutionNumbers.ToList())
+                    {
+                        state.CurrentExecutionNumber = executionNumber;
+                        if (executionNumber != current)
+                            state.Script(state);
+                    }
+                    if (state.Shifter.CurrentContext.Passed)
+                        OnRunPassed(state, current);
+                    else
+                    {
+                        if (state.ExecutionNumbers.Contains(current)) stillShrinking = true;
+                        OnRunFailed(state, current);
+
+                    }
+                    current++;
+                    shrinkCount++;
                 }
-                if (state.Shifter.CurrentContext.Passed)
-                    OnRunPassed(state, current);
-                else
-                    OnRunFailed(state, current);
-                current++;
-                shrinkCount++;
             }
         }
         return shrinkCount;

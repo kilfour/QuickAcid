@@ -128,7 +128,8 @@ public sealed class QAcidState
                 return caseFile;
             }
         }
-        return Annotate.TheCaseFile(CaseFile.Empty(), Memory, ExecutionNumbers);
+        //return Annotate.TheCaseFile(CaseFile.Empty(), Memory, ExecutionNumbers);
+        return CaseFile.Empty();
     }
     // ---------------------------------------------------------------------
     // FOR SEEDVAULT
@@ -158,9 +159,7 @@ public sealed class QAcidState
         originalFailingRunExecutionCount = ExecutionNumbers.Count;
         if (AllowShrinking)
         {
-            shrinkCount += executionShrinker.Run(this); // <= 
-            shrinkCount += executionShrinker.Run(this); // <= 
-            shrinkCount += executionShrinker.Run(this); // <= This should not be needed 3 times.
+            shrinkCount += executionShrinker.Run(this);
             if (config.Verbose)
                 runs.Add(DeposeTheRun("AFTER EXECUTION SHRINKING"));
 
@@ -199,7 +198,8 @@ public sealed class QAcidState
                 ShrinkCount: shrinkCount,
                 Seed: FuzzState.Seed
             );
-        return Annotate.TheCaseFile(Compile.TheCaseFile(Memory, dossier), Memory, dossier.ExecutionNumbers);
+        //return Annotate.TheCaseFile(Compile.TheCaseFile(Memory, dossier), Memory, dossier.ExecutionNumbers);
+        return Compile.TheCaseFile(Memory, dossier);
     }
 
     private RunDeposition DeposeTheRun(string label)

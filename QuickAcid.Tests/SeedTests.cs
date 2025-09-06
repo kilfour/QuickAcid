@@ -21,7 +21,7 @@ public class SeedTests
         Assert.Equal(42, article.Seed());
     }
 
-    [Fact(Skip = "Works, but the shrink executions 3 times hack, messes with current Assert value.")]
+    [Fact]
     public void Seed_Allows_Reruns()
     {
         var collector = new List<int>();
