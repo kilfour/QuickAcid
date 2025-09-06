@@ -17,22 +17,23 @@ public class CanCoachBeAssigned
         }
     }
 
-    [Fact(Skip = "Example maybe")]
+    public record CoachBooking : Input;
+    public record BookTheCoach : Act;
+    public record CoachBooked : Spec;
+
+    [Fact]
     public void LetsSee()
     {
         var script =
-            from coach in "Coach".Stashed(() =>
-                {
-                    var coach = new Coach(1, "coach", "coach@coaching.com");
-                    return coach;
-                })
-            from booking in "Booking".Input(BookingGenerator)
-            from bookCoach in "Book the Coach".Act(() => coach.BookIn(booking))
+            from coach in Script.Stashed(() => new Coach(1, "coach", "coach@coaching.com"))
+            from booking in Script.Input<CoachBooking>().From(BookingGenerator)
+            from bookCoach in Script.Act<BookTheCoach>(() => coach.BookIn(booking))
+            from coachBooked in Script.Spec<CoachBooked>(() => coach.bookings.Contains(booking))
             select Acid.Test;
         QState.Run(script, 906172892)
             .Options(a => a with { FileAs = "CanCoachBeAssigned" })
             .With(10.Runs())
-            .And(5.ExecutionsPerRun());
+            .And(1.ExecutionsPerRun());
     }
 
     private static readonly Generator<DayOfWeek> WeekDayGenerator =

@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using QuickAcid.Bolts;
 using QuickAcid.TheyCanFade;
 using QuickFuzzr;
@@ -42,4 +43,74 @@ public static class Script
 				return scripts[index](state);
 			};
 	}
+
+	public static QAcidScript<T> ChooseIf<T>(params (Func<bool> condition, QAcidScript<T> script)[] scripts)
+		=> ChooseIfInternal(scripts);
+
+	private static QAcidScript<T> ChooseIfInternal<T>(
+		 (Func<bool> condition, QAcidScript<T> script)[] scripts,
+		[CallerFilePath] string file = "",
+		[CallerLineNumber] int line = 0,
+		[CallerMemberName] string member = "")
+	{
+		var key = $"Choose|{Path.GetFileName(file)}:{line}|{member}|{scripts.Length}";
+		return state =>
+			{
+				var validScriptIndexes =
+					scripts.Select((a, ix) => (ix, a.condition))
+						.Where(a => a.condition())
+						.Select(a => a.ix);
+				var index = state.CurrentExecutionContext().Remember(key,
+					() => Fuzz.ChooseFrom(validScriptIndexes)(state.FuzzState).Value, ReportingIntent.Never);
+				return scripts[index].script(state);
+			};
+	}
+
+	public static QAcidScript<T> Stashed<T>(Func<T> func) => typeof(T).FullName!.Stashed(func);
+
+	public static InputBuilder<TTypedInput> Input<TTypedInput>()
+		where TTypedInput : Input => new();
+
+	public record InputBuilder<TTypedInput>()
+		where TTypedInput : TypedScript
+	{
+		public QAcidScript<TValue> From<TValue>(Generator<TValue> generator)
+			=> TypedScript.MessageFromType(typeof(TTypedInput)).Input(generator);
+	}
+
+	public static QAcidScript<Acid> Act<TTypedInput>(Action action)
+		where TTypedInput : Act
+		=> TypedScript.MessageFromType(typeof(TTypedInput)).Act(action);
+
+	public static ActBuilder<TTypedInput> Act<TTypedInput>()
+		where TTypedInput : Act => new();
+
+	public record ActBuilder<TTypedInput>()
+		where TTypedInput : TypedScript
+	{
+		public QAcidScript<TValue> Do<TValue>(Func<TValue> func)
+			=> TypedScript.MessageFromType(typeof(TTypedInput)).Act(func);
+	}
+
+	public static QAcidScript<Acid> Spec<TTypedInput>(Func<bool> condition)
+		where TTypedInput : Spec
+		=> TypedScript.MessageFromType(typeof(TTypedInput)).Spec(condition);
+}
+
+public record Input : TypedScript;
+
+public record Act : TypedScript;
+
+public record Spec : TypedScript;
+
+public record TypedScript
+{
+	public static string MessageFromType(Type type) =>
+		LowercaseAllLettersExceptTheFirst(PutASpaceBeforeEachCapital(type.Name));
+
+	private static string LowercaseAllLettersExceptTheFirst(string withSpaces)
+		=> $"{new string([.. withSpaces.Take(1)])}{new string([.. withSpaces.Skip(1).Select(char.ToLower)])}";
+
+	private static string PutASpaceBeforeEachCapital(string input)
+		=> Regex.Replace(input, "(?<!^)([A-Z])", " $1");
 }
