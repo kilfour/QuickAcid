@@ -83,6 +83,7 @@ public static partial class QAcidCombinators
 				bool passed = condition();
 				if (passed)
 				{
+					state.SpecPassed(key);
 					state.Shifter.CurrentContext.StopRun();
 				}
 				return QAcidResult.AcidOnly(state);
