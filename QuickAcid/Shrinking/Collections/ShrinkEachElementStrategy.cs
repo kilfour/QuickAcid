@@ -36,7 +36,7 @@ public class ShrinkEachElementStrategy : ICollectionShrinkStrategy
                 {
                     ShrinkStrategyPicker.Input(state, key, before, $"{fullKey}.{GetMappedIndex(index)}");
                     var removeForShrinking =
-                        state.Memory.ForThisExecution().GetDecorated(key).GetShrinkTraces()
+                        state.Memory.AccessForForThisExecution().GetDecorated(key).GetShrinkTraces()
                             .Any(a => a.Key == $"{fullKey}.{GetMappedIndex(index)}" && a.IsIrrelevant);
                     if (removeForShrinking)
                         theList[ix] = GetPlaceholder(theList[ix]!);

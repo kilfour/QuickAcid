@@ -62,17 +62,17 @@ public class PrimitiveShrinkStrategy
                 });
                 return;
             }
-
-            state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
-            {
-                ExecutionId = -1,
-                Key = fullKey,
-                Name = fullKey.Split(".").Last(),
-                Original = value,
-                Result = null,
-                Intent = ShrinkIntent.Irrelevant,
-                Strategy = "PrimitiveShrink"
-            });
         }
+
+        state.CurrentExecutionContext().ShrinkTrace(key, ShrinkKind.PrimitiveKind, new ShrinkTrace
+        {
+            ExecutionId = -1,
+            Key = fullKey,
+            Name = fullKey.Split(".").Last(),
+            Original = value,
+            Result = null,
+            Intent = ShrinkIntent.Irrelevant,
+            Strategy = "PrimitiveShrink"
+        });
     }
 }

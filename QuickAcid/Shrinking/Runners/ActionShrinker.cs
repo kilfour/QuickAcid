@@ -11,12 +11,12 @@ public class ActionShrinker
         var max = state.ExecutionNumbers.Max();
         foreach (var outerExcutionNumber in state.ExecutionNumbers.ToList())
         {
-            var oldKeys = state.Memory.For(outerExcutionNumber).ActionKeys;
+            var oldKeys = state.Memory.AccessFor(outerExcutionNumber).ActionKeys;
             if (oldKeys.Count < 1) continue;
             foreach (var key in oldKeys.ToList())
             {
                 if (oldKeys.Count < 1) continue;
-                state.Memory.For(outerExcutionNumber).ActionKeys.Remove(key);
+                state.Memory.AccessFor(outerExcutionNumber).ActionKeys.Remove(key);
                 using (state.Shifter.EnterPhase(QAcidPhase.ShrinkingExecutions))
                 {
                     state.Memory.ResetRunScopedInputs();
@@ -27,7 +27,7 @@ public class ActionShrinker
                     }
                     if (!state.Shifter.CurrentContext.Failed)
                     {
-                        state.Memory.For(outerExcutionNumber).ActionKeys.Add(key);
+                        state.Memory.AccessFor(outerExcutionNumber).ActionKeys.Add(key);
                     }
                     shrinkCount++;
                 }

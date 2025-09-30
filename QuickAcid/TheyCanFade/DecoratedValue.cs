@@ -9,7 +9,7 @@ public class DecoratedValue
 
     public ReportingIntent ReportingIntent { get; set; } = ReportingIntent.Shrinkable;
 
-    private ShrinkTraceRecord root = new ShrinkTraceRecord();
+    private readonly ShrinkTraceRecord root = new();
 
     public void SetShrinkKind(ShrinkKind shrinkKind) { root.ShrinkKind = shrinkKind; }
 

@@ -57,6 +57,23 @@ public class CustomShrinkingTests
     }
 
     [Fact]
+    public void Custom_Does_actually_shrink()
+    {
+        var observe = new HashSet<int>();
+        var script =
+            from _ in Shrink<int>.LikeThis(a => [666])
+            from input in "input".Input(Fuzz.Constant(42))
+            from foo in "spec".Spec(() => input != 42)
+            select Acid.Test;
+        var article = TheJournalist.Exposes(() => QState.Run(script)
+            .WithOneRun()
+            .AndOneExecutionPerRun());
+
+        var entry = article.Execution(1).Input(1).Read();
+        Assert.Equal("42", entry.Value);
+    }
+
+    [Fact]
     [Doc(Order = $"{Chapter.Order}-3", Content = @"custom list strat")]
     public void Custom_using_list()
     {

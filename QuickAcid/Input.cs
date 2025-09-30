@@ -1,13 +1,52 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Phasers;
 using QuickAcid.Shrinking;
+using QuickAcid.Shrinking.Custom;
 using QuickFuzzr.UnderTheHood;
+using QuickPulse.Show;
 
 namespace QuickAcid;
 
 
 public static partial class QAcidCombinators
 {
+	public record InputConfiguration<T>()
+	{
+		public bool NeedsTracing { get; init; }
+		public InputConfiguration<T> Trace() => this with { NeedsTracing = true };
+		public InputConfiguration<T> Trace(Func<bool> predicate) => predicate() ? this with { NeedsTracing = true } : this;
+
+		public bool HasSchrinker { get; init; }
+		public Func<T, IEnumerable<T>> Shrinker { get; init; } = _ => [];
+		public InputConfiguration<T> ShrinkWith(Func<T, IEnumerable<T>> shrinker)
+			=> this with { HasSchrinker = true, Shrinker = shrinker };
+
+	};
+	public static QAcidScript<T> Input<T>(
+		this string key,
+		Generator<T> generator,
+		Func<InputConfiguration<T>, InputConfiguration<T>> configAction)
+	{
+		return state =>
+			{
+				var cfg = configAction(new InputConfiguration<T>());
+				if (cfg.HasSchrinker)
+				{
+					state.ShrinkingRegistry.RegisterShrinker(new LambdaShrinker<T>(cfg.Shrinker));
+				}
+				var result = state.HandleInput(key, generator);
+				if (cfg.NeedsTracing)
+				{
+					key.Trace(() => Introduce.This(result.Value!, false))(state);
+				}
+				if (cfg.HasSchrinker)
+				{
+					state.ShrinkingRegistry.RemoveShrinker<T>();
+				}
+				return result;
+			};
+	}
+
 	public static QAcidScript<T> Input<T>(this string key, Generator<T> generator)
 	{
 		return state =>

@@ -64,7 +64,7 @@ public sealed class QAcidState
     {
         return new RunExecutionContext(
             CurrentExecutionNumber,
-            Memory.ForThisExecution(),
+            Memory.AccessForForThisExecution(),
             InputTracker.ForThisExecution(),
             Memory.TracesForThisExecution(),
             Memory.DiagnosisForThisExecution());
@@ -178,10 +178,10 @@ public sealed class QAcidState
         {
             caseFile.AddRunDeposition(run);
         }
-        // caseFile.ShrinkTraces =
-        //     Memory.AllAccesses()
-        //         .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
-        //         .ToList();
+        caseFile.ShrinkTraces =
+            Memory.AllAccesses()
+                .SelectMany(a => a.access.GetAll().SelectMany(kv => kv.Value.GetShrinkTraces()))
+                .ToList();
         return caseFile;
 
     }

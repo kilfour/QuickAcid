@@ -26,6 +26,9 @@ public static class Script
 	public static QAcidScript<T> ExecuteIf<T>(Func<bool> predicate, Generator<T> generator) =>
 		state => predicate() ? Vessel.Some(state, generator(state.FuzzState).Value) : Vessel.None<T>(state);
 
+	public static QAcidScript<T> Generate<T>(Generator<T> generator) =>
+		state => Vessel.Some(state, generator(state.FuzzState).Value);
+
 	public static QAcidScript<T> Choose<T>(params QAcidScript<T>[] scripts)
 		=> ChooseInternal(scripts);
 

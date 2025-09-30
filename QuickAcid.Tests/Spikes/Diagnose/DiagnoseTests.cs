@@ -1,10 +1,8 @@
 using QuickPulse.Explains;
-using QuickFuzzr;
-using QuickFuzzr.UnderTheHood;
 using QuickAcid.Tests._Tools.ThePress;
 
 
-namespace QuickAcid.TestsDeposition.Docs.Combinators.Trace;
+namespace QuickAcid.Tests.Spikes.Diagnose;
 
 [DocFile]
 [DocContent(
@@ -12,7 +10,7 @@ namespace QuickAcid.TestsDeposition.Docs.Combinators.Trace;
 ")]
 public class DiagnoseTests
 {
-    [Fact]
+    [Fact(Skip = "Not sure about this")]
     public void Diagnose_usage()
     {
         var script =

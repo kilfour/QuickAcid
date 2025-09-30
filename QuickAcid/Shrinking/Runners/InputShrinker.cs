@@ -5,17 +5,37 @@ namespace QuickAcid.Shrinking.Runners;
 
 public class InputShrinker
 {
+    // public static int Run(QAcidState state)
+    // {
+    //     var shrinkCount = 0;
+    //     using (state.Shifter.EnterPhase(QAcidPhase.ShrinkingInputs))
+    //     {
+    //         state.Memory.ResetRunScopedInputs();
+    //         foreach (var executionNumber in state.ExecutionNumbers.ToList())
+    //         {
+    //             state.CurrentExecutionNumber = executionNumber;
+    //             state.Script(state);
+    //             shrinkCount++;
+    //         }
+    //     }
+    //     return shrinkCount;
+    // }
+
     public static int Run(QAcidState state)
     {
         var shrinkCount = 0;
-        using (state.Shifter.EnterPhase(QAcidPhase.ShrinkingInputs))
+        foreach (var current in state.ExecutionNumbers.ToList())
         {
             state.Memory.ResetRunScopedInputs();
             foreach (var executionNumber in state.ExecutionNumbers.ToList())
             {
-                state.CurrentExecutionNumber = executionNumber;
-                state.Script(state);
-                shrinkCount++;
+                var phase = current == executionNumber ? QAcidPhase.ShrinkingInputs : QAcidPhase.ShrinkInputEval;
+                using (state.Shifter.EnterPhase(phase))
+                {
+                    state.CurrentExecutionNumber = executionNumber;
+                    state.Script(state);
+                    shrinkCount++;
+                }
             }
         }
         return shrinkCount;

@@ -46,7 +46,7 @@ public class TrackedInputMemory
         return reportPerExecution[id];
     }
 
-    public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedInputsPerExecution()
+    public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedInputReportsPerExecution()
     {
         return reportPerExecution;
     }

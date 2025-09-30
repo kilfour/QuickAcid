@@ -2,9 +2,12 @@ using System.Diagnostics;
 using QuickAcid.Bolts;
 using QuickAcid.Proceedings;
 using QuickAcid.Proceedings.ClerksOffice;
+using QuickAcid.Shrinking;
 using QuickFuzzr;
 using QuickPulse;
 using QuickPulse.Arteries;
+using QuickPulse.Bolts;
+using QuickPulse.Show;
 
 namespace QuickAcid.RunningThings;
 
@@ -72,6 +75,10 @@ public class QRunner
             var filenameCf = Path.Combine(".quickacid", "archive", $"{config.FileAs}.qr");
             Signal.Tracing<string>().SetArtery(new WriteDataToFile(filenameCf).ClearFile())
                    .Pulse(TheClerk.Transcribes(caseFile));
+
+            var filenameSt = Path.Combine(".quickacid", "archive", $"{config.FileAs}.qs");
+            Signal.From(DefaultFormat).SetArtery(new WriteDataToFile(filenameSt).ClearFile())
+                   .Pulse(caseFile.ShrinkTraces);
         }
     }
 
@@ -83,4 +90,23 @@ public class QRunner
 
     [StackTraceHidden]
     public CaseFile AndOneExecutionPerRun() => And(new ExecutionCount(1));
+
+    public static readonly Flow<ShrinkTrace> Raw =
+        from input in Pulse.Start<ShrinkTrace>()
+        from _ in Pulse.Trace($"  {input}")
+        select input;
+
+    private static readonly Flow<ShrinkTrace> DefaultFormat =
+        from input in Pulse.Start<ShrinkTrace>()
+        from _ in Pulse.Trace(
+            $"  {input.Key} = {Introduce.This(input.Original!, false)}, ExecId = {input.ExecutionId}, Intent = {input.Intent} (Cause: {Introduce.This(input.Result!, false)}), Strategy = {input.Strategy} ")
+        select input;
+
+    private static readonly Flow<ShrinkTrace> DefaultFormat2 =
+        from input in Pulse.Start<ShrinkTrace>()
+        from _ in Pulse.TraceIf(input.Intent == ShrinkIntent.Irrelevant,
+            () => $"  {input.Key} = {Introduce.This(input.Original!, false)}, ExecId = {input.ExecutionId}, Intent = {input.Intent} (Cause: {Introduce.This(input.Result!, false)}), Strategy = {input.Strategy} ")
+        from __ in Pulse.TraceIf(input.Intent != ShrinkIntent.Irrelevant,
+            () => $"  {input.Key} = {Introduce.This(input.Original!, false)}, ExecId = {input.ExecutionId}, Intent = {input.Intent}, Strategy = {input.Strategy}")
+        select input;
 }

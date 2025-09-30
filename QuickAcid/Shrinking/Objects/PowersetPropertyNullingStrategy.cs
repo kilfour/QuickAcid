@@ -14,7 +14,7 @@ public class PowersetPropertyNullingStrategy : IObjectShrinkStrategy
 {
     public void Shrink<T>(QAcidState state, string key, T value, string fullKey)
     {
-        var shrunk = state.Memory.ForThisExecution().GetDecorated(key).GetShrinkOutcome();
+        var shrunk = state.Memory.AccessForForThisExecution().GetDecorated(key).GetShrinkOutcome();
         if (shrunk == ShrinkOutcome.Irrelevant)
         {
             var oldValues = new Dictionary<string, object>();

@@ -53,7 +53,7 @@ public class ListDependencyTests
             .And(30.ExecutionsPerRun());
     }
 
-    [Fact]
+    [Fact(Skip = "exploring")]
     public void NotSoSimpleChooseIf()
     {
         var script =

@@ -14,7 +14,7 @@ public class GreedyShrinkEachElementStrategy : ICollectionShrinkStrategy
         {
             mapper[index] = indexKey;
             var removeForShrinking =
-                state.Memory.ForThisExecution().GetDecorated(key).GetShrinkTraces()
+                state.Memory.AccessForForThisExecution().GetDecorated(key).GetShrinkTraces()
                     .Any(a => a.Key == $"{fullKey}.{indexKey}" && a.IsRemoved);
             if (removeForShrinking)
                 theList.RemoveAt(index);

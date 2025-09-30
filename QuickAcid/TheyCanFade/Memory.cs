@@ -11,9 +11,9 @@ public class Memory(Func<int> getCurrentExecutionId)
 		this.getCurrentExecutionId = getCurrentExecutionId;
 	}
 
-	private readonly TrackedInputMemory trackedInputMemory = new TrackedInputMemory(getCurrentExecutionId);
-	public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedSnapshot()
-		=> trackedInputMemory.TrackedInputsPerExecution();
+	private readonly TrackedInputMemory trackedInputMemory = new(getCurrentExecutionId);
+	public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedInputReportsPerExecution()
+		=> trackedInputMemory.TrackedInputReportsPerExecution();
 
 	public T StoreTracked<T>(string key, Func<T> factory)
 		=> trackedInputMemory.Store(key, factory);
@@ -27,14 +27,15 @@ public class Memory(Func<int> getCurrentExecutionId)
 
 
 	private readonly Dictionary<int, Access> memoryPerExecution = [];
-	public Access For(int executionId)
+	public Access AccessFor(int executionId)
 	{
 		if (!memoryPerExecution.ContainsKey(executionId))
 			memoryPerExecution[executionId] = new Access();
 		return memoryPerExecution[executionId];
 	}
-	public Access ForThisExecution() => For(getCurrentExecutionId());
-
+	public Access AccessForForThisExecution() => AccessFor(getCurrentExecutionId());
+	public IEnumerable<(int executionId, Access access)> AllAccesses()
+		=> memoryPerExecution.Select(kvp => (kvp.Key, kvp.Value));
 
 
 	private readonly Dictionary<int, Dictionary<string, string>> tracesPerExecution = [];
@@ -68,9 +69,9 @@ public class Memory(Func<int> getCurrentExecutionId)
 
 	public IDisposable ScopedSwap(string key, object value)
 	{
-		var memory = ForThisExecution();
+		var access = AccessForForThisExecution();
 
-		Func<object> getValue = () => memory.Get<object>(key);
+		Func<object> getValue = () => access.Get<object>(key);
 		var setSteps = new Stack<(MemoryLens lens, object container)>();
 
 		foreach (var lens in swappers.Reverse())
@@ -94,11 +95,11 @@ public class Memory(Func<int> getCurrentExecutionId)
 			return updated;
 		};
 
-		memory.Set(key, setValue(value), ReportingIntent.Never);
+		access.Set(key, setValue(value), ReportingIntent.Never);
 
 		return new DisposableAction(() =>
 		{
-			memory.Set(key, setValue(oldValue), ReportingIntent.Shrinkable);
+			access.Set(key, setValue(oldValue), ReportingIntent.Shrinkable);
 		});
 	}
 }

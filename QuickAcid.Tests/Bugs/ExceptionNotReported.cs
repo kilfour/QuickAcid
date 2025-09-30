@@ -23,7 +23,7 @@ public class ExceptionNotReported
 			from bugHouseRun in "BugHouse.Run".Act(bugHouse.Run)
 			select Acid.Test;
 
-		var article = TheJournalist.Exposes(() => QState.Run(script)
+		var article = TheJournalist.Exposes(() => QState.Run("bughouse", script)
 			.WithOneRun()
 			.And(2.ExecutionsPerRun()));
 

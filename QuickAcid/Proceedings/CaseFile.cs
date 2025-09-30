@@ -1,4 +1,6 @@
 
+using QuickAcid.Shrinking;
+
 namespace QuickAcid.Proceedings;
 
 public class CaseFile
@@ -37,4 +39,6 @@ public class CaseFile
         DiagnosisExecutionDepositions.Add(diagnosisExecutionDeposition);
         return this;
     }
-};
+
+    public List<ShrinkTrace> ShrinkTraces { get; internal set; } = [];
+}

@@ -16,6 +16,11 @@ public class ShrinkingRegistry
         shrinkers[typeof(T)] = shrinker;
     }
 
+    public void RemoveShrinker<T>()
+    {
+        shrinkers.Remove(typeof(T));
+    }
+
     public IShrinker<T>? TryGetShrinker<T>()
     {
         return shrinkers.TryGetValue(typeof(T), out var shrinker)
