@@ -11,18 +11,21 @@ public class Memory(Func<int> getCurrentExecutionId)
 		this.getCurrentExecutionId = getCurrentExecutionId;
 	}
 
-	private readonly TrackedInputMemory trackedInputMemory = new(getCurrentExecutionId);
-	public IReadOnlyDictionary<int, Dictionary<string, string>> TrackedInputReportsPerExecution()
-		=> trackedInputMemory.TrackedInputReportsPerExecution();
+	private readonly RunScopedMemory runScopedMemory = new(getCurrentExecutionId);
+	public IReadOnlyDictionary<int, Dictionary<string, string>> ShashedValuesPerExecution()
+		=> runScopedMemory.TrackedInputReportsPerExecution();
 
 	public T StoreTracked<T>(string key, Func<T> factory)
-		=> trackedInputMemory.Store(key, factory);
+		=> runScopedMemory.Store(key, factory);
 
 	public T StoreStashed<T>(string key, Func<T> factory)
-		=> trackedInputMemory.StoreWithoutReporting(key, factory);
+		=> runScopedMemory.StoreWithoutReporting(key, factory);
 
 	public void ResetRunScopedInputs()
-		=> trackedInputMemory.Reset();
+		=> runScopedMemory.Reset();
+
+	public T GetStashed<T>(string key)
+		=> runScopedMemory.Get<T>(key);
 
 
 

@@ -2,7 +2,7 @@ using QuickAcid.Proceedings;
 
 namespace QuickAcid.Tests.Proceedings.TrackedDepositions;
 
-public class TrackedDepositionsTests : DepositionTest
+public class StashedDepositionsTests : DepositionTest
 {
 
     [Fact]
@@ -10,7 +10,7 @@ public class TrackedDepositionsTests : DepositionTest
     {
         var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
-                    .AddTrackedDeposition(new TrackedDeposition("Tracked Value", "{ Property = 42}"))));
+                    .AddTrackedDeposition(new StashedDeposition("Tracked Value", "{ Property = 42}"))));
         var reader = Transcribe(caseFile);
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal("   => Tracked Value (tracked) : { Property = 42}", reader.NextLine());
@@ -24,8 +24,8 @@ public class TrackedDepositionsTests : DepositionTest
     {
         var caseFile = CaseFile.WithVerdict(Verdict.FromDossier(Dossier)
                 .AddExecutionDeposition(new ExecutionDeposition(1)
-                    .AddTrackedDeposition(new TrackedDeposition("Tracked Value", "{ Property = 42}"))
-                    .AddTrackedDeposition(new TrackedDeposition("Other", "{ Truthy = false }"))));
+                    .AddTrackedDeposition(new StashedDeposition("Tracked Value", "{ Property = 42}"))
+                    .AddTrackedDeposition(new StashedDeposition("Other", "{ Truthy = false }"))));
         var reader = Transcribe(caseFile);
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal("   => Tracked Value (tracked) : { Property = 42}", reader.NextLine());

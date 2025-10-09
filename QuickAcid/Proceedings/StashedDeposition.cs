@@ -1,11 +1,11 @@
 namespace QuickAcid.Proceedings;
 
-public record TrackedDeposition
+public record StashedDeposition
 {
     public string Label { get; }
     public string Value { get; }
 
-    public TrackedDeposition(string label, string value)
+    public StashedDeposition(string label, string value)
     {
         Label = label;
         Value = value;

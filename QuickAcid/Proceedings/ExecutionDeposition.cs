@@ -10,7 +10,7 @@ public record ExecutionDeposition
 
     public List<ActionDeposition> ActionDepositions { get; } = [];
 
-    public List<TrackedDeposition> TrackedDepositions { get; } = [];
+    public List<StashedDeposition> TrackedDepositions { get; } = [];
 
     public List<InputDeposition> InputDepositions { get; } = [];
 
@@ -44,7 +44,7 @@ public record ExecutionDeposition
         return false;
     }
 
-    public ExecutionDeposition AddTrackedDeposition(TrackedDeposition trackedDeposition)
+    public ExecutionDeposition AddTrackedDeposition(StashedDeposition trackedDeposition)
     {
         TrackedDepositions.Add(trackedDeposition);
         return this;

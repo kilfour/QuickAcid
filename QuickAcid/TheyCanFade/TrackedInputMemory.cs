@@ -2,17 +2,14 @@ using QuickPulse.Show;
 
 namespace QuickAcid.TheyCanFade;
 
-public class TrackedInputMemory
+public class RunScopedMemory(Func<int> getCurrentExecutionId)
 {
-    private readonly Func<int> getCurrentExecutionId;
+    private readonly Func<int> getCurrentExecutionId = getCurrentExecutionId;
 
     private readonly Dictionary<string, object> values = [];
     private readonly Dictionary<int, Dictionary<string, string>> reportPerExecution = [];
 
-    public TrackedInputMemory(Func<int> getCurrentExecutionId)
-    {
-        this.getCurrentExecutionId = getCurrentExecutionId;
-    }
+    public T Get<T>(string key) => (T)values[key];
 
     public T Store<T>(string key, Func<T> factory)
     {

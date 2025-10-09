@@ -15,7 +15,7 @@ public sealed class QAcidState
     public State FuzzState { get; } = new State();
     public int Seed { get { return FuzzState.Seed; } }
 
-    public Verifier VerifyIf { get; }
+    public Verifier VerifyIf { get; private set; }
 
     public QAcidState(QAcidScript<Acid> script)
     {
@@ -24,8 +24,6 @@ public sealed class QAcidState
         Memory = new Memory(() => CurrentExecutionNumber);
         InputTracker = new InputTracker(() => CurrentExecutionNumber);
         VerifyIf = new Verifier(this);
-
-        executionShrinker = new();
     }
 
     public QAcidState(QAcidScript<Acid> script, int seed)
@@ -112,17 +110,14 @@ public sealed class QAcidState
 
         }
     }
-    // -----------------------------------------------------------------
-    // Shrinking Machinery
-    // --
-    private readonly ExecutionShrinker executionShrinker;
-    // -----------------------------------------------------------------
+
     public CaseFile Run(int executionsPerScope, QAcidStateConfig config)
     {
+
         ExecutionNumbers = [.. Enumerable.Repeat(-1, executionsPerScope)];
         for (int j = 0; j < executionsPerScope; j++)
         {
-            var caseFile = ExecuteStep(config);
+            var caseFile = PerformExecution(config);
             if (Shifter.CurrentContext.Failed)
             {
                 return caseFile;
@@ -136,7 +131,7 @@ public sealed class QAcidState
     public CaseFile Run(int executionsPerScope) => Run(executionsPerScope, new());
     // ---------------------------------------------------------------------
 
-    private CaseFile ExecuteStep(QAcidStateConfig config)
+    private CaseFile PerformExecution(QAcidStateConfig config)
     {
         ExecutionNumbers[CurrentExecutionNumber] = CurrentExecutionNumber;
         Script(this);
@@ -150,6 +145,8 @@ public sealed class QAcidState
 
     public CaseFile HandleFailure(QAcidStateConfig config)
     {
+        var executionShrinker = config.Diagnose == null ? new ExecutionShrinker() : new DiagnosticExecutionShrinker(config.Diagnose);
+        VerifyIf = config.Diagnose == null ? new Verifier(this) : new DiagnosticVerifier(this, config.Diagnose);
         var runs = new List<RunDeposition>();
         if (config.Verbose)
         {

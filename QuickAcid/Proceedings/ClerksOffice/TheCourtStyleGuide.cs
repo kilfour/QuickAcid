@@ -44,8 +44,8 @@ public static class The
         from __ in Pulse.Trace($" {input.Label.Trim()}")
         select input;
 
-    private readonly static Flow<TrackedDeposition> trackedDeposition =
-        from input in Pulse.Start<TrackedDeposition>()
+    private readonly static Flow<StashedDeposition> trackedDeposition =
+        from input in Pulse.Start<StashedDeposition>()
         from context in Pulse.Gather<Decorum>()
         from _ in Pulse.When<Decorum>(a => a.Line.Passable(), line)
         from __ in Pulse.Trace($"   => {input.Label} (tracked) : {input.Value}")

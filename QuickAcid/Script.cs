@@ -7,7 +7,7 @@ using QuickFuzzr.UnderTheHood;
 
 namespace QuickAcid;
 
-public static class Script
+public static partial class Script
 {
 	public static QAcidScript<Acid> Execute(Action action) =>
 		state => { action(); return Vessel.AcidOnly(state); };
@@ -73,6 +73,8 @@ public static class Script
 	}
 
 	public static QAcidScript<T> Stashed<T>(Func<T> func) => typeof(T).FullName!.Stashed(func);
+
+	public static QAcidScript<Stash<T>> StashFor<T>() => typeof(Stash<T>).FullName!.Stashed(() => new Stash<T>());
 
 	public static InputBuilder<TTypedInput> Input<TTypedInput>()
 		where TTypedInput : Input => new();

@@ -29,7 +29,7 @@ public static class Compile
     private static ExecutionDeposition GetExecutionDeposition(Memory memory, int executionNumber, bool isVerdict)
     {
         var executionDeposition = new ExecutionDeposition(executionNumber);
-        GetTrackedDepositions(memory, executionNumber, executionDeposition);
+        GetStashedDepositions(memory, executionNumber, executionDeposition);
         var access = memory.AccessFor(executionNumber);
         GetActionDepositions(executionDeposition, access);
         GetInputDepositions(executionDeposition, access, isVerdict);
@@ -37,12 +37,12 @@ public static class Compile
         return executionDeposition;
     }
 
-    private static void GetTrackedDepositions(Memory Memory, int executionNumber, ExecutionDeposition executionDeposition)
+    private static void GetStashedDepositions(Memory Memory, int executionNumber, ExecutionDeposition executionDeposition)
     {
-        if (Memory.TrackedInputReportsPerExecution().TryGetValue(executionNumber, out var snapshot))
+        if (Memory.ShashedValuesPerExecution().TryGetValue(executionNumber, out var snapshot))
         {
             foreach (var (key, val) in snapshot)
-                executionDeposition.AddTrackedDeposition(new TrackedDeposition(key, val));
+                executionDeposition.AddTrackedDeposition(new StashedDeposition(key, val));
         }
     }
 

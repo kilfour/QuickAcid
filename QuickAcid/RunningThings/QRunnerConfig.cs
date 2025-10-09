@@ -18,6 +18,7 @@ public record QRunnerConfig
     // --
     public required bool Verbose { get; init; }
     public required bool ShrinkingActions { get; init; }
+    public required IArtery? Diagnose { get; init; }
     //----------------------------------------------------------------
 
     public static QRunnerConfig Default()
@@ -29,7 +30,8 @@ public record QRunnerConfig
                 Vault = null,
                 Verbose = false,
                 ReplayMode = false,
-                ShrinkingActions = false
+                ShrinkingActions = false,
+                Diagnose = null
             };
     }
 
