@@ -21,7 +21,12 @@ public static partial class QAcidCombinators
 		public InputConfiguration<T> ShrinkWith(Func<T, IEnumerable<T>> shrinker)
 			=> this with { HasSchrinker = true, Shrinker = shrinker };
 
+		public bool HasReducer { get; init; }
+		public Func<T, IEnumerable<T>> Reducer { get; init; } = _ => [];
+		public InputConfiguration<T> ReduceWith(Func<T, IEnumerable<T>> reducer)
+			=> this with { HasReducer = true, Reducer = reducer };
 	};
+
 	public static QAcidScript<T> Input<T>(
 		this string key,
 		Generator<T> generator,
@@ -32,7 +37,11 @@ public static partial class QAcidCombinators
 				var cfg = configAction(new InputConfiguration<T>());
 				if (cfg.HasSchrinker)
 				{
-					state.ShrinkingRegistry.RegisterShrinker(new LambdaShrinker<T>(cfg.Shrinker));
+					state.ShrinkingRegistry.Register(new LambdaShrinker<T>(cfg.Shrinker));
+				}
+				if (cfg.HasReducer)
+				{
+					state.ReducersRegistry.Register(cfg.Reducer);
 				}
 				var result = state.HandleInput(key, generator);
 				if (cfg.NeedsTracing)
@@ -41,7 +50,11 @@ public static partial class QAcidCombinators
 				}
 				if (cfg.HasSchrinker)
 				{
-					state.ShrinkingRegistry.RemoveShrinker<T>();
+					state.ShrinkingRegistry.Remove<T>();
+				}
+				if (cfg.HasReducer)
+				{
+					state.ReducersRegistry.Remove<T>();
 				}
 				return result;
 			};

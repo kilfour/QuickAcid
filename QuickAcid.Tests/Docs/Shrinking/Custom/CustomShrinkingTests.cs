@@ -1,4 +1,3 @@
-using QuickPulse.Explains.Deprecated;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickAcid.Shrinking.Collections;
@@ -8,9 +7,7 @@ namespace QuickAcid.TestsDeposition.Docs.Shrinking.Custom;
 
 public static class Chapter { public const string Order = "1-50-20"; }
 
-[Doc(Order = Chapter.Order, Caption = "Custom Shrinking", Content =
-@"...
-")]
+
 public class CustomShrinkingTests
 {
     public class Shrinky : IShrinker<int>
@@ -22,7 +19,6 @@ public class CustomShrinkingTests
     }
 
     [Fact]
-    [Doc(Order = $"{Chapter.Order}-1", Content = @"Usage with class")]
     public void Custom_using_class()
     {
         var observe = new HashSet<int>();
@@ -40,7 +36,6 @@ public class CustomShrinkingTests
     }
 
     [Fact]
-    [Doc(Order = $"{Chapter.Order}-2", Content = @"Usage with lambda")]
     public void Custom_using_lambda()
     {
         var observe = new HashSet<int>();
@@ -74,7 +69,6 @@ public class CustomShrinkingTests
     }
 
     [Fact]
-    [Doc(Order = $"{Chapter.Order}-3", Content = @"custom list strat")]
     public void Custom_using_list()
     {
         var observe = new HashSet<int>();
@@ -91,7 +85,6 @@ public class CustomShrinkingTests
     }
 
     [Fact]
-    [Doc(Order = $"{Chapter.Order}-4", Content = @"Custom Collection Shrinking Policy: RemoveOneByOneStrategy")]
     public void Custom_collection_shrinking_policies_RemoveOneByOneStrategy()
     {
         var script =
@@ -109,7 +102,6 @@ public class CustomShrinkingTests
     }
 
     [Fact]
-    [Doc(Order = $"{Chapter.Order}-4", Content = @"ShrinkEachElementStrategy")]
     public void Custom_collection_shrinking_policies_ShrinkEachElementStrategy()
     {
         var script =

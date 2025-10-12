@@ -73,11 +73,11 @@ public class QRunner
         if (config.FileAs != null)
         {
             var filenameCf = Path.Combine(".quickacid", "archive", $"{config.FileAs}.qr");
-            Signal.Tracing<string>().SetArtery(new WriteDataToFile(filenameCf).ClearFile())
+            Signal.From<string>(a => Pulse.Trace(a)).SetArtery(TheLedger.Rewrites(filenameCf))
                    .Pulse(TheClerk.Transcribes(caseFile));
 
             var filenameSt = Path.Combine(".quickacid", "archive", $"{config.FileAs}.qs");
-            Signal.From(DefaultFormat).SetArtery(new WriteDataToFile(filenameSt).ClearFile())
+            Signal.From(DefaultFormat).SetArtery(TheLedger.Rewrites(filenameSt))
                    .Pulse(caseFile.ShrinkTraces);
         }
     }

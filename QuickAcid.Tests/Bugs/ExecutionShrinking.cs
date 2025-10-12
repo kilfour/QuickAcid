@@ -9,11 +9,11 @@ public class ExecutionShrinking
     public void Choosing_Executions_Two_Need_To_Remain()
     {
         var script =
-            from collector in "collector".Stashed(() => new TheCollector<int>())
+            from collector in "collector".Stashed(() => TheCollector.Exhibits<int>())
             from ops in Script.Choose(
-                "act1".Act(() => collector.Flow(1)),
-                "act2".Act(() => collector.Flow(2)),
-                "act3".Act(() => collector.Flow(3))
+                "act1".Act(() => collector.Absorb(1)),
+                "act2".Act(() => collector.Absorb(2)),
+                "act3".Act(() => collector.Absorb(3))
             )
             from spec in "spec".Spec(() => collector.TheExhibit.Count == collector.TheExhibit.Distinct().Count())
             select Acid.Test;

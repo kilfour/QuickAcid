@@ -54,7 +54,7 @@ public class ExecutionShrinker
 
 public class DiagnosticExecutionShrinker : ExecutionShrinker
 {
-    public Signal<string> Signal = QuickPulse.Signal.Tracing<string>();
+    public Signal<string> Signal = QuickPulse.Signal.From<string>(a => Pulse.Trace(a));
 
     public DiagnosticExecutionShrinker(IArtery artery) { Signal.SetArtery(artery); }
 

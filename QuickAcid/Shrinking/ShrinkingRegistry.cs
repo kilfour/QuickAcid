@@ -11,12 +11,12 @@ public class ShrinkingRegistry
 {
     private readonly Dictionary<Type, object> shrinkers = [];
 
-    public void RegisterShrinker<T>(IShrinker<T> shrinker)
+    public void Register<T>(IShrinker<T> shrinker)
     {
         shrinkers[typeof(T)] = shrinker;
     }
 
-    public void RemoveShrinker<T>()
+    public void Remove<T>()
     {
         shrinkers.Remove(typeof(T));
     }

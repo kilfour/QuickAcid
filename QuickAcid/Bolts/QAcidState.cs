@@ -41,7 +41,8 @@ public sealed class QAcidState
     {
         return CurrentExecutionNumber == ExecutionNumbers.Last();
     }
-
+    //--
+    public ReducersRegistry ReducersRegistry { get; } = new ReducersRegistry();
     //--
     public ShrinkingRegistry ShrinkingRegistry { get; } = new ShrinkingRegistry();
     public Shifter Shifter { get; } = new Shifter();

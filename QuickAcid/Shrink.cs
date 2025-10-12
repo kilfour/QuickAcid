@@ -9,7 +9,7 @@ public static class Shrink<T>
     public static QAcidScript<Acid> LikeThis(IShrinker<T> shrinker) =>
         state =>
             {
-                state.ShrinkingRegistry.RegisterShrinker(shrinker);
+                state.ShrinkingRegistry.Register(shrinker);
                 return Vessel.AcidOnly(state);
             };
 

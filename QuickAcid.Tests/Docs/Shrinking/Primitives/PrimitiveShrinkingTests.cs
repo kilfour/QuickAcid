@@ -1,4 +1,4 @@
-using QuickPulse.Explains.Deprecated;
+using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
 
@@ -7,24 +7,24 @@ namespace QuickAcid.TestsDeposition.Docs.Shrinking.Primitives;
 
 public static class Chapter { public const string Order = "1-50-5"; }
 
-[Doc(Order = Chapter.Order, Caption = "Primitives Shrinking", Content =
-@"`PrimitiveShrinkStrategy` is a shrinker used in QuickAcid to simplify failing test inputs for known primitive types.
-It operates using a predefined list of alternative values per type and attempts to
-replace the original with a simpler version that still causes the test to fail.
-")]
+// [Doc(Order = Chapter.Order, Caption = "Primitives Shrinking", Content =
+// @"`PrimitiveShrinkStrategy` is a shrinker used in QuickAcid to simplify failing test inputs for known primitive types.
+// It operates using a predefined list of alternative values per type and attempts to
+// replace the original with a simpler version that still causes the test to fail.
+// ")]
 public class PrimitiveShrinkingTests
 {
-    [Doc(Order = Chapter.Order + "-1", Caption = "How It Works", Content =
-@"1. **Recognize Known Type**  
-   Checks if the given value belongs to a supported primitive type (like `int`, `bool`, `string`, etc.).
-2. **Initial Check**  
-   First ensures that the original value *actually* causes a failure. Otherwise, shrinking is skipped.
-3. **Candidate Evaluation**
-   - Iterates over alternative values (excluding the current one).
-   - Tries all candidates. If one causes the test to pass, the current value is minimal.
-4. **Trace Result**  
-   After evaluation, it emits a trace indicating whether the value was kept, or marked irrelevant.
-")]
+    // [Doc(Order = Chapter.Order + "-1", Caption = "How It Works", Content =
+    // @"1. **Recognize Known Type**  
+    //    Checks if the given value belongs to a supported primitive type (like `int`, `bool`, `string`, etc.).
+    // 2. **Initial Check**  
+    //    First ensures that the original value *actually* causes a failure. Otherwise, shrinking is skipped.
+    // 3. **Candidate Evaluation**
+    //    - Iterates over alternative values (excluding the current one).
+    //    - Tries all candidates. If one causes the test to pass, the current value is minimal.
+    // 4. **Trace Result**  
+    //    After evaluation, it emits a trace indicating whether the value was kept, or marked irrelevant.
+    // ")]
     [Fact]
     public void OneRelevantInt()
     {
@@ -116,16 +116,16 @@ public class PrimitiveShrinkingTests
         Assert.NotNull(article.Exception());
     }
 
-    [Doc(Order = Chapter.Order + "-2", Caption = "Supported Types", Content =
-@"These are matched via `Type.IsAssignableFrom(...)` to allow some flexibility:
+    // [Doc(Order = Chapter.Order + "-2", Caption = "Supported Types", Content =
+    // @"These are matched via `Type.IsAssignableFrom(...)` to allow some flexibility:
 
-- **Boolean**: `true`, `false`
-- **Numeric Types**: `int`, `long`, `short`, `byte`, `float`, `double`, `decimal`, including unsigned variants
-- **Characters**: `\0`, `'a'`, `'Z'`, space, newline, `\uFFFF`
-- **Strings**: `null`, empty, short strings, long strings
-- **Time Types**: `DateTime`, `DateTimeOffset`, `TimeSpan`
-- **Miscellaneous**: `Guid`, `Uri`
-")]
+    // - **Boolean**: `true`, `false`
+    // - **Numeric Types**: `int`, `long`, `short`, `byte`, `float`, `double`, `decimal`, including unsigned variants
+    // - **Characters**: `\0`, `'a'`, `'Z'`, space, newline, `\uFFFF`
+    // - **Strings**: `null`, empty, short strings, long strings
+    // - **Time Types**: `DateTime`, `DateTimeOffset`, `TimeSpan`
+    // - **Miscellaneous**: `Guid`, `Uri`
+    // ")]
     [Fact]
     public void OneRelevantChar()
     {

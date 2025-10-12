@@ -46,7 +46,7 @@ public static class The
 
     private readonly static Flow<StashedDeposition> trackedDeposition =
         from input in Pulse.Start<StashedDeposition>()
-        from context in Pulse.Gather<Decorum>()
+        from context in Pulse.Draw<Decorum>()
         from _ in Pulse.When<Decorum>(a => a.Line.Passable(), line)
         from __ in Pulse.Trace($"   => {input.Label} (tracked) : {input.Value}")
         from ___ in newLine
@@ -170,7 +170,7 @@ public static class The
 
     public readonly static Flow<CaseFile> CourtStyleGuide =
         from input in Pulse.Start<CaseFile>()
-        from _ in Pulse.Gather(new Decorum())
+        from _ in Pulse.Prime(() => new Decorum())
         from runDeposition in Pulse.ToFlow(runDeposition, input.RunDepositions)
         from verdict in Pulse.ToFlowIf(input.Verdict != null, verdict, () => input.Verdict)
         let needsBreak = input.Verdict != null && input.PassedSpecDepositions.Count > 0

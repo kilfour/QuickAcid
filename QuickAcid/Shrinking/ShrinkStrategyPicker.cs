@@ -17,6 +17,14 @@ public class ShrinkStrategyPicker
             : typeof(T);
 
         var normalizedType = Nullable.GetUnderlyingType(actualType) ?? actualType;
+
+        var customReducer = state.ReducersRegistry.TryGet<T>();
+        if (customReducer != null)
+        {
+            new CustomReductionStrategy<T>(customReducer).Reduce(state, key, value!);
+            return;
+        }
+
         var customShrinker = state.ShrinkingRegistry.TryGetShrinker<T>();
         if (customShrinker != null)
         {

@@ -43,7 +43,7 @@ public class Verifier
 
 public class DiagnosticVerifier : Verifier
 {
-    public Signal<string> Signal = QuickPulse.Signal.Tracing<string>();
+    public Signal<string> Signal = QuickPulse.Signal.From<string>(a => Pulse.Trace(a));
 
     public DiagnosticVerifier(QAcidState state, IArtery artery)
         : base(state) { Signal.SetArtery(artery); }

@@ -1,4 +1,4 @@
-using QuickPulse.Explains.Deprecated;
+using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using QuickAcid.Tests._Tools;
@@ -8,13 +8,11 @@ namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 
 public static class Chapter { public const string Order = "1-50-7"; }
 
-[Doc(Order = Chapter.Order, Caption = "Collection Shrinking", Content =
-@"...
-")]
+// [Doc(Order = Chapter.Order, Caption = "Collection Shrinking", Content ="")]
 public class CollectionShrinkingTests
 {
     [Fact]
-    [Doc(Order = $"{Chapter.Order}-1", Content = @"Usage")]
+    // [Doc(Order = $"{Chapter.Order}-1", Content = @"Usage")]
     public void Collection_shrink()
     {
         var script =
