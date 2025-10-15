@@ -26,7 +26,7 @@ public class CanCoachBeAssigned
     {
         var script =
             from coach in Script.Stashed(() => new Coach(1, "coach", "coach@coaching.com"))
-            from booking in Script.Input<CoachBooking>().From(BookingGenerator)
+            from booking in Script.Input<CoachBooking>().With(BookingGenerator)
             from bookCoach in Script.Act<BookTheCoach>(() => coach.BookIn(booking))
             from coachBooked in Script.Spec<CoachBooked>(() => coach.bookings.Contains(booking))
             select Acid.Test;

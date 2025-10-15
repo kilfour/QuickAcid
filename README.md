@@ -9,3 +9,58 @@ QuickAcid is a property-based testing library for C# that combines:
 * Deep state modeling and execution traces
 
 It's designed for sharp diagnostics, elegant expressiveness, and easy extension.  
+## Example
+Given a naive `Account` model:  
+```csharp
+public class Account
+{
+    public int Balance = 0;
+    public void Deposit(int amount) { Balance += amount; }
+    public void Withdraw(int amount) { Balance -= amount; }
+}
+```
+You can test the overdraft invariant like this:  
+```csharp
+var script =
+    from account in Script.Tracked(() => new Account())
+    from _ in Script.Choose(
+        from amount in Script.Input<Deposit.Amount>().With(Fuzz.Int(0, 10))
+        from act in Script.Act<Deposit>(() => account.Deposit(amount))
+        select Acid.Test,
+        from amount in Script.Input<Withdraw.Amount>().With(Fuzz.Int(0, 10))
+        from act in Script.Act<Withdraw>(() => account.Withdraw(amount))
+        select Acid.Test)
+    from spec in Script.Spec<NoOverdraft>(() => account.Balance >= 0)
+    select Acid.Test;
+QState.Run(script)
+    .WithOneRun()
+    .And(50.ExecutionsPerRun());
+```
+The generic arguments to the various `Script` methods are just record markers:  
+```
+namespace QuickAcid.Tests;
+
+public record Deposit : Act { public record Amount : Input; };
+public record Withdraw : Act { public record Amount : Input; };
+public record NoOverdraft : Spec;
+```
+## Example Failure Output:
+```
+──────────────────────────────────────────────────
+ Test:                    AcidTestNew
+ Location:                C:\Code\QuickAcid\QuickAcid.Tests\ReadMe.cs:104:1
+ Original failing run:    4 executions
+ Minimal failing case:    1 execution (after 4 shrinks)
+ Seed:                    1584314623
+ ──────────────────────────────────────────────────
+   => Account (tracked) : { Balance: 0 }
+ ──────────────────────────────────────────────────
+  Executed (3): Withdraw
+   - Input: Withdraw Amount = 9
+ ═══════════════════════════════
+  ❌ Spec Failed: No overdraft
+ ═══════════════════════════════
+ Passed Specs
+ - No overdraft: 3x
+ ──────────────────────────────────────────────────
+```

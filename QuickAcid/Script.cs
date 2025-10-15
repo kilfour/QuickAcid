@@ -75,6 +75,8 @@ public static partial class Script
 			};
 	}
 
+	public static QAcidScript<T> Tracked<T>(Func<T> func) => typeof(T).Name.Tracked(func);
+
 	public static QAcidScript<T> Stashed<T>(Func<T> func) => typeof(T).FullName!.Stashed(func);
 
 	public static QAcidScript<Stash<T>> StashFor<T>() => typeof(Stash<T>).FullName!.Stashed(() => new Stash<T>());
@@ -85,13 +87,13 @@ public static partial class Script
 	public record InputBuilder<TTypedInput>()
 		where TTypedInput : TypedScript
 	{
-		public QAcidScript<TValue> From<TValue>(Generator<TValue> generator)
-			=> TypedScript.MessageFromType(typeof(TTypedInput)).Input(generator);
+		public QAcidScript<TValue> With<TValue>(Generator<TValue> generator)
+			=> TypedScript.LabelFromType(typeof(TTypedInput)).Input(generator);
 	}
 
 	public static QAcidScript<Acid> Act<TTypedInput>(Action action)
 		where TTypedInput : Act
-		=> TypedScript.MessageFromType(typeof(TTypedInput)).Act(action);
+		=> TypedScript.LabelFromType(typeof(TTypedInput)).Act(action);
 
 	public static ActBuilder<TTypedInput> Act<TTypedInput>()
 		where TTypedInput : Act => new();
@@ -100,12 +102,12 @@ public static partial class Script
 		where TTypedInput : TypedScript
 	{
 		public QAcidScript<TValue> Do<TValue>(Func<TValue> func)
-			=> TypedScript.MessageFromType(typeof(TTypedInput)).Act(func);
+			=> TypedScript.LabelFromType(typeof(TTypedInput)).Act(func);
 	}
 
 	public static QAcidScript<Acid> Spec<TTypedInput>(Func<bool> condition)
 		where TTypedInput : Spec
-		=> TypedScript.MessageFromType(typeof(TTypedInput)).Spec(condition);
+		=> TypedScript.LabelFromType(typeof(TTypedInput)).Spec(condition);
 }
 
 public record Input : TypedScript;
@@ -116,7 +118,21 @@ public record Spec : TypedScript;
 
 public record TypedScript
 {
-	public static string MessageFromType(Type type) =>
+	public static string LabelFromType(Type type)
+	{
+		IEnumerable<string> names = [FormatTypeName(type)];
+		Type? parent = type.DeclaringType;
+		while (parent != null && typeof(TypedScript).IsAssignableFrom(parent))
+		{
+			names = names.Prepend(FormatTypeName(parent));
+			parent = parent.DeclaringType;
+
+		}
+		return string.Join(" ", names);
+	}
+
+
+	public static string FormatTypeName(Type type) =>
 		LowercaseAllLettersExceptTheFirst(PutASpaceBeforeEachCapital(type.Name));
 
 	private static string LowercaseAllLettersExceptTheFirst(string withSpaces)
@@ -124,4 +140,6 @@ public record TypedScript
 
 	private static string PutASpaceBeforeEachCapital(string input)
 		=> Regex.Replace(input, "(?<!^)([A-Z])", " $1");
+
+
 }

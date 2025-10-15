@@ -7,6 +7,7 @@ public class Article(CaseFile caseFile)
 {
     private readonly CaseFile caseFile = caseFile;
 
+    public CaseFile CaseFile { get; } = caseFile;
     public bool VerdictReached() => caseFile.HasVerdict();
 
     public string AssayerDisagrees()

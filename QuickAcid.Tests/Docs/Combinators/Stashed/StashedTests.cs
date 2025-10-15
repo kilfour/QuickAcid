@@ -1,4 +1,3 @@
-using QuickAcid;
 using QuickAcid.Tests._Tools.Models;
 using QuickPulse.Explains;
 
