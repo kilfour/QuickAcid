@@ -1,8 +1,4 @@
-using QuickAcid;
-using QuickAcid.Shrinking;
 using QuickPulse;
-using QuickPulse.Bolts;
-using QuickPulse.Show;
 
 namespace QuickAcid.RunningThings;
 

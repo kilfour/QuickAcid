@@ -1,8 +1,8 @@
-using QuickAcid.TestsDeposition._Tools;
 using QuickAcid.TestsDeposition._Tools.Models;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
+using QuickPulse.Bolts;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Tracked;
@@ -38,7 +38,7 @@ from account in ""account"".Tracked(() => new Account())
     public void Tracked_in_report_after_shrinking()
     {
         var script =
-           from container in "container".Tracked(() => new Container<int>(21))
+           from container in "container".Tracked(() => new Box<int>(21))
            from input in "input".Input(Fuzz.Constant(42))
            from _do in "do".Act(() => { container.Value = input; })
            from _ in "spec".Spec(() => container.Value != 42)
@@ -62,7 +62,7 @@ from account in ""account"".Tracked(() => new Account())
             {
                 if (executionCount != 0)
                     throw new Exception("BOOM");
-                return new Container<bool>(true);
+                return new Box<bool>(true);
             })
             from act in "act".Act(() => { executionCount++; })
             select Acid.Test;
@@ -104,7 +104,7 @@ from account in ""account"".Tracked(() => new Account())
     //     var report =
     //         SystemSpecs
     //             .Define()
-    //             .Tracked(Keys.Container, () => new Container() { ItsOnlyAModel = 1 })
+    //             .Tracked(Keys.Box, () => new Box() { ItsOnlyAModel = 1 })
     //             .Do("throw", _ => throw new Exception())
     //             .DumpItInAcid()
     //             .AndCheckForGold(1, 1);
@@ -118,7 +118,7 @@ from account in ""account"".Tracked(() => new Account())
     // [Fact]
     // public void TrackedInput_can_use_context_when_registering()
     // {
-    //     var container = new Container();
+    //     var container = new Box();
     //     var report =
     //         SystemSpecs.Define()
     //             .Tracked(Keys.TheAnswer, () => 42)
@@ -132,7 +132,7 @@ from account in ""account"".Tracked(() => new Account())
     // [Fact]
     // public void TrackedInput_can_be_stringified()
     // {
-    //     var container = new Container();
+    //     var container = new Box();
     //     var report =
     //         SystemSpecs.Define()
     //             .Tracked(Keys.TheAnswer, () => 42, a => "it is " + a)

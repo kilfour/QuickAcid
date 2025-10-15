@@ -1,5 +1,4 @@
 using QuickAcid.TestsDeposition._Tools.Models;
-using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
 

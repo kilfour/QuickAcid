@@ -1,7 +1,7 @@
-using QuickAcid.TestsDeposition._Tools;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
+using QuickPulse.Bolts;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Derived;
@@ -20,14 +20,14 @@ public class DerivedTests
     [DocContent(
 @"**Usage example:**
 ```csharp
-from container in ""container"".Stashed(() => new Container<List<int>>([]))
+from container in ""container"".Stashed(() => new Box<List<int>>([]))
 from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
 ```
 ")]
     public void Derived_usage()
     {
         var script =
-            from container in "container".Stashed(() => new Container<List<int>>([]))
+            from container in "container".Stashed(() => new Box<List<int>>([]))
             from input in Script.Execute(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
             from act in "act".Act(() => container.Value.Add(42))
             from spec in "fail".Spec(() => input != 42)
@@ -40,7 +40,7 @@ from input in ""input"".Derived(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Va
     public void Derived_alternative_usage()
     {
         var script =
-            from container in "container".Stashed(() => new Container<List<int>>(new List<int>()))
+            from container in "container".Stashed(() => new Box<List<int>>(new List<int>()))
             from input in Script.Execute(Fuzz.ChooseFromWithDefaultWhenEmpty(container.Value))
             select Acid.Test;
         var article = TheJournalist.Unearths(QState.Run(script).WithOneRunAndOneExecution());

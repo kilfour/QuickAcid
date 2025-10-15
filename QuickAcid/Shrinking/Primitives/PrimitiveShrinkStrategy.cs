@@ -1,5 +1,4 @@
 using QuickAcid.Bolts;
-using QuickAcid.Shrinking;
 using QuickAcid.TheyCanFade;
 
 namespace QuickAcid.Shrinking.Primitives;

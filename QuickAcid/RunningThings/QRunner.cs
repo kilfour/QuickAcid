@@ -6,7 +6,6 @@ using QuickAcid.Shrinking;
 using QuickFuzzr;
 using QuickPulse;
 using QuickPulse.Arteries;
-using QuickPulse.Bolts;
 using QuickPulse.Show;
 
 namespace QuickAcid.RunningThings;

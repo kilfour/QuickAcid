@@ -1,5 +1,3 @@
-using QuickPulse.Explains;
-
 namespace QuickAcid.TestsDeposition.Docs.CueState;
 
 public static class Chapter { public const string Order = "1-20"; }

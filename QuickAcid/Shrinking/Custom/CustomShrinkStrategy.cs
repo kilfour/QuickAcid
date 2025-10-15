@@ -1,6 +1,5 @@
 using QuickAcid.Bolts;
 using QuickAcid.TheyCanFade;
-using QuickPulse.Show;
 
 namespace QuickAcid.Shrinking.Custom;
 

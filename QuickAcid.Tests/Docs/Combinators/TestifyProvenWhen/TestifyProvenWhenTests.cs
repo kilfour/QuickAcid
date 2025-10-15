@@ -1,7 +1,7 @@
-using QuickAcid.TestsDeposition._Tools;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
+using QuickPulse.Bolts;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.TestifyProvenWhen;
 
@@ -25,7 +25,7 @@ from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
     public void TestifyProvenWhen_usage()
     {
         var script =
-            from container in "container".Stashed(() => new Container<bool>(false))
+            from container in "container".Stashed(() => new Box<bool>(false))
             from val in Script.Execute(Fuzz.Constant(true))
             from act in "act".Act(() => container.Value = container.Value | val)
             from spec in "val is true".TestifyProvenWhen(() => container.Value)
@@ -57,7 +57,7 @@ This would end the test run early once `container.Value` becomes `true`.
     public void TestifyProvenWhen_scaffold()
     {
         var script =
-            from container in "container".Stashed(() => new Container<bool>(false))
+            from container in "container".Stashed(() => new Box<bool>(false))
             from val in Script.Execute(Fuzz.Constant(false))
             from act in "act".Act(() => container.Value = container.Value | val)
             from spec in "early exit".TestifyProvenWhen(() => container.Value)

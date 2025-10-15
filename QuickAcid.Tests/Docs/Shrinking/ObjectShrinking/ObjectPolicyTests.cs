@@ -1,6 +1,6 @@
 using QuickAcid.Tests._Tools.ThePress;
-using QuickAcid.TestsDeposition._Tools;
 using QuickFuzzr;
+using QuickPulse.Bolts;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.ObjectShrinking;
 
@@ -12,7 +12,7 @@ public class ObjectPolicyTests
         var observe = new HashSet<int>();
         var script =
             from _ in ShrinkingPolicy.ForObjects()
-            from input in "input".Input(Fuzz.Constant(new Container<int>(42)))
+            from input in "input".Input(Fuzz.Constant(new Box<int>(42)))
             from foo in "spec".Spec(() => { observe.Add(input.Value); return false; })
             select Acid.Test;
 

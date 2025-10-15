@@ -1,4 +1,3 @@
-using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using QuickAcid.Tests._Tools;
