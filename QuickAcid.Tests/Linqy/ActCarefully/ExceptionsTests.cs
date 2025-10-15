@@ -1,7 +1,7 @@
 using QuickFuzzr;
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Linqy.ActCarefully;
-
 
 public class ExceptionsTests
 {

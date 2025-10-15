@@ -2,6 +2,7 @@ using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using QuickAcid.Tests._Tools;
 using QuickAcid.Tests._Tools.ThePress;
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 

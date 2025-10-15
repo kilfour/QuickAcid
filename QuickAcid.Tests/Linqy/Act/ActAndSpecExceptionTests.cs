@@ -1,5 +1,6 @@
 ﻿using QuickAcid.Bolts;
 using QuickAcid.Tests._Tools.ThePress;
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Linqy.Act;
 

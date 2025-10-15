@@ -1,6 +1,6 @@
 using QuickAcid.Tests._Tools.Models;
 using QuickPulse.Explains;
-
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Docs.Combinators.Stashed;
 

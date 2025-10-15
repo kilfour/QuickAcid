@@ -1,5 +1,6 @@
 ﻿using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Shrinking.Objects
 {

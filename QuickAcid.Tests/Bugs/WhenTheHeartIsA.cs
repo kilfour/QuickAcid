@@ -1,4 +1,5 @@
 using QuickAcid.Bolts;
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Bugs;
 

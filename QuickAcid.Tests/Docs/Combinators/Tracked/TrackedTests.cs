@@ -3,7 +3,7 @@ using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickPulse.Bolts;
 using QuickAcid.Tests._Tools.Models;
-
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Tracked;
 

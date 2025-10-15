@@ -2,6 +2,7 @@ using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 using QuickPulse.Arteries;
 using QuickPulse.Bolts;
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Bugs;
 

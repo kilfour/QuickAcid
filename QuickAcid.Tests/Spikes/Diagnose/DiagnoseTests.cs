@@ -1,6 +1,6 @@
 using QuickPulse.Explains;
 using QuickAcid.Tests._Tools.ThePress;
-
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Spikes.Diagnose;
 

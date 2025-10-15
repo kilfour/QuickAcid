@@ -1,6 +1,7 @@
-﻿using QuickAcid.Bolts;
+﻿using QuickAcid;
+using QuickAcid.Bolts;
 
-namespace QuickAcid;
+namespace StringExtensionCombinators;
 
 public class DelayedSpecResult
 {

@@ -1,5 +1,6 @@
 using QuickAcid.Bolts;
 using QuickFuzzr;
+using StringExtensionCombinators;
 
 namespace QuickAcid;
 

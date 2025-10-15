@@ -1,5 +1,6 @@
 using QuickAcid.Tests._Tools.ThePress;
 using QuickPulse.Arteries;
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Bugs;
 

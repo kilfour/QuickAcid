@@ -1,4 +1,5 @@
 using QuickAcid.Tests._Tools.ThePress;
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs.Logging;
 

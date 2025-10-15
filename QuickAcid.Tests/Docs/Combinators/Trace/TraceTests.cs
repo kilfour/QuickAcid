@@ -2,7 +2,7 @@ using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using QuickAcid.Tests._Tools.ThePress;
-
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Trace;
 

@@ -1,7 +1,7 @@
 using QuickAcid.Bolts;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickPulse.Explains;
-
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Spec;
 

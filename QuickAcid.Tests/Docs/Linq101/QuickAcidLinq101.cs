@@ -1,6 +1,7 @@
 using QuickFuzzr;
 using QuickAcid.Bolts;
 using QuickPulse.Bolts;
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs.Linq101;
 

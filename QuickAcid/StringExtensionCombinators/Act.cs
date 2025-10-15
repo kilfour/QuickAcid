@@ -1,8 +1,11 @@
-﻿using QuickAcid.Bolts;
+﻿using System.ComponentModel;
+using QuickAcid;
+using QuickAcid.Bolts;
 using QuickAcid.Phasers;
 
-namespace QuickAcid;
+namespace StringExtensionCombinators;
 
+[EditorBrowsable(EditorBrowsableState.Advanced)]
 public static partial class QAcidCombinators
 {
 	private static QAcidScript<TOutput> TryCatch<TOutput>(string key, Func<TOutput> func) =>

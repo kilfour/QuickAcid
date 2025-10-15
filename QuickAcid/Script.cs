@@ -4,6 +4,7 @@ using QuickAcid.Bolts;
 using QuickAcid.TheyCanFade;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
+using StringExtensionCombinators;
 
 namespace QuickAcid;
 

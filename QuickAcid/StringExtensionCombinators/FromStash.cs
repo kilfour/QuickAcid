@@ -1,7 +1,8 @@
+using QuickAcid;
 using QuickAcid.Bolts;
 using QuickFuzzr;
 
-namespace QuickAcid;
+namespace StringExtensionCombinators;
 
 public static partial class QAcidCombinators
 {

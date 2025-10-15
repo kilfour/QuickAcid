@@ -1,7 +1,8 @@
-﻿using QuickAcid.Bolts;
+﻿using QuickAcid;
+using QuickAcid.Bolts;
 using QuickAcid.TheyCanFade;
 
-namespace QuickAcid;
+namespace StringExtensionCombinators;
 
 public static partial class QAcidCombinators
 {

@@ -5,14 +5,16 @@ namespace QuickAcid.Tests.Bugs;
 
 public class ChooseFromDynamicCollection
 {
+    public record TheAct : Act;
+    public record TheSpec : Spec;
     [Fact]
     public void Example()
     {
         var script =
-            from list in "list".Stashed(() => new List<int>() { 0 })
+            from list in Script.Stashed(() => new List<int>() { 0 })
             from input in Script.Execute(Fuzz.Constant(list.Last()))
-            from act in "act".Act(() => { list.Add(input + 1); })
-            from spec in "spec".Spec(() => !list.Contains(2))
+            from act in Script.Act<TheAct>(() => { list.Add(input + 1); })
+            from spec in Script.Spec<TheSpec>(() => !list.Contains(2))
             select Acid.Test;
 
         var article = TheJournalist.Exposes(() => QState.Run(script)
@@ -22,17 +24,17 @@ public class ChooseFromDynamicCollection
         Assert.Equal(2, article.Execution(1).Read().Times);
         Assert.Equal(1, article.Total().Executions());
         var actionDeposition = article.Execution(1).Action(1).Read();
-        Assert.Equal("act", actionDeposition.Label);
+        Assert.Equal("The act", actionDeposition.Label);
     }
 
     [Fact]
     public void Trickier()
     {
         var script =
-            from list in "list".Stashed(() => new List<int>() { 0 })
+            from list in Script.Stashed(() => new List<int>() { 0 })
             from input in Script.Execute(Fuzz.Constant(list.Last()))
-            from act in "act".Act(() => { list.Add(input + 1); })
-            from spec in "spec".Spec(() => !list.Contains(2))
+            from act in Script.Act<TheAct>(() => { list.Add(input + 1); })
+            from spec in Script.Spec<TheSpec>(() => !list.Contains(2))
             select Acid.Test;
 
         var article = TheJournalist.Exposes(() => QState.Run(script)
@@ -42,6 +44,6 @@ public class ChooseFromDynamicCollection
         Assert.Equal(2, article.Execution(1).Read().Times);
         Assert.Equal(1, article.Total().Executions());
         var actionDeposition = article.Execution(1).Action(1).Read();
-        Assert.Equal("act", actionDeposition.Label);
+        Assert.Equal("The act", actionDeposition.Label);
     }
 }

@@ -1,5 +1,6 @@
 using QuickFuzzr;
 using QuickPulse.Bolts;
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Bugs;
 

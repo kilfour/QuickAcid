@@ -38,7 +38,7 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
     [DocExample(typeof(CreateReadMe), nameof(ExampleTest))]
 
     [DocContent("The generic arguments to the various `Script` methods are just lightweight marker records, used for labeling inputs, actions, and specifications in reports:")]
-    [DocCodeFile("ReadMeTestMarkers.cs", "csharp")]
+    [DocCodeFile("CreateReadMeTestMarkers.cs", "csharp")]
 
     [DocHeader("Example Failure Output")]
     [DocContent("A failing property produces a minimal counterexample and a readable execution trace:")]

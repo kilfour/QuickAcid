@@ -1,4 +1,6 @@
-﻿namespace QuickAcid;
+﻿using QuickAcid;
+
+namespace StringExtensionCombinators;
 
 public static partial class QAcidCombinators
 {

@@ -1,4 +1,5 @@
 using QuickFuzzr;
+using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Bugs;
 

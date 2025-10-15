@@ -1,6 +1,7 @@
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickAcid.Tests._Tools.Models;
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs;
 

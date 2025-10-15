@@ -1,6 +1,7 @@
 using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
 using QuickPulse.Bolts;
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.ObjectShrinking;
 

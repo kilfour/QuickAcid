@@ -2,6 +2,7 @@ using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickPulse.Bolts;
+using StringExtensionCombinators;
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.TestifyProvenWhen;
 

@@ -1,4 +1,3 @@
-using QuickAcid;
 using QuickAcid.Shrinking;
 
 namespace QuickAcid.TheyCanFade;

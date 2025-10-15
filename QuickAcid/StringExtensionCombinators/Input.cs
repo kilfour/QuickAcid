@@ -4,8 +4,9 @@ using QuickAcid.Shrinking;
 using QuickAcid.Shrinking.Custom;
 using QuickFuzzr.UnderTheHood;
 using QuickPulse.Show;
+using QuickAcid;
 
-namespace QuickAcid;
+namespace StringExtensionCombinators;
 
 
 public static partial class QAcidCombinators

@@ -1,7 +1,8 @@
 ﻿using QuickAcid.Bolts;
+using QuickAcid;
 using QuickPulse.Bolts;
 
-namespace QuickAcid;
+namespace StringExtensionCombinators;
 
 public static partial class QAcidCombinators
 {
