@@ -7,7 +7,7 @@ namespace QuickAcid.Tests;
 
 [DocFile]
 [DocFileHeader("QuickAcid")]
-[DocContent("> Drop it in acid. Look for gold. Like alchemy, but reproducible.")]
+[DocContent("> Drop it in acid. Look for gold.  \n> Like alchemy, but reproducible.\n")]
 public class ReadMe
 {
     [Fact]
@@ -33,9 +33,10 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
     [DocExample(typeof(Account))]
     [DocContent("You can test the overdraft invariant like this:")]
     [DocExample(typeof(ReadMe), nameof(ExampleTest))]
-    [DocContent("The generic arguments to the various `Script` methods are just record markers:")]
-    [DocCodeFile("ReadMeTestMarkers.cs")]
-    [DocHeader("Example Failure Output:")]
+    [DocContent("The generic arguments to the various `Script` methods are just lightweight marker records, used for labeling inputs, actions, and specifications in reports:")]
+    [DocCodeFile("ReadMeTestMarkers.cs", "csharp")]
+    [DocHeader("Example Failure Output")]
+    [DocContent("A failing property produces a minimal counterexample and a readable execution trace:")]
     [DocCodeFile("ReadMe.qr")]
     public void Example()
     {
@@ -65,7 +66,6 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
     }
 
     [CodeSnippet]
-    [CodeRemove(", 1584314623")]
     private static void ExampleTest()
     {
         var script =
@@ -79,7 +79,7 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
                 select Acid.Test)
             from spec in Script.Spec<NoOverdraft>(() => account.Balance >= 0)
             select Acid.Test;
-        QState.Run(script, 1584314623)
+        QState.Run(script, 1584314623) // <= reproducible when seeded
             .WithOneRun()
             .And(50.ExecutionsPerRun());
     }

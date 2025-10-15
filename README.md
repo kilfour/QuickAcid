@@ -1,5 +1,7 @@
 # QuickAcid
-> Drop it in acid. Look for gold. Like alchemy, but reproducible.  
+> Drop it in acid. Look for gold.  
+> Like alchemy, but reproducible.
+  
 QuickAcid is a property-based testing library for C# that combines:
 
 * LINQ-based test scripting
@@ -32,19 +34,19 @@ var script =
         select Acid.Test)
     from spec in Script.Spec<NoOverdraft>(() => account.Balance >= 0)
     select Acid.Test;
-QState.Run(script)
+QState.Run(script, 1584314623) // <= Reproducable when (optionally) seeded
     .WithOneRun()
     .And(50.ExecutionsPerRun());
 ```
-The generic arguments to the various `Script` methods are just record markers:  
-```
+The generic arguments to the various `Script` methods are just lightweight marker records used for labeling inputs, actions, and specifications in reports:  
+```csharp
 namespace QuickAcid.Tests;
 
 public record Deposit : Act { public record Amount : Input; };
 public record Withdraw : Act { public record Amount : Input; };
 public record NoOverdraft : Spec;
 ```
-## Example Failure Output:
+A failing property produces a minimal counterexample and a readable execution trace:  
 ```
 ──────────────────────────────────────────────────
  Test:                    AcidTestNew
