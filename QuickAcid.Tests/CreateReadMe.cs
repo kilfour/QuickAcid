@@ -2,7 +2,6 @@ using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Tests._Tools.Models;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
-using QuickPulse.Arteries;
 using QuickPulse.Explains;
 using QuickPulse.Explains.Text;
 
@@ -87,7 +86,8 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.True(reader.EndOfContent());
         // -- save the file for doc, if things change. Can't use PulseToLog as it quotes the output 
-        // TheLedger.Rewrites("QuickAcid.Tests/CreateReadMe.txt").Absorb(TheClerk.Transcribes(article.CaseFile));
+        // QuickPulse.Arteries.TheLedger.Rewrites("QuickAcid.Tests/CreateReadMe.txt")
+        //     .Absorb(TheClerk.Transcribes(article.CaseFile));
     }
 
     [CodeSnippet]
