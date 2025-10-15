@@ -9,6 +9,9 @@ namespace QuickAcid;
 
 public static partial class Script
 {
+	// Execute =>
+	// Let(...) for value materialization,
+	// Do(...) for side-effect actions.
 	public static QAcidScript<Acid> Execute(Action action) =>
 		state => { action(); return Vessel.AcidOnly(state); };
 

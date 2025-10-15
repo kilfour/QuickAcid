@@ -1,8 +1,8 @@
-using QuickAcid.TestsDeposition._Tools.Models;
 using QuickPulse.Explains;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickPulse.Bolts;
+using QuickAcid.Tests._Tools.Models;
 
 
 namespace QuickAcid.TestsDeposition.Docs.Combinators.Tracked;

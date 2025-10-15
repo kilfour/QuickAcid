@@ -1,6 +1,6 @@
-using QuickAcid.TestsDeposition._Tools.Models;
 using QuickFuzzr;
 using QuickAcid.Tests._Tools.ThePress;
+using QuickAcid.Tests._Tools.Models;
 
 namespace QuickAcid.TestsDeposition.Docs;
 

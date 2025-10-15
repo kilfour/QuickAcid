@@ -1,5 +1,8 @@
-namespace QuickAcid.TestsDeposition._Tools.Models;
+using QuickPulse.Explains;
 
+namespace QuickAcid.Tests._Tools.Models;
+
+[CodeExample]
 public class Account
 {
     public int Balance = 0;

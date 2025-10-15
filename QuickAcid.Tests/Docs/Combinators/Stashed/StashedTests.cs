@@ -1,8 +1,9 @@
-using QuickAcid.TestsDeposition._Tools.Models;
+using QuickAcid;
+using QuickAcid.Tests._Tools.Models;
 using QuickPulse.Explains;
 
 
-namespace QuickAcid.TestsDeposition.Docs.Combinators.Stashed;
+namespace QuickAcid.Tests.Docs.Combinators.Stashed;
 
 [DocFile]
 [DocContent(
