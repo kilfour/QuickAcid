@@ -1,14 +1,17 @@
+using QuickAcid.Proceedings.ClerksOffice;
 using QuickAcid.Tests._Tools.Models;
 using QuickAcid.Tests._Tools.ThePress;
 using QuickFuzzr;
+using QuickPulse.Arteries;
 using QuickPulse.Explains;
+using QuickPulse.Explains.Text;
 
 namespace QuickAcid.Tests;
 
 [DocFile]
 [DocFileHeader("QuickAcid")]
 [DocContent("> Drop it in acid. Look for gold.  \n> Like alchemy, but reproducible.\n")]
-public class ReadMe
+public class CreateReadMe
 {
     [Fact]
     [DocContent(
@@ -24,20 +27,23 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
     )]
     public void Generate()
     {
-        Explain.OnlyThis<ReadMe>("README.md");
+        Explain.OnlyThis<CreateReadMe>("README.md");
     }
 
     [Fact]
     [DocHeader("Example")]
     [DocContent("Given a naive `Account` model:")]
     [DocExample(typeof(Account))]
+
     [DocContent("You can test the overdraft invariant like this:")]
-    [DocExample(typeof(ReadMe), nameof(ExampleTest))]
+    [DocExample(typeof(CreateReadMe), nameof(ExampleTest))]
+
     [DocContent("The generic arguments to the various `Script` methods are just lightweight marker records, used for labeling inputs, actions, and specifications in reports:")]
     [DocCodeFile("ReadMeTestMarkers.cs", "csharp")]
+
     [DocHeader("Example Failure Output")]
     [DocContent("A failing property produces a minimal counterexample and a readable execution trace:")]
-    [DocCodeFile("ReadMe.qr")]
+    [DocCodeFile("CreateReadMe.txt")]
     public void Example()
     {
         var article = TheJournalist.Exposes(ExampleTest);
@@ -61,8 +67,27 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
         Assert.Equal("No overdraft", passedSpec.Label);
         Assert.Equal(3, passedSpec.TimesPassed);
 
-        // -- save the file for doc, if things change
-        // TheLedger.Rewrites("QuickAcid.Tests/ReadMe.qr").Absorb(TheClerk.Transcribes(article.CaseFile));
+        var reader = LinesReader.FromText(TheClerk.Transcribes(article.CaseFile));
+        Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
+        Assert.Equal(" Test:                    ExampleTest", reader.NextLine());
+        Assert.Equal(" Location:                C:\\Code\\QuickAcid\\QuickAcid.Tests\\CreateReadMe.cs:107:1", reader.NextLine());
+        Assert.Equal(" Original failing run:    4 executions", reader.NextLine());
+        Assert.Equal(" Minimal failing case:    1 execution (after 4 shrinks)", reader.NextLine());
+        Assert.Equal(" Seed:                    1584314623", reader.NextLine());
+        Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
+        Assert.Equal("   => Account (tracked) : { Balance: 0 }", reader.NextLine());
+        Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
+        Assert.Equal("  Executed (3): Withdraw", reader.NextLine());
+        Assert.Equal("   - Input: Withdraw Amount = 9", reader.NextLine());
+        Assert.Equal(" ═══════════════════════════════", reader.NextLine());
+        Assert.Equal("  ❌ Spec Failed: No overdraft", reader.NextLine());
+        Assert.Equal(" ═══════════════════════════════", reader.NextLine());
+        Assert.Equal(" Passed Specs", reader.NextLine());
+        Assert.Equal(" - No overdraft: 3x", reader.NextLine());
+        Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
+        Assert.True(reader.EndOfContent());
+        // -- save the file for doc, if things change. Can't use PulseToLog as it quotes the output 
+        // TheLedger.Rewrites("QuickAcid.Tests/CreateReadMe.txt").Absorb(TheClerk.Transcribes(article.CaseFile));
     }
 
     [CodeSnippet]

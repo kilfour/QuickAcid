@@ -34,11 +34,11 @@ var script =
         select Acid.Test)
     from spec in Script.Spec<NoOverdraft>(() => account.Balance >= 0)
     select Acid.Test;
-QState.Run(script, 1584314623) // <= Reproducable when (optionally) seeded
+QState.Run(script, 1584314623) // <= reproducible when seeded
     .WithOneRun()
     .And(50.ExecutionsPerRun());
 ```
-The generic arguments to the various `Script` methods are just lightweight marker records used for labeling inputs, actions, and specifications in reports:  
+The generic arguments to the various `Script` methods are just lightweight marker records, used for labeling inputs, actions, and specifications in reports:  
 ```csharp
 namespace QuickAcid.Tests;
 
@@ -46,11 +46,12 @@ public record Deposit : Act { public record Amount : Input; };
 public record Withdraw : Act { public record Amount : Input; };
 public record NoOverdraft : Spec;
 ```
+## Example Failure Output
 A failing property produces a minimal counterexample and a readable execution trace:  
 ```
 ──────────────────────────────────────────────────
- Test:                    AcidTestNew
- Location:                C:\Code\QuickAcid\QuickAcid.Tests\ReadMe.cs:104:1
+ Test:                    ExampleTest
+ Location:                C:\Code\QuickAcid\QuickAcid.Tests\CreateReadMe.cs:107:1
  Original failing run:    4 executions
  Minimal failing case:    1 execution (after 4 shrinks)
  Seed:                    1584314623
