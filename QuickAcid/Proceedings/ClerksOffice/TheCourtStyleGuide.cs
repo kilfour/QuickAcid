@@ -43,7 +43,7 @@ public static class The
         from __ in Pulse.Trace($" {input.Label.Trim()}")
         select input;
 
-    private readonly static Flow<StashedDeposition> trackedDeposition =
+    private readonly static Flow<StashedDeposition> stashedDeposition =
         from input in Pulse.Start<StashedDeposition>()
         from context in Pulse.Draw<Decorum>()
         from _ in Pulse.When<Decorum>(a => a.Line.Passable(), line)
@@ -55,7 +55,7 @@ public static class The
         from input in Pulse.Start<ExecutionDeposition>()
         from _ in Pulse.Scoped<Decorum>(
             a => a with { Line = Valve.Install() },
-            Pulse.ToFlow(trackedDeposition, input.TrackedDepositions))
+            Pulse.ToFlow(stashedDeposition, input.StashedDepositions))
         from __ in line
         from ___ in input.Times == 1
                 ? Pulse.Trace($"  Executed ({input.ExecutionId}):")

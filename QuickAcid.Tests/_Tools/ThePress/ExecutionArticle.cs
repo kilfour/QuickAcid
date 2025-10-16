@@ -10,7 +10,7 @@ public class ExecutionArticle : AbstractArticle<ExecutionDeposition>
 
     [StackTraceHidden]
     public StashedArticle Tracked(int number)
-        => new(deposition.TrackedDepositions[number - 1]);
+        => new(deposition.StashedDepositions[number - 1]);
 
     [StackTraceHidden]
     public ActionArticle Action(int number)

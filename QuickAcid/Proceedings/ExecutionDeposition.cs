@@ -10,7 +10,7 @@ public record ExecutionDeposition
 
     public List<ActionDeposition> ActionDepositions { get; } = [];
 
-    public List<StashedDeposition> TrackedDepositions { get; } = [];
+    public List<StashedDeposition> StashedDepositions { get; } = [];
 
     public List<InputDeposition> InputDepositions { get; } = [];
 
@@ -23,7 +23,7 @@ public record ExecutionDeposition
 
     public bool Collapsed(ExecutionDeposition other)
     {
-        if (!TrackedDepositions.SequenceEqual(other.TrackedDepositions))
+        if (!StashedDepositions.SequenceEqual(other.StashedDepositions))
             return false;
         if (!ActionDepositions.SequenceEqual(other.ActionDepositions))
             return false;
@@ -37,16 +37,16 @@ public record ExecutionDeposition
 
     public bool HasContent()
     {
-        if (TrackedDepositions.Count > 0) return true;
+        if (StashedDepositions.Count > 0) return true;
         if (ActionDepositions.Count > 0) return true;
         if (InputDepositions.Count > 0) return true;
         if (TraceDepositions.Count > 0) return true;
         return false;
     }
 
-    public ExecutionDeposition AddTrackedDeposition(StashedDeposition trackedDeposition)
+    public ExecutionDeposition AddStashedDeposition(StashedDeposition trackedDeposition)
     {
-        TrackedDepositions.Add(trackedDeposition);
+        StashedDepositions.Add(trackedDeposition);
         return this;
     }
 

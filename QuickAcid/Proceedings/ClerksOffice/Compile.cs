@@ -42,7 +42,7 @@ public static class Compile
         if (Memory.ShashedValuesPerExecution().TryGetValue(executionNumber, out var snapshot))
         {
             foreach (var (key, val) in snapshot)
-                executionDeposition.AddTrackedDeposition(new StashedDeposition(key, val));
+                executionDeposition.AddStashedDeposition(new StashedDeposition(key, val));
         }
     }
 
