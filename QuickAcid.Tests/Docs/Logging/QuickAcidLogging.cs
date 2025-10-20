@@ -76,7 +76,7 @@ public class QuickAcidLogging
   // ```csharp
   // var script =
   //     from container in ""stashed"".Stashed(() => new Container(0))
-  //     from input in ""input"".Input(Fuzz.Int(1, 6))
+  //     from input in ""input"".Input(Fuzzr.Int(1, 6))
   //     from act in ""act"".Act(() => container.Value = input)
   //     from spec in ""spec"".Spec(() => container.Value != 5)
   //     select Acid.Test;

@@ -5,6 +5,7 @@ using QuickAcid.TheyCanFade;
 using QuickFuzzr;
 using QuickFuzzr.UnderTheHood;
 using StringExtensionCombinators;
+using static StringExtensionCombinators.QAcidCombinators;
 
 namespace QuickAcid;
 
@@ -18,5 +19,10 @@ public static partial class Script
 	{
 		public QAcidScript<TValue> With<TValue>(Generator<TValue> generator)
 			=> TypedScript.LabelFromType(typeof(TTypedInput)).Input(generator);
+
+		public QAcidScript<TValue> With<TValue>(
+			Generator<TValue> generator,
+			Func<InputConfiguration<TValue>, InputConfiguration<TValue>> configAction)
+			=> TypedScript.LabelFromType(typeof(TTypedInput)).Input(generator, configAction);
 	}
 }

@@ -12,7 +12,7 @@ public class ChooseFromDynamicCollection
     {
         var script =
             from list in Script.Stashed(() => new List<int>() { 0 })
-            from input in Script.Execute(Fuzz.Constant(list.Last()))
+            from input in Script.Execute(Fuzzr.Constant(list.Last()))
             from act in Script.Act<TheAct>(() => { list.Add(input + 1); })
             from spec in Script.Spec<TheSpec>(() => !list.Contains(2))
             select Acid.Test;
@@ -32,7 +32,7 @@ public class ChooseFromDynamicCollection
     {
         var script =
             from list in Script.Stashed(() => new List<int>() { 0 })
-            from input in Script.Execute(Fuzz.Constant(list.Last()))
+            from input in Script.Execute(Fuzzr.Constant(list.Last()))
             from act in Script.Act<TheAct>(() => { list.Add(input + 1); })
             from spec in Script.Spec<TheSpec>(() => !list.Contains(2))
             select Acid.Test;

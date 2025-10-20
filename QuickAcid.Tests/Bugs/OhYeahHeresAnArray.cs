@@ -10,7 +10,7 @@ public class OhYeahHeresAnArray
     {
         var counter = 0;
         var script =
-            from input in "input".Input(Fuzz.Constant(new[] { 1, 2 }))
+            from input in "input".Input(Fuzzr.Constant(new[] { 1, 2 }))
             from act in "act".Act(() => counter++)
             from spec in "spec".SpecIf(() => counter > 3, () => false)
             select Acid.Test;

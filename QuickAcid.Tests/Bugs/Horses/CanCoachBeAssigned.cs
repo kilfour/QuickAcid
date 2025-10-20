@@ -37,24 +37,24 @@ public class CanCoachBeAssigned
     }
 
     private static readonly Generator<DayOfWeek> WeekDayGenerator =
-        Fuzz.Enum<DayOfWeek>().Where(a => a != DayOfWeek.Saturday && a != DayOfWeek.Sunday);
+        Fuzzr.Enum<DayOfWeek>().Where(a => a != DayOfWeek.Saturday && a != DayOfWeek.Sunday);
 
     private static Generator<TimeSlot> TimeslotGenerator =>
-        from start in Fuzz.Int(9, 17)
+        from start in Fuzzr.Int(9, 17)
         let startTime = start.OClock()
-        from end in Fuzz.Int(start + 1, 18)
+        from end in Fuzzr.Int(start + 1, 18)
         let endTime = end.OClock()
         from day in WeekDayGenerator
-        from timeslot in Fuzz.Constant(TimeSlot.From(day, startTime, endTime))
+        from timeslot in Fuzzr.Constant(TimeSlot.From(day, startTime, endTime))
         select timeslot;
 
     private static Generator<Booking> BookingGenerator =>
-        from start in Fuzz.Int(1, 31)
+        from start in Fuzzr.Int(1, 31)
         let startDate = start.January(2025)
-        from end in Fuzz.Int(start, 32)
+        from end in Fuzzr.Int(start, 32)
         let endDate = end.January(2025)
-        from key in Fuzz.Int().Unique("booking")
+        from key in Fuzzr.Int().Unique("booking")
         from timeslots in TimeslotGenerator.Many(1, 5)
-        from booking in Fuzz.Constant(new Booking([.. timeslots], startDate, endDate))
+        from booking in Fuzzr.Constant(new Booking([.. timeslots], startDate, endDate))
         select booking;
 }

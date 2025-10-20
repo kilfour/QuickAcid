@@ -22,7 +22,7 @@ public static partial class Script
 		return state =>
 			{
 				var index = state.CurrentExecutionContext().Remember(key,
-					() => Fuzz.Int(0, scripts.Length)(state.FuzzState).Value, ReportingIntent.Never);
+					() => Fuzzr.Int(0, scripts.Length)(state.FuzzState).Value, ReportingIntent.Never);
 				return scripts[index](state);
 			};
 	}
@@ -44,7 +44,7 @@ public static partial class Script
 						.Where(a => a.condition())
 						.Select(a => a.ix);
 				var index = state.CurrentExecutionContext().Remember(key,
-					() => Fuzz.ChooseFrom(validScriptIndexes)(state.FuzzState).Value, ReportingIntent.Never);
+					() => Fuzzr.OneOf(validScriptIndexes)(state.FuzzState).Value, ReportingIntent.Never);
 				var script = scripts[index];
 				if (script.condition())
 					return scripts[index].script(state);

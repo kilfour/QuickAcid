@@ -34,7 +34,7 @@ public class QuickAcidLinq101
     // [Doc(Order = $"{Chapter.Order}-1-1", Content = "You can think of scripts as the building blocks of a property-based test.")]
     public void What_is_a_single_script()
     {
-        Assert.IsType<QAcidScript<int>>("an int".Input(Fuzz.Int()));
+        Assert.IsType<QAcidScript<int>>("an int".Input(Fuzzr.Int()));
     }
 
     [Fact]
@@ -149,7 +149,7 @@ public class QuickAcidLinq101
     //  ```csharp
     // var script =
     //     from container in ""container"".Stashed(() => new Box(0))
-    //     from input in ""input"".Input(Fuzz.Int(1, 5))
+    //     from input in ""input"".Input(Fuzzr.Int(1, 5))
     //     from act in ""act"".Act(() => container.Value = input)
     //     from spec in ""spec"".Spec(() => container.Value != 0)
     //     select Acid.Test;
@@ -188,7 +188,7 @@ public class QuickAcidLinq101
     {
         var script =
             from container in "container".Stashed(() => new Box<int>(0))
-            from input in "input".Input(Fuzz.Int(1, 5))
+            from input in "input".Input(Fuzzr.Int(1, 5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 0)
             select Acid.Test;

@@ -40,7 +40,7 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
     {
         var counter = 0;
         var script =
-            from ints in "ints".Input(Fuzz.Constant(42).Many(2))
+            from ints in "ints".Input(Fuzzr.Constant(42).Many(2))
             from _ in "act".Act(() => { counter++; })
             from __ in "Info Key".Trace(() => $"[ {string.Join(", ", ints)} ]")
             from ___ in "spec".Spec(() => counter < 3)
@@ -91,7 +91,7 @@ from _ in ""Info Key"".TraceIf(() => number == 42, () => ""Extra words"")
     public void TraceIf_usage()
     {
         var script =
-            from input in "input".Input(Fuzz.Constant(42))
+            from input in "input".Input(Fuzzr.Constant(42))
             from _ in "act".Act(() => { })
             from __ in "Trace 42".TraceIf(() => input == 42, () => "YEP 1")
             from ___ in "Trace not 42".TraceIf(() => input != 42, () => "YEP 2")

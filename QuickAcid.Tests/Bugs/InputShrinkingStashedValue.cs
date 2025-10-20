@@ -17,11 +17,11 @@ public class InputShrinkingStashedValue
             from inc in Script.Execute(() => count.Value++)
             from _ in Script.ChooseIf(
                 (() => count.Value == 1,
-                    from input in "input a".Input(Fuzz.Constant(42))
+                    from input in "input a".Input(Fuzzr.Constant(42))
                     from a in "a".Act(() => { storage.Absorb(input); })
                     select Acid.Test),
                 (() => storage.TheExhibit.Count != 0,
-                    from input in "input b".Input(Fuzz.Constant(42))
+                    from input in "input b".Input(Fuzzr.Constant(42))
                     from a in "b".Act(() => { })
                     from spec in "spec b".Spec(() => storage.TheExhibit[0] != input)
                     select Acid.Test))

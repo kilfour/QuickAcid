@@ -10,8 +10,8 @@ public class TimeOnlyTests
     public void Simple()
     {
         var script =
-            from i1 in "i1".Input(Fuzz.Constant(new TimeOnly(10, 0)))
-            from i2 in "i2".Input(Fuzz.Constant(new TimeOnly(10, 0)))
+            from i1 in "i1".Input(Fuzzr.Constant(new TimeOnly(10, 0)))
+            from i2 in "i2".Input(Fuzzr.Constant(new TimeOnly(10, 0)))
             from spec in "spec".Spec(() => i2 != new TimeOnly(10, 0))
             select Acid.Test;
 

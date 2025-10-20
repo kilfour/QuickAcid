@@ -10,8 +10,8 @@ public class DateOnlyTests
     public void Simple()
     {
         var script =
-            from i1 in "i1".Input(Fuzz.Constant(new DateOnly(2025, 1, 1)))
-            from i2 in "i2".Input(Fuzz.Constant(new DateOnly(2025, 1, 1)))
+            from i1 in "i1".Input(Fuzzr.Constant(new DateOnly(2025, 1, 1)))
+            from i2 in "i2".Input(Fuzzr.Constant(new DateOnly(2025, 1, 1)))
             from spec in "spec".Spec(() => i2 != new DateOnly(2025, 1, 1))
             select Acid.Test;
 

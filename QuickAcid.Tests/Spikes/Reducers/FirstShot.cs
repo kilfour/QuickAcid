@@ -10,7 +10,7 @@ public class FirstShot
     public void HowTo()
     {
         var script =
-            from i in "i".Input(Fuzz.Constant(5), a => a.ReduceWith(TowardsZero))
+            from i in "i".Input(Fuzzr.Constant(5), a => a.ReduceWith(TowardsZero))
             from a in "a".Act(() => i)
             from s in "s".Spec(() => a < 3)
             select Acid.Test;

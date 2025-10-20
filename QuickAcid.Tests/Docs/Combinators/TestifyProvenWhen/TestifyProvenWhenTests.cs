@@ -27,7 +27,7 @@ from seenTrue in ""val is true"".TestifyProvenWhen(() => container.Value)
     {
         var script =
             from container in "container".Stashed(() => new Box<bool>(false))
-            from val in Script.Execute(Fuzz.Constant(true))
+            from val in Script.Execute(Fuzzr.Constant(true))
             from act in "act".Act(() => container.Value = container.Value | val)
             from spec in "val is true".TestifyProvenWhen(() => container.Value)
             select Acid.Test;
@@ -59,7 +59,7 @@ This would end the test run early once `container.Value` becomes `true`.
     {
         var script =
             from container in "container".Stashed(() => new Box<bool>(false))
-            from val in Script.Execute(Fuzz.Constant(false))
+            from val in Script.Execute(Fuzzr.Constant(false))
             from act in "act".Act(() => container.Value = container.Value | val)
             from spec in "early exit".TestifyProvenWhen(() => container.Value)
             from finalspec in "val is true".Assay(() => container.Value)

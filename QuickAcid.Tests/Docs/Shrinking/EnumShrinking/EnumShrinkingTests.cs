@@ -10,8 +10,8 @@ public class EnumShrinkingTests
     public void SystemEnum()
     {
         var script =
-            from i1 in "i1".Input(Fuzz.Constant(DayOfWeek.Monday))
-            from i2 in "i2".Input(Fuzz.Constant(DayOfWeek.Monday))
+            from i1 in "i1".Input(Fuzzr.Constant(DayOfWeek.Monday))
+            from i2 in "i2".Input(Fuzzr.Constant(DayOfWeek.Monday))
             from spec in "spec".Spec(() => i2 != DayOfWeek.Monday)
             select Acid.Test;
 
@@ -31,8 +31,8 @@ public class EnumShrinkingTests
     public void CustomEnum()
     {
         var script =
-            from i1 in "i1".Input(Fuzz.Constant(MyEnum.One))
-            from i2 in "i2".Input(Fuzz.Constant(MyEnum.One))
+            from i1 in "i1".Input(Fuzzr.Constant(MyEnum.One))
+            from i2 in "i2".Input(Fuzzr.Constant(MyEnum.One))
             from spec in "spec".Spec(() => i2 != MyEnum.One)
             select Acid.Test;
 

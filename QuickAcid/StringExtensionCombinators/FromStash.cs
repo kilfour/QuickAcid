@@ -13,7 +13,7 @@ public static partial class QAcidCombinators
                 var valids = stash.Warehouse
                     .Where(a => predicate(a.Value))
                     .ToArray();
-                var pick = Fuzz.ChooseFrom(valids)(state.FuzzState).Value.Key;
+                var pick = Fuzzr.OneOf(valids)(state.FuzzState).Value.Key;
                 state.CurrentExecutionContext().SetIfNotAlreadyThere(key, pick);
                 pick = state.CurrentExecutionContext().Get<Guid>(key);
                 if (!stash.Warehouse.TryGetValue(pick, out T? value))

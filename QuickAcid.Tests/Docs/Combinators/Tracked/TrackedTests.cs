@@ -39,7 +39,7 @@ from account in ""account"".Tracked(() => new Account())
     {
         var script =
            from container in "container".Tracked(() => new Box<int>(21))
-           from input in "input".Input(Fuzz.Constant(42))
+           from input in "input".Input(Fuzzr.Constant(42))
            from _do in "do".Act(() => { container.Value = input; })
            from _ in "spec".Spec(() => container.Value != 42)
            select Acid.Test;

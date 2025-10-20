@@ -19,6 +19,7 @@ public class EnumerableShrinkStrategy
             Strategy = "EnumerableShrinkStrategy"
         });
         state.ShrinkingRegistry.GetCollectionStrategies()
+            .ToList()
             .ForEach(a => { a.Shrink(state, key, value, fullKey); });
     }
 }

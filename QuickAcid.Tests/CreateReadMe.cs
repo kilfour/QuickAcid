@@ -96,10 +96,10 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
         var script =
             from account in Script.Tracked(() => new Account())
             from _ in Script.Choose(
-                from amount in Script.Input<Deposit.Amount>().With(Fuzz.Int(0, 10))
+                from amount in Script.Input<Deposit.Amount>().With(Fuzzr.Int(0, 10))
                 from act in Script.Act<Deposit>(() => account.Deposit(amount))
                 select Acid.Test,
-                from amount in Script.Input<Withdraw.Amount>().With(Fuzz.Int(0, 10))
+                from amount in Script.Input<Withdraw.Amount>().With(Fuzzr.Int(0, 10))
                 from act in Script.Act<Withdraw>(() => account.Withdraw(amount))
                 select Acid.Test)
             from spec in Script.Spec<NoOverdraft>(() => account.Balance >= 0)

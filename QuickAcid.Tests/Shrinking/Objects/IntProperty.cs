@@ -18,8 +18,8 @@ public class IntProperty
     public void SimplesRelevant()
     {
         var generator =
-            from _ in Fuzz.Constant(6).Replace()
-            from thing in Fuzz.One<Simples>()
+            from _ in Fuzzr.Constant(6).Replace()
+            from thing in Fuzzr.One<Simples>()
             select thing;
         var script =
             from input in "input".Input(generator)
@@ -48,8 +48,8 @@ public class IntProperty
     public void SimplesIrrelevant()
     {
         var generator =
-            from _ in Fuzz.Int(5, 7).Replace()
-            from thing in Fuzz.One<Simples>()
+            from _ in Fuzzr.Int(5, 7).Replace()
+            from thing in Fuzzr.One<Simples>()
             select thing;
         var script =
             from input in "input".Input(generator)
@@ -72,8 +72,8 @@ public class IntProperty
     public void OneRelevantProperty()
     {
         var generator =
-            from _ in Fuzz.Int(5, 7).Replace()
-            from thing in Fuzz.One<Something>()
+            from _ in Fuzzr.Int(5, 7).Replace()
+            from thing in Fuzzr.One<Something>()
             select thing;
         var script =
             from input in "input".Input(generator)
@@ -101,8 +101,8 @@ public class IntProperty
     public void TwoRelevantProperties()
     {
         var generator =
-            from _ in Fuzz.Int(5, 7).Replace()
-            from thing in Fuzz.One<Something>()
+            from _ in Fuzzr.Int(5, 7).Replace()
+            from thing in Fuzzr.One<Something>()
             select thing;
         var script =
 
@@ -132,8 +132,8 @@ public class IntProperty
     public void TwoRelevantPropertiesTricky()
     {
         var generator =
-            from _ in Fuzz.Int(5, 7).Replace()
-            from thing in Fuzz.One<Something>()
+            from _ in Fuzzr.Int(5, 7).Replace()
+            from thing in Fuzzr.One<Something>()
             select thing;
 
         var sometimesPropOne = false;
@@ -183,8 +183,8 @@ public class IntProperty
     public void TwoRelevantPropertiesEvenTrickier()
     {
         var generator =
-            from _ in Fuzz.Constant(42).Replace()
-            from thing in Fuzz.One<Something>()
+            from _ in Fuzzr.Constant(42).Replace()
+            from thing in Fuzzr.One<Something>()
             select thing;
 
         var script =
@@ -217,9 +217,9 @@ public class IntProperty
     public void TwoRelevantPropertiesSuperTricky()
     {
         var generator =
-            from _ in Fuzz.Constant(42).Replace()
-            from cust in Fuzz.For<Something>().Customize(x => x.MyFifthProperty, 0)
-            from thing in Fuzz.One<Something>()
+            from _ in Fuzzr.Constant(42).Replace()
+            from cust in Configr<Something>.Property(x => x.MyFifthProperty, 0)
+            from thing in Fuzzr.One<Something>()
             select thing;
 
         var script =
@@ -253,9 +253,9 @@ public class IntProperty
     public void ThreeRelevantProperties()
     {
         var generator =
-            from _ in Fuzz.Constant(42).Replace()
-            from cust in Fuzz.For<Something>().Customize(x => x.MyFifthProperty, 0)
-            from thing in Fuzz.One<Something>()
+            from _ in Fuzzr.Constant(42).Replace()
+            from cust in Configr<Something>.Property(x => x.MyFifthProperty, 0)
+            from thing in Fuzzr.One<Something>()
             select thing;
 
         var script =

@@ -53,7 +53,7 @@ public class ShrinkStrategyPicker
 
         if (actualType.IsClass)
         {
-            new CompositeObjectShrinkStrategy().Shrink(state, key, value, fullKey);
+            CompositeObjectShrinkStrategy.Shrink(state, key, value, fullKey);
             return;
         }
 

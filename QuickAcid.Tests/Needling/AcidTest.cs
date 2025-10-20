@@ -14,11 +14,11 @@ public class AcidTest
         var script =
             from needler in "Needler".Stashed(() => new Needler<int, Box<int>>())
 
-            from key in "key".Input(Fuzz.Guid().AsString())
-            from input in "input".Input(Fuzz.Int())
+            from key in "key".Input(Fuzzr.Guid().AsString())
+            from input in "input".Input(Fuzzr.Int())
             from start in "Start".Act(() => GetAnswerAsync(input).Attach(needler, key, input))
 
-            from toReload in $"To Reload".Input(Fuzz.ChooseFromWithDefaultWhenEmpty(needler.Keys))
+            from toReload in $"To Reload".Input(Fuzzr.OneOfOrDefault(needler.Keys))
             from check in "IsIdentity".SpecIf(
                 () => needler.HasDataWaiting,
                 () => needler.Check(input => input, output => output.Value))

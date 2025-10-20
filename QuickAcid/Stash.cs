@@ -41,7 +41,7 @@ public class Stash<T>
                     .Select(a => a)
                     .ToArray();
                 var key = label + "---ID---";
-                var pick = Fuzz.ChooseFrom(valids)(state.FuzzState).Value.Key;
+                var pick = Fuzzr.OneOf(valids)(state.FuzzState).Value.Key;
                 state.CurrentExecutionContext().SetIfNotAlreadyThere(key, pick);
                 pick = state.CurrentExecutionContext().Get<Guid>(key);
                 if (!Warehouse.ContainsKey(pick))

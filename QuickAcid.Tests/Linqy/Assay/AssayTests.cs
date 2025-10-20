@@ -11,7 +11,7 @@ public class AssayTests
     {
         var script =
             from observer in "observer".Tracked(() => new HashSet<int>())
-            from roll in "roll".Act(() => Fuzz.Int(1, 3).Generate())
+            from roll in "roll".Act(() => Fuzzr.Int(1, 3).Generate())
             from _a1 in "record".Act(() => observer.Add(roll))
             from as1 in "gens 3".Assay(() => observer.Contains(3))
             select Acid.Test;
@@ -28,7 +28,7 @@ public class AssayTests
     {
         var script =
             from observer in "observer".Tracked(() => new HashSet<int>())
-            from roll in "roll".Act(() => Fuzz.Int(1, 3).Generate())
+            from roll in "roll".Act(() => Fuzzr.Int(1, 3).Generate())
             from _a1 in "record".Act(() => observer.Add(roll))
             from as1 in "combined".Assay(("gens 3", () => observer.Contains(3)), ("gens 4", () => observer.Contains(4)))
             select Acid.Test;

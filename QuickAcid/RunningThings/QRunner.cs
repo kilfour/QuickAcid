@@ -83,7 +83,7 @@ public class QRunner
 
     private void AddPassedSpecsToCaseFile(CaseFile caseFile)
     {
-        passedSpecCount.ForEach(kv =>
+        passedSpecCount.ToList().ForEach(kv =>
             caseFile.AddPassedSpecDeposition(new PassedSpecDeposition(kv.Key, kv.Value)));
     }
 

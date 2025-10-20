@@ -10,7 +10,7 @@ public class ActAndInputExceptionTests
     public void ExceptionThrownByAct()
     {
         var script =
-            from input in "input".Input(Fuzz.Int(1, 1))
+            from input in "input".Input(Fuzzr.Int(1, 1))
             from foo in "foo".Act(() => { if (input == 1) throw new Exception(); })
             from spec in "spec".Spec(() => true)
             select Acid.Test;

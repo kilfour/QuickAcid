@@ -34,6 +34,7 @@ public class ObjectShrinkStrategy : IObjectShrinkStrategy
                 p.GetIndexParameters().Length == 0 &&
                 p.SetMethod is not null &&
                 p.SetMethod.IsPublic)
+            .ToList()
             .ForEach(p => HandleProperty(state, key, value, p, fullKey));
     }
 
