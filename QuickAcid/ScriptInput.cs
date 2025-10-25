@@ -17,11 +17,11 @@ public static partial class Script
 	public record InputBuilder<TTypedInput>()
 		where TTypedInput : TypedScript
 	{
-		public QAcidScript<TValue> With<TValue>(Generator<TValue> generator)
+		public QAcidScript<TValue> With<TValue>(FuzzrOf<TValue> generator)
 			=> TypedScript.LabelFromType(typeof(TTypedInput)).Input(generator);
 
 		public QAcidScript<TValue> With<TValue>(
-			Generator<TValue> generator,
+			FuzzrOf<TValue> generator,
 			Func<InputConfiguration<TValue>, InputConfiguration<TValue>> configAction)
 			=> TypedScript.LabelFromType(typeof(TTypedInput)).Input(generator, configAction);
 	}

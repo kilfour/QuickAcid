@@ -24,13 +24,13 @@ public static partial class Script
 	public static QAcidScript<T> ExecuteIf<T>(Func<bool> predicate, Func<T> func) =>
 		state => predicate() ? Vessel.Some(state, func()) : Vessel.None<T>(state);
 
-	public static QAcidScript<T> Execute<T>(Generator<T> generator) =>
+	public static QAcidScript<T> Execute<T>(FuzzrOf<T> generator) =>
 		state => Vessel.Some(state, generator(state.FuzzState).Value);
 
-	public static QAcidScript<T> ExecuteIf<T>(Func<bool> predicate, Generator<T> generator) =>
+	public static QAcidScript<T> ExecuteIf<T>(Func<bool> predicate, FuzzrOf<T> generator) =>
 		state => predicate() ? Vessel.Some(state, generator(state.FuzzState).Value) : Vessel.None<T>(state);
 
-	// public static QAcidScript<T> Generate<T>(Generator<T> generator) =>
+	// public static QAcidScript<T> Generate<T>(FuzzrOf<T> generator) =>
 	// 	state => Vessel.Some(state, generator(state.FuzzState).Value);
 
 	public static QAcidScript<T> Tracked<T>(Func<T> func) => typeof(T).Name.Tracked(func);

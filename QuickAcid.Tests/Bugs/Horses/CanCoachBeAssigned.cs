@@ -26,7 +26,7 @@ public class CanCoachBeAssigned
     {
         var script =
             from coach in Script.Stashed(() => new Coach(1, "coach", "coach@coaching.com"))
-            from booking in Script.Input<CoachBooking>().With(BookingGenerator)
+            from booking in Script.Input<CoachBooking>().With(BookingFuzzrOf)
             from bookCoach in Script.Act<BookTheCoach>(() => coach.BookIn(booking))
             from coachBooked in Script.Spec<CoachBooked>(() => coach.bookings.Contains(booking))
             select Acid.Test;
@@ -36,25 +36,25 @@ public class CanCoachBeAssigned
             .And(1.ExecutionsPerRun());
     }
 
-    private static readonly Generator<DayOfWeek> WeekDayGenerator =
+    private static readonly FuzzrOf<DayOfWeek> WeekDayFuzzrOf =
         Fuzzr.Enum<DayOfWeek>().Where(a => a != DayOfWeek.Saturday && a != DayOfWeek.Sunday);
 
-    private static Generator<TimeSlot> TimeslotGenerator =>
+    private static FuzzrOf<TimeSlot> TimeslotFuzzrOf =>
         from start in Fuzzr.Int(9, 17)
         let startTime = start.OClock()
         from end in Fuzzr.Int(start + 1, 18)
         let endTime = end.OClock()
-        from day in WeekDayGenerator
+        from day in WeekDayFuzzrOf
         from timeslot in Fuzzr.Constant(TimeSlot.From(day, startTime, endTime))
         select timeslot;
 
-    private static Generator<Booking> BookingGenerator =>
+    private static FuzzrOf<Booking> BookingFuzzrOf =>
         from start in Fuzzr.Int(1, 31)
         let startDate = start.January(2025)
         from end in Fuzzr.Int(start, 32)
         let endDate = end.January(2025)
         from key in Fuzzr.Int().Unique("booking")
-        from timeslots in TimeslotGenerator.Many(1, 5)
+        from timeslots in TimeslotFuzzrOf.Many(1, 5)
         from booking in Fuzzr.Constant(new Booking([.. timeslots], startDate, endDate))
         select booking;
 }

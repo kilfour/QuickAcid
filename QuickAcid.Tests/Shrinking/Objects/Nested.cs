@@ -38,7 +38,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public class Child
         {
             public int MyInt { get; set; }
-            public string? MyIrrelevantString { get; set; }
+            public string MyIrrelevantString { get; set; } = string.Empty;
         }
     }
 }

@@ -1,8 +1,7 @@
 using QuickFuzzr;
-using QuickFuzzr.UnderTheHood;
-using QuickAcid.Tests._Tools;
 using QuickAcid.Tests._Tools.ThePress;
 using StringExtensionCombinators;
+using QuickFuzzr.UnderTheHood;
 
 namespace QuickAcid.TestsDeposition.Docs.Shrinking.Collections;
 
@@ -63,7 +62,7 @@ public class CollectionShrinkingTests
         Assert.Equal("[ _, 42 ]", entry.Value);
     }
 
-    public static Generator<IEnumerable<int>> GrowingListUp()
+    public static FuzzrOf<IEnumerable<int>> GrowingListUp()
     {
         var counter = 3;
         return

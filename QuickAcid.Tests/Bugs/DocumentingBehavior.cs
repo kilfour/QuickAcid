@@ -1,16 +1,11 @@
 using QuickAcid.Tests._Tools.ThePress;
-using QuickFuzzr.UnderTheHood;
+using QuickFuzzr;
 using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Bugs;
 
 public class DocumentingBehavior
 {
-    public Generator<int> Counter()
-    {
-        var counter = 0;
-        return state => new Result<int>(counter++, state);
-    }
 
     [Fact]
     public void ShrinkingInputs_phase_should_not_clear_failure()

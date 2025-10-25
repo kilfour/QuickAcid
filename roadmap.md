@@ -1,0 +1,1 @@
+NRE in Spec because input  == null, f.i. with string => .Spec(a => a.Length == 5)

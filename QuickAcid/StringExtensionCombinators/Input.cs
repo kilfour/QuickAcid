@@ -2,7 +2,7 @@
 using QuickAcid.Phasers;
 using QuickAcid.Shrinking;
 using QuickAcid.Shrinking.Custom;
-using QuickFuzzr.UnderTheHood;
+using QuickFuzzr;
 using QuickPulse.Show;
 using QuickAcid;
 
@@ -30,7 +30,7 @@ public static partial class QAcidCombinators
 
 	public static QAcidScript<T> Input<T>(
 		this string key,
-		Generator<T> generator,
+		FuzzrOf<T> generator,
 		Func<InputConfiguration<T>, InputConfiguration<T>> configAction)
 	{
 		return state =>
@@ -61,7 +61,7 @@ public static partial class QAcidCombinators
 			};
 	}
 
-	public static QAcidScript<T> Input<T>(this string key, Generator<T> generator)
+	public static QAcidScript<T> Input<T>(this string key, FuzzrOf<T> generator)
 	{
 		return state =>
 			{
@@ -69,7 +69,7 @@ public static partial class QAcidCombinators
 			};
 	}
 
-	private static Vessel<T> HandleInput<T>(this QAcidState state, string key, Generator<T> generator)
+	private static Vessel<T> HandleInput<T>(this QAcidState state, string key, FuzzrOf<T> generator)
 	{
 		var execution = state.CurrentExecutionContext();
 		switch (state.Shifter.CurrentPhase)

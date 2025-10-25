@@ -1,30 +1,18 @@
 using QuickAcid.Tests._Tools.ThePress;
-using QuickFuzzr.UnderTheHood;
+using QuickFuzzr;
 using StringExtensionCombinators;
 
 namespace QuickAcid.Tests.Spikes.StoringStuff;
 
 public class StashTests
 {
-    private static Generator<int> Counter()
-    {
-        return
-            state =>
-            {
-                var counter = state.Get("MyCounter", 0);
-                var newVal = counter + 1;
-                state.Set("MyCounter", newVal);
-                return new Result<int>(newVal, state);
-            };
-    }
-
     [Fact]
     public void First_try()
     {
 
         var script =
             from stash in Script.StashFor<int>()
-            from cnt in "cnt".Input(Counter())
+            from cnt in "cnt".Input(Fuzzr.Counter(0))
             from create in "create a thing".Act(() => cnt)
             from add in Script.Execute(() => stash.Add(cnt))
             from blowup in "boom".Spec(() => !stash.Where(a => a == 5).Any() && stash.Count != 2)

@@ -53,18 +53,11 @@ from _ in ""Info Key"".Trace(() => ""Extra words"")
 
         Assert.Equal("[ 42, 42 ]", article.Execution(1).Trace(1).Read().Value);
     }
-
-    public Generator<int> Counter()
-    {
-        var counter = 0;
-        return state => new Result<int>(counter++, state);
-    }
-
     [Fact]
     public void Trace_with_other_shrinking()
     {
         var script =
-            from input in "input".Input(Counter())
+            from input in "input".Input(Fuzzr.Counter("id"))
             from list in "list".Stashed(() => new List<int>())
             from _ in "act".Act(() => { })
             from delayedSpec in "spec".DelayedSpec(() => input != 3)
