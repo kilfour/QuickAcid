@@ -1,6 +1,7 @@
 using QuickAcid.Bolts;
 using QuickAcid.Phasers;
 using QuickPulse;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.Shrinking.Runners;
 

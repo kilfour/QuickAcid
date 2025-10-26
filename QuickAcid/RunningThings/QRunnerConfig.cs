@@ -1,4 +1,5 @@
 using QuickPulse;
+using QuickPulse.Arteries;
 
 namespace QuickAcid.RunningThings;
 

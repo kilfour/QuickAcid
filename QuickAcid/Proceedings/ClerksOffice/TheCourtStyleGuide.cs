@@ -11,18 +11,18 @@ public record Decorum
 
 public static class The
 {
-    private readonly static Flow<Unit> separator = Pulse.Trace(",");
+    private readonly static Flow<Flow> separator = Pulse.Trace(",");
 
-    private readonly static Flow<Unit> space = Pulse.Trace(" ");
+    private readonly static Flow<Flow> space = Pulse.Trace(" ");
 
-    private static readonly Flow<Unit> newLine = Pulse.Trace(Environment.NewLine);
+    private static readonly Flow<Flow> newLine = Pulse.Trace(Environment.NewLine);
 
-    private static Flow<Unit> LineOf(int length) => Pulse.Trace(new string('─', length));
+    private static Flow<Flow> LineOf(int length) => Pulse.Trace(new string('─', length));
 
-    private static Flow<Unit> DoubleLineOf(int length) =>
+    private static Flow<Flow> DoubleLineOf(int length) =>
         space.Then(Pulse.Trace(new string('═', length)));
 
-    private readonly static Flow<Unit> line =
+    private readonly static Flow<Flow> line =
         space.Then(LineOf(50)).Then(newLine);
 
     private readonly static Flow<TraceDeposition> traceDeposition =
@@ -105,12 +105,19 @@ public static class The
         from _3 in DoubleLineOf(75)
         select input;
 
-    private readonly static Flow<FailureDeposition> failureDeposition =
+    private readonly static Flow<FailureDeposition> failureDepositionAlt =
         from input in Pulse.Start<FailureDeposition>()
         from _1 in Pulse.ToFlowIf(input is FailedSpecDeposition, failedSpecDeposition, () => (FailedSpecDeposition)input)
         from _2 in Pulse.ToFlowIf(input is ExceptionDeposition, exceptionDeposition, () => (ExceptionDeposition)input)
         from _3 in Pulse.ToFlowIf(input is AssayerDeposition, assayerDeposition, () => (AssayerDeposition)input)
         select input;
+
+    private readonly static Flow<FailureDeposition> failureDeposition =
+        Pulse.Start<FailureDeposition>(input =>
+            Pulse.FirstOf(
+                (() => input is FailedSpecDeposition, () => Pulse.ToFlow(failedSpecDeposition, (FailedSpecDeposition)input)),
+                (() => input is ExceptionDeposition, () => Pulse.ToFlow(exceptionDeposition, (ExceptionDeposition)input)),
+                (() => input is AssayerDeposition, () => Pulse.ToFlow(assayerDeposition, (AssayerDeposition)input))));
 
     private readonly static Flow<TestMethodInfoDeposition?> testMethodInfoDeposition =
         from input in Pulse.Start<TestMethodInfoDeposition>()
@@ -158,8 +165,6 @@ public static class The
         from ____ in Pulse.TraceIf(input.Times > 1, () => $" ({input.Times} Times)")
         from _____ in Pulse.ToFlow(diagnosisDeposition, input.DiagnosisDepositions)
         select input;
-
-
 
     private readonly static Flow<string> extraDepositionMessage =
         from input in Pulse.Start<string>()
