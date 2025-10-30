@@ -11,13 +11,13 @@ public class ShrinkingOperationInputs
     public void Trying_To_Find_Failure()
     {
         var script =
-            from collector in "container".Stashed(() => TheCollector.Exhibits<int>())
+            from collector in "container".Stashed(() => Collect.ValuesOf<int>())
             from ops in Script.Choose(
                 from i1 in "i1".Input(Fuzzr.Constant(42))
                 from a1 in "act1".Act(() => collector.Absorb(i1))
                 select Acid.Test,
                 from i2 in "i2".Input(Fuzzr.Constant(42))
-                from a2 in "act2".Act(() => { if (collector.TheExhibit.Contains(i2)) { throw new Exception(); } })
+                from a2 in "act2".Act(() => { if (collector.Values.Contains(i2)) { throw new Exception(); } })
                 select Acid.Test
             )
             select Acid.Test;
@@ -43,7 +43,7 @@ public class ShrinkingOperationInputs
     {
 
         var script =
-            from collector in "container".Stashed(() => TheCollector.Exhibits<int>())
+            from collector in "container".Stashed(() => Collect.ValuesOf<int>())
             from ops in Script.Choose(
                 from i1 in "i1".Input(Fuzzr.Constant(42))
                 from a1 in "act1".Act(() => collector.Absorb(i1))
@@ -53,8 +53,8 @@ public class ShrinkingOperationInputs
                 from a2 in "act2".ActCarefully(() =>
                 {
                     if (i2 != 42) return;
-                    if (collector.TheExhibit.Contains(44)) throw new Exception();
-                    if (collector.TheExhibit.Contains(43)) { collector.Absorb(i2 + 2); return; }
+                    if (collector.Values.Contains(44)) throw new Exception();
+                    if (collector.Values.Contains(43)) { collector.Absorb(i2 + 2); return; }
                     collector.Absorb(i2 + 1);
                 })
                 from spec in "does not throw".Spec(() => !a2.Threw)
@@ -78,7 +78,7 @@ public class ShrinkingOperationInputs
     public void Trying_To_Find_Failure_Again_Carefully()
     {
         var script =
-            from collector in "container".Stashed(() => TheCollector.Exhibits<int>())
+            from collector in "container".Stashed(() => Collect.ValuesOf<int>())
             from ops in Script.Choose(
                 from i1 in "i1".Input(Fuzzr.Constant(42))
                 from a1 in "act1".Act(() => collector.Absorb(i1))
@@ -88,8 +88,8 @@ public class ShrinkingOperationInputs
                 from a2 in "act2".ActCarefully(() =>
                 {
                     if (i2 != 42) return;
-                    if (collector.TheExhibit.Contains(44)) throw new Exception();
-                    if (collector.TheExhibit.Contains(43)) { collector.Absorb(i2 + 2); return; }
+                    if (collector.Values.Contains(44)) throw new Exception();
+                    if (collector.Values.Contains(43)) { collector.Absorb(i2 + 2); return; }
                     collector.Absorb(i2 + 1);
                 })
                 from spec in "does not throw".Spec(() => !a2.Threw)

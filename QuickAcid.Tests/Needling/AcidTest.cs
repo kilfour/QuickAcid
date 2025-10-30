@@ -6,13 +6,13 @@ namespace QuickAcid.Tests.Needling;
 
 public class AcidTest
 {
-    public static async Task<Box<int>> GetAnswerAsync(int a) => await Task.FromResult(new Box<int>(a));
+    public static async Task<Cell<int>> GetAnswerAsync(int a) => await Task.FromResult(new Cell<int>(a));
 
     [Fact]
     public void Spike()
     {
         var script =
-            from needler in "Needler".Stashed(() => new Needler<int, Box<int>>())
+            from needler in "Needler".Stashed(() => new Needler<int, Cell<int>>())
 
             from key in "key".Input(Fuzzr.Guid().AsString())
             from input in "input".Input(Fuzzr.Int())

@@ -148,7 +148,7 @@ public class QuickAcidLinq101
     // @"In the previous section we briefly mentioned executions, let's elaborate and have a look at a simple test:
     //  ```csharp
     // var script =
-    //     from container in ""container"".Stashed(() => new Box(0))
+    //     from container in ""container"".Stashed(() => new Cell(0))
     //     from input in ""input"".Input(Fuzzr.Int(1, 5))
     //     from act in ""act"".Act(() => container.Value = input)
     //     from spec in ""spec"".Spec(() => container.Value != 0)
@@ -171,7 +171,7 @@ public class QuickAcidLinq101
     // `Input(...)` values, on the other hand, are regenerated with each execution and shrink independently if a failure is detected.
 
     // **First execution** :
-    // 1. () => new Box() gets called and the result is stored in memory.
+    // 1. () => new Cell() gets called and the result is stored in memory.
     // 2. A 'shrinkable input' is generated using QuickFuzzr and stored in memory. Let's assume it returns 3. 
     // 3. The act is performed and container.Value changed.
     // 4. The invariant defined in spec is checked, and in this case (3 != 0) will pass.
@@ -187,7 +187,7 @@ public class QuickAcidLinq101
     public void What_is_an_execution()
     {
         var script =
-            from container in "container".Stashed(() => new Box<int>(0))
+            from container in "container".Stashed(() => new Cell<int>(0))
             from input in "input".Input(Fuzzr.Int(1, 5))
             from act in "act".Act(() => container.Value = input)
             from spec in "spec".Spec(() => container.Value != 0)

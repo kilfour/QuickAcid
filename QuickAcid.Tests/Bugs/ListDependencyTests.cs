@@ -11,8 +11,8 @@ public class ListDependencyTests
     public void Simple()
     {
         var script =
-            from boxOne in "box 1".Stashed(() => new Box<List<string>>([]))
-            from boxTwo in "box 2".Stashed(() => new Box<List<string>>([]))
+            from boxOne in "box 1".Stashed(() => new Cell<List<string>>([]))
+            from boxTwo in "box 2".Stashed(() => new Cell<List<string>>([]))
             from boxOneContent in "box 1 content".Input(Fuzzr.Constant(new List<string> { "one" }))
             from boxTwoContent in "box 2 content".Input(Fuzzr.Constant(new List<string> { "two" }))
             from boxOneAdd in "box 1 add".Act(() => boxOne.Value = boxOneContent)
@@ -27,9 +27,9 @@ public class ListDependencyTests
     public void NotSoSimple()
     {
         var script =
-            from boxOne in "box 1".Stashed(() => new Box<List<string>>([]))
-            from boxTwo in "box 2".Stashed(() => new Box<List<string>>([]))
-            from connected in "connected".Stashed(() => new Box<bool>(false))
+            from boxOne in "box 1".Stashed(() => new Cell<List<string>>([]))
+            from boxTwo in "box 2".Stashed(() => new Cell<List<string>>([]))
+            from connected in "connected".Stashed(() => new Cell<bool>(false))
             from listWithA in "setup value".Input(Fuzzr.Constant(new List<string> { "A" }))
             from listWithB in "box 2 change value".Input(Fuzzr.Constant(new List<string> { "B" }))
             from seq in Script.Choose(
@@ -58,9 +58,9 @@ public class ListDependencyTests
     public void NotSoSimpleChooseIf()
     {
         var script =
-            from boxOne in "box 1".Stashed(() => new Box<List<string>>([]))
-            from boxTwo in "box 2".Stashed(() => new Box<List<string>>([]))
-            from connected in "connected".Stashed(() => new Box<bool>(false))
+            from boxOne in "box 1".Stashed(() => new Cell<List<string>>([]))
+            from boxTwo in "box 2".Stashed(() => new Cell<List<string>>([]))
+            from connected in "connected".Stashed(() => new Cell<bool>(false))
             from listWithA in "setup value".Input(Fuzzr.Constant(new List<string> { "A" }))
             from listWithB in "box 2 change value".Input(Fuzzr.Constant(new List<string> { "B" }))
             from seq in Script.ChooseIf(

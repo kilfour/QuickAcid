@@ -9,9 +9,9 @@ public static class TheClerk
     {
         return
             Signal.From(The.CourtStyleGuide)
-                .SetArtery(TheString.Catcher())
+                .SetArtery(Text.Capture())
                 .Pulse(caseFile)
-                .GetArtery<Holden>()
-                .Whispers();
+                .GetArtery<StringSink>()
+                .Content();
     }
 }

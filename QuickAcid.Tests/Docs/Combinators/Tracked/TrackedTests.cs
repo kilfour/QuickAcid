@@ -38,7 +38,7 @@ from account in ""account"".Tracked(() => new Account())
     public void Tracked_in_report_after_shrinking()
     {
         var script =
-           from container in "container".Tracked(() => new Box<int>(21))
+           from container in "container".Tracked(() => new Cell<int>(21))
            from input in "input".Input(Fuzzr.Constant(42))
            from _do in "do".Act(() => { container.Value = input; })
            from _ in "spec".Spec(() => container.Value != 42)
@@ -62,7 +62,7 @@ from account in ""account"".Tracked(() => new Account())
             {
                 if (executionCount != 0)
                     throw new Exception("BOOM");
-                return new Box<bool>(true);
+                return new Cell<bool>(true);
             })
             from act in "act".Act(() => { executionCount++; })
             select Acid.Test;

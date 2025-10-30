@@ -12,18 +12,18 @@ public class InputShrinkingStashedValue
     public void Looking()
     {
         var script =
-            from storage in "storage".Stashed(() => TheCollector.Exhibits<int>())
-            from count in Script.Stashed(() => new Box<int>(0))
+            from storage in "storage".Stashed(() => Collect.ValuesOf<int>())
+            from count in Script.Stashed(() => new Cell<int>(0))
             from inc in Script.Execute(() => count.Value++)
             from _ in Script.ChooseIf(
                 (() => count.Value == 1,
                     from input in "input a".Input(Fuzzr.Constant(42))
                     from a in "a".Act(() => { storage.Absorb(input); })
                     select Acid.Test),
-                (() => storage.TheExhibit.Count != 0,
+                (() => storage.Values.Count != 0,
                     from input in "input b".Input(Fuzzr.Constant(42))
                     from a in "b".Act(() => { })
-                    from spec in "spec b".Spec(() => storage.TheExhibit[0] != input)
+                    from spec in "spec b".Spec(() => storage.Values[0] != input)
                     select Acid.Test))
             select Acid.Test;
 

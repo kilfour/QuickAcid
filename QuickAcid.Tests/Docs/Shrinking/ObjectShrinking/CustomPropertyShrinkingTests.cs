@@ -12,8 +12,8 @@ public class CustomPropertyShrinkingTests
     {
         var observe = new HashSet<int>();
         var script =
-            from _ in Shrink<Box<int>>.For(a => a.Value, a => [666])
-            from input in "input".Input(Fuzzr.Constant(new Box<int>(42)))
+            from _ in Shrink<Cell<int>>.For(a => a.Value, a => [666])
+            from input in "input".Input(Fuzzr.Constant(new Cell<int>(42)))
             from foo in "spec".Spec(() => { observe.Add(input.Value); return false; })
             select Acid.Test;
 
@@ -29,8 +29,8 @@ public class CustomPropertyShrinkingTests
     {
         var observe = new HashSet<int>();
         var script =
-            from _ in Shrink<Box<int>>.None(a => a.Value)
-            from input in "input".Input(Fuzzr.Constant(new Box<int>(42)))
+            from _ in Shrink<Cell<int>>.None(a => a.Value)
+            from input in "input".Input(Fuzzr.Constant(new Cell<int>(42)))
             from foo in "spec".Spec(() => { observe.Add(input.Value); return false; })
             select Acid.Test;
         var article = TheJournalist.Exposes(() => QState.Run(script)

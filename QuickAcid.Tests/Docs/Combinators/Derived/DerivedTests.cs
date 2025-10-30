@@ -20,14 +20,14 @@ public class DerivedTests
     [DocContent(
 @"**Usage example:**
 ```csharp
-from container in ""container"".Stashed(() => new Box<List<int>>([]))
+from container in ""container"".Stashed(() => new Cell<List<int>>([]))
 from input in ""input"".Derived(Fuzzr.OneOfOrDefault(container.Value))
 ```
 ")]
     public void Derived_usage()
     {
         var script =
-            from container in "container".Stashed(() => new Box<List<int>>([]))
+            from container in "container".Stashed(() => new Cell<List<int>>([]))
             from input in Script.Execute(Fuzzr.OneOfOrDefault(container.Value))
             from act in "act".Act(() => container.Value.Add(42))
             from spec in "fail".Spec(() => input != 42)
@@ -40,7 +40,7 @@ from input in ""input"".Derived(Fuzzr.OneOfOrDefault(container.Value))
     public void Derived_alternative_usage()
     {
         var script =
-            from container in "container".Stashed(() => new Box<List<int>>(new List<int>()))
+            from container in "container".Stashed(() => new Cell<List<int>>(new List<int>()))
             from input in Script.Execute(Fuzzr.OneOfOrDefault(container.Value))
             select Acid.Test;
         var article = TheJournalist.Unearths(QState.Run(script).WithOneRunAndOneExecution());
