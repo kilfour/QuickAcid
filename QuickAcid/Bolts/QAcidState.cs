@@ -147,6 +147,7 @@ public sealed class QAcidState
     public CaseFile HandleFailure(QAcidStateConfig config)
     {
         var executionShrinker = config.Diagnose == null ? new ExecutionShrinker() : new DiagnosticExecutionShrinker(config.Diagnose);
+        var actionShrinker = config.Diagnose == null ? new ActionShrinker() : new DiagnosticActionShrinker(config.Diagnose);
         VerifyIf = config.Diagnose == null ? new Verifier(this) : new DiagnosticVerifier(this, config.Diagnose);
         var runs = new List<RunDeposition>();
         if (config.Verbose)
@@ -163,7 +164,7 @@ public sealed class QAcidState
 
             if (config.ShrinkingActions)
             {
-                shrinkCount += ActionShrinker.Run(this);
+                shrinkCount += actionShrinker.Run(this);
                 if (config.Verbose)
                     runs.Add(DeposeTheRun("AFTER ACTION SHRINKING"));
             }
