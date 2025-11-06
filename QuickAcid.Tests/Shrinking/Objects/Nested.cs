@@ -11,8 +11,8 @@ namespace QuickAcid.Tests.Shrinking.Objects
         {
             var script =
                 from input in "input".Input(
-                    from _ in Fuzzr.Constant("Answer me").Replace()
-                    from __ in Fuzzr.Constant(42).Replace()
+                    from _ in Configr.Primitive(Fuzzr.Constant("Answer me"))
+                    from __ in Configr.Primitive(Fuzzr.Constant(42))
                     from thing in Fuzzr.One<Parent>()
                     select thing)
                 from act in "act".Act(() => { })

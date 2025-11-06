@@ -13,7 +13,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void OneRelevantProperty()
         {
             var generator =
-                from _ in Fuzzr.Int(5, 7).AsString().Replace()
+                from _ in Configr.Primitive(Fuzzr.OneOf("5", "6"))
                 from thing in Fuzzr.One<Something>()
                 select thing;
             var script =
@@ -44,7 +44,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void TwoRelevantProperties()
         {
             var generator =
-                from _ in Fuzzr.Int(5, 7).AsString().Replace()
+                from _ in Configr.Primitive(Fuzzr.OneOf("5", "6"))
                 from thing in Fuzzr.One<Something>()
                 select thing;
             var script =
@@ -75,7 +75,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void TwoRelevantPropertiesTricky()
         {
             var generator =
-                from _ in Fuzzr.Int(5, 7).AsString().Replace()
+                from _ in Configr.Primitive(Fuzzr.OneOf("5", "6"))
                 from thing in Fuzzr.One<Something>()
                 select thing;
 
@@ -126,7 +126,7 @@ namespace QuickAcid.Tests.Shrinking.Objects
         public void TwoRelevantPropertiesEvenTrickier()
         {
             var generator =
-                from _ in Fuzzr.Constant(42).AsString().Replace()
+                from _ in Configr.Primitive(Fuzzr.Constant("42"))
                 from cust in Configr<Something>.Property(x => x.MyFourthProperty, "")
                 from thing in Fuzzr.One<Something>()
                 select thing;

@@ -18,7 +18,7 @@ public class IntProperty
     public void SimplesRelevant()
     {
         var generator =
-            from _ in Fuzzr.Constant(6).Replace()
+            from _ in Configr.Primitive(Fuzzr.Constant(6))
             from thing in Fuzzr.One<Simples>()
             select thing;
         var script =
@@ -48,7 +48,7 @@ public class IntProperty
     public void SimplesIrrelevant()
     {
         var generator =
-            from _ in Fuzzr.Int(5, 7).Replace()
+            from _ in Configr.Primitive(Fuzzr.Int(5, 7))
             from thing in Fuzzr.One<Simples>()
             select thing;
         var script =
@@ -72,7 +72,7 @@ public class IntProperty
     public void OneRelevantProperty()
     {
         var generator =
-            from _ in Fuzzr.Int(5, 7).Replace()
+            from _ in Configr.Primitive(Fuzzr.Int(5, 7))
             from thing in Fuzzr.One<Something>()
             select thing;
         var script =
@@ -101,7 +101,7 @@ public class IntProperty
     public void TwoRelevantProperties()
     {
         var generator =
-            from _ in Fuzzr.Int(5, 7).Replace()
+            from _ in Configr.Primitive(Fuzzr.Int(5, 7))
             from thing in Fuzzr.One<Something>()
             select thing;
         var script =
@@ -132,7 +132,7 @@ public class IntProperty
     public void TwoRelevantPropertiesTricky()
     {
         var generator =
-            from _ in Fuzzr.Int(5, 7).Replace()
+            from _ in Configr.Primitive(Fuzzr.Int(5, 7))
             from thing in Fuzzr.One<Something>()
             select thing;
 
@@ -183,7 +183,7 @@ public class IntProperty
     public void TwoRelevantPropertiesEvenTrickier()
     {
         var generator =
-            from _ in Fuzzr.Constant(42).Replace()
+            from _ in Configr.Primitive(Fuzzr.Constant(42))
             from thing in Fuzzr.One<Something>()
             select thing;
 
@@ -217,7 +217,7 @@ public class IntProperty
     public void TwoRelevantPropertiesSuperTricky()
     {
         var generator =
-            from _ in Fuzzr.Constant(42).Replace()
+            from _ in Configr.Primitive(Fuzzr.Constant(42))
             from cust in Configr<Something>.Property(x => x.MyFifthProperty, 0)
             from thing in Fuzzr.One<Something>()
             select thing;
@@ -253,7 +253,7 @@ public class IntProperty
     public void ThreeRelevantProperties()
     {
         var generator =
-            from _ in Fuzzr.Constant(42).Replace()
+            from _ in Configr.Primitive(Fuzzr.Constant(42))
             from cust in Configr<Something>.Property(x => x.MyFifthProperty, 0)
             from thing in Fuzzr.One<Something>()
             select thing;
