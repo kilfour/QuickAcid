@@ -1,4 +1,4 @@
-name: .NET CI QuickPulse
+name: .NET CI
 on:
   push:
     branches: [ "main" ]
