@@ -69,7 +69,7 @@ It's designed for sharp diagnostics, elegant expressiveness, and easy extension.
         var reader = LinesReader.FromText(TheClerk.Transcribes(article.CaseFile));
         Assert.Equal(" ──────────────────────────────────────────────────", reader.NextLine());
         Assert.Equal(" Test:                    ExampleTest", reader.NextLine());
-        Assert.Equal(" Location:                C:\\Code\\QuickAcid\\QuickAcid.Tests\\CreateReadMe.cs:107:1", reader.NextLine());
+        Assert.Contains(" Location: ", reader.NextLine());
         Assert.Equal(" Original failing run:    4 executions", reader.NextLine());
         Assert.Equal(" Minimal failing case:    1 execution (after 4 shrinks)", reader.NextLine());
         Assert.Equal(" Seed:                    1584314623", reader.NextLine());
